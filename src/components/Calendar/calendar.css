@@ -2,10 +2,26 @@
     --fixedWidth: 8.57rem;
 }
 
+.calendar-wrapper {
+    width: 100vw;
+    display: flex;
+}
+
+.calendar-column--fixed {
+    min-width: 150px;
+}
+
+.calendar-column--fixed div {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+}
+
 .calendar {
-    width: calc(100vw - var(--fixedWidth));
-    margin-left: 8.57rem;
+    height: calc(100% - 45px);
     overflow-x: scroll;
+    position: relative;
 }
 
 .calendar table {
@@ -47,6 +63,19 @@
 .column-fixed > p {
     display: table-cell;
     vertical-align: middle;
+}
+
+.calendar-events--holder {
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.calendar--event {
+    position: absolute;
 }
 
 .calendar-day--current {

@@ -21,6 +21,13 @@ class App extends React.Component {
                 worker: 'Jiří Pavlík',
                 dateFrom: moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(),
                 dateTo: moment().subtract(1, 'days').hours(13).minutes(0).seconds(0).toDate(),
+            },{
+                id: 'abcde',
+                label: 'Zakázka 2',
+                machine: 'FTU 1250',
+                worker: 'Jiří Pavlík',
+                dateFrom: moment().subtract(2, 'days').hours(9).minutes(0).seconds(0).toDate(),
+                dateTo: moment().add(1, 'days').hours(11).minutes(0).seconds(0).toDate(),
             }]
         };
     }
@@ -31,7 +38,7 @@ class App extends React.Component {
 
                 <div>
                     <button
-                        className="btn btn-primary mr-2 float-right"
+                        className=""
                     >
                         Přidat zakázku
                     </button>
@@ -39,16 +46,20 @@ class App extends React.Component {
                         orders={this.state.orders}
                         machines={[
                             {
-                                name: 'Finetech'
+                                name: 'Finetech',
+                                color: 'red',
                             },
                             {
-                                name: 'Haas'
+                                name: 'Haas',
+                                color: 'green'
                             },
                             {
-                                name: 'CNC Soustruh ST310'
+                                name: 'CNC Soustruh ST310',
+                                color: 'orange'
                             },
                             {
-                                name: 'FTU 1250'
+                                name: 'FTU 1250',
+                                color: 'blue'
                             }
                         ]}
                     />

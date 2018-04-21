@@ -23,13 +23,15 @@ export class Calendar extends React.Component {
 
         this.state = {
             ordersToRender: [],
+            calendarHolder: null,
+            calendarTableWidth: 0,
             startOfTheWeek: startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
         };
     }
 
     componentDidMount() {
-        this.renderOrders();
+        this.getDimensions();
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.renderOrders);
     }
 
@@ -41,6 +43,18 @@ export class Calendar extends React.Component {
 
     componentWillUnmount() {
         ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.renderOrders);
+    }
+
+    getDimensions = () => {
+        const calendarHolder = ReactDOM.findDOMNode(this.calendar);
+        const calendarTableWidth = calendarHolder.firstChild.offsetWidth;
+
+        this.setState({
+            calendarHolder,
+            calendarTableWidth
+        }, () => {
+            this.renderOrders();
+        });
     }
 
     handleWeekMove = (e, move) => {
@@ -63,8 +77,12 @@ export class Calendar extends React.Component {
             weekOfTheYear,
         } = this.state;
 
+        const {
+            machines
+        } = this.props;
+
         return (
-            <div>
+            <React.Fragment>
                 {/* CURRENT WEEK */}
                 <div
                     className="text-align--center calendar-year--week"
@@ -87,25 +105,44 @@ export class Calendar extends React.Component {
                 </div>
 
                 {/* TABLE */}
-                <div
-                    className="calendar"
-                    ref={(node) => this.calendar = node}
-                >
-                    <table className="calendar-table">
-                        <thead>
-                            <tr>
-                                {this.renderDaysCell(false)}
-                            </tr>
-                        </thead>
-                        {/* body of the calendar, week */}
-                        <tbody className="calendar-table--body">
-                            {this.renderTableBody()}
-                        </tbody>
-                    </table>
+                <div className="calendar-wrapper">
+                    <div className="calendar-column--fixed">
+                        <div style={{ height: '35px', border: 0 }} />
+                        {
+                            machines.map((machine) => {
+                                return <div>
+                                    {machine.name}
+                                </div>;
+                            })
+                        }
+                    </div>
+                    <div
+                        className="calendar"
+                        ref={(node) => this.calendar = node}
+                    >
+                        <table className="calendar-table">
+                            <thead>
+                                <tr>
+                                    {this.renderDaysCell(false)}
+                                </tr>
+                            </thead>
+                            {/* body of the calendar, week */}
+                            <tbody className="calendar-table--body">
+                                {this.renderTableBody()}
+                            </tbody>
+                        </table>
 
-                    {this.state.ordersToRender}
+                        <div
+                            className="calendar-events--holder"
+                            style={{
+                                width: `${this.state.calendarTableWidth}px`
+                            }}
+                        >
+                            {this.state.ordersToRender}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 
@@ -117,11 +154,6 @@ export class Calendar extends React.Component {
                 key={machine.name}
                 ref={(node) => this[machine.name] = node}
             >
-                <th
-                    className="column-fixed"
-                >
-                    <p>{machine.name}</p>
-                </th>
                 {this.renderDaysCell(true)}
             </tr>;
         });
@@ -136,7 +168,7 @@ export class Calendar extends React.Component {
         let className;
 
         if (empty === false) {
-            days.push(<td key="empty" className="column-fixed" />);
+            // days.push(<td key="empty" className="column-fixed" />);
         }
 
         for (let i = 0; i < 7; i++) {
@@ -158,7 +190,7 @@ export class Calendar extends React.Component {
                                 ? null
                                 : <tr>
                                     <td
-                                        colSpan={15}
+                                        colSpan={14}
                                         className={className}
                                     >
                                         <strong>{day.format(FULL_FORMAT)}</strong>
@@ -198,13 +230,14 @@ export class Calendar extends React.Component {
         return hours;
     }
 
-    renderOrders = () => {
+    renderOrders = (e) => {
         const { orders, machines } = this.props;
 
         const ordersToRender = orders.map((order) => {
             const { dateFrom, dateTo } = order;
             const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
             const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
+            const machine = machines.find((machine) => machine.name === order.machine);
 
             const findRow = ReactDOM.findDOMNode(this[order.machine]);
 
@@ -219,22 +252,24 @@ export class Calendar extends React.Component {
                 return null;
             }
 
-            const startPosition = findStartDateOnRow.getBoundingClientRect();
+            const left = e ? e.offsetLeft : 0;
+
             const endPosition = findEndDateOnRow.getBoundingClientRect();
+            const startPosition = findStartDateOnRow.getBoundingClientRect();
+            const calendarHolderClientRect = this.state.calendarHolder.getBoundingClientRect();
 
             const style = {
-                position: 'absolute',
-                backgroundColor: 'red',
-                top: `${startPosition.top}px`,
-                left: `${startPosition.left}px`,
+                backgroundColor: machine.color,
                 height: `${startPosition.height}px`,
                 width: `${endPosition.right - startPosition.left}px`,
+                top: `${startPosition.top - calendarHolderClientRect.top}px`,
+                left: `${startPosition.left - calendarHolderClientRect.left - left}px`,
             }
-
-            console.log(startPosition);
 
             return (
                 <div
+                    key={order.id}
+                    className="calendar--event"
                     onClick={() => console.log(order)}
                     style={style}
                 >
