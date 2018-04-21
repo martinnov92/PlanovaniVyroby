@@ -1,9 +1,36 @@
-.calendar > table {
+.calendar {
+    width: calc(100vw - 8.57rem);
+    height: calc(100% - 45px);
+    margin-left: 8.57rem;
+    overflow-x: scroll;
+}
+
+.calendar table {
     width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-table tr td {
+    border: 1px solid #000;
 }
 
 .calendar-year--week {
+    height: 45px;
     font-size: 1.2rem;
+    padding-left: 8.57rem;
+}
+
+.calendar-table--hours {
+    min-width: 20px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.column-fixed {
+    left: 0;
+    top: auto;
+    width: 8.57rem;
+    position: absolute;
 }
 
 .calendar-day--current {

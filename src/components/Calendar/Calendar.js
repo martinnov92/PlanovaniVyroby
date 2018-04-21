@@ -19,7 +19,7 @@ export class Calendar extends React.Component {
     }
 
     renderDays = () => {
-        const days = [];
+        const days = [<td className="column-fixed" />];
 
         for (let i = 0; i < 7; i++) {
             const day = moment(this.state.startOfTheWeek).add(i, 'days');
@@ -34,7 +34,10 @@ export class Calendar extends React.Component {
                     <table>
                         <tbody>
                             <tr>
-                                <td colSpan={13}>
+                                <td
+                                    colSpan={15}
+                                    className="text-align--center"
+                                >
                                     {day.format(FULL_FORMAT)}
                                 </td>
                             </tr>
@@ -59,6 +62,7 @@ export class Calendar extends React.Component {
             const td =
                 <td
                     key={i}
+                    className="calendar-table--hours"
                 >
                     {i}
                 </td>;
@@ -90,39 +94,50 @@ export class Calendar extends React.Component {
         } = this.state;
 
         return (
-            <div className="calendar">
-                <table>
-                    <thead>
-                        <tr>
-                            <td
-                                colSpan={7}
-                                className="text-align--center calendar-year--week"
-                            >
-                                <button
-                                    className="btn text-weight--bold"
-                                    onClick={(e) => this.handleWeekMove(e, 'prev')}
-                                >
-                                    {"<"}
-                                </button>
+            <div>
+                <div
+                    className="text-align--center calendar-year--week"
+                >
+                    <button
+                        className="btn text-weight--bold"
+                        onClick={(e) => this.handleWeekMove(e, 'prev')}
+                    >
+                        {"<"}
+                    </button>
 
-                                <strong>{weekOfTheYear}. týden</strong>
+                    <strong>{weekOfTheYear}. týden</strong>
 
-                                <button
-                                    className="btn text-weight--bold"
-                                    onClick={(e) => this.handleWeekMove(e, 'next')}
-                                >
-                                    {">"}
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            {this.renderDays()}
-                        </tr>
-                    </thead>
-                    {/* body of the calendar, week */}
-                    <tbody>
-                    </tbody>
-                </table>
+                    <button
+                        className="btn text-weight--bold"
+                        onClick={(e) => this.handleWeekMove(e, 'next')}
+                    >
+                        {">"}
+                    </button>
+                </div>
+                <div className="calendar">
+                    <table className="calendar-table">
+                        <thead>
+                            <tr>
+                                {this.renderDays()}
+                            </tr>
+                        </thead>
+                        {/* body of the calendar, week */}
+                        <tbody>
+                            <tr>
+                                <th className="column-fixed">Column 1</th>
+                                <td> nějaký data</td>
+                            </tr>
+                            <tr>
+                                <th className="column-fixed">Column 1</th>
+                                <td> nějaký data</td>
+                            </tr>
+                            <tr>
+                                <th className="column-fixed">Column 1</th>
+                                <td> nějaký data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }
