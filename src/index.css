@@ -57,6 +57,14 @@ body {
     font-size: 1.2rem;
 }
 
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
 .text-align--center {
     text-align: center;
 }

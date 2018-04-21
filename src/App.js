@@ -29,7 +29,14 @@ class App extends React.Component {
                 dateFrom: moment().subtract(2, 'days').hours(9).minutes(0).seconds(0).toDate(),
                 dateTo: moment().add(1, 'days').hours(11).minutes(0).seconds(0).toDate(),
             }],
-            open: false
+            open: false,
+            order: {
+                label: '',
+                machine: '',
+                worker: '',
+                dateFrom: moment().hours(7).minutes(0).seconds(0).toDate(),
+                dateTo: moment().hours(10).minutes(0).seconds(0).toDate(),
+            }
         };
     }
 
@@ -75,18 +82,143 @@ class App extends React.Component {
                             className="popup"
                         >
                             <header>
-                                <h2>Přidání zakázky</h2>
+                                <h2
+                                    className="pull-left"
+                                >
+                                    Přidání zakázky
+                                </h2>
+
+                                <button
+                                    className="pull-right"
+                                    onClick={() => this.setState({ open: false })}
+                                >
+                                    x
+                                </button>
                             </header>
 
                             <section>
+                                <div>
+                                    <label>
+                                        Název:
 
+                                        <input
+                                            type="text"
+                                            name="label"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    order: {
+                                                        ...this.state.order,
+                                                        id: e.target.value,
+                                                        [e.target.name]: e.target.value
+                                                    }
+                                                });
+                                            }}
+                                            value={this.state.order.label}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label>
+                                        Stroj:
+
+                                        <input
+                                            type="text"
+                                            name="machine"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    order: {
+                                                        ...this.state.order,
+                                                        [e.target.name]: e.target.value
+                                                    }
+                                                });
+                                            }}
+                                            value={this.state.order.machine}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label>
+                                        Obsluha:
+
+                                        <input
+                                            type="text"
+                                            name="worker"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    order: {
+                                                        ...this.state.order,
+                                                        [e.target.name]: e.target.value
+                                                    }
+                                                });
+                                            }}
+                                            value={this.state.order.worker}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label>
+                                        Od:
+
+                                        <input
+                                            type="datetime-locale"
+                                            name="dateFrom"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    order: {
+                                                        ...this.state.order,
+                                                        [e.target.name]: e.target.value
+                                                    }
+                                                });
+                                            }}
+                                            value={this.state.order.dateFrom}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label>
+                                        Do:
+
+                                        <input
+                                            type="datetime-locale"
+                                            name="dateTo"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    order: {
+                                                        ...this.state.order,
+                                                        [e.target.name]: e.target.value
+                                                    }
+                                                });
+                                            }}
+                                            value={this.state.order.dateTo}
+                                        />
+                                    </label>
+                                </div>
                             </section>
 
                             <footer
                                 className="text-align--right"
                             >
                                 <button
-                                    onClick={this.saveOrder}
+                                    onClick={() => {
+                                        const copy = [...this.state.orders];
+                                        copy.push(this.state.order);
+
+                                        this.setState({
+                                            orders: copy,
+                                            order: {
+                                                label: '',
+                                                machine: '',
+                                                worker: '',
+                                                dateFrom: moment().hours(7).minutes(0).seconds(0).toDate(),
+                                                dateTo: moment().hours(10).minutes(0).seconds(0).toDate(),
+                                            },
+                                            open: false
+                                        });
+                                    }}
                                 >
                                     Uložit zakázku
                                 </button>

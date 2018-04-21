@@ -32,12 +32,17 @@ export class Calendar extends React.Component {
     }
 
     componentDidMount() {
+        // todo: zafocusovat aktuální den + vyřešit špatný zobrazení zakázek
+        // ReactDOM.findDOMNode(this.currentDate).scrollIntoView();
         this.getDimensions();
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.weekOfTheYear !== this.state.weekOfTheYear) {
+        if (
+            prevState.weekOfTheYear !== this.state.weekOfTheYear ||
+            this.props.orders.length !== prevProps.orders.length
+        ) {
             this.renderOrders();
         }
     }
@@ -200,6 +205,7 @@ export class Calendar extends React.Component {
                                     <td
                                         colSpan={14}
                                         className={className}
+                                        ref={current ? (node) => this.currentDate = node : null}
                                     >
                                         <strong>{day.format(FULL_FORMAT)}</strong>
                                     </td>
