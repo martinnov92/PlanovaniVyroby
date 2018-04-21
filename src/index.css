@@ -19,6 +19,37 @@ body {
     grid-template-rows: auto 500px auto;
 }
 
+.popup {
+    width: 300px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    grid-template-rows: 45px auto minmax(20px, 40px);
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    background-color: white;
+    position: absolute;
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, .1);
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.popup header,
+.popup section,
+.popup footer {
+    padding: 10px;
+}
+
+.popup header {
+    border-radius: 0 0 3px 3px;
+    border-bottom: 1px solid #ddd;
+}
+
+.popup footer {
+    border-radius: 3px 3px 0 0;
+    border-top: 1px solid #ddd;
+}
+
 /* helpers */
 .btn {
     border: 0;
@@ -28,6 +59,10 @@ body {
 
 .text-align--center {
     text-align: center;
+}
+
+.text-align--right {
+    text-align: right;
 }
 
 .text-weight--bold {

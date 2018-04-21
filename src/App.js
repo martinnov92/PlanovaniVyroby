@@ -28,9 +28,11 @@ class App extends React.Component {
                 worker: 'Jiří Pavlík',
                 dateFrom: moment().subtract(2, 'days').hours(9).minutes(0).seconds(0).toDate(),
                 dateTo: moment().add(1, 'days').hours(11).minutes(0).seconds(0).toDate(),
-            }]
+            }],
+            open: false
         };
     }
+
     render() {
         return (
             <div className="app">
@@ -39,9 +41,11 @@ class App extends React.Component {
                 <div>
                     <button
                         className=""
+                        onClick={() => this.setState({ open: true })}
                     >
                         Přidat zakázku
                     </button>
+
                     <Calendar
                         orders={this.state.orders}
                         machines={[
@@ -63,6 +67,32 @@ class App extends React.Component {
                             }
                         ]}
                     />
+
+                    {
+                        !this.state.open
+                        ? null
+                        : <div
+                            className="popup"
+                        >
+                            <header>
+                                <h2>Přidání zakázky</h2>
+                            </header>
+
+                            <section>
+
+                            </section>
+
+                            <footer
+                                className="text-align--right"
+                            >
+                                <button
+                                    onClick={this.saveOrder}
+                                >
+                                    Uložit zakázku
+                                </button>
+                            </footer>
+                        </div>
+                    }
                 </div>
 
                 <div />

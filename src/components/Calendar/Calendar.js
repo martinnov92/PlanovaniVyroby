@@ -273,7 +273,7 @@ export class Calendar extends React.Component {
                 top: `${startPosition.top - calendarHolderClientRect.top}px`,
                 left: `${startPosition.left - calendarHolderClientRect.left + scrollLeft}px`,
             };
-            console.log(startPosition, calendarHolderClientRect, scrollLeft);
+
             return (
                 <div
                     key={order.id}
@@ -281,7 +281,8 @@ export class Calendar extends React.Component {
                     onClick={() => console.log(order)}
                     style={style}
                 >
-                    {order.label}
+                    <p>{order.label}</p>
+                    <p>{order.worker}</p>
                 </div>
             );
         });
