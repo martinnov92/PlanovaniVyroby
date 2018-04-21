@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import ReactDOM from 'react-dom';
 import { createClassName } from '../../helpers';
 
 import './calendar.css';
@@ -16,6 +17,8 @@ export class Calendar extends React.Component {
             startOfTheWeek: startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
         };
+
+        console.log(ReactDOM);
     }
 
     handleWeekMove = (e, move) => {
@@ -80,23 +83,21 @@ export class Calendar extends React.Component {
     }
 
     renderTableBody = () => {
-        const body = [];
+        const { machines } = this.props;
 
-        for (let i = 0; i < 5; i++) {
-            const tr =
-                <tr>
-                    <th
-                        className="column-fixed"
-                    >
-                        <p>Stroj {i}</p>
-                    </th>
-                    {this.renderDaysCell(true)}
-                </tr>
-
-            body.push(tr);
-        }
-
-        return body;
+        return machines.map((machine) => {
+            return <tr
+                key={machine.name}
+                ref={(node) => this[machine.name] = node}
+            >
+                <th
+                    className="column-fixed"
+                >
+                    <p>{machine.name}</p>
+                </th>
+                {this.renderDaysCell(true)}
+            </tr>;
+        });
     }
 
     renderDaysCell = (empty = false) => {
@@ -106,19 +107,20 @@ export class Calendar extends React.Component {
         let className;
 
         if (empty === false) {
-            days.push(<td className="column-fixed" />);
+            days.push(<td key="empty" className="column-fixed" />);
         }
 
         for (let i = 0; i < 7; i++) {
+            day = moment(this.state.startOfTheWeek).add(i, 'days');
+
             if (empty === false) {
-                day = moment(this.state.startOfTheWeek).add(i, 'days');
                 current = moment().startOf('day').isSame(day);
                 className = createClassName(['text-align--center', current ? 'calendar-day--current' : null]);
             }
 
             const td =
                 <td
-                    key={empty ? i : day.format(FULL_FORMAT)}
+                    key={day.format(FULL_FORMAT)}
                 >
                     <table>
                         <tbody>
@@ -135,7 +137,7 @@ export class Calendar extends React.Component {
                                 </tr>
                             }
                             <tr>
-                                {this.renderHoursEmptyCell(empty)}
+                                {this.renderHoursEmptyCell(empty, day)}
                             </tr>
                         </tbody>
                     </table>
@@ -147,7 +149,7 @@ export class Calendar extends React.Component {
         return days;
     }
 
-    renderHoursEmptyCell = (empty = false) => {
+    renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
 
         // from 7:00 to 20:00
@@ -156,6 +158,8 @@ export class Calendar extends React.Component {
                 <td
                     key={i}
                     className="calendar-table--hours"
+                    data-date={day.toDate()}
+                    date-time={i}
                 >
                     {empty ? null : i}
                 </td>;

@@ -10,7 +10,20 @@ class App extends React.Component {
                 <Calendar
                     workers={[]}
                     events={[]}
-                    machines={[]}
+                    machines={[
+                        {
+                            name: 'Finetech'
+                        },
+                        {
+                            name: 'Haas'
+                        },
+                        {
+                            name: 'CNC Soustruh ST310'
+                        },
+                        {
+                            name: 'FTU 1250'
+                        }
+                    ]}
                 />
 
                 <div />
