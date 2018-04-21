@@ -4,7 +4,6 @@
 
 .calendar {
     width: calc(100vw - var(--fixedWidth));
-    height: calc(100% - 45px);
     margin-left: 8.57rem;
     overflow-x: scroll;
 }

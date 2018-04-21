@@ -5,7 +5,10 @@
 }
 
 body {
+    width: 100vw;
+    height: 100vh;
     font-size: 14px;
+    overflow: hidden;
     font-family: sans-serif;
 }
 
@@ -13,7 +16,6 @@ body {
     width: 100vw;
     height: 100vh;
     display: grid;
-    overflow: hidden;
     grid-template-rows: auto 500px auto;
 }
 
@@ -22,7 +24,6 @@ body {
     border: 0;
     padding: 10px;
     font-size: 1.2rem;
-    background: none;
 }
 
 .text-align--center {

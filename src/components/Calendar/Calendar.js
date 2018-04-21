@@ -1,3 +1,5 @@
+// @ts-check
+
 import React from 'react';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
@@ -6,19 +8,39 @@ import { createClassName } from '../../helpers';
 import './calendar.css';
 
 const FULL_FORMAT = 'D.M.YYYY dddd';
+const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 
 export class Calendar extends React.Component {
+    static defaultProps = {
+        orders: [],
+        machines: [],
+    };
+
     constructor(props) {
         super(props);
 
         const startOfTheWeek = moment().startOf('week').startOf('day');
 
         this.state = {
+            ordersToRender: [],
             startOfTheWeek: startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
         };
+    }
 
-        console.log(ReactDOM);
+    componentDidMount() {
+        this.renderOrders();
+        ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.renderOrders);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.weekOfTheYear !== this.state.weekOfTheYear) {
+            this.renderOrders();
+        }
+    }
+
+    componentWillUnmount() {
+        ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.renderOrders);
     }
 
     handleWeekMove = (e, move) => {
@@ -65,7 +87,10 @@ export class Calendar extends React.Component {
                 </div>
 
                 {/* TABLE */}
-                <div className="calendar">
+                <div
+                    className="calendar"
+                    ref={(node) => this.calendar = node}
+                >
                     <table className="calendar-table">
                         <thead>
                             <tr>
@@ -77,6 +102,8 @@ export class Calendar extends React.Component {
                             {this.renderTableBody()}
                         </tbody>
                     </table>
+
+                    {this.state.ordersToRender}
                 </div>
             </div>
         );
@@ -85,7 +112,7 @@ export class Calendar extends React.Component {
     renderTableBody = () => {
         const { machines } = this.props;
 
-        return machines.map((machine) => {
+        const body = machines.map((machine) => {
             return <tr
                 key={machine.name}
                 ref={(node) => this[machine.name] = node}
@@ -98,6 +125,8 @@ export class Calendar extends React.Component {
                 {this.renderDaysCell(true)}
             </tr>;
         });
+
+        return body;
     }
 
     renderDaysCell = (empty = false) => {
@@ -158,8 +187,7 @@ export class Calendar extends React.Component {
                 <td
                     key={i}
                     className="calendar-table--hours"
-                    data-date={day.toDate()}
-                    date-time={i}
+                    data-date={day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT)}
                 >
                     {empty ? null : i}
                 </td>;
@@ -168,5 +196,55 @@ export class Calendar extends React.Component {
         }
 
         return hours;
+    }
+
+    renderOrders = () => {
+        const { orders, machines } = this.props;
+
+        const ordersToRender = orders.map((order) => {
+            const { dateFrom, dateTo } = order;
+            const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
+            const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
+
+            const findRow = ReactDOM.findDOMNode(this[order.machine]);
+
+            if (!findRow) {
+                return null;
+            }
+
+            const findStartDateOnRow = findRow.querySelector(`[data-date="${startDate}"]`);
+            const findEndDateOnRow = findRow.querySelector(`[data-date="${endDate}"]`);
+
+            if (!findStartDateOnRow) {
+                return null;
+            }
+
+            const startPosition = findStartDateOnRow.getBoundingClientRect();
+            const endPosition = findEndDateOnRow.getBoundingClientRect();
+
+            const style = {
+                position: 'absolute',
+                backgroundColor: 'red',
+                top: `${startPosition.top}px`,
+                left: `${startPosition.left}px`,
+                height: `${startPosition.height}px`,
+                width: `${endPosition.right - startPosition.left}px`,
+            }
+
+            console.log(startPosition);
+
+            return (
+                <div
+                    onClick={() => console.log(order)}
+                    style={style}
+                >
+                    {order.label}
+                </div>
+            );
+        });
+
+        this.setState({
+            ordersToRender
+        });
     }
 }
