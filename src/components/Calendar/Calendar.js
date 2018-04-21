@@ -132,7 +132,7 @@ export class Calendar extends React.Component {
                                         colSpan={15}
                                         className={className}
                                     >
-                                        {day.format(FULL_FORMAT)}
+                                        <strong>{day.format(FULL_FORMAT)}</strong>
                                     </td>
                                 </tr>
                             }
