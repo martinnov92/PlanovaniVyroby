@@ -1,5 +1,9 @@
+:root {
+    --fixedWidth: 8.57rem;
+}
+
 .calendar {
-    width: calc(100vw - 8.57rem);
+    width: calc(100vw - var(--fixedWidth));
     height: calc(100% - 45px);
     margin-left: 8.57rem;
     overflow-x: scroll;
@@ -10,14 +14,19 @@
     border-collapse: collapse;
 }
 
-.calendar-table tr td {
+.calendar-table tr > td {
     border: 1px solid #000;
+}
+
+.calendar-table--body td,
+.calendar-table--body th {
+    height: 40px;
 }
 
 .calendar-year--week {
     height: 45px;
     font-size: 1.2rem;
-    padding-left: 8.57rem;
+    padding-left: var(--fixedWidth);
 }
 
 .calendar-table--hours {
@@ -29,8 +38,16 @@
 .column-fixed {
     left: 0;
     top: auto;
-    width: 8.57rem;
+    border: 1px solid black;
+    margin-top: 1px;
+    width: var(--fixedWidth);
     position: absolute;
+    display: table;
+}
+
+.column-fixed > p {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .calendar-day--current {
