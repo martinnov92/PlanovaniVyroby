@@ -22,6 +22,7 @@ export class Calendar extends React.Component {
         const startOfTheWeek = moment().startOf('week').startOf('day');
 
         this.state = {
+            scrollLeft: 0,
             ordersToRender: [],
             calendarHolder: null,
             calendarTableWidth: 0,
@@ -32,7 +33,7 @@ export class Calendar extends React.Component {
 
     componentDidMount() {
         this.getDimensions();
-        ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.renderOrders);
+        ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -42,7 +43,7 @@ export class Calendar extends React.Component {
     }
 
     componentWillUnmount() {
-        ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.renderOrders);
+        ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.handleScroll);
     }
 
     getDimensions = () => {
@@ -54,6 +55,12 @@ export class Calendar extends React.Component {
             calendarTableWidth
         }, () => {
             this.renderOrders();
+        });
+    }
+
+    handleScroll = (e) => {
+        this.setState({
+            scrollLeft: e.target.scrollLeft
         });
     }
 
@@ -110,7 +117,7 @@ export class Calendar extends React.Component {
                         <div style={{ height: '35px', border: 0 }} />
                         {
                             machines.map((machine) => {
-                                return <div>
+                                return <div key={machine.name}>
                                     {machine.name}
                                 </div>;
                             })
@@ -134,6 +141,7 @@ export class Calendar extends React.Component {
 
                         <div
                             className="calendar-events--holder"
+                            ref={(node) => this.events = node}
                             style={{
                                 width: `${this.state.calendarTableWidth}px`
                             }}
@@ -218,6 +226,7 @@ export class Calendar extends React.Component {
             const td =
                 <td
                     key={i}
+                    onClick={() => console.log('click', i)}
                     className="calendar-table--hours"
                     data-date={day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT)}
                 >
@@ -252,8 +261,7 @@ export class Calendar extends React.Component {
                 return null;
             }
 
-            const left = e ? e.offsetLeft : 0;
-
+            const { scrollLeft } = this.state;
             const endPosition = findEndDateOnRow.getBoundingClientRect();
             const startPosition = findStartDateOnRow.getBoundingClientRect();
             const calendarHolderClientRect = this.state.calendarHolder.getBoundingClientRect();
@@ -263,9 +271,9 @@ export class Calendar extends React.Component {
                 height: `${startPosition.height}px`,
                 width: `${endPosition.right - startPosition.left}px`,
                 top: `${startPosition.top - calendarHolderClientRect.top}px`,
-                left: `${startPosition.left - calendarHolderClientRect.left - left}px`,
-            }
-
+                left: `${startPosition.left - calendarHolderClientRect.left + scrollLeft}px`,
+            };
+            console.log(startPosition, calendarHolderClientRect, scrollLeft);
             return (
                 <div
                     key={order.id}
