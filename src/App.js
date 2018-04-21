@@ -1,0 +1,22 @@
+import React from 'react';
+import { Calendar } from './components/Calendar';
+
+class App extends React.Component {
+    render() {
+        return (
+            <div className="app">
+                <div />
+
+                <Calendar
+                    workers={[]}
+                    events={[]}
+                    machines={[]}
+                />
+
+                <div />
+            </div>
+        );
+    }
+}
+
+export default App;
