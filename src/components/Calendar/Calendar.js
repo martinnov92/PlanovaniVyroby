@@ -3,17 +3,19 @@
 import React from 'react';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
-import { createClassName } from '../../helpers';
+import {
+    FULL_FORMAT,
+    createClassName,
+    DATA_DATE_FORMAT,
+} from '../../helpers';
 
 import './calendar.css';
-
-const FULL_FORMAT = 'D.M.YYYY dddd';
-const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 
 export class Calendar extends React.Component {
     static defaultProps = {
         orders: [],
         machines: [],
+        onPinOrder: () => {},
         onEventClick: () => {},
         onEventEnter: () => {},
         onEventLeave: () => {}
@@ -125,8 +127,14 @@ export class Calendar extends React.Component {
                         <div style={{ height: '44px', border: 0 }} />
                         {
                             machines.map((machine) => {
-                                return <div key={machine.name}>
-                                    {machine.name}
+                                return <div
+                                    key={machine.name}
+                                    style={{
+                                        borderLeft: `10px solid ${machine.color}`
+                                    }}
+                                    className="calendar--machine"
+                                >
+                                    <p>{machine.name}</p>
                                 </div>;
                             })
                         }
@@ -301,14 +309,35 @@ export class Calendar extends React.Component {
             return (
                 <div
                     key={order.id}
-                    className="calendar--event"
+                    className={
+                        createClassName([
+                            'calendar--event',
+                            order.note ? 'calendar--event-note' : null
+                        ])
+                    }
                     onClick={(e) => this.props.onEventClick(e, order)}
                     onMouseEnter={(e) => this.props.onEventEnter(e, order)}
                     onMouseLeave={(e) => this.props.onEventLeave(e, order)}
                     style={style}
                 >
-                    <p>{order.label}</p>
-                    <p>{order.worker}</p>
+                    {/* <div
+                        className="calendar--pin"
+                    >
+                        <a
+                            onClick={(e) => {
+                                e.preventDefault();
+                                this.props.onPinOrder(e, order);
+                            }}
+                        >
+                            <span />
+                        </a>
+                    </div> */}
+                    <div
+                        // className="calendar--event-text"
+                    >
+                        <p>{order.label}</p>
+                        <p>{order.worker}</p>
+                    </div>
                 </div>
             );
         });

@@ -16,7 +16,7 @@ body {
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-rows: auto 500px auto;
+    grid-template-rows: 100px auto 300px;
 }
 
 .popup-order .input-group-prepend {
@@ -25,6 +25,17 @@ body {
 
 .popup-order .input-group-prepend > span {
     width: 100%;
+}
+
+.orders--detail {
+    display: grid;
+    padding: 10px;
+    grid-template-columns: repeat(3, 1fr);
+
+}
+
+.orders--focused {
+    
 }
 
 /* helpers */

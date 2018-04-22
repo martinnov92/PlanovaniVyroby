@@ -3,7 +3,10 @@ import moment from 'moment';
 import { Popup } from './components/Popup';
 import { Calendar } from './components/Calendar';
 
-const INPUT_DATE_TIME_FORMAT = 'YYYY-MM-DDThh:mm';
+import {
+    DATA_DATE_FORMAT,
+    INPUT_DATE_TIME_FORMAT
+} from './helpers';
 
 const machines = [
     {
@@ -37,23 +40,26 @@ class App extends React.Component {
                 id: 'abc',
                 label: 'Zakázka 1',
                 machine: 'finetech',
-                worker: 'Jiří Pavlík',
+                worker: 'Petr',
+                note: 'Poznámka k zakázce',
                 dateFrom: moment().subtract(5, 'days').hours(10).minutes(0).seconds(0).toDate(),
                 dateTo: moment().subtract(3, 'days').hours(14).minutes(0).seconds(0).toDate(),
             },{
                 id: 'abcd',
                 label: 'Zakázka 2',
                 machine: 'st310',
-                worker: 'Jiří Pavlík',
-                dateFrom: moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(1, 'days').hours(13).minutes(0).seconds(0).toDate(),
+                worker: 'Pavel',
+                note: 'Poznámka k opravě',
+                dateFrom: moment().add(1, 'days').hours(7).minutes(0).seconds(0).toDate(),
+                dateTo: moment().add(2, 'days').hours(13).minutes(0).seconds(0).toDate(),
             },{
                 id: 'abcde',
-                label: 'Zakázka 2',
+                label: 'Zakázka 3',
                 machine: 'ft1250',
-                worker: 'Jiří Pavlík',
-                dateFrom: moment().subtract(3, 'days').hours(9).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(1, 'days').hours(11).minutes(0).seconds(0).toDate(),
+                worker: 'Roman',
+                note: 'Spěchá',
+                dateFrom: moment().add(2, 'days').hours(9).minutes(0).seconds(0).toDate(),
+                dateTo: moment().add(4, 'days').hours(11).minutes(0).seconds(0).toDate(),
             }],
             open: false,
             order: {
@@ -64,19 +70,31 @@ class App extends React.Component {
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
             },
-            focusedOrder: null
+            pinOrders: []
         };
+    }
+
+    handlePinOrder = (e, order) => {
+        const pinOrdersCopy = [...this.state.pinOrders];
+
+        if (pinOrdersCopy.length <= 3) {
+            pinOrdersCopy.push(order);
+
+            this.setState({
+                pinOrders: pinOrdersCopy
+            });
+        }
     }
 
     handleEventEnter = (e, order) => {
         this.setState({
-            focusedOrder: order
+            pinOrders: [order]
         });
     }
 
     handleEventLeave = (e, order) => {
         this.setState({
-            focusedOrder: null
+            pinOrders: []
         });
     }
 
@@ -96,6 +114,7 @@ class App extends React.Component {
                     <Calendar
                         machines={machines}
                         orders={this.state.orders}
+                        onPinOrder={this.handlePinOrder}
                         onEventEnter={this.handleEventEnter}
                         onEventLeave={this.handleEventLeave}
                     /> 
@@ -240,17 +259,53 @@ class App extends React.Component {
                     }
                 </div>
 
-                <div>
-                    {
-                        !this.state.focusedOrder
-                        ? null
-                        : <div>
-                            {JSON.stringify(this.state.focusedOrder)}
-                        </div>
-                    }
+                <div
+                    className="orders--detail"
+                >
+                    {this.renderPinOrders()}
                 </div>
             </div>
         );
+    }
+
+    renderPinOrders = () => {
+        const { pinOrders } = this.state;
+
+        if (pinOrders.length > 0) {
+            return pinOrders.map((order) => {
+                const machine = machines.find((machine) => machine.id === order.machine);
+
+                return <div
+                    key={order.id}
+                    style={{
+                        borderTop: `10px solid ${machine.color}`
+                    }}
+                    className="card"
+                >
+                    <div className="card-body">
+                        <h5 className="card-title">
+                            <strong>{order.label}</strong>
+                        </h5>
+                        <h6 className="card-subtitle mb-2 text-muted">
+                            <strong>{order.worker}</strong>
+                        </h6>
+                        <p className="card-text">
+                            {order.note}
+                        </p>
+                        <p className="card-text">
+                            {machine.name}
+                        </p>
+                        <p className="card-text">
+                            <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
+                            {" - "}
+                            <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
+                        </p>
+                    </div>
+                </div>
+            });
+        }
+
+        return null;
     }
 
     handleSave = () => {

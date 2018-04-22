@@ -12,9 +12,10 @@
     min-width: 150px;
 }
 
-.calendar-column--fixed div {
+.calendar--machine {
     height: 42px;
     display: flex;
+    padding: 10px;
     align-items: center;
     border: 1px solid black;
 }
@@ -75,7 +76,48 @@
 }
 
 .calendar--event {
+    display: flex;
     position: absolute;
+}
+
+.calendar--event-text {
+    margin-left: 10px;
+}
+
+.calendar--event-note:before,
+.calendar--event-note:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.calendar--event-note:before {
+    border-width: 0.5rem;
+    border-right-color: #ccc;
+    border-top-color: #ccc;
+}
+
+.calendar--event-note:after {
+    border-width: 0.5rem;
+    border-right-color: #f00;
+    border-top-color: #f00;
+}
+
+.calendar--pin {
+    padding: 5px;
+}
+
+.calendar--pin span {
+    width: 25px;
+    height: 25px;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url(./push-pin.svg);
 }
 
 .calendar-day--current {
