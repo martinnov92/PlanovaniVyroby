@@ -1,0 +1,36 @@
+.popup {
+    top: 50%;
+    left: 50%;
+    display: grid;
+    grid-template-rows: 45px auto 50px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: white;
+    position: absolute;
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, .1);
+    transform: translate3d(-50%, -50%, 0);
+}
+
+.popup header,
+.popup section,
+.popup footer {
+    padding: 10px;
+}
+
+.popup header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.popup header h4 {
+    flex: 1 1 auto;
+} 
+
+.popup header button {
+    width: 25px;
+}
+
+.popup footer {
+    border-top: 1px solid #ddd;
+}
