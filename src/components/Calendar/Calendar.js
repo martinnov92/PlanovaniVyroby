@@ -164,8 +164,8 @@ export class Calendar extends React.Component {
 
         const body = machines.map((machine) => {
             return <tr
-                key={machine.name}
-                ref={(node) => this[machine.name] = node}
+                key={machine.id}
+                ref={(node) => this[machine.id] = node}
             >
                 {this.renderDaysCell(true)}
             </tr>;
@@ -252,7 +252,7 @@ export class Calendar extends React.Component {
             const { dateFrom, dateTo } = order;
             const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
             const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
-            const machine = machines.find((machine) => machine.name === order.machine);
+            const machine = machines.find((machine) => machine.id === order.machine);
 
             const findRow = ReactDOM.findDOMNode(this[order.machine]);
             if (!findRow) {
