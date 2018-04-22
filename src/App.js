@@ -220,8 +220,8 @@ class App extends React.Component {
                                                 label: '',
                                                 machine: '',
                                                 worker: '',
-                                                dateFrom: moment().hours(7).minutes(0).seconds(0).toDate(),
-                                                dateTo: moment().hours(10).minutes(0).seconds(0).toDate(),
+                                                dateFrom: moment().hours(7).minutes(0).seconds(0).format('YYYY-MM-DDThh:mm'),
+                                                dateTo: moment().hours(10).minutes(0).seconds(0).format('YYYY-MM-DDThh:mm'),
                                             },
                                             open: false
                                         });

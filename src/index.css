@@ -41,7 +41,6 @@ body {
 .popup header {
     display: flex;
     align-items: center;
-    border-radius: 0 0 5px 5px;
     border-bottom: 1px solid #ddd;
 }
 
@@ -54,7 +53,6 @@ body {
 }
 
 .popup footer {
-    border-radius: 5px 5px 0 0;
     border-top: 1px solid #ddd;
 }
 
