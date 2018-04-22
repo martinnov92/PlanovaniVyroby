@@ -255,11 +255,11 @@ export class Calendar extends React.Component {
             const machine = machines.find((machine) => machine.name === order.machine);
 
             const findRow = ReactDOM.findDOMNode(this[order.machine]);
-
             if (!findRow) {
                 return null;
             }
 
+            const rowClientRect = findRow.getBoundingClientRect();
             const findStartDateOnRow = findRow.querySelector(`[data-date="${startDate}"]`);
             const findEndDateOnRow = findRow.querySelector(`[data-date="${endDate}"]`);
 
@@ -267,25 +267,26 @@ export class Calendar extends React.Component {
             let startPosition;
             let endPosition;
 
-            if (!findStartDateOnRow) {
+            if (!findStartDateOnRow && findEndDateOnRow) {
                 startPosition = {
-                    top: 0,
-                    left: 0,
+                    top: rowClientRect.top + 1,
+                    left: rowClientRect.left + 1,
                 };
-            } else {
-                startPosition = findStartDateOnRow.getBoundingClientRect();
-            }
-
-            if (!findEndDateOnRow) {
-                endPosition = {
-                    right: 0
-                };
-            } else {
                 endPosition = findEndDateOnRow.getBoundingClientRect();
+            } else if (findStartDateOnRow && !findEndDateOnRow) {
+                startPosition = findStartDateOnRow.getBoundingClientRect();
+                endPosition = {
+                    top: rowClientRect.top + 1,
+                    right: rowClientRect.right,
+                };
+            } else if (findStartDateOnRow && findEndDateOnRow) {
+                startPosition = findStartDateOnRow.getBoundingClientRect();
+                endPosition = findEndDateOnRow.getBoundingClientRect();
+            } else {
+                return null;
             }
 
             const calendarHolderClientRect = this.state.calendarHolder.getBoundingClientRect();
-
             const style = {
                 backgroundColor: machine.color,
                 height: `${startPosition.height}px`,
