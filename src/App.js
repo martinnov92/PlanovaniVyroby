@@ -26,8 +26,8 @@ class App extends React.Component {
                 label: 'Zakázka 2',
                 machine: 'FTU 1250',
                 worker: 'Jiří Pavlík',
-                dateFrom: moment().subtract(2, 'days').hours(9).minutes(0).seconds(0).toDate(),
-                dateTo: moment().add(1, 'days').hours(11).minutes(0).seconds(0).toDate(),
+                dateFrom: moment().subtract(3, 'days').hours(9).minutes(0).seconds(0).toDate(),
+                dateTo: moment().subtract(1, 'days').hours(11).minutes(0).seconds(0).toDate(),
             }],
             open: false,
             order: {
@@ -47,7 +47,7 @@ class App extends React.Component {
 
                 <div>
                     <button
-                        className=""
+                        className="btn btn-outline-success pull-right mr-2"
                         onClick={() => this.setState({ open: true })}
                     >
                         Přidat zakázku
@@ -79,17 +79,15 @@ class App extends React.Component {
                         !this.state.open
                         ? null
                         : <div
-                            className="popup"
+                            className="popup popup-order"
                         >
                             <header>
-                                <h2
-                                    className="pull-left"
-                                >
+                                <h4>
                                     Přidání zakázky
-                                </h2>
+                                </h4>
 
                                 <button
-                                    className="pull-right"
+                                    className="btn btn-sm"
                                     onClick={() => this.setState({ open: false })}
                                 >
                                     x
@@ -97,105 +95,113 @@ class App extends React.Component {
                             </header>
 
                             <section>
-                                <div>
-                                    <label>
-                                        Název:
-
-                                        <input
-                                            type="text"
-                                            name="label"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    order: {
-                                                        ...this.state.order,
-                                                        id: e.target.value,
-                                                        [e.target.name]: e.target.value
-                                                    }
-                                                });
-                                            }}
-                                            value={this.state.order.label}
-                                        />
-                                    </label>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Název</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="label"
+                                        className="form-control"
+                                        onChange={(e) => {
+                                            this.setState({
+                                                order: {
+                                                    ...this.state.order,
+                                                    id: e.target.value,
+                                                    [e.target.name]: e.target.value
+                                                }
+                                            });
+                                        }}
+                                        value={this.state.order.label}
+                                    />
+                                </div>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Stroj</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="machine"
+                                        className="form-control"
+                                        onChange={(e) => {
+                                            this.setState({
+                                                order: {
+                                                    ...this.state.order,
+                                                    [e.target.name]: e.target.value
+                                                }
+                                            });
+                                        }}
+                                        value={this.state.order.machine}
+                                    />
                                 </div>
 
-                                <div>
-                                    <label>
-                                        Stroj:
-
-                                        <input
-                                            type="text"
-                                            name="machine"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    order: {
-                                                        ...this.state.order,
-                                                        [e.target.name]: e.target.value
-                                                    }
-                                                });
-                                            }}
-                                            value={this.state.order.machine}
-                                        />
-                                    </label>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Obsluha</span>
+                                    </div>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="worker"
+                                        onChange={(e) => {
+                                            this.setState({
+                                                order: {
+                                                    ...this.state.order,
+                                                    [e.target.name]: e.target.value
+                                                }
+                                            });
+                                        }}
+                                        value={this.state.order.worker}
+                                    />
                                 </div>
 
-                                <div>
-                                    <label>
-                                        Obsluha:
-
-                                        <input
-                                            type="text"
-                                            name="worker"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    order: {
-                                                        ...this.state.order,
-                                                        [e.target.name]: e.target.value
-                                                    }
-                                                });
-                                            }}
-                                            value={this.state.order.worker}
-                                        />
-                                    </label>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Od</span>
+                                    </div>
+                                    <input
+                                        className="form-control"
+                                        type="datetime-local"
+                                        name="dateFrom"
+                                        onChange={(e) => {
+                                            this.setState({
+                                                order: {
+                                                    ...this.state.order,
+                                                    [e.target.name]: e.target.value
+                                                }
+                                            });
+                                        }}
+                                        value={this.state.order.dateFrom}
+                                    />
                                 </div>
 
-                                <div>
-                                    <label>
-                                        Od:
-
-                                        <input
-                                            type="datetime-locale"
-                                            name="dateFrom"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    order: {
-                                                        ...this.state.order,
-                                                        [e.target.name]: e.target.value
-                                                    }
-                                                });
-                                            }}
-                                            value={this.state.order.dateFrom}
-                                        />
-                                    </label>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Do</span>
+                                    </div>
+                                    <input
+                                        className="form-control"
+                                        type="datetime-local"
+                                        name="dateTo"
+                                        onChange={(e) => {
+                                            this.setState({
+                                                order: {
+                                                    ...this.state.order,
+                                                    [e.target.name]: e.target.value
+                                                }
+                                            });
+                                        }}
+                                        value={this.state.order.dateTo}
+                                    />
                                 </div>
 
-                                <div>
-                                    <label>
-                                        Do:
-
-                                        <input
-                                            type="datetime-locale"
-                                            name="dateTo"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    order: {
-                                                        ...this.state.order,
-                                                        [e.target.name]: e.target.value
-                                                    }
-                                                });
-                                            }}
-                                            value={this.state.order.dateTo}
-                                        />
-                                    </label>
+                                <div className="input-group">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Poznámka</span>
+                                    </div>
+                                    <textarea
+                                        className="form-control"
+                                    />
                                 </div>
                             </section>
 
@@ -203,6 +209,7 @@ class App extends React.Component {
                                 className="text-align--right"
                             >
                                 <button
+                                    className="btn btn-success btn-sm"
                                     onClick={() => {
                                         const copy = [...this.state.orders];
                                         copy.push(this.state.order);
@@ -220,7 +227,7 @@ class App extends React.Component {
                                         });
                                     }}
                                 >
-                                    Uložit zakázku
+                                    Uložit
                                 </button>
                             </footer>
                         </div>

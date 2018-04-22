@@ -100,7 +100,7 @@ export class Calendar extends React.Component {
                     className="text-align--center calendar-year--week"
                 >
                     <button
-                        className="btn text-weight--bold"
+                        className="btn text-weight--bold btn-outline-success mr-1"
                         onClick={(e) => this.handleWeekMove(e, 'prev')}
                     >
                         {"<"}
@@ -109,7 +109,7 @@ export class Calendar extends React.Component {
                     <strong>{weekOfTheYear}. týden</strong>
 
                     <button
-                        className="btn text-weight--bold"
+                        className="btn text-weight--bold btn-outline-success ml-1"
                         onClick={(e) => this.handleWeekMove(e, 'next')}
                     >
                         {">"}
@@ -119,7 +119,7 @@ export class Calendar extends React.Component {
                 {/* TABLE */}
                 <div className="calendar-wrapper">
                     <div className="calendar-column--fixed">
-                        <div style={{ height: '35px', border: 0 }} />
+                        <div style={{ height: '44px', border: 0 }} />
                         {
                             machines.map((machine) => {
                                 return <div key={machine.name}>
