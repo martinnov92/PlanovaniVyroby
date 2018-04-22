@@ -74,7 +74,7 @@ class App extends React.Component {
                                 color: 'blue'
                             }
                         ]}
-                    />
+                    /> 
 
                     {
                         !this.state.open
