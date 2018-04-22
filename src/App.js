@@ -58,7 +58,7 @@ class App extends React.Component {
             open: false,
             order: {
                 label: '',
-                machine: '',
+                machine: machines[0].id,
                 worker: '',
                 note: '',
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
@@ -121,7 +121,6 @@ class App extends React.Component {
                                         this.setState({
                                             order: {
                                                 ...this.state.order,
-                                                id: e.target.value,
                                                 [e.target.name]: e.target.value
                                             }
                                         });
@@ -256,7 +255,13 @@ class App extends React.Component {
 
     handleSave = () => {
         const copy = [...this.state.orders];
-        copy.push(this.state.order);
+        const order = {
+            ...this.state.order,
+            id: moment().toDate(),
+            dateTo: moment(this.state.order.dateTo).toDate(),
+            dateFrom: moment(this.state.order.dateFrom).toDate(),
+        };
+        copy.push(order);
 
         this.setState({
             orders: copy,
