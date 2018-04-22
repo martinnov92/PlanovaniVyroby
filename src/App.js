@@ -3,6 +3,8 @@ import moment from 'moment';
 import { Popup } from './components/Popup';
 import { Calendar } from './components/Calendar';
 
+const INPUT_DATE_TIME_FORMAT = 'YYYY-MM-DDThh:mm';
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -35,8 +37,8 @@ class App extends React.Component {
                 label: '',
                 machine: '',
                 worker: '',
-                dateFrom: moment().hours(7).minutes(0).seconds(0).format('YYYY-MM-DDThh:mm'),
-                dateTo: moment().hours(10).minutes(0).seconds(0).format('YYYY-MM-DDThh:mm'),
+                dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
+                dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
             }
         };
     }
@@ -212,8 +214,8 @@ class App extends React.Component {
                 label: '',
                 machine: '',
                 worker: '',
-                dateFrom: moment().hours(7).minutes(0).seconds(0).format('YYYY-MM-DDThh:mm'),
-                dateTo: moment().hours(10).minutes(0).seconds(0).format('YYYY-MM-DDThh:mm'),
+                dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
+                dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
             },
             open: false
         });

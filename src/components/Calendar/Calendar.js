@@ -263,13 +263,27 @@ export class Calendar extends React.Component {
             const findStartDateOnRow = findRow.querySelector(`[data-date="${startDate}"]`);
             const findEndDateOnRow = findRow.querySelector(`[data-date="${endDate}"]`);
 
+            const { scrollLeft } = this.state;
+            let startPosition;
+            let endPosition;
+
             if (!findStartDateOnRow) {
-                return null;
+                startPosition = {
+                    top: 0,
+                    left: 0,
+                };
+            } else {
+                startPosition = findStartDateOnRow.getBoundingClientRect();
             }
 
-            const { scrollLeft } = this.state;
-            const endPosition = findEndDateOnRow.getBoundingClientRect();
-            const startPosition = findStartDateOnRow.getBoundingClientRect();
+            if (!findEndDateOnRow) {
+                endPosition = {
+                    right: 0
+                };
+            } else {
+                endPosition = findEndDateOnRow.getBoundingClientRect();
+            }
+
             const calendarHolderClientRect = this.state.calendarHolder.getBoundingClientRect();
 
             const style = {
