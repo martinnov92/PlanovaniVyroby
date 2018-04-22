@@ -63,8 +63,21 @@ class App extends React.Component {
                 note: '',
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
-            }
+            },
+            focusedOrder: null
         };
+    }
+
+    handleEventEnter = (e, order) => {
+        this.setState({
+            focusedOrder: order
+        });
+    }
+
+    handleEventLeave = (e, order) => {
+        this.setState({
+            focusedOrder: null
+        });
     }
 
     render() {
@@ -81,8 +94,10 @@ class App extends React.Component {
                     </button>
 
                     <Calendar
-                        orders={this.state.orders}
                         machines={machines}
+                        orders={this.state.orders}
+                        onEventEnter={this.handleEventEnter}
+                        onEventLeave={this.handleEventLeave}
                     /> 
 
                     {
@@ -226,7 +241,15 @@ class App extends React.Component {
                     }
                 </div>
 
-                <div />
+                <div>
+                    {
+                        !this.state.focusedOrder
+                        ? null
+                        : <div>
+                            {JSON.stringify(this.state.focusedOrder)}
+                        </div>
+                    }
+                </div>
             </div>
         );
     }

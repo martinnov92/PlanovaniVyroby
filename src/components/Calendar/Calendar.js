@@ -14,6 +14,9 @@ export class Calendar extends React.Component {
     static defaultProps = {
         orders: [],
         machines: [],
+        onEventClick: () => {},
+        onEventEnter: () => {},
+        onEventLeave: () => {}
     };
 
     constructor(props) {
@@ -299,7 +302,9 @@ export class Calendar extends React.Component {
                 <div
                     key={order.id}
                     className="calendar--event"
-                    onClick={() => console.log(order)}
+                    onClick={(e) => this.props.onEventClick(e, order)}
+                    onMouseEnter={(e) => this.props.onEventEnter(e, order)}
+                    onMouseLeave={(e) => this.props.onEventLeave(e, order)}
                     style={style}
                 >
                     <p>{order.label}</p>
