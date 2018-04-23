@@ -19,6 +19,10 @@ body {
     grid-template-rows: 100px auto 300px;
 }
 
+.popup-order {
+    top: calc(50% + 150px);
+}
+
 .popup-order .input-group-prepend {
     width: 100px;
 }

@@ -70,8 +70,15 @@ class App extends React.Component {
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
             },
-            pinOrders: []
+            pinOrders: [],
         };
+    }
+
+    handleEventClick = (e, order) => {
+        this.setState({
+            order: order,
+            open: true,
+        });
     }
 
     handlePinOrder = (e, order) => {
@@ -115,6 +122,7 @@ class App extends React.Component {
                         machines={machines}
                         orders={this.state.orders}
                         onPinOrder={this.handlePinOrder}
+                        onEventClick={this.handleEventClick}
                         onEventEnter={this.handleEventEnter}
                         onEventLeave={this.handleEventLeave}
                     /> 
@@ -126,7 +134,7 @@ class App extends React.Component {
                             className="popup-order"
                             title="Přidání zakázky"
                             onSave={this.handleSave}
-                            onClose={() => this.setState({ open: false })}
+                            onClose={this.handleClose}
                         >
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
@@ -204,7 +212,6 @@ class App extends React.Component {
                                     type="datetime-local"
                                     name="dateFrom"
                                     required={true}
-                                    max={moment(this.state.order.dateFrom).hours(20).format(INPUT_DATE_TIME_FORMAT)}
                                     onChange={(e) => {
                                         this.setState({
                                             order: {
@@ -335,6 +342,12 @@ class App extends React.Component {
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
             }
+        });
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false,
         });
     }
 }

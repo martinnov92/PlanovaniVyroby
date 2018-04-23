@@ -17,7 +17,7 @@ export class Popup extends React.Component {
                     </h4>
 
                     <button
-                        className="btn btn-sm"
+                        className="btn btn-outline-secondary btn-sm"
                         onClick={this.props.onClose}
                     >
                         x

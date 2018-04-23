@@ -1,0 +1,38 @@
+.context {
+    width: 200px;
+    height: auto;
+    background-color: white;
+    display: block;
+    position: fixed;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 2px #343434;
+}
+
+.context > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context > ul li {
+    padding: 5px 5px 5px 30px;
+    border-bottom: 1px solid #ccc;
+}
+
+.context > ul li:last-child {
+    border-bottom: 0;
+}
+
+.context > ul li a {
+    display: block;
+    color: #343434;
+    text-decoration: none;
+}
+
+.context > ul li:hover a {
+    color: #000;
+}
+
+.context > ul li:hover {
+    background-color: #eeeff0;
+}
