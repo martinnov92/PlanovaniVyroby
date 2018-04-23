@@ -407,6 +407,7 @@ export class Calendar extends React.Component {
                     }
                     style={style}
                     draggable={true}
+                    onDragEnd={this.handleDragEnd}
                     onDrag={(e) => this.handleDrag(e, event)}
                     onClick={(e) => this.props.onEventClick(e, event)}
                     onDragStart={(e) => this.handleDragStart(e, event)}
