@@ -112,6 +112,16 @@ class App extends React.Component {
         });
     }
 
+    handleEventDrop = (order) => {
+        const ordersCopy = [...this.state.orders];
+        const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+        ordersCopy.splice(findIndex, 1, order);
+
+        this.setState({
+            orders: ordersCopy,
+        });
+    }
+
     handleSave = () => {
         const copy = [...this.state.orders];
         const order = {
@@ -175,6 +185,7 @@ class App extends React.Component {
                     <Calendar
                         machines={machines}
                         events={this.state.orders}
+                        onEventDrop={this.handleEventDrop}
                         onEventClick={this.handleEventClick}
                         onEventEnter={this.handleEventEnter}
                         onEventLeave={this.handleEventLeave}

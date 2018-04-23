@@ -16,6 +16,7 @@ export class Calendar extends React.Component {
     static defaultProps = {
         events: [],
         machines: [],
+        onEventDrop: () => {},
         onEventClick: () => {},
         onEventEnter: () => {},
         onEventLeave: () => {}
@@ -137,10 +138,28 @@ export class Calendar extends React.Component {
             draggingEvent: null,
         });
 
+        // get event and get new date from drop
         const parsedEvent = JSON.parse(e.dataTransfer.getData('event'));
-        const dropOnDate = moment(e.target.dataset.date, FULL_FORMAT).toDate();
+        const dateOnDrop = moment(e.target.dataset.date, DATA_DATE_FORMAT);
 
-        console.log('drop', dropOnDate, parsedEvent);
+        // get differenc in hours between dateFrom to dateTo from original event
+        const momentDateTo = moment(parsedEvent.dateTo);
+        const momentDateFrom = moment(parsedEvent.dateFrom);
+        const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
+        const sign = Math.sign(hoursDifference);
+
+        // set new dateFrom and dateTo on object and pass it to parent component
+        const dateFrom = dateOnDrop.toDate();
+        const dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
+
+        const newEvent = {
+            ...parsedEvent,
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+        };
+
+        this.props.onEventDrop(newEvent);
+        console.log('drop', dateOnDrop, parsedEvent, hoursDifference, newEvent);
     }
 
     render() {
