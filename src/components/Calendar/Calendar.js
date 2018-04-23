@@ -1,6 +1,7 @@
 // @ts-check
 
 import React from 'react';
+import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
 import {
@@ -26,8 +27,8 @@ export class Calendar extends React.Component {
 
         const startOfTheWeek = moment().startOf('week').startOf('day');
 
+        this.scrollLeft = 0;
         this.state = {
-            scrollLeft: 0,
             ordersToRender: [],
             calendarHolder: null,
             calendarTableWidth: 0,
@@ -44,9 +45,10 @@ export class Calendar extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        console.log(isEqual(this.props.orders, prevProps.orders));
         if (
             prevState.weekOfTheYear !== this.state.weekOfTheYear ||
-            this.props.orders.length !== prevProps.orders.length
+            isEqual(this.props.orders, prevProps.orders) === false
         ) {
             this.renderOrders();
         }
@@ -69,9 +71,7 @@ export class Calendar extends React.Component {
     }
 
     handleScroll = (e) => {
-        this.setState({
-            scrollLeft: e.target.scrollLeft
-        });
+        this.scrollLeft = e.target.scrollLeft;
     }
 
     handleWeekMove = (e, move) => {
@@ -274,7 +274,7 @@ export class Calendar extends React.Component {
             const findStartDateOnRow = findRow.querySelector(`[data-date="${startDate}"]`);
             const findEndDateOnRow = findRow.querySelector(`[data-date="${endDate}"]`);
 
-            const { scrollLeft } = this.state;
+            const { scrollLeft } = this;
             let startPosition;
             let endPosition;
 
@@ -294,6 +294,7 @@ export class Calendar extends React.Component {
                 startPosition = findStartDateOnRow.getBoundingClientRect();
                 endPosition = findEndDateOnRow.getBoundingClientRect();
             } else {
+                // todo: kontrola objednávek přes více týdnů
                 return null;
             }
 

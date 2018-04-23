@@ -63,6 +63,7 @@ class App extends React.Component {
             }],
             open: false,
             order: {
+                id: null,
                 label: '',
                 machine: machines[0].id,
                 worker: '',
@@ -72,13 +73,6 @@ class App extends React.Component {
             },
             pinOrders: [],
         };
-    }
-
-    handleEventClick = (e, order) => {
-        this.setState({
-            order: order,
-            open: true,
-        });
     }
 
     handlePinOrder = (e, order) => {
@@ -93,6 +87,19 @@ class App extends React.Component {
         }
     }
 
+    handleEventClick = (e, order) => {
+        const copyOrder = {
+            ...order,
+            dateFrom: moment(order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
+            dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
+        };
+
+        this.setState({
+            order: copyOrder,
+            open: true,
+        });
+    }
+
     handleEventEnter = (e, order) => {
         this.setState({
             pinOrders: [order]
@@ -103,6 +110,36 @@ class App extends React.Component {
         this.setState({
             pinOrders: []
         });
+    }
+
+    handleSave = () => {
+        const copy = [...this.state.orders];
+        const order = {
+            ...this.state.order,
+            dateTo: moment(this.state.order.dateTo).toDate(),
+            dateFrom: moment(this.state.order.dateFrom).toDate(),
+        };
+        
+        if (!this.state.order.id) {
+            order.id = moment().toDate();
+            copy.push(order);
+        } else {
+            const findIndex = copy.findIndex((o) => o.id === order.id);
+            copy.splice(findIndex, 1, order);
+        }
+
+        this.setState({
+            orders: copy,
+            open: false
+        });
+        this.resetOrderState();
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false,
+        });
+        this.resetOrderState();
     }
 
     render() {
@@ -315,23 +352,6 @@ class App extends React.Component {
         return null;
     }
 
-    handleSave = () => {
-        const copy = [...this.state.orders];
-        const order = {
-            ...this.state.order,
-            id: moment().toDate(),
-            dateTo: moment(this.state.order.dateTo).toDate(),
-            dateFrom: moment(this.state.order.dateFrom).toDate(),
-        };
-        copy.push(order);
-
-        this.setState({
-            orders: copy,
-            open: false
-        });
-        this.resetOrderState();
-    }
-
     resetOrderState = () => {
         this.setState({
             order: {
@@ -342,12 +362,6 @@ class App extends React.Component {
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
             }
-        });
-    }
-
-    handleClose = () => {
-        this.setState({
-            open: false,
         });
     }
 }
