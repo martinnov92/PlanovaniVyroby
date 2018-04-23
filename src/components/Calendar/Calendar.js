@@ -159,7 +159,6 @@ export class Calendar extends React.Component {
         };
 
         this.props.onEventDrop(newEvent);
-        console.log('drop', dateOnDrop, parsedEvent, hoursDifference, newEvent);
     }
 
     render() {
