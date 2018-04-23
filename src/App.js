@@ -146,8 +146,10 @@ class App extends React.Component {
 
         orders.splice(findIndex, 1);
         this.setState({
-            orders: orders
+            orders: orders,
+            open: false,
         });
+        this.resetOrderState();
     };
 
     handleClose = () => {
