@@ -70,8 +70,6 @@
 .calendar-events--holder {
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
     position: absolute;
 }
 
@@ -118,6 +116,10 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-image: url(./push-pin.svg);
+}
+
+.calendar--event-dragging {
+    display: none;
 }
 
 .calendar-day--current {

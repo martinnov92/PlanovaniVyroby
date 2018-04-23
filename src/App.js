@@ -174,8 +174,7 @@ class App extends React.Component {
 
                     <Calendar
                         machines={machines}
-                        orders={this.state.orders}
-                        onPinOrder={this.handlePinOrder}
+                        events={this.state.orders}
                         onEventClick={this.handleEventClick}
                         onEventEnter={this.handleEventEnter}
                         onEventLeave={this.handleEventLeave}

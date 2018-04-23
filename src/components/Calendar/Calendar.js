@@ -14,9 +14,8 @@ import './calendar.css';
 
 export class Calendar extends React.Component {
     static defaultProps = {
-        orders: [],
+        events: [],
         machines: [],
-        onPinOrder: () => {},
         onEventClick: () => {},
         onEventEnter: () => {},
         onEventLeave: () => {}
@@ -29,7 +28,8 @@ export class Calendar extends React.Component {
 
         this.scrollLeft = 0;
         this.state = {
-            ordersToRender: [],
+            eventsToRender: [],
+            draggingEvent: null,
             calendarHolder: null,
             calendarTableWidth: 0,
             startOfTheWeek: startOfTheWeek,
@@ -41,16 +41,17 @@ export class Calendar extends React.Component {
         // todo: zafocusovat aktuální den + vyřešit špatný zobrazení zakázek
         // ReactDOM.findDOMNode(this.currentDate).scrollIntoView();
         this.getDimensions();
+        // document.addEventListener('drop', this.o)
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log(isEqual(this.props.orders, prevProps.orders));
         if (
+            prevState.draggingEvent !== this.state.draggingEvent ||
             prevState.weekOfTheYear !== this.state.weekOfTheYear ||
-            isEqual(this.props.orders, prevProps.orders) === false
+            isEqual(this.props.events, prevProps.events) === false
         ) {
-            this.renderOrders();
+            this.renderevents();
         }
     }
 
@@ -66,7 +67,7 @@ export class Calendar extends React.Component {
             calendarHolder,
             calendarTableWidth
         }, () => {
-            this.renderOrders();
+            this.renderevents();
         });
     }
 
@@ -87,6 +88,59 @@ export class Calendar extends React.Component {
             startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
         });
+    }
+
+    handleDragStart = (e, event) => {
+        console.log('drag start', e, event);
+
+        setTimeout(() => {
+            this.setState({
+                draggingEvent: event
+            });
+        }, 0);
+
+        const stringifyEvent = JSON.stringify(event);
+        e.dataTransfer.setData('event', stringifyEvent);
+    }
+
+    handleDrag = (e, event) => {
+        console.log('handle');
+    }
+
+    handleDragEnter = (e) => {
+        e.preventDefault();
+        console.log('enter');
+    }
+
+    handleDragOver = (e) => {
+        e.preventDefault();
+        console.log('over');
+    }
+
+    handleDragLeave = (e) => {
+        e.preventDefault();
+        console.log('leave');
+    }
+
+    handleDragEnd = (e) => {
+        e.preventDefault();
+
+        this.setState({
+            draggingEvent: null,
+        });
+    }
+
+    handleDrop = (e) => {
+        e.preventDefault();
+
+        this.setState({
+            draggingEvent: null,
+        });
+
+        const parsedEvent = JSON.parse(e.dataTransfer.getData('event'));
+        const dropOnDate = moment(e.target.dataset.date, FULL_FORMAT).toDate();
+
+        console.log('drop', dropOnDate, parsedEvent);
     }
 
     render() {
@@ -162,7 +216,7 @@ export class Calendar extends React.Component {
                                 width: `${this.state.calendarTableWidth}px`
                             }}
                         >
-                            {this.state.ordersToRender}
+                            {this.state.eventsToRender}
                         </div>
                     </div>
                 </div>
@@ -237,15 +291,30 @@ export class Calendar extends React.Component {
 
     renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
+        const { draggingEvent } = this.state;
 
         // from 7:00 to 20:00
         for (let i = 7; i <= 20; i++) {
+            const emptyTdAttrs = {};
+            const date = day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT);
+
+            if (empty) {
+                emptyTdAttrs.onDrop = this.handleDrop;
+                emptyTdAttrs.onDragOver = this.handleDragOver;
+                emptyTdAttrs.onDragEnter = this.handleDragEnter;
+                emptyTdAttrs.onDragLeave = this.handleDragLeave;
+            }
+
             const td =
                 <td
                     key={i}
-                    onClick={() => console.log('click', i)}
+                    style={{
+                        zIndex: draggingEvent ? 1 : 'initial',
+                    }}
+                    data-date={date}
                     className="calendar-table--hours"
-                    data-date={day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT)}
+                    onClick={() => console.log('click', i)}
+                    {...emptyTdAttrs}
                 >
                     {empty ? null : i}
                 </td>;
@@ -256,16 +325,17 @@ export class Calendar extends React.Component {
         return hours;
     }
 
-    renderOrders = (e) => {
-        const { orders, machines } = this.props;
+    renderevents = (e) => {
+        const { draggingEvent } = this.state;
+        const { events, machines } = this.props;
 
-        const ordersToRender = orders.map((order) => {
-            const { dateFrom, dateTo } = order;
+        const eventsToRender = events.map((event) => {
+            const { dateFrom, dateTo } = event;
             const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
             const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
-            const machine = machines.find((machine) => machine.id === order.machine);
+            const machine = machines.find((machine) => machine.id === event.machine);
 
-            const findRow = ReactDOM.findDOMNode(this[order.machine]);
+            const findRow = ReactDOM.findDOMNode(this[event.machine]);
             if (!findRow) {
                 return null;
             }
@@ -299,7 +369,7 @@ export class Calendar extends React.Component {
             }
 
             const calendarHolderClientRect = this.state.calendarHolder.getBoundingClientRect();
-            const style = {
+            let style = {
                 backgroundColor: machine.color,
                 height: `${startPosition.height}px`,
                 width: `${endPosition.right - startPosition.left}px`,
@@ -309,17 +379,21 @@ export class Calendar extends React.Component {
 
             return (
                 <div
-                    key={order.id}
+                    key={event.id}
                     className={
                         createClassName([
                             'calendar--event',
-                            order.note ? 'calendar--event-note' : null
+                            event.note ? 'calendar--event-note' : null,
+                            draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
                         ])
                     }
-                    onClick={(e) => this.props.onEventClick(e, order)}
-                    onMouseEnter={(e) => this.props.onEventEnter(e, order)}
-                    onMouseLeave={(e) => this.props.onEventLeave(e, order)}
                     style={style}
+                    draggable={true}
+                    onDrag={(e) => this.handleDrag(e, event)}
+                    onClick={(e) => this.props.onEventClick(e, event)}
+                    onDragStart={(e) => this.handleDragStart(e, event)}
+                    onMouseEnter={(e) => this.props.onEventEnter(e, event)}
+                    onMouseLeave={(e) => this.props.onEventLeave(e, event)}
                 >
                     {/* <div
                         className="calendar--pin"
@@ -336,15 +410,15 @@ export class Calendar extends React.Component {
                     <div
                         // className="calendar--event-text"
                     >
-                        <p>{order.label}</p>
-                        <p>{order.worker}</p>
+                        <p>{event.label}</p>
+                        <p>{event.worker}</p>
                     </div>
                 </div>
             );
         });
 
         this.setState({
-            ordersToRender
+            eventsToRender
         });
     }
 }
