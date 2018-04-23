@@ -320,15 +320,21 @@ class App extends React.Component {
 
         this.setState({
             orders: copy,
+            open: false
+        });
+        this.resetOrderState();
+    }
+
+    resetOrderState = () => {
+        this.setState({
             order: {
                 label: '',
-                machine: '',
+                machine: machines[0].id,
                 worker: '',
                 note: '',
                 dateFrom: moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT),
-            },
-            open: false
+            }
         });
     }
 }
