@@ -4,6 +4,10 @@ import { createClassName } from '../../helpers';
 import './popup.css';
 
 export class Popup extends React.Component {
+    static defaultProps = {
+        footerButtons: () => {},
+    };
+
     render() {
         return (
             <div
@@ -31,12 +35,7 @@ export class Popup extends React.Component {
                 <footer
                     className="text-align--right"
                 >
-                    <button
-                        className="btn btn-success btn-sm"
-                        onClick={this.props.onSave}
-                    >
-                        Uložit
-                    </button>
+                    {this.props.footerButtons()}
                 </footer>
             </div>
         );

@@ -135,6 +135,21 @@ class App extends React.Component {
         this.resetOrderState();
     }
 
+    handleDelete = () => {
+        const { order } = this.state;
+        const orders = [...this.state.orders];
+        const findIndex = orders.findIndex((o) => o.id === order.id);
+
+        if (findIndex < 0) {
+            return;
+        }
+
+        orders.splice(findIndex, 1);
+        this.setState({
+            orders: orders
+        });
+    };
+
     handleClose = () => {
         this.setState({
             open: false,
@@ -170,7 +185,27 @@ class App extends React.Component {
                         : <Popup
                             className="popup-order"
                             title="Přidání zakázky"
-                            onSave={this.handleSave}
+                            footerButtons={() => {
+                                return <React.Fragment>
+                                    {
+                                        this.state.order.id
+                                        ? <button
+                                            className="btn btn-sm btn-danger"
+                                            onClick={this.handleDelete}
+                                        >
+                                            Smazat
+                                        </button>
+                                        : null
+                                    }
+                                    
+                                    <button
+                                        className="btn btn-sm btn-success ml-2"
+                                        onClick={this.handleSave}
+                                    >
+                                        Uložit
+                                    </button>
+                                </React.Fragment>
+                            }}
                             onClose={this.handleClose}
                         >
                             <div className="input-group mb-3">
