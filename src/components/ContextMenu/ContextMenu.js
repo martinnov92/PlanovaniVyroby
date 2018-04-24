@@ -27,12 +27,12 @@ export class ContextMenu extends React.Component {
         
         const root = ReactDOM.findDOMNode(this.div);
         const context = ReactDOM.findDOMNode(this.context);
-        const isInRow = (!root.contains(e.target) || root.contains(e.target));
+        const isInRoot = (!root.contains(e.target) || root.contains(e.target));
         const isInContext = !context.contains(e.target);
         
-        if (isInRow && isInContext) {
+        if (isInRoot && isInContext) {
             this.setState({
-            open: false
+                open: false
             });
         } 
     }
@@ -43,11 +43,11 @@ export class ContextMenu extends React.Component {
         }
     
         const root = ReactDOM.findDOMNode(this.div);
-        const isInRow = !root.contains(e.target);
-    
-        if (isInRow) {
+        const isInRoot = !root.contains(e.target);
+
+        if (isInRoot) {
             this.setState({
-            open: false
+                open: false
             });
         }
     }
@@ -60,6 +60,14 @@ export class ContextMenu extends React.Component {
             top: e.nativeEvent.clientY,
             left: e.nativeEvent.clientX,
         });
+    }
+
+    handleButtonClick = (e, button) => {
+        this.setState({
+            open: false,
+        });
+
+        return button.onClick(...arguments);
     }
 
     render() {
@@ -84,7 +92,9 @@ export class ContextMenu extends React.Component {
                         this.props.buttons.length > 0 &&
                         this.props.buttons.map((button) => {
                             return <li key={button.label}>
-                                <button onClick={button.onClick}>
+                                <button
+                                    onClick={(e) => this.handleButtonClick(e, button)}
+                                >
                                     {button.label}
                                 </button>
                             </li>;

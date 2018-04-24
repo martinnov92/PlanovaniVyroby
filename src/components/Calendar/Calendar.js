@@ -1,9 +1,10 @@
 // @ts-check
 
 import React from 'react';
-import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
+import isEqual from 'lodash/isEqual';
+import { ContextMenu } from '../ContextMenu';
 import {
     FULL_FORMAT,
     createClassName,
@@ -400,33 +401,42 @@ export class Calendar extends React.Component {
             };
 
             return (
-                <div
+                <ContextMenu
                     key={event.id}
-                    className={
-                        createClassName([
-                            'calendar--event',
-                            event.note ? 'calendar--event-note' : null,
-                            draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
-                        ])
-                    }
-                    style={style}
-                    draggable={true}
-                    onDragEnd={this.handleDragEnd}
-                    onDrag={(e) => this.handleDrag(e, event)}
-                    onClick={(e) => this.props.onEventClick(e, event)}
-                    onDragStart={(e) => this.handleDragStart(e, event)}
-                    onMouseEnter={(e) => this.props.onEventEnter(e, event)}
-                    onMouseLeave={(e) => this.props.onEventLeave(e, event)}
+                    buttons={[
+                        {
+                            label: 'Upravit',
+                            onClick: () => this.props.onEventClick(e, event),
+                        }
+                    ]}
                 >
-                    <div>
-                        <p>
-                            <strong>
-                                {event.label}
-                            </strong>
-                        </p>
-                        <p>{event.worker}</p>
+                    <div
+                        className={
+                            createClassName([
+                                'calendar--event',
+                                event.note ? 'calendar--event-note' : null,
+                                draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
+                            ])
+                        }
+                        style={style}
+                        draggable={true}
+                        onDragEnd={this.handleDragEnd}
+                        onDrag={(e) => this.handleDrag(e, event)}
+                        onClick={(e) => console.log('zaktivuj element pro resize')}
+                        onDragStart={(e) => this.handleDragStart(e, event)}
+                        onMouseEnter={(e) => this.props.onEventEnter(e, event)}
+                        onMouseLeave={(e) => this.props.onEventLeave(e, event)}
+                    >
+                        <div>
+                            <p>
+                                <strong>
+                                    {event.label}
+                                </strong>
+                            </p>
+                            <p>{event.worker}</p>
+                        </div>
                     </div>
-                </div>
+                </ContextMenu>
             );
         });
 

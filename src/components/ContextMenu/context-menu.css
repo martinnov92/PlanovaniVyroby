@@ -6,6 +6,7 @@
     position: fixed;
     border: 1px solid #ccc;
     box-shadow: 2px 2px 2px #343434;
+    z-index: 10;
 }
 
 .context > ul {
@@ -15,7 +16,7 @@
 }
 
 .context > ul li {
-    padding: 5px 5px 5px 30px;
+    padding: 5px;
     border-bottom: 1px solid #ccc;
 }
 
@@ -23,9 +24,14 @@
     border-bottom: 0;
 }
 
-.context > ul li a {
+.context > ul li > button {
+    border: 0;
+    width: 100%;
+    outline: none;
     display: block;
     color: #343434;
+    background: none;
+    text-align: left;
     text-decoration: none;
 }
 
