@@ -53,7 +53,7 @@ export class Calendar extends React.Component {
             prevState.weekOfTheYear !== this.state.weekOfTheYear ||
             isEqual(this.props.events, prevProps.events) === false
         ) {
-            this.renderevents();
+            this.renderEvents();
         }
     }
 
@@ -69,7 +69,7 @@ export class Calendar extends React.Component {
             calendarHolder,
             calendarTableWidth
         }, () => {
-            this.renderevents();
+            this.renderEvents();
         });
     }
 
@@ -347,7 +347,7 @@ export class Calendar extends React.Component {
         return hours;
     }
 
-    renderevents = (e) => {
+    renderEvents = (e) => {
         const { draggingEvent } = this.state;
         const { events, machines } = this.props;
 
@@ -386,7 +386,7 @@ export class Calendar extends React.Component {
                 startPosition = findStartDateOnRow.getBoundingClientRect();
                 endPosition = findEndDateOnRow.getBoundingClientRect();
             } else {
-                // todo: kontrola objednávek přes více týdnů
+                // TODO: kontrola objednávek přes více týdnů
                 return null;
             }
 
@@ -418,22 +418,12 @@ export class Calendar extends React.Component {
                     onMouseEnter={(e) => this.props.onEventEnter(e, event)}
                     onMouseLeave={(e) => this.props.onEventLeave(e, event)}
                 >
-                    {/* <div
-                        className="calendar--pin"
-                    >
-                        <a
-                            onClick={(e) => {
-                                e.preventDefault();
-                                this.props.onPinOrder(e, order);
-                            }}
-                        >
-                            <span />
-                        </a>
-                    </div> */}
-                    <div
-                        // className="calendar--event-text"
-                    >
-                        <p>{event.label}</p>
+                    <div>
+                        <p>
+                            <strong>
+                                {event.label}
+                            </strong>
+                        </p>
                         <p>{event.worker}</p>
                     </div>
                 </div>

@@ -1,0 +1,31 @@
+.pd-drag,
+.pd-drag__drag-element {
+    width: auto;
+    height: auto;
+}
+
+.pd-drag {
+    display: inline-flex;
+    flex-direction: column;
+    position: relative;
+    overflow: visible;
+}
+
+.pd-drag .pd-drag__drag-element {
+    cursor: move;
+}
+
+.pd-drag.floating {
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+.pd-drag__show > .pd-drag__drag-element {
+    opacity: 0;
+    transition: opacity ease-in-out 300ms;
+}
+
+.pd-drag__show:hover > .pd-drag__drag-element {
+    opacity: 1;
+}
