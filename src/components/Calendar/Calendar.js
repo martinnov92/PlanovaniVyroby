@@ -32,6 +32,7 @@ export class Calendar extends React.Component {
             eventsToRender: [],
             draggingEvent: null,
             calendarHolder: null,
+            dragActiveCell: null,
             calendarTableWidth: 0,
             startOfTheWeek: startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
@@ -92,8 +93,6 @@ export class Calendar extends React.Component {
     }
 
     handleDragStart = (e, event) => {
-        console.log('drag start', e, event);
-
         setTimeout(() => {
             this.setState({
                 draggingEvent: event
@@ -105,27 +104,30 @@ export class Calendar extends React.Component {
     }
 
     handleDrag = (e, event) => {
-        console.log('handle');
+        // console.log('handle');
     }
 
     handleDragEnter = (e) => {
-        e.preventDefault();
-        console.log('enter');
+        const date = e.target.dataset && e.target.dataset.date ? e.target.dataset.date : null;
+
+        // this.setState({
+        //     dragActiveCell: date,
+        // });
     }
 
     handleDragOver = (e) => {
         e.preventDefault();
-        console.log('over');
+        // console.log('over');
     }
 
     handleDragLeave = (e) => {
-        e.preventDefault();
+        // this.setState({
+        //     dragActiveCell: null,
+        // });
         console.log('leave');
     }
 
     handleDragEnd = (e) => {
-        e.preventDefault();
-
         this.setState({
             draggingEvent: null,
         });
@@ -309,7 +311,9 @@ export class Calendar extends React.Component {
 
     renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
-        const { draggingEvent } = this.state;
+        const {
+            dragActiveCell
+        } = this.state;
 
         // from 7:00 to 20:00
         for (let i = 7; i <= 20; i++) {
@@ -326,11 +330,11 @@ export class Calendar extends React.Component {
             const td =
                 <td
                     key={i}
-                    style={{
-                        zIndex: draggingEvent ? 1 : 'initial',
-                    }}
                     data-date={date}
-                    className="calendar-table--hours"
+                    className={createClassName([
+                        'calendar-table--hours',
+                        dragActiveCell === date ? 'calendar--event-dragging--over' : null,
+                    ])}
                     onClick={() => console.log('click', i)}
                     {...emptyTdAttrs}
                 >
