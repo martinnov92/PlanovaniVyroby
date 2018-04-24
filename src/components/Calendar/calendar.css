@@ -52,6 +52,10 @@
     text-align: center;
 }
 
+.calendar-table--empty-hours {
+    min-width: 10px;
+}
+
 .column-fixed {
     left: 0;
     top: auto;

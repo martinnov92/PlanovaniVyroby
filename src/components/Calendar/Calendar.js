@@ -179,21 +179,26 @@ export class Calendar extends React.Component {
                 <div
                     className="text-align--center calendar-year--week"
                 >
-                    <button
-                        className="btn text-weight--bold btn-outline-success mr-1"
-                        onClick={(e) => this.handleWeekMove(e, 'prev')}
+                    <div
+                        className="btn-group"
+                        role="group"
                     >
-                        {"<"}
-                    </button>
+                        <button
+                            className="btn text-weight--bold btn-success"
+                            onClick={(e) => this.handleWeekMove(e, 'prev')}
+                        >
+                            {"<"}
+                        </button>
 
-                    <strong>{weekOfTheYear}. týden</strong>
+                        <button class="btn btn-secondary">{weekOfTheYear}. týden</button>
 
-                    <button
-                        className="btn text-weight--bold btn-outline-success ml-1"
-                        onClick={(e) => this.handleWeekMove(e, 'next')}
-                    >
-                        {">"}
-                    </button>
+                        <button
+                            className="btn text-weight--bold btn-success"
+                            onClick={(e) => this.handleWeekMove(e, 'next')}
+                        >
+                            {">"}
+                        </button>
+                    </div>
                 </div>
 
                 {/* TABLE */}
@@ -289,7 +294,7 @@ export class Calendar extends React.Component {
                                 ? null
                                 : <tr>
                                     <td
-                                        colSpan={14}
+                                        colSpan={28}
                                         className={className}
                                         ref={current ? (node) => this.currentDate = node : null}
                                     >
@@ -319,7 +324,8 @@ export class Calendar extends React.Component {
         // from 7:00 to 20:00
         for (let i = 7; i <= 20; i++) {
             const emptyTdAttrs = {};
-            const date = day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT);
+            const fullHour = day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT);
+            const hourAndHalf = day.hours(i).minutes(30).seconds(0).format(DATA_DATE_FORMAT);
 
             if (empty) {
                 emptyTdAttrs.onDrop = this.handleDrop;
@@ -328,19 +334,48 @@ export class Calendar extends React.Component {
                 emptyTdAttrs.onDragLeave = this.handleDragLeave;
             }
 
-            const td =
+            let td =
                 <td
                     key={i}
-                    data-date={date}
+                    colSpan={2}
                     className={createClassName([
                         'calendar-table--hours',
-                        dragActiveCell === date ? 'calendar--event-dragging--over' : null,
                     ])}
-                    onClick={() => console.log('click', i)}
-                    {...emptyTdAttrs}
                 >
-                    {empty ? null : i}
+                    {i}
                 </td>;
+
+            if (empty) {
+                td =
+                    <React.Fragment
+                        key={i}
+                    >
+                        <td
+                            data-date={fullHour}
+                            style={{
+                                borderRight: 0,
+                            }}
+                            className={createClassName([
+                                'calendar-table--empty-hours',
+                                dragActiveCell === fullHour ? 'calendar--event-dragging--over' : null,
+                            ])}
+                            onClick={() => console.log('click', i)}
+                            {...emptyTdAttrs}
+                        />
+                        <td
+                            data-date={hourAndHalf}
+                            style={{
+                                borderLeft: 0,
+                            }}
+                            className={createClassName([
+                                'calendar-table--empty-hours',
+                                dragActiveCell === hourAndHalf ? 'calendar--event-dragging--over' : null,
+                            ])}
+                            onClick={() => console.log('click', i)}
+                            {...emptyTdAttrs}
+                        />
+                    </React.Fragment>;
+            }
 
             hours.push(td);
         }
