@@ -1,5 +1,6 @@
 # TODO:
 
+    - možnost nastavení času po půl hodině
     - kontrola vykreslení objednávek, které se táhnou přes více týdnů
     - možnost zvětšení eventy
         - bude fungovat tak, že kliknu - eventa se označí, budu mít možnost ji rovnou přenést a nebo ji zvětšit/zmenšit
