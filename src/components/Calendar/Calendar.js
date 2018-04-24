@@ -30,10 +30,12 @@ export class Calendar extends React.Component {
 
         this.scrollLeft = 0;
         this.state = {
+            lockScroll: false,
             eventsToRender: [],
             draggingEvent: null,
             calendarHolder: null,
             dragActiveCell: null,
+            selectedEvent: null,
             calendarTableWidth: 0,
             startOfTheWeek: startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
@@ -49,11 +51,12 @@ export class Calendar extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (
-            prevState.draggingEvent !== this.state.draggingEvent ||
-            prevState.weekOfTheYear !== this.state.weekOfTheYear ||
-            isEqual(this.props.events, prevProps.events) === false
-        ) {
+        const dragging = prevState.draggingEvent !== this.state.draggingEvent;
+        const events = !isEqual(this.props.events, prevProps.events);
+        const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
+        const weekOfTheYear = prevState.weekOfTheYear !== this.state.weekOfTheYear;
+
+        if (dragging || selectedEvent || weekOfTheYear || events) {
             this.renderEvents();
         }
     }
@@ -93,6 +96,12 @@ export class Calendar extends React.Component {
         });
     }
 
+    selectEvent = (e, event) => {
+        this.setState({
+            selectedEvent: event,
+        });
+    }
+
     handleDragStart = (e, event) => {
         setTimeout(() => {
             this.setState({
@@ -122,10 +131,10 @@ export class Calendar extends React.Component {
     }
 
     handleDragLeave = (e) => {
+        console.log('leave');
         // this.setState({
         //     dragActiveCell: null,
         // });
-        console.log('leave');
     }
 
     handleDragEnd = (e) => {
@@ -166,6 +175,7 @@ export class Calendar extends React.Component {
 
     render() {
         const {
+            lockScroll,
             weekOfTheYear,
         } = this.state;
 
@@ -190,7 +200,7 @@ export class Calendar extends React.Component {
                             {"<"}
                         </button>
 
-                        <button class="btn btn-secondary">{weekOfTheYear}. týden</button>
+                        <button className="btn btn-secondary">{weekOfTheYear}. týden</button>
 
                         <button
                             className="btn text-weight--bold btn-success"
@@ -220,7 +230,10 @@ export class Calendar extends React.Component {
                         }
                     </div>
                     <div
-                        className="calendar"
+                        className={createClassName([
+                            'calendar',
+                            lockScroll ? 'lock--scroll' : null
+                        ])}
                         ref={(node) => this.calendar = node}
                     >
                         <table className="calendar-table">
@@ -326,6 +339,11 @@ export class Calendar extends React.Component {
             const emptyTdAttrs = {};
             const fullHour = day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT);
             const hourAndHalf = day.hours(i).minutes(30).seconds(0).format(DATA_DATE_FORMAT);
+            const cellOver = (dragActiveCell === fullHour) || (dragActiveCell === hourAndHalf);
+            const emptyCellclassNames = createClassName([
+                'calendar-table--empty-hours',
+                cellOver ? 'calendar--event-dragging--over' : null,
+            ]);
 
             if (empty) {
                 emptyTdAttrs.onDrop = this.handleDrop;
@@ -334,43 +352,20 @@ export class Calendar extends React.Component {
                 emptyTdAttrs.onDragLeave = this.handleDragLeave;
             }
 
-            let td =
-                <td
-                    key={i}
-                    colSpan={2}
-                    className={createClassName([
-                        'calendar-table--hours',
-                    ])}
-                >
-                    {i}
-                </td>;
+            let td = <td key={i} colSpan={2} className={createClassName(['calendar-table--hours'])}>{i}</td>;
 
             if (empty) {
                 td =
-                    <React.Fragment
-                        key={i}
-                    >
+                    <React.Fragment key={i}>
                         <td
                             data-date={fullHour}
-                            style={{
-                                borderRight: 0,
-                            }}
-                            className={createClassName([
-                                'calendar-table--empty-hours',
-                                dragActiveCell === fullHour ? 'calendar--event-dragging--over' : null,
-                            ])}
+                            className={emptyCellclassNames}
                             onClick={() => console.log('click', i)}
                             {...emptyTdAttrs}
                         />
                         <td
                             data-date={hourAndHalf}
-                            style={{
-                                borderLeft: 0,
-                            }}
-                            className={createClassName([
-                                'calendar-table--empty-hours',
-                                dragActiveCell === hourAndHalf ? 'calendar--event-dragging--over' : null,
-                            ])}
+                            className={emptyCellclassNames}
                             onClick={() => console.log('click', i)}
                             {...emptyTdAttrs}
                         />
@@ -384,7 +379,10 @@ export class Calendar extends React.Component {
     }
 
     renderEvents = (e) => {
-        const { draggingEvent } = this.state;
+        const {
+            selectedEvent,
+            draggingEvent,
+        } = this.state;
         const { events, machines } = this.props;
 
         const eventsToRender = events.map((event) => {
@@ -438,6 +436,8 @@ export class Calendar extends React.Component {
             return (
                 <ContextMenu
                     key={event.id}
+                    onOpen={() => this.setState({ lockScroll: true })}
+                    onClose={() => this.setState({ lockScroll: false })}
                     buttons={[
                         {
                             label: 'Upravit',
@@ -451,13 +451,14 @@ export class Calendar extends React.Component {
                                 'calendar--event',
                                 event.note ? 'calendar--event-note' : null,
                                 draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
+                                selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
                             ])
                         }
                         style={style}
                         draggable={true}
                         onDragEnd={this.handleDragEnd}
                         onDrag={(e) => this.handleDrag(e, event)}
-                        onClick={(e) => console.log('zaktivuj element pro resize')}
+                        onClick={(e) => this.selectEvent(e, event)}
                         onDragStart={(e) => this.handleDragStart(e, event)}
                         onMouseEnter={(e) => this.props.onEventEnter(e, event)}
                         onMouseLeave={(e) => this.props.onEventLeave(e, event)}

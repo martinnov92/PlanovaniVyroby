@@ -4,7 +4,9 @@ import './context-menu.css';
 
 export class ContextMenu extends React.Component {
     static defaultProps = {
-        buttons: []
+        buttons: [],
+        onOpen: () => {},
+        onClose: () => {},
     };
   
     constructor() {
@@ -19,22 +21,17 @@ export class ContextMenu extends React.Component {
         document.addEventListener('click', this.handleClickOutside);
         document.addEventListener('contextmenu', this.handleRightClickOutside);
     }
-    
-    handleClickOutside = (e) => { 
-        if (!this.state.open) {
-            return;
-        }
-        
-        const root = ReactDOM.findDOMNode(this.div);
-        const context = ReactDOM.findDOMNode(this.context);
-        const isInRoot = (!root.contains(e.target) || root.contains(e.target));
-        const isInContext = !context.contains(e.target);
-        
-        if (isInRoot && isInContext) {
-            this.setState({
-                open: false
-            });
-        } 
+
+    handleRightClick = (e) => {
+        e.preventDefault();
+
+        this.setState({
+            open: true,
+            top: e.nativeEvent.clientY,
+            left: e.nativeEvent.clientX,
+        });
+
+        this.props.onOpen();
     }
 
     handleRightClickOutside = (e) => {
@@ -46,28 +43,36 @@ export class ContextMenu extends React.Component {
         const isInRoot = !root.contains(e.target);
 
         if (isInRoot) {
-            this.setState({
-                open: false
-            });
+            this.closeContextMenu();
         }
     }
 
-    handleRightClick = (e) => {
-        e.preventDefault();
-
-        this.setState({
-            open: true,
-            top: e.nativeEvent.clientY,
-            left: e.nativeEvent.clientX,
-        });
+    handleClickOutside = (e) => { 
+        if (!this.state.open) {
+            return;
+        }
+        
+        const root = ReactDOM.findDOMNode(this.div);
+        const context = ReactDOM.findDOMNode(this.context);
+        const isInRoot = (!root.contains(e.target) || root.contains(e.target));
+        const isInContext = !context.contains(e.target);
+        
+        if (isInRoot && isInContext) {
+            this.closeContextMenu();
+        } 
     }
 
     handleButtonClick = (e, button) => {
+        this.closeContextMenu();
+        return button.onClick(...arguments);
+    }
+
+    closeContextMenu = () => {
         this.setState({
             open: false,
         });
 
-        return button.onClick(...arguments);
+        this.props.onClose();
     }
 
     render() {
