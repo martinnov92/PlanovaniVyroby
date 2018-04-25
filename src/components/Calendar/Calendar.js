@@ -33,6 +33,7 @@ export class Calendar extends React.Component {
             lockScroll: false,
             eventsToRender: [],
             draggingEvent: null,
+            renderTableBody: [],
             calendarHolder: null,
             dragActiveCell: null,
             selectedEvent: null,
@@ -46,6 +47,7 @@ export class Calendar extends React.Component {
         // todo: zafocusovat aktuální den + vyřešit špatný zobrazení zakázek
         // ReactDOM.findDOMNode(this.currentDate).scrollIntoView();
         this.getDimensions();
+        this.renderTableBody();
         // document.addEventListener('drop', this.o)
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
@@ -56,7 +58,11 @@ export class Calendar extends React.Component {
         const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
         const weekOfTheYear = prevState.weekOfTheYear !== this.state.weekOfTheYear;
 
-        if (dragging || selectedEvent || weekOfTheYear || events) {
+        if (weekOfTheYear) {
+            this.renderTableBody();
+        }
+
+        if (dragging || selectedEvent || events) {
             this.renderEvents();
         }
     }
@@ -244,7 +250,7 @@ export class Calendar extends React.Component {
                             </thead>
                             {/* body of the calendar, week */}
                             <tbody className="calendar-table--body">
-                                {this.renderTableBody()}
+                                {this.state.renderTableBody}
                             </tbody>
                         </table>
 
@@ -275,7 +281,11 @@ export class Calendar extends React.Component {
             </tr>;
         });
 
-        return body;
+        this.setState({
+            renderTableBody: body,
+        }, () => {
+            this.renderEvents();
+        });
     }
 
     renderDaysCell = (empty = false) => {
@@ -283,10 +293,6 @@ export class Calendar extends React.Component {
         let day;
         let current;
         let className;
-
-        if (empty === false) {
-            // days.push(<td key="empty" className="column-fixed" />);
-        }
 
         for (let i = 0; i < 7; i++) {
             day = moment(this.state.startOfTheWeek).add(i, 'days');
@@ -334,9 +340,24 @@ export class Calendar extends React.Component {
             dragActiveCell
         } = this.state;
 
+        if (empty === false) {
+            for (let i = 7; i <= 20; i++) {
+                let td = <td key={i} colSpan={2} className={createClassName(['calendar-table--hours'])}>{i}</td>;
+                hours.push(td);
+            }
+
+            return hours;
+        }
+
         // from 7:00 to 20:00
         for (let i = 7; i <= 20; i++) {
-            const emptyTdAttrs = {};
+            const emptyTdAttrs = {
+                onDrop: this.handleDrop,
+                onDragOver: this.handleDragOver,
+                onDragEnter: this.handleDragEnter,
+                onDragLeave: this.handleDragLeave,
+            };
+
             const fullHour = day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT);
             const hourAndHalf = day.hours(i).minutes(30).seconds(0).format(DATA_DATE_FORMAT);
             const cellOver = (dragActiveCell === fullHour) || (dragActiveCell === hourAndHalf);
@@ -344,33 +365,21 @@ export class Calendar extends React.Component {
                 'calendar-table--empty-hours',
                 // cellOver ? 'calendar--event-dragging--over' : null,
             ]);
-            console.log('kreslím');
-            if (empty) {
-                emptyTdAttrs.onDrop = this.handleDrop;
-                emptyTdAttrs.onDragOver = this.handleDragOver;
-                emptyTdAttrs.onDragEnter = this.handleDragEnter;
-                emptyTdAttrs.onDragLeave = this.handleDragLeave;
-            }
-
-            let td = <td key={i} colSpan={2} className={createClassName(['calendar-table--hours'])}>{i}</td>;
-
-            if (empty) {
-                td =
-                    <React.Fragment key={i}>
-                        <td
-                            data-date={fullHour}
-                            className={emptyCellclassNames}
-                            onClick={() => console.log('click', i)}
-                            {...emptyTdAttrs}
-                        />
-                        <td
-                            data-date={hourAndHalf}
-                            className={emptyCellclassNames}
-                            onClick={() => console.log('click', i)}
-                            {...emptyTdAttrs}
-                        />
-                    </React.Fragment>;
-            }
+            console.warn('kreslím');
+            const td = <React.Fragment key={i}>
+                <td
+                    data-date={fullHour}
+                    className={emptyCellclassNames}
+                    onClick={() => console.log('click', i)}
+                    {...emptyTdAttrs}
+                />
+                <td
+                    data-date={hourAndHalf}
+                    className={emptyCellclassNames}
+                    onClick={() => console.log('click', i)}
+                    {...emptyTdAttrs}
+                />
+            </React.Fragment>;
 
             hours.push(td);
         }
