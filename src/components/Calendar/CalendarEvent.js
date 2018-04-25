@@ -11,8 +11,18 @@ export class CalendarEvent extends React.Component {
         event: {},
         machine: {},
         scrollLeft: 0,
+        selectedEvent: {},
+        draggingEvent: {},
         calendarWrapperClientRect: {}
     };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            resizerActive: false
+        };
+    }
 
     positionEvent = () => {
         const {
@@ -70,11 +80,42 @@ export class CalendarEvent extends React.Component {
         return style;
     }
 
+    handleResizerMouseDown = (e) => {
+        this.setState({
+            resizerActive: true,
+        });
+    }
+
+    handleResizerMouseDown = (e) => {
+        this.setState({
+            resizerActive: false,
+        });
+    }
+
+    handleResizerDragStart = (e) => {
+        e.stopPropagation();
+
+        const stringifyEvent = JSON.stringify(this.props.event);
+        e.dataTransfer.setData('event', stringifyEvent);
+        e.dataTransfer.setData('eventResize', e.target.dataset.resize);
+    }
+
     render() {
         const {
+            resizerActive,
+        } = this.state;
+
+        const {
             event,
+            selectedEvent,
+            draggingEvent
         } = this.props;
-        const style = this.positionEvent();
+        const style = Object.assign({}, this.positionEvent());
+
+        if (resizerActive) {
+            console.log(resizerActive);
+            style.zIndex = -1;
+        }
 
         return (
             <ContextMenu
@@ -93,15 +134,16 @@ export class CalendarEvent extends React.Component {
                         createClassName([
                             'calendar--event',
                             event.note ? 'calendar--event-note' : null,
-                            // draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
-                            // selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
+                            draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
+                            selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
                         ])
                     }
                     style={style}
-                    draggable={true}
+                    draggable={!resizerActive}
                     onDragEnd={this.props.onDragEnd}
                     onDrag={(e) => this.props.onDrag(e, event)}
                     onClick={(e) => this.props.onClick(e, event)}
+                    ref={(node) => this.draggableParentDiv = node}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDragStart={(e) => this.props.onDragStart(e, event)}
@@ -114,6 +156,22 @@ export class CalendarEvent extends React.Component {
                         </p>
                         <p>{event.worker}</p>
                     </div>
+
+                    <div
+                        draggable={true}
+                        onMouseDown={this.handleResizerMouseDown}
+                        onDragStart={this.handleResizerDragStart}
+                        data-resize="dateFrom"
+                        className="calendar--event--resizer calendar--event--resizer-left"
+                    />
+
+                    <div
+                        draggable={true}
+                        onMouseDown={this.handleResizerMouseDown}
+                        onDragStart={this.handleResizerDragStart}
+                        data-resize="dateTo"
+                        className="calendar--event--resizer calendar--event--resizer-right"
+                    />
                 </div>
             </ContextMenu>
         );

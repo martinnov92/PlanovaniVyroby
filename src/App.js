@@ -42,8 +42,8 @@ class App extends React.Component {
                 machine: 'finetech',
                 worker: 'Petr',
                 note: 'Poznámka k zakázce',
-                dateFrom: moment().subtract(5, 'days').hours(10).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(3, 'days').hours(14).minutes(0).seconds(0).toDate(),
+                dateFrom: moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(),
+                dateTo: moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate(),
             },{
                 id: 'abcd',
                 label: 'Zakázka 2',

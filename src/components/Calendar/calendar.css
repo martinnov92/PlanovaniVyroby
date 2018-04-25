@@ -134,10 +134,6 @@
     display: none;
 }
 
-.calendar--event-selected {
-    border: 2px solid black;
-}
-
 .calendar--event-dragging--over {
     background-color: #eeeff0;
 }
@@ -146,6 +142,29 @@
     color: #BADA55;
 }
 
-.hover {
-    background-color: blue !important;
+.calendar--event-selected {
+    border: 2px solid black;
+}
+
+.calendar--event--resizer {
+    width: 10px;
+    height: 10px;
+    top: 50%;
+    left: -7px;
+    transform: translate(0, -50%);
+    display: none;
+    position: absolute;
+    background-color: #000;
+    cursor: w-resize;
+}
+
+.calendar--event--resizer-right {
+    right: -7px;
+    left: initial;
+    cursor: e-resize;
+    transform: translate(0, -50%);
+}
+
+.calendar--event-selected .calendar--event--resizer {
+    display: block;
 }

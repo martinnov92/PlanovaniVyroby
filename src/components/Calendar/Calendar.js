@@ -153,17 +153,27 @@ export class Calendar extends React.Component {
 
         // get event and get new date from drop
         const parsedEvent = JSON.parse(e.dataTransfer.getData('event'));
+        const resizeType = e.dataTransfer.getData('eventResize');
         const dateOnDrop = moment(e.target.dataset.date, DATA_DATE_FORMAT);
 
-        // get differenc in hours between dateFrom to dateTo from original event
-        const momentDateTo = moment(parsedEvent.dateTo);
-        const momentDateFrom = moment(parsedEvent.dateFrom);
-        const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
-        const sign = Math.sign(hoursDifference);
+        let dateFrom = parsedEvent.dateFrom;
+        let dateTo = parsedEvent.dateTo;
 
-        // set new dateFrom and dateTo on object and pass it to parent component
-        const dateFrom = dateOnDrop.toDate();
-        const dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
+        if (resizeType === 'dateFrom') {
+            dateFrom = dateOnDrop.toDate();
+        } else if (resizeType === 'dateTo') {
+            dateTo = dateOnDrop.toDate();
+        } else {
+            // get differenc in hours between dateFrom to dateTo from original event
+            const momentDateTo = moment(parsedEvent.dateTo);
+            const momentDateFrom = moment(parsedEvent.dateFrom);
+            const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
+            const sign = Math.sign(hoursDifference);
+    
+            // set new dateFrom and dateTo on object and pass it to parent component
+            dateFrom = dateOnDrop.toDate();
+            dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
+        }
 
         const newEvent = {
             ...parsedEvent,
@@ -379,6 +389,8 @@ export class Calendar extends React.Component {
         } = this.props;
 
         const {
+            draggingEvent,
+            selectedEvent,
             calendarHolder,
             startOfTheWeek,
         } = this.state;
@@ -400,6 +412,8 @@ export class Calendar extends React.Component {
                     key={event.id}
                     machine={machine}
                     scrollLeft={this.scrollLeft}
+                    selectedEvent={selectedEvent}
+                    draggingEvent={draggingEvent}
                     calendarWrapperClientRect={calendarHolder}
 
                     // mouse events
