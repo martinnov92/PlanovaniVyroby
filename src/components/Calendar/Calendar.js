@@ -119,10 +119,12 @@ export class Calendar extends React.Component {
 
     handleDragEnter = (e) => {
         const date = e.target.dataset && e.target.dataset.date ? e.target.dataset.date : null;
-
+        console.log('drag enter');
         // this.setState({
         //     dragActiveCell: date,
         // });
+
+        e.target.classList.add('calendar--event-dragging--over');
     }
 
     handleDragOver = (e) => {
@@ -132,9 +134,7 @@ export class Calendar extends React.Component {
 
     handleDragLeave = (e) => {
         console.log('leave');
-        // this.setState({
-        //     dragActiveCell: null,
-        // });
+        e.target.classList.remove('calendar--event-dragging--over');
     }
 
     handleDragEnd = (e) => {
@@ -342,9 +342,9 @@ export class Calendar extends React.Component {
             const cellOver = (dragActiveCell === fullHour) || (dragActiveCell === hourAndHalf);
             const emptyCellclassNames = createClassName([
                 'calendar-table--empty-hours',
-                cellOver ? 'calendar--event-dragging--over' : null,
+                // cellOver ? 'calendar--event-dragging--over' : null,
             ]);
-
+            console.log('kreslím');
             if (empty) {
                 emptyTdAttrs.onDrop = this.handleDrop;
                 emptyTdAttrs.onDragOver = this.handleDragOver;

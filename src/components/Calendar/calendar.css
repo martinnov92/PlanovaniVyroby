@@ -139,7 +139,7 @@
 }
 
 .calendar--event-dragging--over {
-    background-color: red;
+    background-color: #eeeff0;
 }
 
 .calendar-day--current {
