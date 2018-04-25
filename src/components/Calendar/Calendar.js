@@ -3,6 +3,7 @@
 import React from 'react';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
+import { CalendarEvent } from './';
 import isEqual from 'lodash/isEqual';
 import { ContextMenu } from '../ContextMenu';
 import {
@@ -59,6 +60,8 @@ export class Calendar extends React.Component {
         const weekOfTheYear = prevState.weekOfTheYear !== this.state.weekOfTheYear;
 
         if (weekOfTheYear) {
+            // TODO: zkusit vytvořit cell komponentu a potom vytáhnout rendertable body ze statu, vyzkoušet jestli se bude překreslovat
+            // normálně něbo pomale
             this.renderTableBody();
         }
 
@@ -140,6 +143,9 @@ export class Calendar extends React.Component {
 
     handleDragLeave = (e) => {
         console.log('leave');
+        // this.setState({
+        //     dragActiveCell: null,
+        // });
         e.target.classList.remove('calendar--event-dragging--over');
     }
 
@@ -363,7 +369,7 @@ export class Calendar extends React.Component {
             const cellOver = (dragActiveCell === fullHour) || (dragActiveCell === hourAndHalf);
             const emptyCellclassNames = createClassName([
                 'calendar-table--empty-hours',
-                // cellOver ? 'calendar--event-dragging--over' : null,
+                cellOver ? 'calendar--event-dragging--over___2' : null,
             ]);
             console.warn('kreslím');
             const td = <React.Fragment key={i}>
@@ -389,99 +395,47 @@ export class Calendar extends React.Component {
 
     renderEvents = (e) => {
         const {
+            events,
+            machines,
+        } = this.props;
+
+        const {
             selectedEvent,
             draggingEvent,
+            calendarHolder,
+            startOfTheWeek,
         } = this.state;
-        const { events, machines } = this.props;
 
-        const eventsToRender = events.map((event) => {
-            const { dateFrom, dateTo } = event;
-            const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
-            const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
+        // vyfiltrovat eventy pouze pro daný týden
+        const endOfTheWeek = moment(startOfTheWeek).endOf('week');
+        const filteredEvents = events.filter((event) => {
+            return (moment(event.dateFrom).isAfter(startOfTheWeek) && moment(event.dateTo).isBefore(endOfTheWeek));
+        });
+
+        const eventsToRender = filteredEvents.map((event) => {
             const machine = machines.find((machine) => machine.id === event.machine);
-
-            const findRow = ReactDOM.findDOMNode(this[event.machine]);
-            if (!findRow) {
-                return null;
-            }
-
-            const rowClientRect = findRow.getBoundingClientRect();
-            const findStartDateOnRow = findRow.querySelector(`[data-date="${startDate}"]`);
-            const findEndDateOnRow = findRow.querySelector(`[data-date="${endDate}"]`);
-
-            const { scrollLeft } = this;
-            let startPosition;
-            let endPosition;
-
-            if (!findStartDateOnRow && findEndDateOnRow) {
-                startPosition = {
-                    top: rowClientRect.top + 1,
-                    left: rowClientRect.left + 1,
-                };
-                endPosition = findEndDateOnRow.getBoundingClientRect();
-            } else if (findStartDateOnRow && !findEndDateOnRow) {
-                startPosition = findStartDateOnRow.getBoundingClientRect();
-                endPosition = {
-                    top: rowClientRect.top + 1,
-                    right: rowClientRect.right,
-                };
-            } else if (findStartDateOnRow && findEndDateOnRow) {
-                startPosition = findStartDateOnRow.getBoundingClientRect();
-                endPosition = findEndDateOnRow.getBoundingClientRect();
-            } else {
-                // TODO: kontrola objednávek přes více týdnů
-                return null;
-            }
-
-            const calendarHolderClientRect = this.state.calendarHolder.getBoundingClientRect();
-            let style = {
-                backgroundColor: machine.color,
-                height: `${startPosition.height}px`,
-                width: `${endPosition.right - startPosition.left}px`,
-                top: `${startPosition.top - calendarHolderClientRect.top}px`,
-                left: `${startPosition.left - calendarHolderClientRect.left + scrollLeft}px`,
-            };
+            const row = ReactDOM.findDOMNode(this[machine.id]);
 
             return (
-                <ContextMenu
+                <CalendarEvent
+                    row={row}
+                    event={event}
                     key={event.id}
-                    onOpen={() => this.setState({ lockScroll: true })}
-                    onClose={() => this.setState({ lockScroll: false })}
-                    buttons={[
-                        {
-                            label: 'Upravit',
-                            onClick: () => this.props.onEventClick(e, event),
-                        }
-                    ]}
-                >
-                    <div
-                        className={
-                            createClassName([
-                                'calendar--event',
-                                event.note ? 'calendar--event-note' : null,
-                                draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
-                                selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
-                            ])
-                        }
-                        style={style}
-                        draggable={true}
-                        onDragEnd={this.handleDragEnd}
-                        onDrag={(e) => this.handleDrag(e, event)}
-                        onClick={(e) => this.selectEvent(e, event)}
-                        onDragStart={(e) => this.handleDragStart(e, event)}
-                        onMouseEnter={(e) => this.props.onEventEnter(e, event)}
-                        onMouseLeave={(e) => this.props.onEventLeave(e, event)}
-                    >
-                        <div>
-                            <p>
-                                <strong>
-                                    {event.label}
-                                </strong>
-                            </p>
-                            <p>{event.worker}</p>
-                        </div>
-                    </div>
-                </ContextMenu>
+                    machine={machine}
+                    scrollLeft={this.scrollLeft}
+                    calendarWrapperClientRect={calendarHolder}
+
+                    // mouse events
+                    onDrag={this.handleDrag}
+                    onClick={this.selectEvent}
+                    onDragEnd={this.handleDragEnd}
+                    onDragStart={this.handleDragStart}
+                    onMouseEnter={this.props.onEventEnter}
+                    onMouseLeave={this.props.onEventLeave}
+
+                    // context menu props
+                    onEditEvent={this.props.onEventClick}
+                />
             );
         });
 
