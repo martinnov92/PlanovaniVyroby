@@ -1,9 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import ReactDOM from 'react-dom';
 import { ContextMenu } from '../ContextMenu';
 import {
-    FULL_FORMAT,
     createClassName,
     DATA_DATE_FORMAT,
 } from '../../helpers';

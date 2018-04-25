@@ -3,9 +3,8 @@
 import React from 'react';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
-import { CalendarEvent } from './';
 import isEqual from 'lodash/isEqual';
-import { ContextMenu } from '../ContextMenu';
+import { CalendarEvent, CalendarCell } from './';
 import {
     FULL_FORMAT,
     createClassName,
@@ -127,12 +126,6 @@ export class Calendar extends React.Component {
     }
 
     handleDragEnter = (e) => {
-        const date = e.target.dataset && e.target.dataset.date ? e.target.dataset.date : null;
-        console.log('drag enter');
-        // this.setState({
-        //     dragActiveCell: date,
-        // });
-
         e.target.classList.add('calendar--event-dragging--over');
     }
 
@@ -142,10 +135,6 @@ export class Calendar extends React.Component {
     }
 
     handleDragLeave = (e) => {
-        console.log('leave');
-        // this.setState({
-        //     dragActiveCell: null,
-        // });
         e.target.classList.remove('calendar--event-dragging--over');
     }
 
@@ -342,9 +331,6 @@ export class Calendar extends React.Component {
 
     renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
-        const {
-            dragActiveCell
-        } = this.state;
 
         if (empty === false) {
             for (let i = 7; i <= 20; i++) {
@@ -357,33 +343,26 @@ export class Calendar extends React.Component {
 
         // from 7:00 to 20:00
         for (let i = 7; i <= 20; i++) {
-            const emptyTdAttrs = {
+            const cellAttrs = {
                 onDrop: this.handleDrop,
+                onClick: (i) => console.log('klik', i),
                 onDragOver: this.handleDragOver,
                 onDragEnter: this.handleDragEnter,
                 onDragLeave: this.handleDragLeave,
             };
 
-            const fullHour = day.hours(i).minutes(0).seconds(0).format(DATA_DATE_FORMAT);
-            const hourAndHalf = day.hours(i).minutes(30).seconds(0).format(DATA_DATE_FORMAT);
-            const cellOver = (dragActiveCell === fullHour) || (dragActiveCell === hourAndHalf);
-            const emptyCellclassNames = createClassName([
-                'calendar-table--empty-hours',
-                cellOver ? 'calendar--event-dragging--over___2' : null,
-            ]);
-            console.warn('kreslím');
             const td = <React.Fragment key={i}>
-                <td
-                    data-date={fullHour}
-                    className={emptyCellclassNames}
+                <CalendarCell
+                    day={day}
+                    hours={i}
                     onClick={() => console.log('click', i)}
-                    {...emptyTdAttrs}
+                    {...cellAttrs}
                 />
-                <td
-                    data-date={hourAndHalf}
-                    className={emptyCellclassNames}
-                    onClick={() => console.log('click', i)}
-                    {...emptyTdAttrs}
+                <CalendarCell
+                    day={day}
+                    hours={i}
+                    minutes={30}
+                    {...cellAttrs}
                 />
             </React.Fragment>;
 
@@ -400,8 +379,6 @@ export class Calendar extends React.Component {
         } = this.props;
 
         const {
-            selectedEvent,
-            draggingEvent,
             calendarHolder,
             startOfTheWeek,
         } = this.state;

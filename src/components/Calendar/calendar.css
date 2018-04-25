@@ -145,3 +145,7 @@
 .calendar-day--current {
     color: #BADA55;
 }
+
+.hover {
+    background-color: blue !important;
+}
