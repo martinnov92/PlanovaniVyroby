@@ -36,7 +36,7 @@ export class CalendarEvent extends React.Component {
         const { dateFrom, dateTo } = event;
         const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
         const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
-
+        console.log(row);
         if (!row) {
             return null;
         }
@@ -67,7 +67,7 @@ export class CalendarEvent extends React.Component {
             // TODO: kontrola objednávek přes více týdnů
             return null;
         }
-
+        console.log(startPosition, endPosition);
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
             backgroundColor: machine.color,
@@ -86,7 +86,7 @@ export class CalendarEvent extends React.Component {
         });
     }
 
-    handleResizerMouseDown = (e) => {
+    handleResizerMouseUp = (e) => {
         this.setState({
             resizerActive: false,
         });
@@ -116,7 +116,7 @@ export class CalendarEvent extends React.Component {
             console.log(resizerActive);
             style.zIndex = -1;
         }
-
+        console.log('render calendar cell', this.state.resizerActive);
         return (
             <ContextMenu
                 key={event.id}

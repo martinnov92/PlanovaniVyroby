@@ -65,7 +65,7 @@ export class Calendar extends React.Component {
         }
 
         if (dragging || selectedEvent || events) {
-            this.renderEvents();
+            // this.renderEvents();
         }
     }
 
@@ -81,7 +81,7 @@ export class Calendar extends React.Component {
             calendarHolder,
             calendarTableWidth
         }, () => {
-            this.renderEvents();
+            // this.renderEvents();
         });
     }
 
@@ -255,7 +255,7 @@ export class Calendar extends React.Component {
                             </thead>
                             {/* body of the calendar, week */}
                             <tbody className="calendar-table--body">
-                                {this.state.renderTableBody}
+                                {this.renderTableBody()}
                             </tbody>
                         </table>
 
@@ -266,7 +266,7 @@ export class Calendar extends React.Component {
                                 width: `${this.state.calendarTableWidth}px`
                             }}
                         >
-                            {this.state.eventsToRender}
+                            {this.renderEvents()}
                         </div>
                     </div>
                 </div>
@@ -286,11 +286,7 @@ export class Calendar extends React.Component {
             </tr>;
         });
 
-        this.setState({
-            renderTableBody: body,
-        }, () => {
-            this.renderEvents();
-        });
+        return body;
     }
 
     renderDaysCell = (empty = false) => {
@@ -400,17 +396,16 @@ export class Calendar extends React.Component {
         const filteredEvents = events.filter((event) => {
             return (moment(event.dateFrom).isAfter(startOfTheWeek) && moment(event.dateTo).isBefore(endOfTheWeek));
         });
-
+        console.warn(endOfTheWeek);
         const eventsToRender = filteredEvents.map((event) => {
             const machine = machines.find((machine) => machine.id === event.machine);
-            const row = ReactDOM.findDOMNode(this[machine.id]);
 
             return (
                 <CalendarEvent
-                    row={row}
                     event={event}
                     key={event.id}
                     machine={machine}
+                    row={this[machine.id]}
                     scrollLeft={this.scrollLeft}
                     selectedEvent={selectedEvent}
                     draggingEvent={draggingEvent}
@@ -430,8 +425,10 @@ export class Calendar extends React.Component {
             );
         });
 
-        this.setState({
-            eventsToRender
-        });
+        // this.setState({
+        //     eventsToRender
+        // });
+
+        return eventsToRender;
     }
 }
