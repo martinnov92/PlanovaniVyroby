@@ -23,6 +23,7 @@ export class CalendarCell extends React.Component {
         const dateTime = day.hours(hours).minutes(minutes).seconds(0).format(DATA_DATE_FORMAT);
         const emptyCellclassNames = createClassName([
             'calendar-table--empty-hours',
+            Array.isArray(this.props.className) ? [...this.props.className] : this.props.className,
         ]);
 
         return (

@@ -15,6 +15,7 @@ import './calendar.css';
 
 export class Calendar extends React.Component {
     static defaultProps = {
+        pause: 11,
         events: [],
         machines: [],
         currentWeek: 1,
@@ -322,6 +323,7 @@ export class Calendar extends React.Component {
 
     renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
+        const { pause } = this.props;
 
         if (empty === false) {
             for (let i = 7; i <= 20; i++) {
@@ -342,10 +344,13 @@ export class Calendar extends React.Component {
                 onDragLeave: this.handleDragLeave,
             };
 
+            const hasPause = (pause === i) ? 'calendar--cell-pause' : null;
+
             const td = <React.Fragment key={i}>
                 <CalendarCell
                     day={day}
                     hours={i}
+                    className={[hasPause]}
                     onClick={() => console.log('click', i)}
                     {...cellAttrs}
                 />
