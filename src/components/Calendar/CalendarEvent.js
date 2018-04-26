@@ -80,24 +80,24 @@ export class CalendarEvent extends React.Component {
         return style;
     }
 
-    handleResizerMouseDown = (e) => {
-        this.setState({
-            resizerActive: true,
-        });
-    }
-
-    handleResizerMouseDown = (e) => {
-        this.setState({
-            resizerActive: false,
-        });
-    }
-
     handleResizerDragStart = (e) => {
         e.stopPropagation();
+
+        setTimeout(() => {
+            this.setState({
+                resizerActive: true,
+            });
+        }, 0);
 
         const stringifyEvent = JSON.stringify(this.props.event);
         e.dataTransfer.setData('event', stringifyEvent);
         e.dataTransfer.setData('eventResize', e.target.dataset.resize);
+    }
+
+    handleResizerDragEnd = (e) => {
+        this.setState({
+            resizerActive: false,
+        });
     }
 
     render() {
@@ -159,17 +159,17 @@ export class CalendarEvent extends React.Component {
 
                     <div
                         draggable={true}
-                        onMouseDown={this.handleResizerMouseDown}
-                        onDragStart={this.handleResizerDragStart}
                         data-resize="dateFrom"
+                        onDragStart={this.handleResizerDragStart}
+                        onDragEnd={this.handleResizerDragEnd}
                         className="calendar--event--resizer calendar--event--resizer-left"
                     />
 
                     <div
                         draggable={true}
-                        onMouseDown={this.handleResizerMouseDown}
-                        onDragStart={this.handleResizerDragStart}
                         data-resize="dateTo"
+                        onDragStart={this.handleResizerDragStart}
+                        onDragEnd={this.handleResizerDragEnd}
                         className="calendar--event--resizer calendar--event--resizer-right"
                     />
                 </div>
