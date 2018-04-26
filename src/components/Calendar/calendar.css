@@ -23,6 +23,7 @@
     height: calc(100% - 45px);
     overflow-x: scroll;
     position: relative;
+    border: 1px solid #000;
 }
 
 .calendar table {
