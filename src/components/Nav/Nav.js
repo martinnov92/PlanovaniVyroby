@@ -4,7 +4,7 @@ export class Nav extends React.Component {
     render() {
         return (
             <nav
-                className="navbar navbar-dark bg-dark mb-3"
+                className="navbar navbar-dark bg-dark"
             >
                     <h2
                         className="navbar-brand"
@@ -14,8 +14,8 @@ export class Nav extends React.Component {
 
                     <div>
                         <div
-                            className="btn-group"
                             role="group"
+                            className="btn-group"
                         >
                             <button
                                 title="Minulý týden"
@@ -43,14 +43,14 @@ export class Nav extends React.Component {
                         </div>
 
                         <button
-                            className="btn btn-outline-success text-light ml-3"
+                            className="btn btn-success ml-3"
                             onClick={this.props.addNewEvent}
                         >
                             Přidat zakázku
                         </button>
 
                         <button
-                            className="btn btn-success ml-3"
+                            className="btn btn-outline-success ml-3 text-light"
                             type="button"
                         >
                             Nastavení

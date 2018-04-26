@@ -17,6 +17,11 @@ body {
     height: 100vh;
 }
 
+.app-main--screen {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
 .popup-order {
     top: calc(50% + 150px);
 }

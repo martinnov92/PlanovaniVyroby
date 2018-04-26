@@ -219,7 +219,7 @@ class App extends React.Component {
                 />
 
                 <div
-                    className="pr-3 pb-3 pl-3"
+                    className="pt-3 pr-3 pb-3 pl-3 app-main--screen_"
                 >
                     <Calendar
                         machines={machines}
@@ -389,12 +389,12 @@ class App extends React.Component {
                             </div>
                         </Popup>
                     }
-                </div>
 
-                <div
-                    className="orders--detail"
-                >
-                    {this.renderPinOrders()}
+                    <div
+                        className="orders--detail"
+                    >
+                        {this.renderPinOrders()}
+                    </div>
                 </div>
             </div>
         );
