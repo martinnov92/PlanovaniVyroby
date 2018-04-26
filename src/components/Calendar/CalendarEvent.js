@@ -148,7 +148,9 @@ export class CalendarEvent extends React.Component {
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDragStart={(e) => this.props.onDragStart(e, event)}
                 >
-                    <div>
+                    <div
+                        className="calendar--event-text"
+                    >
                         <p>
                             <strong>
                                 {event.label}

@@ -171,6 +171,7 @@ export class Calendar extends React.Component {
             // get differenc in hours between dateFrom to dateTo from original event
             const momentDateTo = moment(parsedEvent.dateTo);
             const momentDateFrom = moment(parsedEvent.dateFrom);
+
             const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
             const sign = Math.sign(hoursDifference);
     
@@ -200,7 +201,7 @@ export class Calendar extends React.Component {
         return (
             <React.Fragment>
                 {/* TABLE */}
-                <div className="calendar-wrapper">
+                <div className="calendar-wrapper element--block shadow--light">
                     <div className="calendar-column--fixed">
                         <div style={{ height: '44px', border: 0 }} />
                         {

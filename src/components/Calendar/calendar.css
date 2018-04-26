@@ -108,6 +108,15 @@
 }
 
 .calendar--event-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.calendar--event-text > p {
+}
+
+.calendar--event-text {
     margin-left: 10px;
 }
 

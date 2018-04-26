@@ -10,6 +10,7 @@ body {
     font-size: 14px;
     overflow: hidden;
     font-family: sans-serif;
+    background-color: #f3f3f3;
 }
 
 .app {
@@ -41,14 +42,20 @@ body {
 
 }
 
-.orders--focused {
-    
-}
-
 /* helpers */
 p,
 h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0;
+}
+
+.element--block {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.shadow--light {
+    box-shadow: 0 0 15px 2px rgba(0, 0, 0, .1);
 }
 
 .lock--scroll {

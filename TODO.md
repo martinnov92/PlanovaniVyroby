@@ -1,5 +1,6 @@
 # TODO:
 
+    - rozpis hodin od 7 do 20 (včetěn 20:00, tzn. do 20:59, nebo do 19:59?)
     - možnost nastavení času po půl hodině
     - opravit časový posun při změně události
     - kontrola vykreslení objednávek, které se táhnou přes více týdnů

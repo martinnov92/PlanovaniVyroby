@@ -4,7 +4,7 @@ export class Nav extends React.Component {
     render() {
         return (
             <nav
-                className="navbar navbar-dark bg-dark"
+                className="navbar navbar-dark bg-dark shadow--light"
             >
                     <h2
                         className="navbar-brand"
