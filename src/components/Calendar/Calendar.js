@@ -282,7 +282,10 @@ export class Calendar extends React.Component {
 
             if (empty === false) {
                 current = moment().startOf('day').isSame(day);
-                className = createClassName(['text-align--center', current ? 'calendar-day--current' : null]);
+                className = createClassName([
+                    'text-align--center',
+                    current ? 'calendar-day--current bg-success text-light' : null
+                ]);
             }
 
             const td =

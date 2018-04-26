@@ -137,10 +137,6 @@
     background-color: #eeeff0;
 }
 
-.calendar-day--current {
-    color: #BADA55;
-}
-
 .calendar--event-selected {
     border: 2px solid black;
 }
