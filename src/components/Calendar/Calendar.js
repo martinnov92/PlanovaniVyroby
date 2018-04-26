@@ -227,7 +227,9 @@ export class Calendar extends React.Component {
                         ref={(node) => this.calendar = node}
                     >
                         <table className="calendar-table">
-                            <thead> 
+                            <thead
+                                className="calendar-table--header"
+                            >
                                 <tr>
                                     {this.renderDaysCell(false)}
                                 </tr>

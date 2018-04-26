@@ -17,6 +17,11 @@
     padding: 10px;
     align-items: center;
     border: 1px solid black;
+    border-right: 0;
+}
+
+.calendar--machine + .calendar--machine {
+    border-top: 0;
 }
 
 .calendar {
@@ -33,6 +38,18 @@
 
 .calendar-table td {
     border: 1px solid #000;
+    border-left: 0;
+    border-top: 0;
+}
+
+.calendar-table td:last-child > table td:last-child {
+    border-right: 0;
+}
+
+.calendar-table--header td {
+    height: 21px;
+    max-height: 21px;
+    min-height: 21px;
 }
 
 .calendar-table--body td,

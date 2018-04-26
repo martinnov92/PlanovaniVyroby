@@ -6,6 +6,7 @@ import { Calendar } from './components/Calendar';
 
 import {
     DATA_DATE_FORMAT,
+    getNetMachineTime,
     INPUT_DATE_TIME_FORMAT
 } from './helpers';
 
@@ -171,7 +172,7 @@ class App extends React.Component {
             const findIndex = copy.findIndex((o) => o.id === order.id);
             copy.splice(findIndex, 1, order);
         }
-
+        console.log(getNetMachineTime(order.dateFrom, order.dateTo));
         this.setState({
             orders: copy,
             open: false
