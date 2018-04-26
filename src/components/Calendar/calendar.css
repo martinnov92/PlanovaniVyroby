@@ -29,6 +29,7 @@
     overflow-x: scroll;
     position: relative;
     border: 1px solid #000;
+    z-index: 1;
 }
 
 .calendar table {
