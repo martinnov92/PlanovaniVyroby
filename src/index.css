@@ -15,8 +15,6 @@ body {
 .app {
     width: 100vw;
     height: 100vh;
-    display: grid;
-    grid-template-rows: 100px auto 300px;
 }
 
 .popup-order {

@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { Nav } from './components/Nav';
 import { Popup } from './components/Popup';
 import { Calendar } from './components/Calendar';
 
@@ -73,6 +74,12 @@ class App extends React.Component {
             },
             pinOrders: [],
         };
+    }
+
+    handleAddNewEvent = () => {
+        this.setState({
+            open: true,
+        });
     }
 
     handlePinOrder = (e, order) => {
@@ -172,16 +179,13 @@ class App extends React.Component {
     render() {
         return (
             <div className="app">
-                <div />
+                <Nav
+                    addNewEvent={this.handleAddNewEvent}
+                />
 
-                <div>
-                    <button
-                        className="btn btn-outline-success pull-right mr-2"
-                        onClick={() => this.setState({ open: true })}
-                    >
-                        Přidat zakázku
-                    </button>
-
+                <div
+                    className="pr-3 pb-3 pl-3"
+                >
                     <Calendar
                         machines={machines}
                         events={this.state.orders}
