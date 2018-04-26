@@ -17,6 +17,7 @@ export class Calendar extends React.Component {
     static defaultProps = {
         events: [],
         machines: [],
+        currentWeek: 1,
         onEventDrop: () => {},
         onEventClick: () => {},
         onEventEnter: () => {},
@@ -25,8 +26,6 @@ export class Calendar extends React.Component {
 
     constructor(props) {
         super(props);
-
-        const startOfTheWeek = moment().startOf('week').startOf('day');
 
         this.scrollLeft = 0;
         this.state = {
@@ -39,8 +38,6 @@ export class Calendar extends React.Component {
             selectedEvent: null,
             calendarTableWidth: 0,
             selectedEventElement: null,
-            startOfTheWeek: startOfTheWeek,
-            weekOfTheYear: startOfTheWeek.week(),
         };
     }
 
@@ -58,9 +55,9 @@ export class Calendar extends React.Component {
         const dragging = prevState.draggingEvent !== this.state.draggingEvent;
         const events = !isEqual(this.props.events, prevProps.events);
         const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
-        const weekOfTheYear = prevState.weekOfTheYear !== this.state.weekOfTheYear;
+        const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
 
-        if (weekOfTheYear) {
+        if (currentWeek) {
             // TODO: zkusit vytvořit cell komponentu a potom vytáhnout rendertable body ze statu, vyzkoušet jestli se bude překreslovat
             // normálně něbo pomale
             this.renderTableBody();
@@ -109,21 +106,6 @@ export class Calendar extends React.Component {
 
     handleScroll = (e) => {
         this.scrollLeft = e.target.scrollLeft;
-    }
-
-    handleWeekMove = (e, move) => {
-        let startOfTheWeek = moment(this.state.startOfTheWeek);
-
-        if (move === 'next') {
-            startOfTheWeek = startOfTheWeek.add(1, 'week').startOf('week');
-        } else {
-            startOfTheWeek = startOfTheWeek.subtract(1, 'week').startOf('week');
-        }
-
-        this.setState({
-            startOfTheWeek,
-            weekOfTheYear: startOfTheWeek.week(),
-        });
     }
 
     selectEvent = (e, event) => {
@@ -210,7 +192,6 @@ export class Calendar extends React.Component {
     render() {
         const {
             lockScroll,
-            weekOfTheYear,
         } = this.state;
 
         const {
@@ -219,32 +200,6 @@ export class Calendar extends React.Component {
 
         return (
             <React.Fragment>
-                {/* CURRENT WEEK */}
-                <div
-                    className="text-align--center calendar-year--week"
-                >
-                    <div
-                        className="btn-group"
-                        role="group"
-                    >
-                        <button
-                            className="btn text-weight--bold btn-success"
-                            onClick={(e) => this.handleWeekMove(e, 'prev')}
-                        >
-                            {"<"}
-                        </button>
-
-                        <button className="btn btn-secondary">{weekOfTheYear}. týden</button>
-
-                        <button
-                            className="btn text-weight--bold btn-success"
-                            onClick={(e) => this.handleWeekMove(e, 'next')}
-                        >
-                            {">"}
-                        </button>
-                    </div>
-                </div>
-
                 {/* TABLE */}
                 <div className="calendar-wrapper">
                     <div className="calendar-column--fixed">
@@ -323,7 +278,7 @@ export class Calendar extends React.Component {
         let className;
 
         for (let i = 0; i < 7; i++) {
-            day = moment(this.state.startOfTheWeek).add(i, 'days');
+            day = moment(this.props.startOfTheWeek).add(i, 'days');
 
             if (empty === false) {
                 current = moment().startOf('day').isSame(day);
@@ -409,13 +364,13 @@ export class Calendar extends React.Component {
         const {
             events,
             machines,
+            startOfTheWeek,
         } = this.props;
 
         const {
             draggingEvent,
             selectedEvent,
             calendarHolder,
-            startOfTheWeek,
         } = this.state;
 
         // vyfiltrovat eventy pouze pro daný týden

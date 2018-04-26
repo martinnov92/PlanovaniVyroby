@@ -36,7 +36,10 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
+        const startOfTheWeek = moment().startOf('week').startOf('day');
         this.state = {
+            startOfTheWeek: startOfTheWeek,
+            currentWeek: startOfTheWeek.week(),
             orders: [{
                 id: 'abc',
                 label: 'Zakázka 1',
@@ -74,6 +77,21 @@ class App extends React.Component {
             },
             pinOrders: [],
         };
+    }
+
+    handleWeekMove = (e, move) => {
+        let startOfTheWeek = moment(this.state.startOfTheWeek);
+
+        if (move === 'next') {
+            startOfTheWeek = startOfTheWeek.add(1, 'week').startOf('week');
+        } else {
+            startOfTheWeek = startOfTheWeek.subtract(1, 'week').startOf('week');
+        }
+
+        this.setState({
+            startOfTheWeek,
+            currentWeek: startOfTheWeek.week(),
+        });
     }
 
     handleAddNewEvent = () => {
@@ -177,9 +195,16 @@ class App extends React.Component {
     }
 
     render() {
+        const {
+            currentWeek,
+            startOfTheWeek,
+        } = this.state;
+
         return (
             <div className="app">
                 <Nav
+                    currentWeek={currentWeek}
+                    onWeekMove={this.handleWeekMove}
                     addNewEvent={this.handleAddNewEvent}
                 />
 
@@ -188,7 +213,9 @@ class App extends React.Component {
                 >
                     <Calendar
                         machines={machines}
+                        currentWeek={currentWeek}
                         events={this.state.orders}
+                        startOfTheWeek={startOfTheWeek}
                         onEventDrop={this.handleEventDrop}
                         onEventClick={this.handleEventClick}
                         onEventEnter={this.handleEventEnter}
