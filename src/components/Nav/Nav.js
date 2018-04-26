@@ -18,17 +18,23 @@ export class Nav extends React.Component {
                             role="group"
                         >
                             <button
+                                title="Minulý týden"
                                 className="btn text-weight--bold btn-success"
                                 onClick={(e) => this.props.onWeekMove(e, 'prev')}
                             >
                                 {"<"}
                             </button>
 
-                            <button className="btn btn-secondary">
+                            <button
+                                title="Aktuální týden"
+                                className="btn btn-secondary"
+                                onClick={this.props.onCurrentWeekClick}
+                            >
                                 {this.props.currentWeek}. týden
                             </button>
 
                             <button
+                                title="Další týden"
                                 className="btn text-weight--bold btn-success"
                                 onClick={(e) => this.props.onWeekMove(e, 'next')}
                             >

@@ -94,6 +94,15 @@ class App extends React.Component {
         });
     }
 
+    resetCurrentWeek = () => {
+        const startOfTheWeek = moment().startOf('week').startOf('day');
+
+        this.setState({
+            startOfTheWeek,
+            currentWeek: startOfTheWeek.week(),
+        });
+    }
+
     handleAddNewEvent = () => {
         this.setState({
             open: true,
@@ -206,6 +215,7 @@ class App extends React.Component {
                     currentWeek={currentWeek}
                     onWeekMove={this.handleWeekMove}
                     addNewEvent={this.handleAddNewEvent}
+                    onCurrentWeekClick={this.resetCurrentWeek}
                 />
 
                 <div
