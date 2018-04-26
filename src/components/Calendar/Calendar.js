@@ -47,7 +47,7 @@ export class Calendar extends React.Component {
         // ReactDOM.findDOMNode(this.currentDate).scrollIntoView();
         this.getDimensions();
         this.renderTableBody();
-        // document.addEventListener('drop', this.o)
+
         document.addEventListener('click', this.handleClickOutside);
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
@@ -59,8 +59,6 @@ export class Calendar extends React.Component {
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
 
         if (currentWeek) {
-            // TODO: zkusit vytvořit cell komponentu a potom vytáhnout rendertable body ze statu, vyzkoušet jestli se bude překreslovat
-            // normálně něbo pomale
             this.renderTableBody();
         }
 
@@ -287,7 +285,7 @@ export class Calendar extends React.Component {
                 current = moment().startOf('day').isSame(day);
                 className = createClassName([
                     'text-align--center',
-                    current ? 'calendar-day--current bg-success text-light' : null
+                    current ? 'calendar-day--current bg-danger text-light' : null
                 ]);
             }
 
@@ -335,7 +333,7 @@ export class Calendar extends React.Component {
                     colSpan={2}
                     className={createClassName([
                         'calendar-table--hours',
-                        current ? 'calendar-day--current bg-success text-light' : null
+                        current ? 'calendar-day--current bg-danger text-light' : null
                     ])}
                 >
                     {i}

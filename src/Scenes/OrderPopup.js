@@ -1,17 +1,18 @@
 import React from 'react';
-// import { DragWrapper } from '../DragWrapper';
-import { createClassName } from '../../helpers';
+import { Popup } from '../components/Popup';
 
-import './popup.css';
-
-// TODO: dodělat
-
-export class Popup extends React.Component {
+export class OrderPopup extends React.Component {
     static defaultProps = {
+        order: {},
         footerButtons: () => {},
     };
 
     render() {
+        const {
+            order,
+            machines,
+        } = this.props;
+
         return (
             <Popup
                 className="popup-order"
@@ -19,10 +20,10 @@ export class Popup extends React.Component {
                 footerButtons={() => {
                     return <React.Fragment>
                         {
-                            this.state.order.id
+                            order.id
                             ? <button
                                 className="btn btn-sm btn-danger"
-                                onClick={this.handleDelete}
+                                onClick={this.props.handleDelete}
                             >
                                 Smazat
                             </button>
@@ -31,13 +32,13 @@ export class Popup extends React.Component {
                         
                         <button
                             className="btn btn-sm btn-success ml-2"
-                            onClick={this.handleSave}
+                            onClick={this.props.handleSave}
                         >
                             Uložit
                         </button>
                     </React.Fragment>
                 }}
-                onClose={this.handleClose}
+                onClose={this.props.handleClose}
             >
                 <div className="input-group mb-3">
                     <div className="input-group-prepend">
@@ -46,16 +47,9 @@ export class Popup extends React.Component {
                     <input
                         type="text"
                         name="label"
+                        value={order.label}
                         className="form-control"
-                        onChange={(e) => {
-                            this.setState({
-                                order: {
-                                    ...this.state.order,
-                                    [e.target.name]: e.target.value
-                                }
-                            });
-                        }}
-                        value={this.state.order.label}
+                        onChange={this.props.handleInputChange}
                     />
                 </div>
                 <div className="input-group mb-3">
@@ -64,16 +58,9 @@ export class Popup extends React.Component {
                     </div>
                     <select
                         name="machine"
+                        value={order.machine.id}
                         className="custom-select"
-                        onChange={(e) => {
-                            this.setState({
-                                order: {
-                                    ...this.state.order,
-                                    [e.target.name]: e.target.value
-                                }
-                            });
-                        }}
-                        value={this.state.order.machine.id}
+                        onChange={this.props.handleInputChange}
                     >
                         {machines.map((machine) => {
                             return <option
@@ -91,18 +78,11 @@ export class Popup extends React.Component {
                         <span className="input-group-text">Obsluha</span>
                     </div>
                     <input
-                        className="form-control"
                         type="text"
                         name="worker"
-                        onChange={(e) => {
-                            this.setState({
-                                order: {
-                                    ...this.state.order,
-                                    [e.target.name]: e.target.value
-                                }
-                            });
-                        }}
-                        value={this.state.order.worker}
+                        value={order.worker}
+                        className="form-control"
+                        onChange={this.props.handleInputChange}
                     />
                 </div>
 
@@ -111,19 +91,12 @@ export class Popup extends React.Component {
                         <span className="input-group-text">Od</span>
                     </div>
                     <input
-                        className="form-control"
-                        type="datetime-local"
                         name="dateFrom"
                         required={true}
-                        onChange={(e) => {
-                            this.setState({
-                                order: {
-                                    ...this.state.order,
-                                    [e.target.name]: e.target.value
-                                }
-                            });
-                        }}
-                        value={this.state.order.dateFrom}
+                        type="datetime-local"
+                        value={order.dateFrom}
+                        className="form-control"
+                        onChange={this.props.handleInputChange}
                     />
                 </div>
 
@@ -132,18 +105,25 @@ export class Popup extends React.Component {
                         <span className="input-group-text">Do</span>
                     </div>
                     <input
-                        className="form-control"
-                        type="datetime-local"
                         name="dateTo"
-                        onChange={(e) => {
-                            this.setState({
-                                order: {
-                                    ...this.state.order,
-                                    [e.target.name]: e.target.value
-                                }
-                            });
-                        }}
-                        value={this.state.order.dateTo}
+                        value={order.dateTo}
+                        type="datetime-local"
+                        className="form-control"
+                        onChange={this.props.handleInputChange}
+                    />
+                </div>
+
+                <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">Počet hodin</span>
+                    </div>
+                    <input
+                        type="text"
+                        disabled={true}
+                        name="workingHours"
+                        onChange={() => {}}
+                        className="form-control"
+                        value={order.workingHours}
                     />
                 </div>
 
@@ -152,17 +132,10 @@ export class Popup extends React.Component {
                         <span className="input-group-text">Poznámka</span>
                     </div>
                     <textarea
-                        className="form-control"
                         name="note"
-                        onChange={(e) => {
-                            this.setState({
-                                order: {
-                                    ...this.state.order,
-                                    [e.target.name]: e.target.value
-                                }
-                            });
-                        }}
-                        value={this.state.order.note}
+                        value={order.note}
+                        className="form-control"
+                        onChange={this.props.handleInputChange}
                     />
                 </div>
             </Popup>
