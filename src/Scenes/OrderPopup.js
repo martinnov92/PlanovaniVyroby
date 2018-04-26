@@ -121,7 +121,7 @@ export class OrderPopup extends React.Component {
                         type="text"
                         disabled={true}
                         name="workingHours"
-                        onChange={() => {}}
+                        onChange={() => null}
                         className="form-control"
                         value={order.workingHours}
                     />

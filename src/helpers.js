@@ -15,8 +15,11 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
     const notWorkingHours = workHoursTo - workHoursFrom;
     const hoursDifference = moment.duration(dateTo.diff(dateFrom)).asHours();
+    const daysDifference = moment.duration(dateTo.diff(dateFrom)).asDays();
 
-    // if (dateFrom.hours < )
+    const isBetween = dateFrom.isBetween(dateFrom.hours(workHoursTo), dateTo.hours(workHoursFrom));
+
+    console.log(moment(dateFrom).hours(workHoursTo));
 
     return hoursDifference - notWorkingHours - pause;
 }

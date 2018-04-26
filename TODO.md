@@ -1,6 +1,5 @@
 # TODO:
 
-    - rozpis hodin od 7 do 20 (včetěn 20:00, tzn. do 20:59, nebo do 19:59?)
     - možnost nastavení času po půl hodině
     - opravit časový posun při změně události
     - kontrola vykreslení objednávek, které se táhnou přes více týdnů
@@ -15,3 +14,10 @@
 
 ### Nespěchá
     - možnost definovat pracovní dobu
+
+
+## INFO
+
+    - Zakázka - doplnit do popupu (zakázka === ID)
+    - názvy výrobků ukládat (přidat do nastavení, v nastavení bude správa strojů, pracovníků, výrobků) (+ ukládat i jejich časy)
+    - jedna zakázka může pracovat na více strojích (vytvořit nějaké ID a párovat podle strojů)

@@ -29,6 +29,7 @@
     overflow-x: scroll;
     position: relative;
     border: 1px solid #000;
+    border-bottom: 0;
     z-index: 1;
 }
 
@@ -164,10 +165,10 @@
 }
 
 .calendar--event--resizer {
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 100%;
     top: 50%;
-    left: -6px;
+    left: 0;
     transform: translate(0, -50%);
     display: none;
     position: absolute;
@@ -176,7 +177,7 @@
 }
 
 .calendar--event--resizer-right {
-    right: -6px;
+    right: 0;
     left: initial;
     cursor: e-resize;
     transform: translate(0, -50%);
