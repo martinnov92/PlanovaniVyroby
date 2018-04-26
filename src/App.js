@@ -67,8 +67,11 @@ class App extends React.Component {
                 dateTo: moment().add(4, 'days').hours(11).minutes(0).seconds(0).toDate(),
             }],
             open: false,
-            pinOrders: [],
+            hoverOrder: null,
         };
+
+        this.card = React.createRef();
+        this.calendar = React.createRef();
     }
 
     componentDidMount() {
@@ -105,18 +108,6 @@ class App extends React.Component {
         });
     }
 
-    handlePinOrder = (e, order) => {
-        const pinOrdersCopy = [...this.state.pinOrders];
-
-        if (pinOrdersCopy.length <= 3) {
-            pinOrdersCopy.push(order);
-
-            this.setState({
-                pinOrders: pinOrdersCopy
-            });
-        }
-    }
-
     handleEventClick = (e, order) => {
         const copyOrder = {
             ...order,
@@ -132,13 +123,28 @@ class App extends React.Component {
 
     handleEventEnter = (e, order) => {
         this.setState({
-            pinOrders: [order]
+            hoverOrder: order,
         });
+
+        document.addEventListener('mousemove', this.handleMouseMove);
     }
 
     handleEventLeave = (e, order) => {
         this.setState({
-            pinOrders: []
+            hoverOrder: null,
+        });
+        document.removeEventListener('mousemove', this.handleMouseMove);
+    }
+
+    handleMouseMove = (e) => {
+        const cardWidth = this.card.current.offsetWidth / 2;
+        const scrollLeft = this.calendar.current.calendar.scrollLeft;
+        const offsetLeft = this.calendar.current.calendar.offsetLeft;
+        const calendarHeight = this.calendar.current.calendar.offsetHeight;
+
+        this.setState({
+            y: calendarHeight + e.clientY,
+            x: scrollLeft + offsetLeft + e.clientX - cardWidth,
         });
     }
 
@@ -232,6 +238,7 @@ class App extends React.Component {
                     className="pt-3 pr-3 pb-3 pl-3 app-main--screen_"
                 >
                     <Calendar
+                        ref={this.calendar}
                         machines={machines}
                         currentWeek={currentWeek}
                         events={this.state.orders}
@@ -266,43 +273,43 @@ class App extends React.Component {
     }
 
     renderPinOrders = () => {
-        const { pinOrders } = this.state;
+        const { hoverOrder: order } = this.state;
 
-        if (pinOrders.length > 0) {
-            return pinOrders.map((order) => {
-                const machine = machines.find((machine) => machine.id === order.machine);
-
-                return <div
-                    key={order.id}
-                    style={{
-                        borderTop: `10px solid ${machine.color}`
-                    }}
-                    className="card"
-                >
-                    <div className="card-body">
-                        <h5 className="card-title">
-                            <strong>{order.label}</strong>
-                        </h5>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                            <strong>{order.worker}</strong>
-                        </h6>
-                        <p className="card-text">
-                            {order.note}
-                        </p>
-                        <p className="card-text">
-                            {machine.name}
-                        </p>
-                        <p className="card-text">
-                            <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
-                            {" - "}
-                            <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
-                        </p>
-                    </div>
-                </div>
-            });
+        if (!order) {
+            return null;
         }
 
-        return null;
+        const machine = machines.find((machine) => machine.id === order.machine);
+        return <div
+                key={order.id}
+                ref={this.card}
+                style={{
+                    top: this.state.y,
+                    left: this.state.x,
+                    borderTop: `10px solid ${machine.color}`
+                }}
+                className="card shadow--light"
+            >
+                <div className="card-body">
+                    <h5 className="card-title">
+                        <strong>{order.label}</strong>
+                    </h5>
+                    <h6 className="card-subtitle mb-2 text-muted">
+                        <strong>{order.worker}</strong>
+                    </h6>
+                    <p className="card-text">
+                        {order.note}
+                    </p>
+                    <p className="card-text">
+                        {machine.name}
+                    </p>
+                    <p className="card-text">
+                        <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
+                        {" - "}
+                        <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
+                    </p>
+                </div>
+            </div>;
     }
 
     resetOrderState = () => {

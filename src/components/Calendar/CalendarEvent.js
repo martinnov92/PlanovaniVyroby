@@ -138,6 +138,11 @@ export class CalendarEvent extends React.Component {
                             selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
                         ])
                     }
+                    title={
+                        event.label + '\n' +
+                        event.worker + '\n' +
+                        event.note
+                    }
                     style={style}
                     draggable={!resizerActive}
                     onDragEnd={this.props.onDragEnd}

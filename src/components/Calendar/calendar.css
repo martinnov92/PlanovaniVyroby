@@ -105,6 +105,7 @@
 
 .calendar--event {
     display: flex;
+    padding: 0 5px;
     position: absolute;
 }
 
@@ -112,13 +113,6 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-}
-
-.calendar--event-text > p {
-}
-
-.calendar--event-text {
-    margin-left: 10px;
 }
 
 .calendar--event-note:before,
@@ -166,14 +160,14 @@
 }
 
 .calendar--event-selected {
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 .calendar--event--resizer {
     width: 10px;
     height: 10px;
     top: 50%;
-    left: -7px;
+    left: -6px;
     transform: translate(0, -50%);
     display: none;
     position: absolute;
@@ -182,7 +176,7 @@
 }
 
 .calendar--event--resizer-right {
-    right: -7px;
+    right: -6px;
     left: initial;
     cursor: e-resize;
     transform: translate(0, -50%);
