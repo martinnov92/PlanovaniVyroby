@@ -324,10 +324,20 @@ export class Calendar extends React.Component {
     renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
         const { pause } = this.props;
+        const current = moment().startOf('day').isSame(day);
 
         if (empty === false) {
             for (let i = 7; i <= 20; i++) {
-                let td = <td key={i} colSpan={2} className={createClassName(['calendar-table--hours'])}>{i}</td>;
+                let td = <td
+                    key={i}
+                    colSpan={2}
+                    className={createClassName([
+                        'calendar-table--hours',
+                        current ? 'calendar-day--current bg-success text-light' : null
+                    ])}
+                >
+                    {i}
+                </td>;
                 hours.push(td);
             }
 
