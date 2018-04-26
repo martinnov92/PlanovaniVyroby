@@ -38,6 +38,7 @@ export class Calendar extends React.Component {
             dragActiveCell: null,
             selectedEvent: null,
             calendarTableWidth: 0,
+            selectedEventElement: null,
             startOfTheWeek: startOfTheWeek,
             weekOfTheYear: startOfTheWeek.week(),
         };
@@ -49,6 +50,7 @@ export class Calendar extends React.Component {
         this.getDimensions();
         this.renderTableBody();
         // document.addEventListener('drop', this.o)
+        document.addEventListener('click', this.handleClickOutside);
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
 
@@ -74,7 +76,7 @@ export class Calendar extends React.Component {
     }
 
     getDimensions = () => {
-        const calendarHolder = ReactDOM.findDOMNode(this.calendar);
+        const calendarHolder = this.calendar;
         const calendarTableWidth = calendarHolder.firstChild.offsetWidth;
 
         this.setState({
@@ -82,6 +84,26 @@ export class Calendar extends React.Component {
             calendarTableWidth
         }, () => {
             this.renderEvents();
+        });
+    }
+
+    handleClickOutside = (e) => {
+        const {
+            selectedEventElement,
+        } = this.state;
+        
+        if (!selectedEventElement) {
+            return;
+        }
+
+        const isInEvent = selectedEventElement.contains(e.target);
+        if (isInEvent) {
+            return;
+        }
+
+        this.setState({
+            selectedEvent: null,
+            selectedEventElement: null,
         });
     }
 
@@ -107,6 +129,7 @@ export class Calendar extends React.Component {
     selectEvent = (e, event) => {
         this.setState({
             selectedEvent: event,
+            selectedEventElement: e.target,
         });
     }
 
