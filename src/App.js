@@ -53,11 +53,11 @@ class App extends React.Component {
             },{
                 id: 'abcd',
                 label: 'Zakázka 2',
-                machine: 'st310',
+                machine: 'haas',
                 worker: 'Pavel',
                 note: 'Poznámka k opravě',
-                dateFrom: moment().add(1, 'days').hours(7).minutes(0).seconds(0).toDate(),
-                dateTo: moment().add(2, 'days').hours(13).minutes(0).seconds(0).toDate(),
+                dateFrom: moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(),
+                dateTo: moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate(),
             },{
                 id: 'abcde',
                 label: 'Zakázka 3',

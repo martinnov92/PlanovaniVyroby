@@ -12,7 +12,7 @@ export class OrderPopup extends React.Component {
             order,
             machines,
         } = this.props;
-
+        console.log(order);
         return (
             <Popup
                 className="popup-order"

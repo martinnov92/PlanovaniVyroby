@@ -63,21 +63,29 @@ export class CalendarEvent extends React.Component {
             startPosition = findStartDateOnRow.getBoundingClientRect();
             endPosition = {
                 top: rowClientRect.top + 1,
-                right: rowClientRect.right,
+                left: rowClientRect.right,
             };
         } else if (findStartDateOnRow && findEndDateOnRow) {
             startPosition = findStartDateOnRow.getBoundingClientRect();
             endPosition = findEndDateOnRow.getBoundingClientRect();
         } else {
-            // TODO: kontrola objednávek přes více týdnů
-            return null;
+            // událost přes více týdnů -> mělo by fungovat, protože dojde k vyfiltrování událostí v Calendar.js
+            startPosition = {
+                top: rowClientRect.top,
+                left: rowClientRect.left,
+            };
+
+            endPosition = {
+                top: rowClientRect.top,
+                left: rowClientRect.right,
+            };
         }
 
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
             backgroundColor: machine.color,
             height: `${startPosition.height}px`,
-            width: `${endPosition.right - startPosition.left}px`,
+            width: `${endPosition.left - startPosition.left}px`,
             top: `${startPosition.top - calendarWrapper.top - 1}px`,
             left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,
         };

@@ -155,7 +155,7 @@ export class Calendar extends React.Component {
             draggingEvent: null,
         });
 
-        // get event and get new date from drop
+        // získání eventu z drop eventy
         const parsedEvent = JSON.parse(e.dataTransfer.getData('event'));
         const resizeType = e.dataTransfer.getData('eventResize');
         const dateOnDrop = moment(e.target.dataset.date, DATA_DATE_FORMAT);
@@ -168,13 +168,13 @@ export class Calendar extends React.Component {
         } else if (resizeType === 'dateTo') {
             dateTo = dateOnDrop.toDate();
         } else {
-            // get differenc in hours between dateFrom to dateTo from original event
+            // vypočet rozdílu hodin z původní eventy
             const momentDateTo = moment(parsedEvent.dateTo);
             const momentDateFrom = moment(parsedEvent.dateFrom);
 
             const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
             const sign = Math.sign(hoursDifference);
-    
+            console.log(hoursDifference);
             // set new dateFrom and dateTo on object and pass it to parent component
             dateFrom = dateOnDrop.toDate();
             dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
@@ -396,7 +396,10 @@ export class Calendar extends React.Component {
         // vyfiltrovat eventy pouze pro daný týden
         const endOfTheWeek = moment(startOfTheWeek).endOf('week');
         const filteredEvents = events.filter((event) => {
-            return (moment(event.dateFrom).isAfter(startOfTheWeek) && moment(event.dateTo).isBefore(endOfTheWeek));
+            const isInRange = moment(event.dateFrom).isBefore(startOfTheWeek) && moment(event.dateTo).isAfter(endOfTheWeek);
+            const isInWeek = moment(event.dateFrom).isBetween(startOfTheWeek, endOfTheWeek) || moment(event.dateTo).isBetween(startOfTheWeek, endOfTheWeek);
+
+            return isInRange || isInWeek;
         });
 
         const eventsToRender = filteredEvents.map((event) => {
