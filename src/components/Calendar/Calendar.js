@@ -346,7 +346,7 @@ export class Calendar extends React.Component {
         }
 
         // from 7:00 to 20:00
-        for (let i = 6; i < 20; i++) {
+        for (let i = 7; i <= 20; i++) {
             const cellAttrs = {
                 onDrop: this.handleDrop,
                 onClick: (i) => console.log('klik', i),
@@ -361,15 +361,15 @@ export class Calendar extends React.Component {
                 <CalendarCell
                     day={day}
                     hours={i}
-                    minutes={30}
+                    minutes={0}
                     className={[isPause]}
                     onClick={() => console.log('click', i)}
                     {...cellAttrs}
                 />
                 <CalendarCell
                     day={day}
-                    hours={i + 1}
-                    minutes={0}
+                    hours={i}
+                    minutes={30}
                     {...cellAttrs}
                 />
             </React.Fragment>;

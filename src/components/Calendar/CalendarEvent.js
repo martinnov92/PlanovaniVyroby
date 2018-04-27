@@ -22,6 +22,8 @@ export class CalendarEvent extends React.Component {
         this.state = {
             resizerActive: false
         };
+
+        this.draggableParentDiv = React.createRef();
     }
 
     positionEvent = () => {
@@ -148,7 +150,7 @@ export class CalendarEvent extends React.Component {
                     onDragEnd={this.props.onDragEnd}
                     onDrag={(e) => this.props.onDrag(e, event)}
                     onClick={(e) => this.props.onClick(e, event)}
-                    ref={(node) => this.draggableParentDiv = node}
+                    ref={this.draggableParentDiv}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDragStart={(e) => this.props.onDragStart(e, event)}

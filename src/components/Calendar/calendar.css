@@ -152,6 +152,22 @@
     background-image: url(./push-pin.svg);
 }
 
+.calendar--event-card {
+    min-width: 450px;
+    min-height: 250px;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transition: all ease-in 150ms;
+    transform: translate(-50%, 500px)
+}
+
+.calendar--event-card.card--active {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
 .calendar--event-dragging {
     display: none;
 }

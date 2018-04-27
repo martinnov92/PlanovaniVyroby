@@ -7,7 +7,8 @@ import { Calendar } from './components/Calendar';
 import {
     DATA_DATE_FORMAT,
     getNetMachineTime,
-    INPUT_DATE_TIME_FORMAT
+    INPUT_DATE_TIME_FORMAT,
+    createClassName
 } from './helpers';
 
 const machines = [
@@ -70,7 +71,6 @@ class App extends React.Component {
             hoverOrder: null,
         };
 
-        this.card = React.createRef();
         this.calendar = React.createRef();
     }
 
@@ -125,26 +125,11 @@ class App extends React.Component {
         this.setState({
             hoverOrder: order,
         });
-
-        document.addEventListener('mousemove', this.handleMouseMove);
     }
 
     handleEventLeave = (e, order) => {
         this.setState({
             hoverOrder: null,
-        });
-        document.removeEventListener('mousemove', this.handleMouseMove);
-    }
-
-    handleMouseMove = (e) => {
-        const cardWidth = this.card.current.offsetWidth / 2;
-        const scrollLeft = this.calendar.current.calendar.scrollLeft;
-        const offsetLeft = this.calendar.current.calendar.offsetLeft;
-        const calendarHeight = this.calendar.current.calendar.offsetHeight;
-
-        this.setState({
-            y: calendarHeight + e.clientY,
-            x: scrollLeft + offsetLeft + e.clientX - cardWidth,
         });
     }
 
@@ -275,39 +260,42 @@ class App extends React.Component {
     renderPinOrders = () => {
         const { hoverOrder: order } = this.state;
 
-        if (!order) {
-            return null;
-        }
+        const machine = machines.find((machine) => machine.id === (order && order.machine));
 
-        const machine = machines.find((machine) => machine.id === order.machine);
         return <div
-                key={order.id}
                 ref={this.card}
                 style={{
-                    top: this.state.y,
-                    left: this.state.x,
-                    borderTop: `10px solid ${machine.color}`
+                    borderTop: `10px solid ${machine && machine.color}`
                 }}
-                className="card shadow--light"
+                className={createClassName([
+                    order ? 'card--active' : null,
+                    'card shadow--light calendar--event-card',
+                ])}
             >
                 <div className="card-body">
-                    <h5 className="card-title">
-                        <strong>{order.label}</strong>
-                    </h5>
-                    <h6 className="card-subtitle mb-2 text-muted">
-                        <strong>{order.worker}</strong>
-                    </h6>
-                    <p className="card-text">
-                        {order.note}
-                    </p>
-                    <p className="card-text">
-                        {machine.name}
-                    </p>
-                    <p className="card-text">
-                        <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
-                        {" - "}
-                        <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
-                    </p>
+                {
+                    order
+                    ? <React.Fragment>
+                        <h5 className="card-title">
+                            <strong>{order.label}</strong>
+                        </h5>
+                        <h6 className="card-subtitle mb-2 text-muted">
+                            <strong>{order.worker}</strong>
+                        </h6>
+                        <p className="card-text">
+                            {order.note}
+                        </p>
+                        <p className="card-text">
+                            {machine.name}
+                        </p>
+                        <p className="card-text">
+                            <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
+                            {" - "}
+                            <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
+                        </p>
+                    </React.Fragment>
+                    : null
+                }
                 </div>
             </div>;
     }
