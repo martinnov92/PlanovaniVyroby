@@ -20,14 +20,14 @@ export class OrderPopup extends React.Component {
                 footerButtons={() => {
                     return <React.Fragment>
                         {
-                            order.id
-                            ? <button
-                                className="btn btn-sm btn-danger"
-                                onClick={this.props.handleDelete}
-                            >
-                                Smazat
-                            </button>
-                            : null
+                            // order.id
+                            // ? <button
+                            //     className="btn btn-sm btn-danger"
+                            //     onClick={this.props.handleDelete}
+                            // >
+                            //     Smazat
+                            // </button>
+                            // : null
                         }
                         
                         <button

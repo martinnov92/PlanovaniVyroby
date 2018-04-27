@@ -13,6 +13,9 @@ export class CalendarEvent extends React.Component {
         scrollLeft: 0,
         selectedEvent: {},
         draggingEvent: {},
+        onDoneEvent: () => {},
+        onEditEvent: () => {},
+        onDeleteEvent: () => {},
         calendarWrapperClientRect: {}
     };
 
@@ -115,19 +118,26 @@ export class CalendarEvent extends React.Component {
         const style = Object.assign({}, this.positionEvent());
 
         if (resizerActive) {
-            console.log(resizerActive);
             style.zIndex = -1;
         }
 
         return (
             <ContextMenu
                 key={event.id}
-                onOpen={() => this.setState({ lockScroll: true })}
-                onClose={() => this.setState({ lockScroll: false })}
+                onOpen={this.props.onContextOpen}
+                onClose={this.props.onContextClose}
                 buttons={[
                     {
                         label: 'Upravit',
                         onClick: (e) => this.props.onEditEvent(e, event),
+                    },
+                    {
+                        label: 'Smazat',
+                        onClick: (e) => this.props.onDeleteEvent(e, event),
+                    },
+                    {
+                        label: 'Hotovo',
+                        onClick: (e) => this.props.onDoneEvent(e, event),
                     }
                 ]}
             >

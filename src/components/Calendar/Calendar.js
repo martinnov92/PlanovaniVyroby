@@ -423,7 +423,11 @@ export class Calendar extends React.Component {
                     onMouseLeave={this.props.onEventLeave}
 
                     // context menu props
-                    onEditEvent={this.props.onEventClick}
+                    onEditEvent={this.props.onEditEvent}
+                    onDoneEvent={this.props.onDoneEvent}
+                    onDeleteEvent={this.props.onDeleteEvent}
+                    onContextOpen={() => this.setState({ lockScroll: true })}
+                    onContextClose={() => this.setState({ lockScroll: false })}
                 />
             );
         });

@@ -108,7 +108,7 @@ class App extends React.Component {
         });
     }
 
-    handleEventClick = (e, order) => {
+    handleEventEdit = (e, order) => {
         const copyOrder = {
             ...order,
             dateFrom: moment(order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
@@ -180,8 +180,13 @@ class App extends React.Component {
         this.resetOrderState();
     }
 
-    handleDelete = () => {
-        const { order } = this.state;
+    handleEventDelete = (e, passedOrder) => {
+        let { order } = this.state;
+
+        if (order.id == undefined) {
+            order = passedOrder;
+        }
+
         const orders = [...this.state.orders];
         const findIndex = orders.findIndex((o) => o.id === order.id);
 
@@ -229,9 +234,13 @@ class App extends React.Component {
                         events={this.state.orders}
                         startOfTheWeek={startOfTheWeek}
                         onEventDrop={this.handleEventDrop}
-                        onEventClick={this.handleEventClick}
                         onEventEnter={this.handleEventEnter}
                         onEventLeave={this.handleEventLeave}
+
+                        // context menu
+                        onEditEvent={this.handleEventEdit}
+                        onDeleteEvent={this.handleEventDelete}
+                        onDoneEvent={this.handleEventDone}
                     /> 
 
                     {
@@ -242,7 +251,7 @@ class App extends React.Component {
                             order={this.state.order}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
-                            handleDelete={this.handleDelete}
+                            // handleDelete={this.handleEventDelete}
                             handleInputChange={this.handleInputChange}
                         />
                     }
