@@ -62,7 +62,6 @@ export class Calendar extends React.Component {
         if (currentWeek) {
             this.scrolledToCurrentDate = false;
             this.renderTableBody();
-            this.calendar.scrollTo(0, 0);
         }
 
         if (dragging || selectedEvent || events) {
@@ -453,6 +452,8 @@ export class Calendar extends React.Component {
             if (moment().startOf('week').week() === this.props.currentWeek) {
                 this.scrollToCurrentDate();
                 this.scrolledToCurrentDate = true;
+            } else {
+                this.calendar.scrollTo(0, 0);
             }
         });
     }
