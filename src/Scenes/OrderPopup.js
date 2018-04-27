@@ -7,12 +7,22 @@ export class OrderPopup extends React.Component {
         footerButtons: () => {},
     };
 
+    constructor(props) {
+        super(props);
+
+        this.labelInput = React.createRef();
+    }
+
+    componentDidMount() {
+        this.labelInput.current.focus();
+    }
+
     render() {
         const {
             order,
             machines,
         } = this.props;
-        console.log(order);
+
         return (
             <Popup
                 className="popup-order"
@@ -47,6 +57,7 @@ export class OrderPopup extends React.Component {
                     <input
                         type="text"
                         name="label"
+                        ref={this.labelInput}
                         value={order.label}
                         className="form-control"
                         onChange={this.props.handleInputChange}
