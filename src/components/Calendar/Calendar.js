@@ -40,11 +40,12 @@ export class Calendar extends React.Component {
             calendarTableWidth: 0,
             selectedEventElement: null,
         };
+
+        this.scrolledToCurrentDate = false;
+        this.currentDate = React.createRef();
     }
 
     componentDidMount() {
-        // todo: zafocusovat aktuální den + vyřešit špatný zobrazení zakázek
-        // ReactDOM.findDOMNode(this.currentDate).scrollIntoView();
         this.getDimensions();
         this.renderTableBody();
 
@@ -59,7 +60,9 @@ export class Calendar extends React.Component {
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
 
         if (currentWeek) {
+            this.scrolledToCurrentDate = false;
             this.renderTableBody();
+            this.calendar.scrollTo(0, 0);
         }
 
         if (dragging || selectedEvent || events) {
@@ -81,6 +84,15 @@ export class Calendar extends React.Component {
         }, () => {
             this.renderEvents();
         });
+    }
+
+    scrollToCurrentDate = () => {
+        if (this.scrolledToCurrentDate) {
+            return;
+        }
+
+        const currentDateCell = this.currentDate.current.getBoundingClientRect();
+        this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
     }
 
     handleClickOutside = (e) => {
@@ -303,7 +315,7 @@ export class Calendar extends React.Component {
                                     <td
                                         colSpan={28}
                                         className={className}
-                                        ref={current ? (node) => this.currentDate = node : null}
+                                        ref={current ? this.currentDate : null}
                                     >
                                         <strong>{day.format(FULL_FORMAT)}</strong>
                                     </td>
@@ -437,6 +449,11 @@ export class Calendar extends React.Component {
 
         this.setState({
             eventsToRender
+        }, () => {
+            if (moment().startOf('week').week() === this.props.currentWeek) {
+                this.scrollToCurrentDate();
+                this.scrolledToCurrentDate = true;
+            }
         });
     }
 }
