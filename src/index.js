@@ -1,3 +1,5 @@
+import './polyfills';
+
 import React from 'react';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
