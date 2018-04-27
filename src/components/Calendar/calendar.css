@@ -4,11 +4,14 @@
 
 .calendar-wrapper {
     width: 100%;
+    height: calc(50% - 56px);
     display: flex;
+    overflow: hidden;
 }
 
 .calendar-column--fixed {
     min-width: 150px;
+    overflow: hidden;
 }
 
 .calendar--machine {
@@ -25,7 +28,6 @@
 }
 
 .calendar {
-    height: calc(100% - 45px);
     overflow-x: scroll;
     position: relative;
     border: 1px solid #000;
@@ -48,10 +50,16 @@
     border-right: 0;
 }
 
+.calendar-table--header {
+}
+
 .calendar-table--header td {
     height: 21px;
     max-height: 21px;
     min-height: 21px;
+}
+
+.calendar-table--body {
 }
 
 .calendar-table--body td,
@@ -81,6 +89,10 @@
 
 .calendar-table .calendar-table--empty-hours:nth-child(even) {
     border-left: 0;
+}
+
+.calendar--left-side {
+    overflow: visible;
 }
 
 .column-fixed {

@@ -18,8 +18,7 @@ body {
 }
 
 .app-main--screen {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
+    height: 100%;
 }
 
 .popup-order .input-group-prepend {

@@ -28,8 +28,9 @@ export class Calendar extends React.Component {
     constructor(props) {
         super(props);
 
-        this.scrollLeft = 0;
         this.state = {
+            scrollTop: 0,
+            scrollLeft: 0,
             lockScroll: false,
             eventsToRender: [],
             draggingEvent: null,
@@ -115,7 +116,10 @@ export class Calendar extends React.Component {
     }
 
     handleScroll = (e) => {
-        this.scrollLeft = e.target.scrollLeft;
+        this.setState({
+            scrollTop: e.target.scrollTop,
+            scrollLeft: e.target.scrollLeft,
+        });
     }
 
     selectEvent = (e, event) => {
@@ -213,12 +217,21 @@ export class Calendar extends React.Component {
             <React.Fragment>
                 {/* TABLE */}
                 <div className="calendar-wrapper element--block shadow--light">
-                    <div className="calendar-column--fixed">
-                        <div style={{ height: '44px', border: 0 }} />
+                    <div
+                        className="calendar-column--fixed calendar--left-side"
+                        style={{
+                            transform: `translate(0, ${(this.state.scrollTop * -1)}px)`,
+                        }}
+                    >
+                        <div style={{
+                                height: '44px',
+                                border: 0,
+                            }}
+                        />
                         {
                             machines.map((machine) => {
                                 return <div
-                                    key={machine.name}
+                                    key={machine.id}
                                     style={{
                                         borderLeft: `10px solid ${machine.color}`
                                     }}
@@ -412,10 +425,14 @@ export class Calendar extends React.Component {
 
             return isInRange || isInWeek;
         });
-
+        console.log(filteredEvents);
         const eventsToRender = filteredEvents.map((event) => {
             const machine = machines.find((machine) => machine.id === event.machine);
-            const row = ReactDOM.findDOMNode(this[machine.id]);
+            let row = null;
+
+            if (machine) {
+                row = ReactDOM.findDOMNode(this[machine.id]);
+            }
 
             return (
                 <CalendarEvent
@@ -423,9 +440,9 @@ export class Calendar extends React.Component {
                     event={event}
                     key={event.id}
                     machine={machine}
-                    scrollLeft={this.scrollLeft}
                     selectedEvent={selectedEvent}
                     draggingEvent={draggingEvent}
+                    scrollLeft={this.state.scrollLeft}
                     calendarWrapperClientRect={calendarHolder}
 
                     // mouse events
