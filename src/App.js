@@ -83,6 +83,7 @@ class App extends React.Component {
                 machine: 'finetech',
                 worker: 'Petr',
                 note: 'Poznámka k zakázce',
+                workingHours: getNetMachineTime(moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate()),
                 dateFrom: moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(),
                 dateTo: moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate(),
             },{
@@ -91,26 +92,15 @@ class App extends React.Component {
                 machine: 'haas',
                 worker: 'Pavel',
                 note: 'Poznámka k opravě',
+                workingHours: getNetMachineTime(moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(), moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate()),
                 dateFrom: moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(),
                 dateTo: moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate(),
-            },{
-                id: 'abcde',
-                label: 'Zakázka 3',
-                machine: 'ft1250',
-                worker: 'Roman',
-                note: 'Spěchá',
-                dateFrom: moment().add(2, 'days').hours(9).minutes(0).seconds(0).toDate(),
-                dateTo: moment().add(4, 'days').hours(11).minutes(0).seconds(0).toDate(),
             }],
             open: false,
             hoverOrder: null,
         };
 
         this.calendar = React.createRef();
-    }
-
-    componentDidMount() {
-        this.resetOrderState();
     }
 
     handleWeekMove = (e, move) => {
@@ -141,6 +131,7 @@ class App extends React.Component {
         this.setState({
             open: true,
         });
+        this.resetOrderState();
     }
 
     handleEventEdit = (e, order) => {
