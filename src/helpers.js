@@ -10,16 +10,53 @@ export function createClassName(classNames) {
 }
 
 export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHoursTo = 20, pause = 0.5) {
+    const START_TIME = moment().set({
+        hour: workHoursFrom,
+        minute: 0,
+        seconds: 0,
+        millisecond: 0,
+    });
+
+    const END_TIME = moment().set({
+        hour: workHoursTo,
+        minute: 0,
+        seconds: 0,
+        millisecond: 0,
+    });
+
+    let result = 0;
     dateFrom = moment(dateFrom);
     dateTo = moment(dateTo);
+    // const notWorkingHours = workHoursTo - workHoursFrom;
 
-    const notWorkingHours = workHoursTo - workHoursFrom;
-    const hoursDifference = moment.duration(dateTo.diff(dateFrom)).asHours();
-    const daysDifference = moment.duration(dateTo.diff(dateFrom)).asDays();
+    // kontrola jestli jsou data ve správném pořadí
+    if (dateTo.isBefore(dateFrom)) {
+        return result;
+    }
 
-    const isBetween = dateFrom.isBetween(dateFrom.hours(workHoursTo), dateTo.hours(workHoursFrom));
+    // zjistit celkový počet dnů (TODO: mínus víkendy a svátky)
+    const timeDiff = moment.duration(dateTo.diff(dateFrom));
+    const totalDays = Math.floor(timeDiff.asDays());
 
-    console.log(moment(dateFrom).hours(workHoursTo));
+    if (totalDays > 0) {
+        for (let i = 0; i < totalDays; i++) {
+            const dayStart = moment(dateFrom).add(i, 'days');
+            const START_OF_CURRENT_DAY = moment(dayStart).hour(workHoursFrom);
+            const END_OF_CURRENT_DAY = moment(dayStart).hour(workHoursTo);
 
-    return hoursDifference - notWorkingHours - pause;
+            const dayStartDiff = moment.duration(START_OF_CURRENT_DAY.diff(dayStart));
+            const dayEndDiff = moment.duration(END_OF_CURRENT_DAY.diff(dayStart));
+            console.log(dayStartDiff.asHours(), dayEndDiff.asHours());
+        }
+    }
+
+    // if (totalDays > 0) {
+    //     result = totalHours - (notWorkingHours * totalDays) - (pause * totalDays);
+    // } else if (totalHours > 6) {
+    //     result = totalHours - pause;
+    // } else {
+    //     result = totalHours;
+    // }
+    // console.log(result);
+    return result + 10;
 }
