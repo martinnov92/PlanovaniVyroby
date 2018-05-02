@@ -10,53 +10,52 @@ export function createClassName(classNames) {
 }
 
 export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHoursTo = 20, pause = 0.5) {
-    const START_TIME = moment().set({
-        hour: workHoursFrom,
-        minute: 0,
-        seconds: 0,
-        millisecond: 0,
-    });
-
-    const END_TIME = moment().set({
-        hour: workHoursTo,
-        minute: 0,
-        seconds: 0,
-        millisecond: 0,
-    });
-
     let result = 0;
-    dateFrom = moment(dateFrom);
-    dateTo = moment(dateTo);
+    let minutesWorked = 0;
+    const BREAK_AFTER_MINUTES = 360;
+    
+    dateFrom = moment(dateFrom).toDate();
+    dateTo = moment(dateTo).toDate();
     // const notWorkingHours = workHoursTo - workHoursFrom;
 
     // kontrola jestli jsou data ve správném pořadí
-    if (dateTo.isBefore(dateFrom)) {
+    if (moment(dateTo).isBefore(moment(dateFrom))) {
         return result;
     }
 
-    // zjistit celkový počet dnů (TODO: mínus víkendy a svátky)
-    const timeDiff = moment.duration(dateTo.diff(dateFrom));
-    const totalDays = Math.floor(timeDiff.asDays());
+    let current = dateFrom;
+    while (current <= dateTo) {
+        const currentTime = current.getHours() + (current.getMinutes() / 60);
 
-    if (totalDays > 0) {
-        for (let i = 0; i < totalDays; i++) {
-            const dayStart = moment(dateFrom).add(i, 'days');
-            const START_OF_CURRENT_DAY = moment(dayStart).hour(workHoursFrom);
-            const END_OF_CURRENT_DAY = moment(dayStart).hour(workHoursTo);
-
-            const dayStartDiff = moment.duration(START_OF_CURRENT_DAY.diff(dayStart));
-            const dayEndDiff = moment.duration(END_OF_CURRENT_DAY.diff(dayStart));
-            console.log(dayStartDiff.asHours(), dayEndDiff.asHours());
+        // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
+        if (currentTime >= workHoursFrom && currentTime <= workHoursTo) {
+            minutesWorked++;
         }
+
+        // zvětšit čas o hodinu
+        current.setTime(current.getTime() + 1000 * 60);
     }
 
-    // if (totalDays > 0) {
-    //     result = totalHours - (notWorkingHours * totalDays) - (pause * totalDays);
-    // } else if (totalHours > 6) {
-    //     result = totalHours - pause;
-    // } else {
-    //     result = totalHours;
-    // }
-    // console.log(result);
-    return result + 10;
+    // odečíst zákonnou přestávku
+    if ((minutesWorked / 60) >= 6) {
+        const multiple = Math.floor(minutesWorked / BREAK_AFTER_MINUTES);
+        minutesWorked = minutesWorked - (30 * multiple);
+    }
+
+    return {
+        totalHours: (minutesWorked / 60).toFixed(1),
+        totalMinutes: minutesWorked,
+    };
+}
+
+export function formatMinutesToTime(totalMinutes) {
+    if (!totalMinutes) {
+        // default
+        return `0h 0m`;
+    }
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours}h ${minutes}m`;
 }

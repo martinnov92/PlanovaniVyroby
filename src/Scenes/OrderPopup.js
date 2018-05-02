@@ -1,5 +1,6 @@
 import React from 'react';
 import { Popup } from '../components/Popup';
+import { formatMinutesToTime } from '../helpers';
 
 export class OrderPopup extends React.Component {
     static defaultProps = {
@@ -133,8 +134,8 @@ export class OrderPopup extends React.Component {
                         disabled={true}
                         name="workingHours"
                         className="form-control"
-                        value={order.workingHours}
                         onChange={this.props.handleInputChange}
+                        value={formatMinutesToTime(order.workingHours)}
                     />
                 </div>
 
