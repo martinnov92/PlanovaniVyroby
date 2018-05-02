@@ -183,7 +183,7 @@ class App extends React.Component {
         order[e.target.name] = e.target.value;
 
         if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
-            order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo).totalMinutes;
+            order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         }
 
         this.setState({

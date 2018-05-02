@@ -24,7 +24,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     }
 
     let current = dateFrom;
-    while (current <= dateTo) {
+    while (current < dateTo) {
         const currentTime = current.getHours() + (current.getMinutes() / 60);
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
@@ -39,13 +39,10 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     // odečíst zákonnou přestávku
     if ((minutesWorked / 60) >= 6) {
         const multiple = Math.floor(minutesWorked / BREAK_AFTER_MINUTES);
-        minutesWorked = minutesWorked - (30 * multiple);
+        minutesWorked = minutesWorked - ((pause * 60) * multiple);
     }
 
-    return {
-        totalHours: (minutesWorked / 60).toFixed(1),
-        totalMinutes: minutesWorked,
-    };
+    return Math.floor(minutesWorked / 10) * 10;
 }
 
 export function formatMinutesToTime(totalMinutes) {
