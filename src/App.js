@@ -55,7 +55,8 @@ class App extends React.Component {
             currentWeek: startOfTheWeek.week(),
             orders: [{
                 id: 'abc',
-                label: 'Zakázka 1',
+                orderId: 'Z180xxx', // zakázka - může být jedna zakázka na více strojích a pak se zgrupují v order table
+                productName: 'Zakázka 1', // jméno výrobku (ve wordu v němčině)
                 machine: 'finetech',
                 worker: 'Petr',
                 note: 'Poznámka k zakázce',
@@ -64,7 +65,8 @@ class App extends React.Component {
                 dateTo: moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate(),
             },{
                 id: 'abcd',
-                label: 'Zakázka 2',
+                orderId: 'Z180xxx',
+                productName: 'Zakázka 2',
                 machine: 'haas',
                 worker: 'Pavel',
                 note: 'Poznámka k opravě',

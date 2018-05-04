@@ -162,7 +162,7 @@ export class CalendarEvent extends React.Component {
                         ])
                     }
                     title={
-                        event.label + '\n' +
+                        event.productName + '\n' +
                         event.worker + '\n' +
                         event.note
                     }
@@ -181,7 +181,7 @@ export class CalendarEvent extends React.Component {
                     >
                         <p>
                             <strong>
-                                {event.label}
+                                {event.productName}
                             </strong>
                         </p>
                         <p>{event.worker}</p>
