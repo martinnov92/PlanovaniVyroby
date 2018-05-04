@@ -91,8 +91,8 @@ export class OrderTable extends React.Component {
                             <th scope="col">4.o Čas/ks (napl)</th>
                             <th scope="col">5.o Čas/ks (napl)</th>
                             <th scope="col">6.o Čas/ks (napl)</th>
-                            <th scope="col">Celkový čas na kus</th>
-                            <th scope="col">Celkový čas na zakázku</th>
+                            <th scope="col">Čas na kus</th>
+                            <th scope="col">Čas na zakázku</th>
                             <th scope="col">Naplánováné</th>
                             <th scope="col">Zbývá</th>
                         </tr>

@@ -10,6 +10,11 @@
     overflow: auto;
 }
 
+.table--orders .table th {
+    font-size: .75rem;
+    text-align: center;
+}
+
 .table--orders .table td,
 .table--orders .table th {
     min-width: 120px;
