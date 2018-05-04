@@ -29,7 +29,17 @@ const machines = [
         color: '#C01025'
     },
     {
-        id: 'ft1250',
+        id: 'ft1250a',
+        name: 'FTU 1250',
+        color: '#ACCE55'
+    },
+    {
+        id: 'st310a',
+        name: 'CNC Soustruh ST310',
+        color: '#C01025'
+    },
+    {
+        id: 'ft1250c',
         name: 'FTU 1250',
         color: '#ACCE55'
     }
