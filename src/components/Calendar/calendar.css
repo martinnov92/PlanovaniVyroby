@@ -4,7 +4,8 @@
 
 .calendar-wrapper {
     width: 100%;
-    height: calc(50% - 56px);
+    height: auto;
+    max-height: calc(50% - 56px);
     display: flex;
     overflow: hidden;
 }
