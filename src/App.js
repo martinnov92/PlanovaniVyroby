@@ -259,7 +259,6 @@ class App extends React.Component {
 
     renderPinOrders = () => {
         const { hoverOrder: order } = this.state;
-
         const machine = machines.find((machine) => machine.id === (order && order.machine));
 
         return <div
