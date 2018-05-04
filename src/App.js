@@ -31,41 +31,6 @@ const machines = [
         id: 'ft1250',
         name: 'FTU 1250',
         color: '#ACCE55'
-    },
-    {
-        id: 'noname_2',
-        name: 'název',
-        color: '#ACCE55'
-    },
-    {
-        id: 'noname_3',
-        name: 'název',
-        color: '#ACCE55'
-    },
-    {
-        id: 'noname_4',
-        name: 'název',
-        color: '#ACCE55'
-    },
-    {
-        id: 'noname_5',
-        name: 'název',
-        color: '#ACCE55'
-    },
-    {
-        id: 'noname_6',
-        name: 'název',
-        color: '#ACCE55'
-    },
-    {
-        id: 'noname_7',
-        name: 'název',
-        color: '#ACCE55'
-    },
-    {
-        id: 'noname_8',
-        name: 'název',
-        color: '#ACCE55'
     }
 ];
 

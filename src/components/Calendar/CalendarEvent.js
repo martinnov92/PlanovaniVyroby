@@ -104,9 +104,10 @@ export class CalendarEvent extends React.Component {
             });
         }, 0);
 
-        const stringifyEvent = JSON.stringify(this.props.event);
-        e.dataTransfer.setData('event', stringifyEvent);
-        e.dataTransfer.setData('eventResize', e.target.dataset.resize);
+        e.dataTransfer.setData('text', JSON.stringify({
+            event: this.props.event,
+            eventResize: e.target.dataset.resize,
+        }));
     }
 
     handleResizerDragEnd = (e) => {

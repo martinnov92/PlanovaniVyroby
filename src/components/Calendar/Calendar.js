@@ -92,7 +92,7 @@ export class Calendar extends React.Component {
         }
 
         const currentDateCell = this.currentDate.current.getBoundingClientRect();
-        this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
+        // this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
     }
 
     handleClickOutside = (e) => {
@@ -136,8 +136,9 @@ export class Calendar extends React.Component {
             });
         }, 0);
 
-        const stringifyEvent = JSON.stringify(event);
-        e.dataTransfer.setData('event', stringifyEvent);
+        e.dataTransfer.setData('text', JSON.stringify({
+            event: event
+        }));
     }
 
     handleDrag = (e, event) => {
@@ -171,32 +172,31 @@ export class Calendar extends React.Component {
         });
 
         // získání eventu z drop eventy
-        const parsedEvent = JSON.parse(e.dataTransfer.getData('event'));
-        const resizeType = e.dataTransfer.getData('eventResize');
+        const parsedEvent = JSON.parse(e.dataTransfer.getData('text'));
         const dateOnDrop = moment(e.target.dataset.date, DATA_DATE_FORMAT);
 
-        let dateFrom = parsedEvent.dateFrom;
-        let dateTo = parsedEvent.dateTo;
+        let dateFrom = parsedEvent.event.dateFrom;
+        let dateTo = parsedEvent.event.dateTo;
 
-        if (resizeType === 'dateFrom') {
+        if (parsedEvent.eventResize === 'dateFrom') {
             dateFrom = dateOnDrop.toDate();
-        } else if (resizeType === 'dateTo') {
+        } else if (parsedEvent.eventResize === 'dateTo') {
             dateTo = dateOnDrop.toDate();
         } else {
             // vypočet rozdílu hodin z původní eventy
-            const momentDateTo = moment(parsedEvent.dateTo);
-            const momentDateFrom = moment(parsedEvent.dateFrom);
+            const momentDateTo = moment(parsedEvent.event.dateTo);
+            const momentDateFrom = moment(parsedEvent.event.dateFrom);
 
             const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
             const sign = Math.sign(hoursDifference);
-            console.log(hoursDifference);
+
             // set new dateFrom and dateTo on object and pass it to parent component
             dateFrom = dateOnDrop.toDate();
             dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
         }
 
         const newEvent = {
-            ...parsedEvent,
+            ...parsedEvent.event,
             dateFrom: dateFrom,
             dateTo: dateTo,
         };
@@ -467,10 +467,10 @@ export class Calendar extends React.Component {
             eventsToRender
         }, () => {
             if (moment().startOf('week').week() === this.props.currentWeek) {
-                this.scrollToCurrentDate();
+                // this.scrollToCurrentDate();
                 this.scrolledToCurrentDate = true;
             } else {
-                this.calendar.scrollTo(0, 0);
+                // this.calendar.scrollTo(0, 0);
             }
         });
     }
