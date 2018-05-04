@@ -12,6 +12,10 @@
 
 .calendar-column--fixed {
     min-width: 150px;
+    overflow: visible;
+}
+
+.calendar-column--fixed[style*="transform: translateY(0px)"] {
     overflow: hidden;
 }
 
@@ -90,10 +94,6 @@
 
 .calendar-table .calendar-table--empty-hours:nth-child(even) {
     border-left: 0;
-}
-
-.calendar--left-side {
-    overflow: visible;
 }
 
 .column-fixed {

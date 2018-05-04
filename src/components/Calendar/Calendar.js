@@ -220,7 +220,7 @@ export class Calendar extends React.Component {
                     <div
                         className="calendar-column--fixed calendar--left-side"
                         style={{
-                            transform: `translate(0, ${(this.state.scrollTop * -1)}px)`,
+                            transform: `translateY(${(this.state.scrollTop * -1)}px)`,
                         }}
                     >
                         <div style={{
