@@ -425,7 +425,7 @@ export class Calendar extends React.Component {
 
             return isInRange || isInWeek;
         });
-        console.log(filteredEvents);
+
         const eventsToRender = filteredEvents.map((event) => {
             const machine = machines.find((machine) => machine.id === event.machine);
             let row = null;

@@ -206,7 +206,7 @@
 
 .calendar--event--resizer-right {
     right: 0;
-    left: initial;
+    left: auto;
     cursor: e-resize;
     transform: translate(0, -50%);
 }
