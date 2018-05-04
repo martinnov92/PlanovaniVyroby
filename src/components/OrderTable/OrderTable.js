@@ -9,28 +9,39 @@ export class OrderTable extends React.Component {
         this.state = {
             width: 0,
             height: 0,
+            scrollLeft: 0,
         };
 
-        this.tableWrapper = React.createRef();
         this.fixedHeader = React.createRef();
+        this.tableWrapper = React.createRef();
+        this.scrollableDiv = React.createRef();
     }
 
     componentDidMount() {
-        this.setHeight();
+        this.setDimension();
+        window.addEventListener('resize', this.setDimension)
+        this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
     }
 
-    setHeight() {
-        const width = this.fixedHeader.current.getBoundingClientRect().width;
-        const height = this.tableWrapper.current.getBoundingClientRect().height;
+    handleScroll = () => {
+        this.setState({
+            scrollLeft: this.scrollableDiv.current.scrollLeft,
+        });
+    }
+
+    setDimension = () => {
+        const fixedHeader = this.fixedHeader.current.getBoundingClientRect();
+        const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeader.height;
 
         this.setState({
-            width,
+            width: fixedHeader.width,
             height,
         });
     }
 
     render() {
-        const style = {};
+        const divStyle = {};
+        const tableStyle = {};
 
         const classNames = createClassName([
             'table',
@@ -45,8 +56,8 @@ export class OrderTable extends React.Component {
         ]);
 
         if (this.state.height > 0) {
-            style.width = this.state.width;
-            style.height = this.state.height;
+            tableStyle.width = this.state.width;
+            divStyle.height = this.state.height;
         }
 
         return (
@@ -55,8 +66,11 @@ export class OrderTable extends React.Component {
                 ref={this.tableWrapper}
             >
                 <table
-                    className={classNamesHeader}
                     ref={this.fixedHeader}
+                    className={classNamesHeader}
+                    style={{
+                        transform: `translateX(${this.state.scrollLeft * -1}px)`
+                    }}
                 >
                     <thead>
                         <tr>
@@ -78,11 +92,75 @@ export class OrderTable extends React.Component {
                 </table>
 
                 <div
+                    style={divStyle}
+                    ref={this.scrollableDiv}
                     className="table--scrollable"
-                    style={style}
                 >
-                    <table className={classNames}>
+                    <table
+                        className={classNames}
+                        style={tableStyle}
+                    >
                         <tbody>
+                            <tr>
+                                <td>1234xxxx6</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <td>1234xxxx6</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <td>1234xxxx6</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <td>1234xxxx6</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
                             <tr>
                                 <td>1234xxxx6</td>
                                 <td>Mark</td>
