@@ -18,7 +18,9 @@ body {
 }
 
 .app-main--screen {
-    height: 100%;
+    height: calc(100% - 56px);
+    display: flex;
+    flex-direction: column;
 }
 
 .popup-order .input-group-prepend {
@@ -37,6 +39,10 @@ body {
 }
 
 /* helpers */
+.table {
+    margin-bottom: 0;
+}
+
 p,
 h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0;

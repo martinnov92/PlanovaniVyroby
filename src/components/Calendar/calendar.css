@@ -2,10 +2,10 @@
     --fixedWidth: 8.57rem;
 }
 
-.calendar-wrapper {
+.calendar-wrapper,
+.calendar-wrapper.element--block {
     width: 100%;
-    height: auto;
-    max-height: calc(50% - 56px);
+    flex: 1 0 232px;
     display: flex;
     overflow: hidden;
 }

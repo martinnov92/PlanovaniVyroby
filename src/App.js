@@ -3,6 +3,7 @@ import moment from 'moment';
 import { OrderPopup } from './Scenes';
 import { Nav } from './components/Nav';
 import { Calendar } from './components/Calendar';
+import { OrderTable } from './components/OrderTable';
 
 import {
     DATA_DATE_FORMAT,
@@ -231,7 +232,11 @@ class App extends React.Component {
                         onEditEvent={this.handleEventEdit}
                         onDeleteEvent={this.handleEventDelete}
                         onDoneEvent={this.handleEventDone}
-                    /> 
+                    />
+
+                    <OrderTable
+                        events={this.state.orders}
+                    />
 
                     {
                         !this.state.open
@@ -246,11 +251,7 @@ class App extends React.Component {
                         />
                     }
 
-                    <div
-                        className="orders--detail"
-                    >
-                        {this.renderPinOrders()}
-                    </div>
+                    {this.renderPinOrders()}
                 </div>
             </div>
         );
