@@ -45,6 +45,7 @@ class App extends React.Component {
                 productName: 'Výrobek 1', // jméno výrobku (ve wordu v němčině)
                 machine: 'finetech',
                 worker: 'Petr',
+                done: false,
                 note: 'Poznámka k zakázce',
                 operation: {
                     order: "4",
@@ -60,6 +61,7 @@ class App extends React.Component {
                 productName: 'Výrobek 1',
                 machine: 'haas',
                 worker: 'Pavel',
+                done: false,
                 note: 'Poznámka k opravě',
                 operation: {
                     order: "1",
@@ -178,15 +180,9 @@ class App extends React.Component {
         this.resetOrderState();
     }
 
-    handleEventDelete = (e, passedOrder) => {
-        let { order } = this.state;
-
-        if (order.id == undefined) {
-            order = passedOrder;
-        }
-
+    handleOrderDelete = (e, passedOrder) => {
         const orders = [...this.state.orders];
-        const findIndex = orders.findIndex((o) => o.id === order.id);
+        const findIndex = orders.findIndex((o) => o.id === passedOrder.id);
 
         if (findIndex < 0) {
             return;
@@ -237,7 +233,7 @@ class App extends React.Component {
 
                         // context menu
                         onEditEvent={this.handleEventEdit}
-                        onDeleteEvent={this.handleEventDelete}
+                        onDeleteEvent={this.handleOrderDelete}
                         onDoneEvent={this.handleEventDone}
                     />
 
@@ -316,6 +312,7 @@ class App extends React.Component {
                 label: '',
                 worker: '',
                 note: '',
+                done: false, 
                 dateTo: dateTo,
                 operation: {
                     order: 1,
