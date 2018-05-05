@@ -15,11 +15,19 @@ export class ContextMenu extends React.Component {
         this.state = {
             open: false
         };
+
+        this.mounted = false;
     }
     
     componentDidMount() {
+        this.mounted = true;
+
         document.addEventListener('click', this.handleClickOutside);
         document.addEventListener('contextmenu', this.handleRightClickOutside);
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     handleRightClick = (e) => {
@@ -48,7 +56,7 @@ export class ContextMenu extends React.Component {
     }
 
     handleClickOutside = (e) => { 
-        if (!this.state.open) {
+        if (!this.state.open || !this.mounted) {
             return;
         }
         
@@ -76,7 +84,6 @@ export class ContextMenu extends React.Component {
     }
 
     render() {
-        // TODO: možná předělat?
         if (this.props.useAsTableRow) {
             return (
                 <tr

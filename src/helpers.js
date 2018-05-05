@@ -9,8 +9,14 @@ export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
 
-export function createGroupedOrders(orders) {
-    return orders.filter((order) => order.done === false).reduce((prev, current) => {
+export function createGroupedOrders(orders, filterDone = false) {
+    let o = [...orders];
+
+    if (filterDone) {
+        o = orders.filter((order) => order.done === false);
+    }
+
+    return o.reduce((prev, current) => {
         const orderExists = prev[current.orderId];
 
         if (!orderExists) {
@@ -23,12 +29,7 @@ export function createGroupedOrders(orders) {
                             count: Number(current.operation.count),
                         },
                         [current.operation.order]: {
-                            id: current.id,
-                            worker: current.worker,
-                            orderId: current.orderId,
-                            machine: current.machine,
-                            operation: current.operation,
-                            workingHours: current.workingHours,
+                            ...current,
                         }
                     }
                 }
@@ -46,12 +47,7 @@ export function createGroupedOrders(orders) {
                         count: Number(prev[current.orderId][current.productName].total.count) + Number(current.operation.count),
                     },
                     [current.operation.order]: {
-                        id: current.id,
-                        worker: current.worker,
-                        orderId: current.orderId,
-                        machine: current.machine,
-                        operation: current.operation,
-                        workingHours: current.workingHours,
+                        ...current
                     }
                 }
             }

@@ -47,7 +47,7 @@ export class OrderTable extends React.Component {
 
     renderTableBody = (events) => {
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events);
+        const orders = createGroupedOrders(events, true);
         const rows = Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
