@@ -64,7 +64,7 @@ export class OrderTable extends React.Component {
                     >
                         <td>{key}</td>
                         <td>{keys[i]}</td>
-                        <td>TOTAL KS</td>
+                        <td>{product.total.count}</td>
                         <td>
                             {
                                 product['1']
@@ -107,8 +107,10 @@ export class OrderTable extends React.Component {
                                 : '-'
                             }
                         </td>
-                        <td>hh</td>
-                        <td>ch</td>
+                        <td>{product.total.time}</td>
+                        <td>
+                            {product.total.time} * {product.total.count} = {(product.total.time * product.total.count) / 60}h
+                        </td>
                         <td>i</td>
                         <td>j</td>
                     </tr>

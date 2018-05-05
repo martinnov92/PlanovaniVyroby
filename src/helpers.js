@@ -18,6 +18,10 @@ export function createGroupedOrders(orders) {
                 ...prev,
                 [current.orderId]: {
                     [current.productName]: {
+                        total: {
+                            time: Number(current.operation.time),
+                            count: Number(current.operation.count),
+                        },
                         [current.operation.order]: {
                             id: current.id,
                             worker: current.worker,
@@ -37,6 +41,10 @@ export function createGroupedOrders(orders) {
                 ...prev[current.orderId],
                 [current.productName]: {
                     ...prev[current.orderId][current.productName],
+                    total: {
+                        time: Number(prev[current.orderId][current.productName].total.time) + Number(current.operation.time),
+                        count: Number(prev[current.orderId][current.productName].total.count) + Number(current.operation.count),
+                    },
                     [current.operation.order]: {
                         id: current.id,
                         worker: current.worker,
