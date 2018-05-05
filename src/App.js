@@ -57,7 +57,7 @@ class App extends React.Component {
             },{
                 id: 'abcd',
                 orderId: 'Z180xxx',
-                productName: 'Výrobek 2',
+                productName: 'Výrobek 1',
                 machine: 'haas',
                 worker: 'Pavel',
                 note: 'Poznámka k opravě',

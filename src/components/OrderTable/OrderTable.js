@@ -45,8 +45,80 @@ export class OrderTable extends React.Component {
 
     renderTableBody = (events) => {
         // zgrupovat zakázky podle orderId
-        const groupedOrders = createGroupedOrders(events);
-        console.log(groupedOrders);
+        const orders = createGroupedOrders(events);
+        console.log('orders', orders);
+
+        const rows = Object.keys(orders).map((key) => {
+            const row = [];
+            const order = orders[key];
+            const keys = Object.keys(order);
+            console.log('order', order, keys);
+
+            for (let i = 0; i < keys.length; i++) {
+                const product = order[keys[i]];
+                console.log('product', product);
+
+                row.push(
+                    <tr
+                        key={key}
+                    >
+                        <td>{key}</td>
+                        <td>{keys[i]}</td>
+                        <td>TOTAL KS</td>
+                        <td>
+                            {
+                                product['1']
+                                ? `${product['1'].operation.count} (${product['1'].operation.time})`
+                                : '-'
+                            }
+                        </td>
+                        <td>
+                            {
+                                product['2']
+                                ? `${product['2'].operation.count} (${product['2'].operation.time})`
+                                : '-'
+                            }
+                        </td>
+                        <td>
+                            {
+                                product['3']
+                                ? `${product['3'].operation.count} (${product['3'].operation.time})`
+                                : '-'
+                            }
+                        </td>
+                        <td>
+                            {
+                                product['4']
+                                ? `${product['4'].operation.count} (${product['4'].operation.time})`
+                                : '-'
+                            }
+                        </td>
+                        <td>
+                            {
+                                product['5']
+                                ? `${product['5'].operation.count} (${product['5'].operation.time})`
+                                : '-'
+                            }
+                        </td>
+                        <td>
+                            {
+                                product['6']
+                                ? `${product['6'].operation.count} (${product['6'].operation.time})`
+                                : '-'
+                            }
+                        </td>
+                        <td>hh</td>
+                        <td>ch</td>
+                        <td>i</td>
+                        <td>j</td>
+                    </tr>
+                );
+            }
+
+            return row;
+        });
+
+        return rows;
     }
 
     render() {
