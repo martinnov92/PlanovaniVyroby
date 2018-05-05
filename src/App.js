@@ -175,7 +175,7 @@ class App extends React.Component {
             const findIndex = copy.findIndex((o) => o.id === order.id);
             copy.splice(findIndex, 1, order);
         }
-        console.log(getNetMachineTime(order.dateFrom, order.dateTo));
+        // console.log(getNetMachineTime(order.dateFrom, order.dateTo));
         this.setState({
             orders: copy,
             open: false
@@ -238,7 +238,7 @@ class App extends React.Component {
             startOfTheWeek,
             filterFinishedOrders,
         } = this.state;
-        console.log(filterFinishedOrders);
+
         return (
             <div className="app">
                 <Nav
@@ -350,7 +350,8 @@ class App extends React.Component {
 
         this.setState({
             order: {
-                label: '',
+                orderId: '',
+                productName: '',
                 worker: '',
                 note: '',
                 done: false, 
