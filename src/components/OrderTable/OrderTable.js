@@ -1,6 +1,6 @@
 import React from 'react';
-import './order-table.css';
 import { createClassName } from '../../helpers';
+import './order-table.css';
 
 export class OrderTable extends React.Component {
     static defaultProps = {
@@ -43,8 +43,11 @@ export class OrderTable extends React.Component {
         });
     }
 
-    renderTableBody = () => {
-        console.log(this.props.events);
+    renderTableBody = (events) => {
+        console.log(events);
+        // zgrupovat zakázky podle orderId
+        const groupedEvents = events.reduce((prev, current) => {
+        }, []);
     }
 
     render() {
@@ -109,7 +112,7 @@ export class OrderTable extends React.Component {
                         style={tableStyle}
                     >
                         <tbody>
-                            {this.renderTableBody()}
+                            {this.renderTableBody(this.props.events)}
                         </tbody>
                     </table>
                 </div>

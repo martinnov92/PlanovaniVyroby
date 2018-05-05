@@ -1,17 +1,13 @@
 // @ts-check
 
-import React from 'react';
-import moment from 'moment';
-import ReactDOM from 'react-dom';
 import isEqual from 'lodash/isEqual';
-import { CalendarEvent, CalendarCell } from './';
-import {
-    FULL_FORMAT,
-    createClassName,
-    DATA_DATE_FORMAT,
-} from '../../helpers';
-
+import moment from 'moment';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName } from '../../helpers';
+import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
+
 
 export class Calendar extends React.Component {
     static defaultProps = {
@@ -92,7 +88,7 @@ export class Calendar extends React.Component {
         }
 
         const currentDateCell = this.currentDate.current.getBoundingClientRect();
-        // this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
+        this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
     }
 
     handleClickOutside = (e) => {
@@ -467,10 +463,10 @@ export class Calendar extends React.Component {
             eventsToRender
         }, () => {
             if (moment().startOf('week').week() === this.props.currentWeek) {
-                // this.scrollToCurrentDate();
+                this.scrollToCurrentDate();
                 this.scrolledToCurrentDate = true;
             } else {
-                // this.calendar.scrollTo(0, 0);
+                this.calendar.scrollTo(0, 0);
             }
         });
     }

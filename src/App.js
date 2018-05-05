@@ -1,16 +1,12 @@
-import React from 'react';
+import set from 'lodash/set';
 import moment from 'moment';
+import React from 'react';
 import { OrderPopup } from './Scenes';
-import { Nav } from './components/Nav';
 import { Calendar } from './components/Calendar';
+import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
+import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime } from './helpers';
 
-import {
-    DATA_DATE_FORMAT,
-    getNetMachineTime,
-    INPUT_DATE_TIME_FORMAT,
-    createClassName
-} from './helpers';
 
 const machines = [
     {
@@ -33,16 +29,6 @@ const machines = [
         name: 'FTU 1250',
         color: '#ACCE55'
     },
-    {
-        id: 'st310a',
-        name: 'CNC Soustruh ST310',
-        color: '#C01025'
-    },
-    {
-        id: 'ft1250c',
-        name: 'FTU 1250',
-        color: '#ACCE55'
-    }
 ];
 
 class App extends React.Component {
@@ -56,20 +42,30 @@ class App extends React.Component {
             orders: [{
                 id: 'abc',
                 orderId: 'Z180xxx', // zakázka - může být jedna zakázka na více strojích a pak se zgrupují v order table
-                productName: 'Zakázka 1', // jméno výrobku (ve wordu v němčině)
+                productName: 'Výrobek 1', // jméno výrobku (ve wordu v němčině)
                 machine: 'finetech',
                 worker: 'Petr',
                 note: 'Poznámka k zakázce',
+                operation: {
+                    order: "4",
+                    time: 10,
+                    count: 10,
+                },
                 workingHours: getNetMachineTime(moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate()),
                 dateFrom: moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(),
                 dateTo: moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate(),
             },{
                 id: 'abcd',
                 orderId: 'Z180xxx',
-                productName: 'Zakázka 2',
+                productName: 'Výrobek 2',
                 machine: 'haas',
                 worker: 'Pavel',
                 note: 'Poznámka k opravě',
+                operation: {
+                    order: "1",
+                    time: 15,
+                    count: 8,
+                },
                 workingHours: getNetMachineTime(moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(), moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate()),
                 dateFrom: moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(),
                 dateTo: moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate(),
@@ -148,8 +144,7 @@ class App extends React.Component {
     }
 
     handleInputChange= (e) => {
-        const order = {...this.state.order};
-        order[e.target.name] = e.target.value;
+        const order = set(this.state.order, e.target.name, e.target.value);
 
         if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
@@ -322,6 +317,11 @@ class App extends React.Component {
                 worker: '',
                 note: '',
                 dateTo: dateTo,
+                operation: {
+                    order: 1,
+                    time: 0,
+                    count: 0,
+                },
                 dateFrom: dateFrom,
                 machine: machines[0].id,
                 workingHours: workingHours,
