@@ -291,7 +291,7 @@ class App extends React.Component {
                         : <SettingsPopup
                             handleClose={this.closeSettings}
                             filterFinishedOrders={filterFinishedOrders}
-                            handleFilterFinishedOrders={(e) => this.setState({ filterFinishedOrders: e.target.checked })}
+                            handleFilterFinishedOrders={(e) => this.setState({ filterFinishedOrders: !e.target.checked })}
                         />
                     }
 

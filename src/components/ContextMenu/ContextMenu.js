@@ -44,7 +44,7 @@ export class ContextMenu extends React.Component {
     }
 
     handleRightClickOutside = (e) => {
-        if (!this.state.open) {
+        if (!this.state.open || !this.props.disabled) {
             return;
         }
     
@@ -56,8 +56,8 @@ export class ContextMenu extends React.Component {
         }
     }
 
-    handleClickOutside = (e) => { 
-        if (!this.state.open || !this.mounted) {
+    handleClickOutside = (e) => {
+        if (!this.state.open || !this.mounted || !this.props.disabled) {
             return;
         }
         
@@ -85,6 +85,7 @@ export class ContextMenu extends React.Component {
     }
 
     render() {
+        const { disabled } = this.props;
         const classNames = createClassName([
             this.props.className,
         ]);
@@ -94,7 +95,7 @@ export class ContextMenu extends React.Component {
                 <tr
                     className={classNames}
                     ref={(node) => this.div = node}
-                    onContextMenu={this.handleRightClick}
+                    onContextMenu={disabled ? null : this.handleRightClick}
                 >
                 {this.props.children}
     

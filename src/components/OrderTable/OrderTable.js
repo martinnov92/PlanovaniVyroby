@@ -69,6 +69,7 @@ export class OrderTable extends React.Component {
                             }
                         ]}
                         useAsTableRow={true}
+                        disabled={product.done}
                         className={product.done ? 'order--finished' : null}
                     >
                         <td>{key}</td>

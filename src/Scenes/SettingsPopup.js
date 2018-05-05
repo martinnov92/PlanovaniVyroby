@@ -20,7 +20,7 @@ export class SettingsPopup extends React.Component {
                                 type="checkbox"
                                 id="filterFinishedOrders"
                                 name="filterFinishedOrders"
-                                checked={filterFinishedOrders}
+                                checked={!filterFinishedOrders}
                                 onChange={handleFilterFinishedOrders}
                             />
                         </div>
