@@ -1,10 +1,12 @@
 import React from 'react';
 import { createClassName, createGroupedOrders } from '../../helpers';
+import { ContextMenu } from '../ContextMenu';
 import './order-table.css';
 
 export class OrderTable extends React.Component {
     static defaultProps = {
         events: [],
+        onCloseOrder: () => {},
     };
 
     constructor(props) {
@@ -46,21 +48,24 @@ export class OrderTable extends React.Component {
     renderTableBody = (events) => {
         // zgrupovat zakázky podle orderId
         const orders = createGroupedOrders(events);
-        console.log('orders', orders);
-
         const rows = Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
             const keys = Object.keys(order);
-            console.log('order', order, keys);
 
             for (let i = 0; i < keys.length; i++) {
                 const product = order[keys[i]];
-                console.log('product', product);
 
                 row.push(
-                    <tr
+                    <ContextMenu
                         key={keys[i]}
+                        buttons={[
+                            {
+                                label: 'Uzavřít zakázku',
+                                onClick: (e) => this.props.onCloseOrder(e, key, order),
+                            }
+                        ]}
+                        useAsTableRow={true}
                     >
                         <td>{key}</td>
                         <td>{keys[i]}</td>
@@ -113,7 +118,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td>i</td>
                         <td>j</td>
-                    </tr>
+                    </ContextMenu>
                 );
             }
 

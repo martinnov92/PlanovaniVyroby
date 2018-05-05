@@ -1,10 +1,7 @@
-import React from 'react';
 import moment from 'moment';
+import React from 'react';
+import { DATA_DATE_FORMAT, createClassName } from '../../helpers';
 import { ContextMenu } from '../ContextMenu';
-import {
-    createClassName,
-    DATA_DATE_FORMAT,
-} from '../../helpers';
 
 export class CalendarEvent extends React.Component {
     static defaultProps = {
@@ -145,10 +142,6 @@ export class CalendarEvent extends React.Component {
                     {
                         label: 'Smazat',
                         onClick: (e) => this.props.onDeleteEvent(e, event),
-                    },
-                    {
-                        label: 'Hotovo',
-                        onClick: (e) => this.props.onDoneEvent(e, event),
                     }
                 ]}
             >

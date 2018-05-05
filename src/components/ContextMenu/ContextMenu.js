@@ -76,6 +76,44 @@ export class ContextMenu extends React.Component {
     }
 
     render() {
+        // TODO: možná předělat?
+        if (this.props.useAsTableRow) {
+            return (
+                <tr
+                    onContextMenu={this.handleRightClick}
+                    ref={(node) => this.div = node}
+                >
+                {this.props.children}
+    
+                {
+                    !this.state.open
+                    ? null
+                    : <td
+                        className="context pt-0 pr-0 pb-0 pl-0"
+                        ref={(div) => this.context = div}
+                        style={{ top: this.state.top, left: this.state.left }}
+                    >
+                        <ul>
+                        {
+                            // button - name, onClick, label
+                            this.props.buttons.length > 0 &&
+                            this.props.buttons.map((button) => {
+                                return <li key={button.label}>
+                                    <button
+                                        onClick={(e) => this.handleButtonClick(e, button)}
+                                    >
+                                        {button.label}
+                                    </button>
+                                </li>;
+                            })
+                        }
+                        </ul>
+                    </td>
+                }
+                </tr>
+            );
+        }
+
         return (
             <div
                 onContextMenu={this.handleRightClick}

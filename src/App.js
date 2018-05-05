@@ -196,6 +196,20 @@ class App extends React.Component {
         this.resetOrderState();
     };
 
+    handleEventDone = (e, orderId, order) => {
+        const orders = this.state.orders.map((order) => {
+            if (order.orderId === orderId) {
+                order.done = true;
+            }
+
+            return order;
+        });
+
+        this.setState({
+            orders,
+        });
+    }
+
     handleClose = () => {
         this.setState({
             open: false,
@@ -234,11 +248,11 @@ class App extends React.Component {
                         // context menu
                         onEditEvent={this.handleEventEdit}
                         onDeleteEvent={this.handleOrderDelete}
-                        onDoneEvent={this.handleEventDone}
                     />
 
                     <OrderTable
                         events={this.state.orders}
+                        onCloseOrder={this.handleEventDone}
                     />
 
                     {

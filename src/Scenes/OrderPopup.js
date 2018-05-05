@@ -30,24 +30,13 @@ export class OrderPopup extends React.Component {
                 title="Přidání zakázky"
                 footerButtons={() => {
                     return <React.Fragment>
-                        {
-                            // order.id
-                            // ? <button
-                            //     className="btn btn-sm btn-danger"
-                            //     onClick={this.props.handleDelete}
-                            // >
-                            //     Smazat
-                            // </button>
-                            // : null
-                        }
-                        
                         <button
                             className="btn btn-sm btn-success ml-2"
                             onClick={this.props.handleSave}
                         >
                             Uložit
                         </button>
-                    </React.Fragment>
+                    </React.Fragment>;
                 }}
                 onClose={this.props.handleClose}
             >

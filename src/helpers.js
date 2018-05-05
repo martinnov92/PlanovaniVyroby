@@ -10,7 +10,7 @@ export function createClassName(classNames) {
 }
 
 export function createGroupedOrders(orders) {
-    return orders.reduce((prev, current) => {
+    return orders.filter((order) => order.done === false).reduce((prev, current) => {
         const orderExists = prev[current.orderId];
 
         if (!orderExists) {
