@@ -9,6 +9,48 @@ export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
 
+export function createGroupedOrders(orders) {
+    return orders.reduce((prev, current) => {
+        const orderExists = prev[current.orderId];
+
+        if (!orderExists) {
+            return {
+                ...prev,
+                [current.orderId]: {
+                    [current.productName]: {
+                        [current.operation.order]: {
+                            id: current.id,
+                            worker: current.worker,
+                            orderId: current.orderId,
+                            machine: current.machine,
+                            operation: current.operation,
+                            workingHours: current.workingHours,
+                        }
+                    }
+                }
+            };
+        }
+
+        return {
+            ...prev,
+            [current.orderId]: {
+                ...prev[current.orderId],
+                [current.productName]: {
+                    ...prev[current.orderId][current.productName],
+                    [current.operation.order]: {
+                        id: current.id,
+                        worker: current.worker,
+                        orderId: current.orderId,
+                        machine: current.machine,
+                        operation: current.operation,
+                        workingHours: current.workingHours,
+                    }
+                }
+            }
+        };
+    }, {});
+}
+
 export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHoursTo = 20, pause = 0.5) {
     let result = 0;
     let breakMinutes = 0;

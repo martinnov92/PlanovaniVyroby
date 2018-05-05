@@ -1,5 +1,5 @@
 import React from 'react';
-import { createClassName } from '../../helpers';
+import { createClassName, createGroupedOrders } from '../../helpers';
 import './order-table.css';
 
 export class OrderTable extends React.Component {
@@ -44,10 +44,9 @@ export class OrderTable extends React.Component {
     }
 
     renderTableBody = (events) => {
-        console.log(events);
         // zgrupovat zakázky podle orderId
-        const groupedEvents = events.reduce((prev, current) => {
-        }, []);
+        const groupedOrders = createGroupedOrders(events);
+        console.log(groupedOrders);
     }
 
     render() {
