@@ -60,7 +60,7 @@ export class OrderTable extends React.Component {
 
                 row.push(
                     <tr
-                        key={key}
+                        key={keys[i]}
                     >
                         <td>{key}</td>
                         <td>{keys[i]}</td>
