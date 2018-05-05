@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { unselectAll } from './helpers';
 import './drag-wrapper.css';
+import { unselectAll } from './helpers';
 
 export class DragWrapper extends React.Component {
     constructor() {

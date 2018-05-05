@@ -1,8 +1,8 @@
 import React from 'react';
 // import { DragWrapper } from '../DragWrapper';
 import { createClassName } from '../../helpers';
-
 import './popup.css';
+
 
 export class Popup extends React.Component {
     static defaultProps = {
@@ -34,11 +34,15 @@ export class Popup extends React.Component {
                         {this.props.children}
                     </section>
 
-                    <footer
-                        className="text-align--right"
-                    >
-                        {this.props.footerButtons()}
-                    </footer>
+                    {
+                        !this.props.footerButtons()
+                        ? null
+                        : <footer
+                            className="text-align--right"
+                        >
+                            {this.props.footerButtons()}
+                        </footer>
+                    }
                 </div>
             // </DragWrapper>
         );
