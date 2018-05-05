@@ -28,6 +28,7 @@ export function createGroupedOrders(orders, filterDone = false) {
                             time: Number(current.operation.time),
                             count: Number(current.operation.count),
                         },
+                        done: current.done,
                         [current.operation.order]: {
                             ...current,
                         }
@@ -46,6 +47,7 @@ export function createGroupedOrders(orders, filterDone = false) {
                         time: Number(prev[current.orderId][current.productName].total.time) + Number(current.operation.time),
                         count: Number(prev[current.orderId][current.productName].total.count) + Number(current.operation.count),
                     },
+                    done: current.done,
                     [current.operation.order]: {
                         ...current
                     }

@@ -7,6 +7,7 @@ export class OrderTable extends React.Component {
     static defaultProps = {
         events: [],
         onCloseOrder: () => {},
+        filterFinishedOrders: true,
     };
 
     constructor(props) {
@@ -46,9 +47,11 @@ export class OrderTable extends React.Component {
     }
 
     renderTableBody = (events) => {
+        const { filterFinishedOrders } = this.props;
+
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events, true);
-        const rows = Object.keys(orders).map((key) => {
+        const orders = createGroupedOrders(events, filterFinishedOrders);
+        return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
             const keys = Object.keys(order);
@@ -66,6 +69,7 @@ export class OrderTable extends React.Component {
                             }
                         ]}
                         useAsTableRow={true}
+                        className={product.done ? 'order--finished' : null}
                     >
                         <td>{key}</td>
                         <td>{keys[i]}</td>
@@ -124,8 +128,6 @@ export class OrderTable extends React.Component {
 
             return row;
         });
-
-        return rows;
     }
 
     render() {

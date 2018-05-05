@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createClassName } from '../../helpers';
 import './context-menu.css';
 
 export class ContextMenu extends React.Component {
@@ -84,11 +85,16 @@ export class ContextMenu extends React.Component {
     }
 
     render() {
+        const classNames = createClassName([
+            this.props.className,
+        ]);
+
         if (this.props.useAsTableRow) {
             return (
                 <tr
-                    onContextMenu={this.handleRightClick}
+                    className={classNames}
                     ref={(node) => this.div = node}
+                    onContextMenu={this.handleRightClick}
                 >
                 {this.props.children}
     
@@ -123,8 +129,9 @@ export class ContextMenu extends React.Component {
 
         return (
             <div
-                onContextMenu={this.handleRightClick}
+                className={classNames}
                 ref={(node) => this.div = node}
+                onContextMenu={this.handleRightClick}
             >
             {this.props.children}
 

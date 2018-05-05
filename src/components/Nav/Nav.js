@@ -50,8 +50,9 @@ export class Nav extends React.Component {
                         </button>
 
                         <button
-                            className="btn btn-outline-success ml-3 text-light"
                             type="button"
+                            onClick={this.props.openSettings}
+                            className="btn btn-outline-success ml-3 text-light"
                         >
                             Nastavení
                         </button>

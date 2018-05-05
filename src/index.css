@@ -23,6 +23,14 @@ body {
     flex-direction: column;
 }
 
+.popup-order {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    transform: translate(0, 0);
+}
+
 .popup-order .input-group-prepend {
     width: 100px;
 }
@@ -35,7 +43,10 @@ body {
     display: grid;
     padding: 10px;
     grid-template-columns: repeat(3, 1fr);
+}
 
+.order--finished {
+    opacity: .5;
 }
 
 /* helpers */

@@ -1,7 +1,7 @@
 import set from 'lodash/set';
 import moment from 'moment';
 import React from 'react';
-import { OrderPopup } from './Scenes';
+import { OrderPopup, SettingsPopup } from './Scenes';
 import { Calendar } from './components/Calendar';
 import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
@@ -37,8 +37,6 @@ class App extends React.Component {
 
         const startOfTheWeek = moment().startOf('week').startOf('day');
         this.state = {
-            startOfTheWeek: startOfTheWeek,
-            currentWeek: startOfTheWeek.week(),
             orders: [{
                 id: 'abc',
                 orderId: 'Z180xxx', // zakázka - může být jedna zakázka na více strojích a pak se zgrupují v order table
@@ -72,8 +70,13 @@ class App extends React.Component {
                 dateFrom: moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(),
                 dateTo: moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate(),
             }],
+
             open: false,
+            settings: false,
             hoverOrder: null,
+            filterFinishedOrders: true,
+            startOfTheWeek: startOfTheWeek,
+            currentWeek: startOfTheWeek.week(),
         };
 
         this.calendar = React.createRef();
@@ -217,16 +220,30 @@ class App extends React.Component {
         this.resetOrderState();
     }
 
+    openSettings = () => {
+        this.setState({
+            settings: true,
+        });
+    }
+
+    closeSettings = () => {
+        this.setState({
+            settings: false,
+        });
+    }
+
     render() {
         const {
             currentWeek,
             startOfTheWeek,
+            filterFinishedOrders,
         } = this.state;
-
+        console.log(filterFinishedOrders);
         return (
             <div className="app">
                 <Nav
                     currentWeek={currentWeek}
+                    openSettings={this.openSettings}
                     onWeekMove={this.handleWeekMove}
                     addNewEvent={this.handleAddNewEvent}
                     onCurrentWeekClick={this.resetCurrentWeek}
@@ -253,6 +270,7 @@ class App extends React.Component {
                     <OrderTable
                         events={this.state.orders}
                         onCloseOrder={this.handleEventDone}
+                        filterFinishedOrders={filterFinishedOrders}
                     />
 
                     {
@@ -263,8 +281,17 @@ class App extends React.Component {
                             order={this.state.order}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
-                            // handleDelete={this.handleEventDelete}
                             handleInputChange={this.handleInputChange}
+                        />
+                    }
+
+                    {
+                        !this.state.settings
+                        ? null
+                        : <SettingsPopup
+                            handleClose={this.closeSettings}
+                            filterFinishedOrders={filterFinishedOrders}
+                            handleFilterFinishedOrders={(e) => this.setState({ filterFinishedOrders: e.target.checked })}
                         />
                     }
 
