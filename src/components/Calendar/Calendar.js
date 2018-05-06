@@ -175,9 +175,9 @@ export class Calendar extends React.Component {
         let dateTo = parsedEvent.event.dateTo;
 
         if (parsedEvent.eventResize === 'dateFrom') {
-            dateFrom = dateOnDrop.toDate();
+            dateFrom = dateOnDrop.format();
         } else if (parsedEvent.eventResize === 'dateTo') {
-            dateTo = dateOnDrop.toDate();
+            dateTo = dateOnDrop.format();
         } else {
             // vypočet rozdílu hodin z původní eventy
             const momentDateTo = moment(parsedEvent.event.dateTo);
@@ -187,8 +187,8 @@ export class Calendar extends React.Component {
             const sign = Math.sign(hoursDifference);
 
             // set new dateFrom and dateTo on object and pass it to parent component
-            dateFrom = dateOnDrop.toDate();
-            dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
+            dateFrom = dateOnDrop.format();
+            dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').format();
         }
 
         const newEvent = {

@@ -138,12 +138,12 @@ class App extends React.Component {
         const copy = [...this.state.orders];
         const order = {
             ...this.state.order,
-            dateTo: moment(this.state.order.dateTo).toDate(),
-            dateFrom: moment(this.state.order.dateFrom).toDate(),
+            dateTo: moment(this.state.order.dateTo).format(),
+            dateFrom: moment(this.state.order.dateFrom).format(),
         };
-        
+
         if (!this.state.order.id) {
-            order.id = moment().toDate();
+            order.id = moment().format();
             copy.push(order);
         } else {
             const findIndex = copy.findIndex((o) => o.id === order.id);
