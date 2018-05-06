@@ -119,7 +119,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td>{product.total.time}</td>
                         <td>
-                            {product.total.time} * {product.total.count} = {(product.total.time * product.total.count) / 60}h
+                            {product.total.time} * {product.total.count} = {((product.total.time * product.total.count) / 60).toFixed(1)}h
                         </td>
                         <td>i</td>
                         <td>j</td>

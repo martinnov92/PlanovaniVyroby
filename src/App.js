@@ -66,9 +66,9 @@ class App extends React.Component {
                     time: 15,
                     count: 8,
                 },
-                workingHours: getNetMachineTime(moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(), moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate()),
-                dateFrom: moment().subtract(10, 'days').hours(7).minutes(0).seconds(0).toDate(),
-                dateTo: moment().add(4, 'days').hours(7).minutes(0).seconds(0).toDate(),
+                workingHours: getNetMachineTime(moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(7).minutes(0).seconds(0).toDate()),
+                dateFrom: moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(),
+                dateTo: moment().subtract(1, 'days').hours(7).minutes(0).seconds(0).toDate(),
             }],
 
             open: false,
