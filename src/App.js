@@ -35,20 +35,21 @@ class App extends React.Component {
 
     componentDidMount() {
         fs.readFile(path, 'utf-8', (err, data) => {
-            // načíst obsah souboru do state
-            const d = JSON.parse(data);
-
-            this.setState({
-                machines: d.machines,
-                orders: d.orders,
-            }, () => console.log(this.state));
-
             if (err) {
                 // pokud soubor neexistuje, tak ho vytvořit
                 fs.writeFile(path, '', (err) => {
                     // pokud nastala chyba, zobrazí se error
                     if (err) alert(err);
                 });
+            } else {
+                // načíst obsah souboru do state
+                try {
+                    const d = JSON.parse(data);
+                    this.setState({
+                        machines: d.machines,
+                        orders: d.orders,
+                    }, () => console.log(this.state));
+                } catch (err) {}
             }
         });
     }
@@ -205,6 +206,8 @@ class App extends React.Component {
 
     render() {
         const {
+            order,
+            orders,
             machines,
             currentWeek,
             startOfTheWeek,
@@ -224,33 +227,39 @@ class App extends React.Component {
                 <div
                     className="pt-3 pr-3 pb-3 pl-3 app-main--screen"
                 >
-                    <Calendar
-                        ref={this.calendar}
-                        machines={machines}
-                        currentWeek={currentWeek}
-                        events={this.state.orders}
-                        startOfTheWeek={startOfTheWeek}
-                        onEventDrop={this.handleEventDrop}
-                        onEventEnter={this.handleEventEnter}
-                        onEventLeave={this.handleEventLeave}
-
-                        // context menu
-                        onEditEvent={this.handleEventEdit}
-                        onDeleteEvent={this.handleOrderDelete}
-                    />
-
-                    <OrderTable
-                        events={this.state.orders}
-                        onCloseOrder={this.handleEventDone}
-                        filterFinishedOrders={filterFinishedOrders}
-                    />
+                    {
+                        machines.length === 0 && orders.length === 0
+                        ? null
+                        : <React.Fragment>
+                            <Calendar
+                                events={orders}
+                                machines={machines}
+                                ref={this.calendar}
+                                currentWeek={currentWeek}
+                                startOfTheWeek={startOfTheWeek}
+                                onEventDrop={this.handleEventDrop}
+                                onEventEnter={this.handleEventEnter}
+                                onEventLeave={this.handleEventLeave}
+        
+                                // context menu
+                                onEditEvent={this.handleEventEdit}
+                                onDeleteEvent={this.handleOrderDelete}
+                            />
+        
+                            <OrderTable
+                                events={orders}
+                                onCloseOrder={this.handleEventDone}
+                                filterFinishedOrders={filterFinishedOrders}
+                            />
+                        </React.Fragment>
+                    }
 
                     {
                         !this.state.open
                         ? null
                         : <OrderPopup
+                            order={order}
                             machines={machines}
-                            order={this.state.order}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             handleInputChange={this.handleInputChange}
