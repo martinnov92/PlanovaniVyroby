@@ -45,9 +45,11 @@ class App extends React.Component {
                 // načíst obsah souboru do state
                 try {
                     const d = JSON.parse(data);
+
                     this.setState({
-                        machines: d.machines,
                         orders: d.orders,
+                        machines: d.machines,
+                        filterFinishedOrders: d.filterFinishedOrders == undefined ? true : d.filterFinishedOrders,
                     }, () => console.log(this.state));
                 } catch (err) {}
             }
@@ -272,7 +274,11 @@ class App extends React.Component {
                         : <SettingsPopup
                             handleClose={this.closeSettings}
                             filterFinishedOrders={filterFinishedOrders}
-                            handleFilterFinishedOrders={(e) => this.setState({ filterFinishedOrders: !e.target.checked })}
+                            handleFilterFinishedOrders={(e) => {
+                                this.setState({
+                                    filterFinishedOrders: !e.target.checked
+                                }, () => this.saveToFile());
+                            }}
                         />
                     }
 
@@ -329,8 +335,9 @@ class App extends React.Component {
 
     saveToFile = () => {
         saveFile(path, {
-            machines: this.state.machines,
             orders: this.state.orders,
+            machines: this.state.machines,
+            filterFinishedOrders: this.state.filterFinishedOrders,
         })
         .then((value) => {
             console.log(value);
