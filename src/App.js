@@ -5,33 +5,14 @@ import { OrderPopup, SettingsPopup } from './Scenes';
 import { Calendar } from './components/Calendar';
 import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
-import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime } from './helpers';
+import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime, saveFile } from './helpers';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
 
-const machines = [
-    {
-        id: 'finetech',
-        name: 'Finetech',
-        color: '#fb1'
-    },
-    {
-        id: 'haas',
-        name: 'Haas',
-        color: '#1ce'
-    },
-    {
-        id: 'st310',
-        name: 'CNC Soustruh ST310',
-        color: '#C01025'
-    },
-    {
-        id: 'ft1250a',
-        name: 'FTU 1250',
-        color: '#ACCE55'
-    },
-];
+// nastavení souboru
+const fileName = 'Ritek_Planovac_Zakazek.json';
+const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
 
 class App extends React.Component {
     constructor(props) {
@@ -39,41 +20,9 @@ class App extends React.Component {
 
         const startOfTheWeek = moment().startOf('week').startOf('day');
         this.state = {
-            orders: [{
-                id: 'abc',
-                orderId: 'Z180xxx', // zakázka - může být jedna zakázka na více strojích a pak se zgrupují v order table
-                productName: 'Výrobek 1', // jméno výrobku (ve wordu v němčině)
-                machine: 'finetech',
-                worker: 'Petr',
-                done: false,
-                note: 'Poznámka k zakázce',
-                operation: {
-                    order: "4",
-                    time: 10,
-                    count: 10,
-                },
-                workingHours: getNetMachineTime(moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate()),
-                dateFrom: moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate(),
-            },{
-                id: 'abcd',
-                orderId: 'Z180xxx',
-                productName: 'Výrobek 1',
-                machine: 'haas',
-                worker: 'Pavel',
-                done: false,
-                note: 'Poznámka k opravě',
-                operation: {
-                    order: "1",
-                    time: 15,
-                    count: 8,
-                },
-                workingHours: getNetMachineTime(moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(7).minutes(0).seconds(0).toDate()),
-                dateFrom: moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(1, 'days').hours(7).minutes(0).seconds(0).toDate(),
-            }],
-
+            orders: [],
             open: false,
+            machines: [],
             settings: false,
             hoverOrder: null,
             filterFinishedOrders: true,
@@ -85,12 +34,19 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const fileName = 'Ritek_Planovac_Zakazek.json';
-        const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
+        fs.readFile(path, 'utf-8', (err, data) => {
+            // načíst obsah souboru do state
+            const d = JSON.parse(data);
 
-        fs.readFile(path, (err) => {
+            this.setState({
+                machines: d.machines,
+                orders: d.orders,
+            }, () => console.log(this.state));
+
             if (err) {
+                // pokud soubor neexistuje, tak ho vytvořit
                 fs.writeFile(path, '', (err) => {
+                    // pokud nastala chyba, zobrazí se error
                     if (err) alert(err);
                 });
             }
@@ -160,7 +116,7 @@ class App extends React.Component {
 
         this.setState({
             orders: ordersCopy,
-        });
+        }, () => this.saveToFile());
     }
 
     handleInputChange= (e) => {
@@ -194,7 +150,7 @@ class App extends React.Component {
         this.setState({
             orders: copy,
             open: false
-        });
+        }, () => this.saveToFile());
         this.resetOrderState();
     }
 
@@ -210,7 +166,7 @@ class App extends React.Component {
         this.setState({
             orders: orders,
             open: false,
-        });
+        }, () => this.saveToFile());
         this.resetOrderState();
     };
 
@@ -225,7 +181,7 @@ class App extends React.Component {
 
         this.setState({
             orders,
-        });
+        }, () => this.saveToFile());
     }
 
     handleClose = () => {
@@ -249,6 +205,7 @@ class App extends React.Component {
 
     render() {
         const {
+            machines,
             currentWeek,
             startOfTheWeek,
             filterFinishedOrders,
@@ -317,7 +274,10 @@ class App extends React.Component {
     }
 
     renderPinOrders = () => {
-        const { hoverOrder: order } = this.state;
+        const {
+            machines,
+            hoverOrder: order,
+        } = this.state;
         const machine = machines.find((machine) => machine.id === (order && order.machine));
 
         return <div
@@ -358,6 +318,19 @@ class App extends React.Component {
             </div>;
     }
 
+    saveToFile = () => {
+        saveFile(path, {
+            machines: this.state.machines,
+            orders: this.state.orders,
+        })
+        .then((value) => {
+            console.log(value);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
     resetOrderState = () => {
         const dateFrom = moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT);
         const dateTo = moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT);
@@ -377,8 +350,8 @@ class App extends React.Component {
                     count: 0,
                 },
                 dateFrom: dateFrom,
-                machine: machines[0].id,
                 workingHours: workingHours,
+                machine: this.state.machines[0].id,
             }
         });
     }

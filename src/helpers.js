@@ -1,5 +1,5 @@
-// @ts-check
 import moment from 'moment';
+const fs = window.require('fs');
 
 export const FULL_FORMAT = 'D.M.YYYY dddd';
 export const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
@@ -103,4 +103,19 @@ export function formatMinutesToTime(totalMinutes) {
     const minutes = totalMinutes % 60;
 
     return `${hours}h ${minutes}m`;
+}
+
+export function saveFile(path, data) {
+    const d = JSON.stringify(data);
+
+    return new Promise((resolve, reject) => {
+        fs.writeFile(path, d, (err) => {
+            // pokud nastala chyba, zobrazí se error
+            if (err) {
+                reject(err);
+            }
+    
+            resolve('Uloženo.');
+        });
+    });
 }

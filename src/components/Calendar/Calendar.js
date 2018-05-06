@@ -56,7 +56,7 @@ export class Calendar extends React.Component {
         const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
 
-        if (currentWeek) {
+        if (currentWeek || events) {
             this.scrolledToCurrentDate = false;
             this.renderTableBody();
         }
