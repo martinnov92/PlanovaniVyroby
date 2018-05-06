@@ -1,12 +1,12 @@
-import './polyfills';
+// import './polyfills';
 
-import React from 'react';
 import moment from 'moment';
-import ReactDOM from 'react-dom';
 import cs from 'moment/locale/cs';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import App from './App';
-
 import './index.css';
+
 moment.updateLocale('cs', cs);
 
 // import registerServiceWorker from './registerServiceWorker';

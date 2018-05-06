@@ -7,6 +7,8 @@ import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
 import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime } from './helpers';
 
+const fs = window.require('fs');
+const electron = window.require('electron');
 
 const machines = [
     {
@@ -80,6 +82,19 @@ class App extends React.Component {
         };
 
         this.calendar = React.createRef();
+    }
+
+    componentDidMount() {
+        const fileName = 'Ritek_Planovac_Zakazek.json';
+        const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
+
+        fs.readFile(path, (err) => {
+            if (err) {
+                fs.writeFile(path, '', (err) => {
+                    if (err) alert(err);
+                });
+            }
+        });
     }
 
     handleWeekMove = (e, move) => {
