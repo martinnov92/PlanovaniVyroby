@@ -17,6 +17,6 @@
 
 ## INFO
 
-    - Zakázka - doplnit do popupu (zakázka === ID)
+    X Zakázka - doplnit do popupu (zakázka === ID)
     - názvy výrobků ukládat (přidat do nastavení, v nastavení bude správa strojů, pracovníků, výrobků) (+ ukládat i jejich časy)
-    - jedna zakázka může pracovat na více strojích (vytvořit nějaké ID a párovat podle strojů)
+    X jedna zakázka může pracovat na více strojích (vytvořit nějaké ID a párovat podle strojů - Zakázka je ID a páruje se podle toho)
