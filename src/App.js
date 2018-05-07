@@ -96,9 +96,12 @@ class App extends React.Component {
             dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
         };
 
+        const orderObject = this.state.orderList.find((o) => o.id === order.orderId);
+
         this.setState({
-            order: copyOrder,
             open: true,
+            order: copyOrder,
+            newOrderObject: orderObject,
         });
     }
 
@@ -124,7 +127,7 @@ class App extends React.Component {
         }, () => this.saveToFile());
     }
 
-    handleInputChange= (e) => {
+    handleInputChange = (e) => {
         const order = set(this.state.order, e.target.name, e.target.value);
 
         if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
@@ -136,8 +139,21 @@ class App extends React.Component {
         });
     }
 
+    handleNewOrderChange = (e) => {
+        this.setState({
+            newOrderObject: {
+                ...this.state.newOrderObject,
+                [e.target.name]: e.target.value,
+            },
+        });
+    }
+
     handleSave = () => {
-        const copy = [...this.state.orders];
+        const {
+            newOrderObject,
+        } = this.state;
+        const copyOrders = [...this.state.orders];
+
         const order = {
             ...this.state.order,
             dateTo: moment(this.state.order.dateTo).format(),
@@ -146,15 +162,30 @@ class App extends React.Component {
 
         if (!this.state.order.id) {
             order.id = moment().format();
-            copy.push(order);
+            copyOrders.push(order);
         } else {
-            const findIndex = copy.findIndex((o) => o.id === order.id);
-            copy.splice(findIndex, 1, order);
+            const findIndex = copyOrders.findIndex((o) => o.id === order.id);
+            copyOrders.splice(findIndex, 1, order);
         }
-        // console.log(getNetMachineTime(order.dateFrom, order.dateTo));
+
+        if (newOrderObject.id !== '') {
+            // porlinkovat novou zakázku s novou objednávkou
+            order.orderId = newOrderObject.id;
+            const copyOrderList = [...this.state.orderList];
+            const findIndex = copyOrderList.findIndex((o) => o.id === newOrderObject.id);
+
+            if (findIndex > -1) {
+                copyOrderList[findIndex] = newOrderObject;
+            }
+
+            this.setState({
+                orderList: copyOrderList,
+            });
+        }
+
         this.setState({
-            orders: copy,
-            open: false
+            open: false,
+            orders: copyOrders,
         }, () => this.saveToFile());
         this.resetOrderState();
     }
@@ -216,6 +247,7 @@ class App extends React.Component {
             orderList,
             currentWeek,
             startOfTheWeek,
+            newOrderObject,
             filterFinishedOrders,
         } = this.state;
 
@@ -266,9 +298,11 @@ class App extends React.Component {
                             order={order}
                             machines={machines}
                             orderList={orderList}
+                            newOrder={newOrderObject}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             handleInputChange={this.handleInputChange}
+                            handleNewOrderChange={this.handleNewOrderChange}
                         />
                     }
 
@@ -371,10 +405,14 @@ class App extends React.Component {
                     count: 0,
                 },
                 dateFrom: dateFrom,
-                orderColor: '#ffffff',
                 workingHours: workingHours,
                 machine: this.state.machines[0].id,
-            }
+            },
+            newOrderObject: {
+                id: '',
+                done: false,
+                color: '#ffffff',
+            },
         });
     }
 }

@@ -5,6 +5,9 @@ import { formatMinutesToTime } from '../helpers';
 export class OrderPopup extends React.Component {
     static defaultProps = {
         order: {},
+        // newOrder -> vytvořená zakázka (pouze ID a barva a jestli je done)
+        newOrder: {},
+        orderList: [],
         footerButtons: () => {},
     };
 
@@ -26,9 +29,10 @@ export class OrderPopup extends React.Component {
         const {
             order,
             machines,
+            newOrder,
             orderList,
         } = this.props;
-
+        console.log(newOrder, order, orderList);
         return (
             <Popup
                 className="popup-order"
@@ -50,19 +54,30 @@ export class OrderPopup extends React.Component {
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <span className="input-group-text">
-                                    <strong>Zakázka</strong>
+                                    {
+                                        this.state.orderIs !== null
+                                        ? <strong
+                                            onClick={() => this.setState({ orderIs: null })}
+                                        >
+                                            Zpět
+                                        </strong>
+                                        : <strong>
+                                            Zakázka
+                                        </strong>
+                                    }
                                 </span>
                             </div>
                             {
-                                this.state.orderIs === 'new'
+                                this.state.orderIs === 'new' || newOrder.id !== ''
                                 ? <React.Fragment>
                                     <input
                                         type="text"
                                         name="orderId"
                                         ref={this.orderId}
-                                        value={order.orderId}
+                                        placeholder="Zakázka"
                                         className="form-control"
-                                        onChange={this.props.handleInputChange}
+                                        value={newOrder.id}
+                                        onChange={this.props.handleNewOrderChange}
                                     />
                                     <div className="input-group-append">
                                         <input
@@ -72,9 +87,9 @@ export class OrderPopup extends React.Component {
                                                 backgroundColor: '#e9ecef',
                                                 borderRadius: '0 5px 5px 0',
                                             }}
-                                            name="orderColor"
-                                            value={order.orderColor}
-                                            onChange={this.props.handleInputChange}
+                                            name="color"
+                                            value={newOrder.color}
+                                            onChange={this.props.handleNewOrderChange}
                                         />
                                     </div>
                                 </React.Fragment>
@@ -88,7 +103,10 @@ export class OrderPopup extends React.Component {
                                        {
                                             orderList.map((order) => {
                                                 return (
-                                                    <option key={order.id} value={order.id}>
+                                                    <option
+                                                        key={order.id}
+                                                        value={order.id}
+                                                    >
                                                         {order.id}
                                                     </option>
                                                 );
