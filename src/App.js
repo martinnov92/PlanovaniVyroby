@@ -50,6 +50,7 @@ class App extends React.Component {
                     this.setState({
                         orders: d.orders,
                         machines: d.machines,
+                        orderList: d.orderList,
                         filterFinishedOrders: d.filterFinishedOrders == undefined ? true : d.filterFinishedOrders,
                     }, () => console.log(this.state));
                 } catch (err) {}
@@ -212,6 +213,7 @@ class App extends React.Component {
             order,
             orders,
             machines,
+            orderList,
             currentWeek,
             startOfTheWeek,
             filterFinishedOrders,
@@ -263,6 +265,7 @@ class App extends React.Component {
                         : <OrderPopup
                             order={order}
                             machines={machines}
+                            orderList={orderList}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             handleInputChange={this.handleInputChange}

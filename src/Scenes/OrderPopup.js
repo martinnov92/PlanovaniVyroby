@@ -26,6 +26,7 @@ export class OrderPopup extends React.Component {
         const {
             order,
             machines,
+            orderList,
         } = this.props;
 
         return (
@@ -78,11 +79,22 @@ export class OrderPopup extends React.Component {
                                     </div>
                                 </React.Fragment>
                                 : this.state.orderIs === 'exists'
-                                ? <React.Fragment>
-                                    <select>
-                                       <option></option>
-                                    </select>
-                                </React.Fragment>
+                                ? <select
+                                        name="orderId"
+                                        value={order.orderId}
+                                        className="custom-select"
+                                        onChange={this.props.handleInputChange}
+                                    >
+                                       {
+                                            orderList.map((order) => {
+                                                return (
+                                                    <option key={order.id} value={order.id}>
+                                                        {order.id}
+                                                    </option>
+                                                );
+                                            })
+                                        }
+                                </select>
                                 : <div
                                     role="group"
                                     style={{
