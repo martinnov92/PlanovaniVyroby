@@ -23,6 +23,7 @@ class App extends React.Component {
             orders: [],
             open: false,
             machines: [],
+            orderList: [],
             settings: false,
             hoverOrder: null,
             filterFinishedOrders: true,
@@ -337,6 +338,7 @@ class App extends React.Component {
         saveFile(path, {
             orders: this.state.orders,
             machines: this.state.machines,
+            orderList: this.state.orderList,
             filterFinishedOrders: this.state.filterFinishedOrders,
         })
         .then((value) => {
