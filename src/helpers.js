@@ -20,7 +20,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
     return o.reduce((prev, current) => {
         const orderExists = prev[current.orderId];
         const order = list.find((l) => l.id === current.orderId);
-        //console.log(order);
+
         if (!orderExists) {
             return {
                 ...prev,

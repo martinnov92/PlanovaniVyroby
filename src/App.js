@@ -205,17 +205,17 @@ class App extends React.Component {
         this.resetOrderState();
     };
 
-    handleEventDone = (e, orderId, order) => {
-        const orders = this.state.orders.map((order) => {
-            if (order.orderId === orderId) {
-                order.done = true;
+    handleCloseOrder = (e, orderId, order) => {
+        const orderList = this.state.orderList.map((o) => {
+            if (o.id === orderId) {
+                o.done = true;
             }
 
-            return order;
+            return o;
         });
 
         this.setState({
-            orders,
+            orderList,
         }, () => this.saveToFile());
     }
 
@@ -286,7 +286,7 @@ class App extends React.Component {
                             <OrderTable
                                 events={orders}
                                 orderList={orderList}
-                                onCloseOrder={this.handleEventDone}
+                                onCloseOrder={this.handleCloseOrder}
                                 filterFinishedOrders={filterFinishedOrders}
                             />
                         </React.Fragment>

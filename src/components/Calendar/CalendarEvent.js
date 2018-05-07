@@ -85,6 +85,7 @@ export class CalendarEvent extends React.Component {
 
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
+            opacity: order.done ? .5 : 1,
             height: `${startPosition.height}px`,
             backgroundColor: order.color || '#fff',
             width: `${endPosition.left - startPosition.left}px`,
