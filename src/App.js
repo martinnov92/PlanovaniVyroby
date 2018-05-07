@@ -11,7 +11,7 @@ const fs = window.require('fs');
 const electron = window.require('electron');
 
 // nastavení souboru
-const fileName = 'Ritek_Planovac_Zakazek.json';
+const fileName = 'Ritek_Planovac_Zakazek.json'; // TODO: 'RITEK_PLANOVANI_ZAKAZEK.json'
 const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
 
 class App extends React.Component {
