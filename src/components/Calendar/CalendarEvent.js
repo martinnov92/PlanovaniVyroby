@@ -31,6 +31,7 @@ export class CalendarEvent extends React.Component {
             row,
             event,
             machine,
+            scrollTop,
             scrollLeft,
             calendarWrapperClientRect,
         } = this.props;
@@ -85,7 +86,7 @@ export class CalendarEvent extends React.Component {
             backgroundColor: machine.color,
             height: `${startPosition.height}px`,
             width: `${endPosition.left - startPosition.left}px`,
-            top: `${startPosition.top - calendarWrapper.top }px`,
+            top: `${startPosition.top - calendarWrapper.top + scrollTop}px`,
             left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,
         };
 

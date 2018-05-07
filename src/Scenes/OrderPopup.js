@@ -56,6 +56,17 @@ export class OrderPopup extends React.Component {
                                 className="form-control"
                                 onChange={this.props.handleInputChange}
                             />
+                            <div class="input-group-append">
+                                <input
+                                    type="color"
+                                    style={{
+                                        height: '100%',
+                                        backgroundColor: '#e9ecef',
+                                        borderRadius: '0 5px 5px 0',
+                                    }}
+                                    value="#ffffff"
+                                />
+                            </div>
                         </div>
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">

@@ -438,6 +438,7 @@ export class Calendar extends React.Component {
                     machine={machine}
                     selectedEvent={selectedEvent}
                     draggingEvent={draggingEvent}
+                    scrollTop={this.state.scrollTop}
                     scrollLeft={this.state.scrollLeft}
                     calendarWrapperClientRect={calendarHolder}
 

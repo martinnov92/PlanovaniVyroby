@@ -5,7 +5,7 @@
 .calendar-wrapper,
 .calendar-wrapper.element--block {
     width: 100%;
-    flex: 1 0 235px;
+    flex: 1 0 209px;
     display: flex;
     overflow: hidden;
 }
