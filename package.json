@@ -19,7 +19,7 @@
     "eject": "react-scripts eject",
     "deploy": "yarn run build && firebase deploy",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-build": "yarn build && electron-builder -mw"
+    "electron-build": "yarn build && electron-builder -m"
   },
   "devDependencies": {
     "concurrently": "^3.5.1",
@@ -33,7 +33,7 @@
       "build/**/*",
       "node_modules/**/*"
     ],
-    "directories":{
+    "directories": {
       "buildResources": "assets"
     }
   }
