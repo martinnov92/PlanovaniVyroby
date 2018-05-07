@@ -53,7 +53,7 @@ export class CalendarEvent extends React.Component {
         if (!findStartDateOnRow && findEndDateOnRow) {
             endPosition = findEndDateOnRow.getBoundingClientRect();
             startPosition = {
-                top: rowClientRect.top + 1,
+                top: rowClientRect.top,
                 left: rowClientRect.left,
                 height: endPosition.height,
             };
@@ -69,9 +69,9 @@ export class CalendarEvent extends React.Component {
         } else {
             // událost přes více týdnů -> mělo by fungovat, protože dojde k vyfiltrování událostí v Calendar.js
             startPosition = {
-                top: rowClientRect.top + 1,
+                top: rowClientRect.top,
                 left: rowClientRect.left,
-                height: rowClientRect.height - 2,
+                height: rowClientRect.height,
             };
 
             endPosition = {
@@ -85,8 +85,8 @@ export class CalendarEvent extends React.Component {
             backgroundColor: machine.color,
             height: `${startPosition.height}px`,
             width: `${endPosition.left - startPosition.left}px`,
-            top: `${startPosition.top - calendarWrapper.top - 1}px`,
-            left: `${startPosition.left - calendarWrapper.left + scrollLeft - 1}px`,
+            top: `${startPosition.top - calendarWrapper.top }px`,
+            left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,
         };
 
         return style;

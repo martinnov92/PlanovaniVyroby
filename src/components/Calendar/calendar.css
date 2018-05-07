@@ -20,12 +20,11 @@
 }
 
 .calendar--machine {
-    height: 42px;
+    height: 41px;
     display: flex;
     padding: 10px;
     align-items: center;
-    border: 1px solid black;
-    border-right: 0;
+    border: 1px solid #dee2e6;
 }
 
 .calendar--machine + .calendar--machine {
@@ -35,7 +34,6 @@
 .calendar {
     overflow-x: scroll;
     position: relative;
-    border: 1px solid #000;
     border-bottom: 0;
     z-index: 1;
 }
@@ -46,7 +44,7 @@
 }
 
 .calendar-table td {
-    border: 1px solid #000;
+    border: 1px solid #dee2e6;
     border-left: 0;
     border-top: 0;
 }
@@ -55,21 +53,27 @@
     border-right: 0;
 }
 
-.calendar-table--header {
-}
-
 .calendar-table--header td {
     height: 21px;
     max-height: 21px;
     min-height: 21px;
 }
 
-.calendar-table--body {
+.calendar-table--header > tr > td {
+    border-top: 1px solid #dee2e6;
+}
+
+.calendar-table--header > tr > td > tbody> tr:first-child > td {
+    border-bottom: 0;
 }
 
 .calendar-table--body td,
 .calendar-table--body th {
     height: 40px;
+}
+
+.calendar-table--body > tr > td{
+    border-bottom: 0;
 }
 
 .calendar-year--week {
@@ -99,7 +103,7 @@
 .column-fixed {
     left: 0;
     top: auto;
-    border: 1px solid black;
+    border: 1px solid dee2e6;
     margin-top: 1px;
     width: var(--fixedWidth);
     position: absolute;
