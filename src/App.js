@@ -272,6 +272,7 @@ class App extends React.Component {
                                 events={orders}
                                 machines={machines}
                                 ref={this.calendar}
+                                orderList={orderList}
                                 currentWeek={currentWeek}
                                 startOfTheWeek={startOfTheWeek}
                                 onEventDrop={this.handleEventDrop}
@@ -285,6 +286,7 @@ class App extends React.Component {
         
                             <OrderTable
                                 events={orders}
+                                orderList={orderList}
                                 onCloseOrder={this.handleEventDone}
                                 filterFinishedOrders={filterFinishedOrders}
                             />

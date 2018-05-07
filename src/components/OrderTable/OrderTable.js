@@ -6,6 +6,7 @@ import './order-table.css';
 export class OrderTable extends React.Component {
     static defaultProps = {
         events: [],
+        orderList: [],
         onCloseOrder: () => {},
         filterFinishedOrders: true,
     };
@@ -47,10 +48,13 @@ export class OrderTable extends React.Component {
     }
 
     renderTableBody = (events) => {
-        const { filterFinishedOrders } = this.props;
+        const {
+            orderList,
+            filterFinishedOrders,
+        } = this.props;
 
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events, filterFinishedOrders);
+        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
@@ -58,6 +62,7 @@ export class OrderTable extends React.Component {
 
             for (let i = 0; i < keys.length; i++) {
                 const product = order[keys[i]];
+                const orderObject = orderList.find((o) => o.id === product.orderId);
 
                 row.push(
                     <ContextMenu
@@ -72,12 +77,8 @@ export class OrderTable extends React.Component {
                         disabled={product.done}
                         className={product.done ? 'order--finished' : null}
                     >
-                        <td
-                            style={{
-                                backgroundColor: `${product.orderColor}`
-                            }}
-                        >
-                            {key}
+                        <td>
+                            <span style={{ backgroundColor: orderObject.color }}>{key}</span>
                         </td>
                         <td>{keys[i]}</td>
                         <td>{product.total.count}</td>

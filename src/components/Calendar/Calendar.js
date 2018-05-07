@@ -14,6 +14,7 @@ export class Calendar extends React.Component {
         pause: 11,
         events: [],
         machines: [],
+        orderList: [],
         currentWeek: 1,
         onEventDrop: () => {},
         onEventClick: () => {},
@@ -57,6 +58,7 @@ export class Calendar extends React.Component {
         } = this.state;
 
         const events = !isEqual(this.props.events, prevProps.events);
+        const orderList = !isEqual(this.props.orderList, prevProps.orderList);
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
         const dragging = prevState.draggingEvent !== this.state.draggingEvent;
         const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
@@ -67,7 +69,7 @@ export class Calendar extends React.Component {
             this.renderTableBody();
         }
 
-        if (dragging || selectedEvent || events || scrollChanged) {
+        if (dragging || selectedEvent || events || orderList || scrollChanged) {
             this.renderEvents();
         }
     }
@@ -407,6 +409,7 @@ export class Calendar extends React.Component {
         const {
             events,
             machines,
+            orderList,
             startOfTheWeek,
         } = this.props;
 
@@ -426,6 +429,7 @@ export class Calendar extends React.Component {
         });
 
         const eventsToRender = filteredEvents.map((event) => {
+            const order = orderList.find((o) => o.id === event.orderId);
             const machine = machines.find((machine) => machine.id === event.machine);
             let row = null;
 
@@ -436,6 +440,7 @@ export class Calendar extends React.Component {
             return (
                 <CalendarEvent
                     row={row}
+                    order={order}
                     event={event}
                     key={event.id}
                     machine={machine}

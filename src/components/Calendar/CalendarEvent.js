@@ -6,6 +6,7 @@ import { ContextMenu } from '../ContextMenu';
 export class CalendarEvent extends React.Component {
     static defaultProps = {
         event: {},
+        order: {},
         machine: {},
         scrollLeft: 0,
         selectedEvent: {},
@@ -30,6 +31,7 @@ export class CalendarEvent extends React.Component {
         const {
             row,
             event,
+            order,
             machine,
             scrollTop,
             scrollLeft,
@@ -84,7 +86,7 @@ export class CalendarEvent extends React.Component {
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
             height: `${startPosition.height}px`,
-            backgroundColor: event.orderColor || '#fff',
+            backgroundColor: order.color || '#fff',
             width: `${endPosition.left - startPosition.left}px`,
             top: `${startPosition.top - calendarWrapper.top + scrollTop}px`,
             left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,
