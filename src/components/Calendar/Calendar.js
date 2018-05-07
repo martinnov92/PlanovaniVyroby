@@ -51,17 +51,23 @@ export class Calendar extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const dragging = prevState.draggingEvent !== this.state.draggingEvent;
+        const {
+            scrollTop,
+            scrollLeft,
+        } = this.state;
+
         const events = !isEqual(this.props.events, prevProps.events);
-        const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
+        const dragging = prevState.draggingEvent !== this.state.draggingEvent;
+        const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
+        const scrollChanged = (prevState.scrollTop !== 0 && scrollTop === 0) || (prevState.scrollLeft !== 0 && scrollLeft === 0);
 
         if (currentWeek || events) {
             this.scrolledToCurrentDate = false;
             this.renderTableBody();
         }
 
-        if (dragging || selectedEvent || events) {
+        if (dragging || selectedEvent || events || scrollChanged) {
             this.renderEvents();
         }
     }

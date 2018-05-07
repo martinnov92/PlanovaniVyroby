@@ -106,7 +106,7 @@ export function formatMinutesToTime(totalMinutes) {
 }
 
 export function saveFile(path, data) {
-    const d = JSON.stringify(data);
+    const d = JSON.stringify(data, null, 4);
 
     return new Promise((resolve, reject) => {
         fs.writeFile(path, d, (err) => {
