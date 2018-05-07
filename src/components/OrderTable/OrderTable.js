@@ -72,14 +72,12 @@ export class OrderTable extends React.Component {
                         disabled={product.done}
                         className={product.done ? 'order--finished' : null}
                     >
-                        <td>
-                            <span
-                                style={{
-                                    color: product.orderColor,
-                                }}
-                            >
-                                {key}
-                            </span>
+                        <td
+                            style={{
+                                backgroundColor: `${product.orderColor}`
+                            }}
+                        >
+                            {key}
                         </td>
                         <td>{keys[i]}</td>
                         <td>{product.total.count}</td>
