@@ -11,11 +11,15 @@ export class OrderPopup extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            orderIs: null,
+        };
+
         this.orderId = React.createRef();
     }
 
     componentDidMount() {
-        this.orderId.current.focus();
+        // this.orderId.current.focus();
     }
 
     render() {
@@ -48,27 +52,67 @@ export class OrderPopup extends React.Component {
                                     <strong>Zakázka</strong>
                                 </span>
                             </div>
-                            <input
-                                type="text"
-                                name="orderId"
-                                ref={this.orderId}
-                                value={order.orderId}
-                                className="form-control"
-                                onChange={this.props.handleInputChange}
-                            />
-                            <div className="input-group-append">
-                                <input
-                                    type="color"
+                            {
+                                this.state.orderIs === 'new'
+                                ? <React.Fragment>
+                                    <input
+                                        type="text"
+                                        name="orderId"
+                                        ref={this.orderId}
+                                        value={order.orderId}
+                                        className="form-control"
+                                        onChange={this.props.handleInputChange}
+                                    />
+                                    <div className="input-group-append">
+                                        <input
+                                            type="color"
+                                            style={{
+                                                height: '100%',
+                                                backgroundColor: '#e9ecef',
+                                                borderRadius: '0 5px 5px 0',
+                                            }}
+                                            name="orderColor"
+                                            value={order.orderColor}
+                                            onChange={this.props.handleInputChange}
+                                        />
+                                    </div>
+                                </React.Fragment>
+                                : this.state.orderIs === 'exists'
+                                ? <React.Fragment>
+                                    <select>
+                                       <option></option>
+                                    </select>
+                                </React.Fragment>
+                                : <div
+                                    role="group"
                                     style={{
-                                        height: '100%',
-                                        backgroundColor: '#e9ecef',
-                                        borderRadius: '0 5px 5px 0',
+                                        width: 'calc(100% - 100px)'
                                     }}
-                                    name="orderColor"
-                                    value={order.orderColor}
-                                    onChange={this.props.handleInputChange}
-                                />
-                            </div>
+                                    className="btn-group"
+                                >
+                                    <button
+                                        title="Nová zakázka"
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                        className="btn btn-secondary"
+                                        onClick={(e) => this.setState({ orderIs: 'new' })}
+                                    >
+                                        Nová
+                                    </button>
+        
+                                    <button
+                                        title="Vybrat existující zakázku"
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                        className="btn btn-secondary"
+                                        onClick={(e) => this.setState({ orderIs: 'exists' })}
+                                    >
+                                        Vybrat
+                                    </button>
+                                </div>
+                            }
                         </div>
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
