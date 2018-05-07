@@ -46,7 +46,6 @@ class App extends React.Component {
                 // načíst obsah souboru do state
                 try {
                     const d = JSON.parse(data);
-
                     this.setState({
                         orders: d.orders,
                         machines: d.machines,
@@ -399,7 +398,6 @@ class App extends React.Component {
                 productName: '',
                 worker: '',
                 note: '',
-                done: false, 
                 dateTo: dateTo,
                 operation: {
                     order: 1,
