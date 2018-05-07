@@ -365,6 +365,7 @@ class App extends React.Component {
                     time: 0,
                     count: 0,
                 },
+                orderColor: '#fff',
                 dateFrom: dateFrom,
                 workingHours: workingHours,
                 machine: this.state.machines[0].id,

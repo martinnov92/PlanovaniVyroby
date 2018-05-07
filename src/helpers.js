@@ -29,6 +29,7 @@ export function createGroupedOrders(orders, filterDone = false) {
                             count: Number(current.operation.count),
                         },
                         done: current.done,
+                        orderColor: current.orderColor,
                         [current.operation.order]: {
                             ...current,
                         }

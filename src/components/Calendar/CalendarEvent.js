@@ -83,8 +83,8 @@ export class CalendarEvent extends React.Component {
 
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
-            backgroundColor: machine.color,
             height: `${startPosition.height}px`,
+            backgroundColor: event.orderColor || '#fff',
             width: `${endPosition.left - startPosition.left}px`,
             top: `${startPosition.top - calendarWrapper.top + scrollTop}px`,
             left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,

@@ -234,9 +234,6 @@ export class Calendar extends React.Component {
                             machines.map((machine) => {
                                 return <div
                                     key={machine.id}
-                                    style={{
-                                        borderLeft: `10px solid ${machine.color}`
-                                    }}
                                     className="calendar--machine"
                                 >
                                     <p>{machine.name}</p>
