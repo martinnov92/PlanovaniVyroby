@@ -298,7 +298,7 @@ class App extends React.Component {
         return <div
                 ref={this.card}
                 style={{
-                    borderTop: `10px solid ${machine && machine.color}`
+                    borderTop: `10px solid ${order && order.orderColor}`
                 }}
                 className={createClassName([
                     order ? 'card--active' : null,
@@ -365,8 +365,8 @@ class App extends React.Component {
                     time: 0,
                     count: 0,
                 },
-                orderColor: '#fff',
                 dateFrom: dateFrom,
+                orderColor: '#ffffff',
                 workingHours: workingHours,
                 machine: this.state.machines[0].id,
             }

@@ -64,9 +64,9 @@ export class OrderPopup extends React.Component {
                                         backgroundColor: '#e9ecef',
                                         borderRadius: '0 5px 5px 0',
                                     }}
-                                    name="color"
-                                    value="#ffffff"
-                                    onChange={() => {}}
+                                    name="orderColor"
+                                    value={order.orderColor}
+                                    onChange={this.props.handleInputChange}
                                 />
                             </div>
                         </div>
