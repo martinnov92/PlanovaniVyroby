@@ -56,7 +56,7 @@ export class OrderPopup extends React.Component {
                                 className="form-control"
                                 onChange={this.props.handleInputChange}
                             />
-                            <div class="input-group-append">
+                            <div className="input-group-append">
                                 <input
                                     type="color"
                                     style={{
@@ -64,7 +64,9 @@ export class OrderPopup extends React.Component {
                                         backgroundColor: '#e9ecef',
                                         borderRadius: '0 5px 5px 0',
                                     }}
+                                    name="color"
                                     value="#ffffff"
+                                    onChange={() => {}}
                                 />
                             </div>
                         </div>
