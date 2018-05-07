@@ -6,6 +6,7 @@ import './context-menu.css';
 export class ContextMenu extends React.Component {
     static defaultProps = {
         buttons: [],
+        disabled: false,
         onOpen: () => {},
         onClose: () => {},
     };
@@ -57,7 +58,7 @@ export class ContextMenu extends React.Component {
     }
 
     handleClickOutside = (e) => {
-        if (!this.state.open || !this.mounted || !this.props.disabled) {
+        if (!this.state.open || !this.mounted || this.props.disabled) {
             return;
         }
         
