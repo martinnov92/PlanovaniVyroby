@@ -125,6 +125,7 @@
     display: flex;
     padding: 0 5px;
     position: absolute;
+    border: 1px solid #949494;
 }
 
 .calendar--event-text {
@@ -225,7 +226,7 @@
         45deg,
         #6c757d,
         #6c757d 5px,
-        #343a40 5px,
-        #343a40 10px
+        #aaaeb1 5px,
+        #aaaeb1 10px
     );
 }

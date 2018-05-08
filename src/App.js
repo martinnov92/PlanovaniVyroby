@@ -331,6 +331,11 @@ class App extends React.Component {
             machines,
             hoverOrder: order,
         } = this.state;
+
+        if (!order) {
+            return;
+        }
+
         const o = this.state.orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
 

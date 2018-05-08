@@ -1,5 +1,3 @@
-// @ts-check
-
 import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import React from 'react';
@@ -74,7 +72,6 @@ export class Calendar extends React.Component {
         }
 
         if (dragging || selectedEvent || events || orderList || scrollChanged) {
-            console.log('renderuju');
             this.renderEvents();
         }
     }
