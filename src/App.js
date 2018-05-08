@@ -159,10 +159,7 @@ class App extends React.Component {
             dateFrom: moment(this.state.order.dateFrom).format(),
         };
 
-        /* const eventsWithSameDate = copyOrders.filter((o) => {
-
-        });
-        */
+        // TODO: najít události, které mají stejné datum
 
         if (!this.state.order.id) {
             order.id = moment().format();
