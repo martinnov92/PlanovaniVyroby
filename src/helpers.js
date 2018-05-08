@@ -33,25 +33,28 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         done: order.done,
                         color: order.color,
                         [current.operation.order]: {
-                            ...current,
+                            ...current.operation,
                         }
                     }
                 }
             };
         }
 
+        const prevItem = prev[current.orderId][current.productName];
         return {
             ...prev,
             [current.orderId]: {
                 ...prev[current.orderId],
                 [current.productName]: {
-                    ...prev[current.orderId][current.productName],
+                    ...prevItem,
                     total: {
-                        time: Number(prev[current.orderId][current.productName].total.time) + Number(current.operation.time),
-                        count: Number(prev[current.orderId][current.productName].total.count) + Number(current.operation.count),
+                        time: Number(prevItem.total.time) + Number(current.operation.time),
+                        count: Number(prevItem.total.count) + Number(current.operation.count),
                     },
                     [current.operation.order]: {
-                        ...current
+                        ...current.operation,
+                        time: Number(prevItem[current.operation.order] && prevItem[current.operation.order].time || 0) + Number(current.operation.time),
+                        count: Number(prevItem[current.operation.order] && prevItem[current.operation.order].count || 0) + Number(current.operation.count),
                     }
                 }
             }

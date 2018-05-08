@@ -55,6 +55,7 @@ export class OrderTable extends React.Component {
 
         // zgrupovat zakázky podle orderId
         const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
+        console.log(orders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
@@ -90,42 +91,42 @@ export class OrderTable extends React.Component {
                         <td>
                             {
                                 product['1']
-                                ? `${product['1'].operation.count} (${product['1'].operation.time})`
+                                ? `${product['1'].count} (${product['1'].time})`
                                 : '-'
                             }
                         </td>
                         <td>
                             {
                                 product['2']
-                                ? `${product['2'].operation.count} (${product['2'].operation.time})`
+                                ? `${product['2'].count} (${product['2'].time})`
                                 : '-'
                             }
                         </td>
                         <td>
                             {
                                 product['3']
-                                ? `${product['3'].operation.count} (${product['3'].operation.time})`
+                                ? `${product['3'].count} (${product['3'].time})`
                                 : '-'
                             }
                         </td>
                         <td>
                             {
                                 product['4']
-                                ? `${product['4'].operation.count} (${product['4'].operation.time})`
+                                ? `${product['4'].count} (${product['4'].time})`
                                 : '-'
                             }
                         </td>
                         <td>
                             {
                                 product['5']
-                                ? `${product['5'].operation.count} (${product['5'].operation.time})`
+                                ? `${product['5'].count} (${product['5'].time})`
                                 : '-'
                             }
                         </td>
                         <td>
                             {
                                 product['6']
-                                ? `${product['6'].operation.count} (${product['6'].operation.time})`
+                                ? `${product['6'].count} (${product['6'].time})`
                                 : '-'
                             }
                         </td>
