@@ -64,8 +64,7 @@ export class Calendar extends React.Component {
         const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
         // zkontrolovat scroll, pokud došlo k drop události a kalendář se sám zascroloval (vyrovnat zobrazení)
         const scrollChanged = (prevState.scrollTop !== 0 && scrollTop === 0) || (prevState.scrollLeft !== 0 && scrollLeft === 0);
-        console.log(orderList, this.props.orderList, prevProps.orderList);
-        console.log(dragging, selectedEvent, events, orderList, scrollChanged);
+
         if (currentWeek || events) {
             this.scrolledToCurrentDate = false;
             this.renderTableBody();

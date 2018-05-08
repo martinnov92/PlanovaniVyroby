@@ -331,12 +331,13 @@ class App extends React.Component {
             machines,
             hoverOrder: order,
         } = this.state;
+        const o = this.state.orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
 
         return <div
                 ref={this.card}
                 style={{
-                    borderTop: `10px solid ${order && order.orderColor}`
+                    borderTop: `10px solid ${o && o.color}`
                 }}
                 className={createClassName([
                     order ? 'card--active' : null,
