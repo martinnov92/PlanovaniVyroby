@@ -11,13 +11,13 @@ export function createClassName(classNames) {
 
 export function createGroupedOrders(orders, orderList, displayFinishedOrders = false) {
     let o = [...orders];
-    let list = orderList.filter((order) => order.done === false);
+    let list = [...orderList]; 
 
     if (displayFinishedOrders) {
-        list = [...orderList];
+        list = orderList.filter((order) => order.done === false);
     }
 
-    return o.reduce((prev, current) => {
+    return o.filter((o) => list.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
         const orderExists = prev[current.orderId];
         const order = list.find((l) => l.id === current.orderId);
 
