@@ -37,7 +37,7 @@ export class Calendar extends React.Component {
             selectedEventElement: null,
         };
 
-        this.scrolledToCurrentDate = false;
+        this.calendarScrolled = false;
         this.currentDate = React.createRef();
     }
 
@@ -64,7 +64,7 @@ export class Calendar extends React.Component {
         const scrollChanged = (prevState.scrollTop !== 0 && scrollTop === 0) || (prevState.scrollLeft !== 0 && scrollLeft === 0);
 
         if (currentWeek) {
-            this.scrolledToCurrentDate = false;
+            this.calendarScrolled = false;
         }
 
         if (currentWeek || events) {
@@ -93,7 +93,7 @@ export class Calendar extends React.Component {
     }
 
     scrollToCurrentDate = () => {
-        if (this.scrolledToCurrentDate) {
+        if (this.calendarScrolled) {
             return;
         }
 
@@ -476,10 +476,13 @@ export class Calendar extends React.Component {
         }, () => {
             if (moment().startOf('week').week() === this.props.currentWeek) {
                 this.scrollToCurrentDate();
-                this.scrolledToCurrentDate = true;
             } else {
-                this.calendar.scrollTo(0, 0);
+                if (!this.calendarScrolled) {
+                    this.calendar.scrollTo(0, 0);
+                }
             }
+
+            this.calendarScrolled = true;
         });
     }
 }
