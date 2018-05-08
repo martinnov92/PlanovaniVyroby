@@ -6,6 +6,7 @@ import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName } from '../../helpers';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 
+const CELL_OVER_CLASS_NAME = 'calendar--event-dragging--over';
 
 export class Calendar extends React.Component {
     static defaultProps = {
@@ -152,7 +153,7 @@ export class Calendar extends React.Component {
     }
 
     handleDragEnter = (e) => {
-        e.target.classList.add('calendar--event-dragging--over');
+        e.target.classList.add(CELL_OVER_CLASS_NAME);
     }
 
     handleDragOver = (e) => {
@@ -161,13 +162,18 @@ export class Calendar extends React.Component {
     }
 
     handleDragLeave = (e) => {
-        e.target.classList.remove('calendar--event-dragging--over');
+        e.target.classList.remove(CELL_OVER_CLASS_NAME);
     }
 
     handleDragEnd = (e) => {
         this.setState({
             draggingEvent: null,
         });
+
+        const classListToRemove = Array.from(this.calendar.getElementsByClassName(CELL_OVER_CLASS_NAME));
+        if (classListToRemove.length > 0) {
+            classListToRemove.forEach((node) => node.classList.remove(CELL_OVER_CLASS_NAME));
+        }
     }
 
     handleDrop = (e) => {
