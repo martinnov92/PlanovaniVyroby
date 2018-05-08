@@ -32,7 +32,6 @@ export class CalendarEvent extends React.Component {
             row,
             event,
             order,
-            machine,
             scrollTop,
             scrollLeft,
             calendarWrapperClientRect,

@@ -50,7 +50,7 @@ class App extends React.Component {
                         orders: d.orders,
                         machines: d.machines,
                         orderList: d.orderList,
-                        filterFinishedOrders: d.filterFinishedOrders == undefined ? true : d.filterFinishedOrders,
+                        filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
                     }, () => console.log(this.state));
                 } catch (err) {}
             }
@@ -206,16 +206,15 @@ class App extends React.Component {
     };
 
     handleCloseOrder = (e, orderId, order) => {
-        const orderList = this.state.orderList.map((o) => {
-            if (o.id === orderId) {
-                o.done = true;
-            }
+        const orderListCopy = [...this.state.orderList];
+        const findOrder = orderListCopy.findIndex((o) => o.id === orderId);
 
-            return o;
-        });
+        if (findOrder > -1) {
+            orderListCopy[findOrder].done = true;
+        }
 
         this.setState({
-            orderList,
+            orderList: orderListCopy,
         }, () => this.saveToFile());
     }
 
