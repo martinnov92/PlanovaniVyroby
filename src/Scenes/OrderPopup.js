@@ -252,11 +252,12 @@ export class OrderPopup extends React.Component {
             return (
                 <React.Fragment>
                     <input
-                        type="text"
                         name="id"
+                        type="text"
+                        value={newOrder.id}
                         placeholder="Zakázka"
                         className="form-control"
-                        value={newOrder.id}
+                        disabled={newOrder.id !== ''}
                         onChange={this.props.handleNewOrderChange}
                     />
                     <div className="input-group-append">
@@ -269,6 +270,7 @@ export class OrderPopup extends React.Component {
                             }}
                             name="color"
                             value={newOrder.color}
+                            disabled={newOrder.id !== ''}
                             onChange={this.props.handleNewOrderChange}
                         />
                     </div>
