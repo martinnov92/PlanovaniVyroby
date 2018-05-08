@@ -45,7 +45,7 @@ export class ContextMenu extends React.Component {
     }
 
     handleRightClickOutside = (e) => {
-        if (!this.state.open || !this.props.disabled) {
+        if (!this.mounted) {
             return;
         }
     
