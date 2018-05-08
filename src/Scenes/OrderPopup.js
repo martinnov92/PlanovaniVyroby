@@ -285,7 +285,7 @@ export class OrderPopup extends React.Component {
                     onChange={this.props.handleInputChange}
                 >
                     {
-                        this.props.orderList.map((order) => {
+                        this.props.orderList.filter((o) => !o.done).map((order) => {
                             return (
                                 <option
                                     key={order.id}
