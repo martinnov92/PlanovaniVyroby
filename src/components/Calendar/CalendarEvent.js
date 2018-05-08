@@ -123,6 +123,7 @@ export class CalendarEvent extends React.Component {
 
         const {
             event,
+            order,
             selectedEvent,
             draggingEvent
         } = this.props;
@@ -163,11 +164,11 @@ export class CalendarEvent extends React.Component {
                         event.note
                     }
                     style={style}
-                    draggable={!resizerActive}
+                    ref={this.draggableParentDiv}
                     onDragEnd={this.props.onDragEnd}
                     onDrag={(e) => this.props.onDrag(e, event)}
                     onClick={(e) => this.props.onClick(e, event)}
-                    ref={this.draggableParentDiv}
+                    draggable={order.done ? false : !resizerActive}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDragStart={(e) => this.props.onDragStart(e, event)}
@@ -184,18 +185,18 @@ export class CalendarEvent extends React.Component {
                     </div>
 
                     <div
-                        draggable={true}
                         data-resize="dateFrom"
-                        onDragStart={this.handleResizerDragStart}
                         onDragEnd={this.handleResizerDragEnd}
+                        draggable={order.done ? false : true}
+                        onDragStart={this.handleResizerDragStart}
                         className="calendar--event--resizer calendar--event--resizer-left"
                     />
 
                     <div
-                        draggable={true}
                         data-resize="dateTo"
-                        onDragStart={this.handleResizerDragStart}
                         onDragEnd={this.handleResizerDragEnd}
+                        draggable={order.done ? false : true}
+                        onDragStart={this.handleResizerDragStart}
                         className="calendar--event--resizer calendar--event--resizer-right"
                     />
                 </div>
