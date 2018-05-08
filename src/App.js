@@ -151,7 +151,8 @@ class App extends React.Component {
         const {
             newOrderObject,
         } = this.state;
-        const copyOrders = [...this.state.orders];
+        const ordersCopy = [...this.state.orders];
+        const orderListCopy = [...this.state.orderList];
 
         const order = {
             ...this.state.order,
@@ -163,30 +164,28 @@ class App extends React.Component {
 
         if (!this.state.order.id) {
             order.id = moment().format();
-            copyOrders.push(order);
+            ordersCopy.push(order);
         } else {
-            const findIndex = copyOrders.findIndex((o) => o.id === order.id);
-            copyOrders.splice(findIndex, 1, order);
+            const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+            ordersCopy.splice(findIndex, 1, order);
         }
 
         if (newOrderObject.id !== '') {
-            // porlinkovat novou zakázku s novou objednávkou
+            // prolinkovat novou zakázku s novou objednávkou
             order.orderId = newOrderObject.id;
-            const copyOrderList = [...this.state.orderList];
-            const findIndex = copyOrderList.findIndex((o) => o.id === newOrderObject.id);
+            const findIndex = orderListCopy.findIndex((o) => o.id === newOrderObject.id);
 
             if (findIndex > -1) {
-                copyOrderList[findIndex] = newOrderObject;
+                orderListCopy[findIndex] = newOrderObject;
+            } else {
+                orderListCopy.push(newOrderObject);
             }
-
-            this.setState({
-                orderList: copyOrderList,
-            });
         }
 
         this.setState({
             open: false,
-            orders: copyOrders,
+            orders: ordersCopy,
+            orderList: orderListCopy,
         }, () => this.saveToFile());
         this.resetOrderState();
     }
@@ -251,6 +250,8 @@ class App extends React.Component {
             filterFinishedOrders,
         } = this.state;
 
+        const productsNameList = orders.map((o) => o.productName);
+
         return (
             <div className="app">
                 <Nav
@@ -303,6 +304,7 @@ class App extends React.Component {
                             newOrder={newOrderObject}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
+                            productsNameList={productsNameList}
                             handleInputChange={this.handleInputChange}
                             handleNewOrderChange={this.handleNewOrderChange}
                         />
