@@ -2,7 +2,7 @@ import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName } from '../../helpers';
+import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName, filterDataByDate } from '../../helpers';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 
@@ -430,12 +430,7 @@ export class Calendar extends React.Component {
 
         // vyfiltrovat eventy pouze pro daný týden
         const endOfTheWeek = moment(startOfTheWeek).endOf('week');
-        const filteredEvents = events.filter((event) => {
-            const isInRange = moment(event.dateFrom).isBefore(startOfTheWeek) && moment(event.dateTo).isAfter(endOfTheWeek);
-            const isInWeek = moment(event.dateFrom).isBetween(startOfTheWeek, endOfTheWeek) || moment(event.dateTo).isBetween(startOfTheWeek, endOfTheWeek);
-
-            return isInRange || isInWeek;
-        });
+        const filteredEvents = filterDataByDate(events, startOfTheWeek, endOfTheWeek);
 
         const eventsToRender = filteredEvents.map((event) => {
             const order = orderList.find((o) => o.id === event.orderId);

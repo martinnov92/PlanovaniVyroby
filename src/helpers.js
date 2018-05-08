@@ -95,6 +95,15 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     return Math.floor(minutesWorked / 10) * 10;
 }
 
+export function filterDataByDate(events, from, to) {
+    return events.filter((event) => {
+        const isInRange = moment(event.dateFrom).isBefore(from) && moment(event.dateTo).isAfter(to);
+        const isInWeek = moment(event.dateFrom).isBetween(from, to) || moment(event.dateTo).isBetween(from, to);
+
+        return isInRange || isInWeek;
+    });
+}
+
 export function formatMinutesToTime(totalMinutes) {
     if (!totalMinutes) {
         // default

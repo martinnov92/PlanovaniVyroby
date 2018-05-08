@@ -18,11 +18,11 @@ export class OrderPopup extends React.Component {
             orderIs: null,
         };
 
-        this.orderId = React.createRef();
+        this.product = React.createRef();
     }
 
     componentDidMount() {
-        // this.orderId.current.focus();
+        this.product.current.focus();
     }
 
     render() {
@@ -32,7 +32,7 @@ export class OrderPopup extends React.Component {
             newOrder,
             orderList,
         } = this.props;
-        console.log(newOrder, order, orderList);
+
         return (
             <Popup
                 className="popup-order"
@@ -73,7 +73,6 @@ export class OrderPopup extends React.Component {
                                     <input
                                         type="text"
                                         name="orderId"
-                                        ref={this.orderId}
                                         placeholder="Zakázka"
                                         className="form-control"
                                         value={newOrder.id}
@@ -151,6 +150,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 type="text"
                                 name="productName"
+                                ref={this.product}
                                 className="form-control"
                                 value={order.productName}
                                 onChange={this.props.handleInputChange}

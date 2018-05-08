@@ -159,6 +159,11 @@ class App extends React.Component {
             dateFrom: moment(this.state.order.dateFrom).format(),
         };
 
+        /* const eventsWithSameDate = copyOrders.filter((o) => {
+
+        });
+        */
+
         if (!this.state.order.id) {
             order.id = moment().format();
             copyOrders.push(order);
