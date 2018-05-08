@@ -112,11 +112,7 @@ export function saveFile(path, data) {
 
     return new Promise((resolve, reject) => {
         fs.writeFile(path, d, (err) => {
-            // pokud nastala chyba, zobrazí se error
-            if (err) {
-                reject(err);
-            }
-    
+            if (err) reject(err);
             resolve('Uloženo.');
         });
     });

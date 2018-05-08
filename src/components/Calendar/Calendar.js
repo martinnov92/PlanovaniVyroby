@@ -65,12 +65,16 @@ export class Calendar extends React.Component {
         // zkontrolovat scroll, pokud došlo k drop události a kalendář se sám zascroloval (vyrovnat zobrazení)
         const scrollChanged = (prevState.scrollTop !== 0 && scrollTop === 0) || (prevState.scrollLeft !== 0 && scrollLeft === 0);
 
-        if (currentWeek || events) {
+        if (currentWeek) {
             this.scrolledToCurrentDate = false;
+        }
+
+        if (currentWeek || events) {
             this.renderTableBody();
         }
 
         if (dragging || selectedEvent || events || orderList || scrollChanged) {
+            console.log('renderuju');
             this.renderEvents();
         }
     }
@@ -231,6 +235,7 @@ export class Calendar extends React.Component {
                         <div style={{
                                 height: '44px',
                                 border: 0,
+                                borderRight: '1px solid #dee2e6'
                             }}
                         />
                         {

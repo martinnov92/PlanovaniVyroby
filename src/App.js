@@ -383,7 +383,7 @@ class App extends React.Component {
             console.log(value);
         })
         .catch((err) => {
-            console.log(err);
+            alert(err);
         });
     }
 
