@@ -284,6 +284,9 @@ export class OrderPopup extends React.Component {
                     className="custom-select"
                     onChange={this.props.handleInputChange}
                 >
+                    <option>
+                        Vybrat zakázku
+                    </option>
                     {
                         this.props.orderList.filter((o) => !o.done).map((order) => {
                             return (

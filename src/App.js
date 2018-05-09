@@ -130,6 +130,17 @@ class App extends React.Component {
         const order = set(this.state.order, e.target.name, e.target.value);
 
         if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
+            const date = moment(e.target.value);
+            const hours = date.hours();
+            const minutes = date.minutes();
+
+            const shiftFrom = hours < 7;
+            const shiftTo = (hours > 20) || (hours > 20 && minutes > 0);
+
+            if ((e.target.name === 'dateFrom' && shiftFrom) || (e.target.name === 'dateFrom' && shiftTo) || e.target.name === 'dateTo' && shiftTo) {
+                return;
+            }
+
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         }
 
@@ -160,9 +171,18 @@ class App extends React.Component {
             dateFrom: moment(this.state.order.dateFrom).format(),
         };
 
-        // TODO: najít události, které mají stejné datum
-
         if (!this.state.order.id) {
+            // TODO: najít události, které mají stejné datum
+            for (let i = 0; i < ordersCopy.length; i++) {
+                const sameMachine = order.machine === ordersCopy[i].machine;
+                const dateFromIsBetween = moment(order.dateFrom).isBetween(ordersCopy[i].dateFrom, ordersCopy[i].dateTo, null, '[]');
+                const dateToIsBetween = moment(order.dateTo).isBetween(ordersCopy[i].dateFrom, ordersCopy[i].dateTo, null, '[]');
+
+                if ((dateFromIsBetween || dateToIsBetween) && sameMachine) {
+                    return alert('Datum je již obsazené');
+                }
+            }
+
             order.id = moment().format();
             ordersCopy.push(order);
         } else {

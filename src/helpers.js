@@ -53,8 +53,8 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         count: Number(prevItem.total.count) + Number(current.operation.count),
                     },
                     [current.operation.order]: {
-                        time: Number(prevItem[current.operation.order] && prevItem[current.operation.order].time || 0) + Number(current.operation.time),
-                        count: Number(prevItem[current.operation.order] && prevItem[current.operation.order].count || 0) + Number(current.operation.count),
+                        time: Number(prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
+                        count: Number(prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
                     }
                 }
             }
