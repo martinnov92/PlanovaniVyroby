@@ -175,8 +175,12 @@ class App extends React.Component {
             // TODO: najít události, které mají stejné datum
             for (let i = 0; i < ordersCopy.length; i++) {
                 const sameMachine = order.machine === ordersCopy[i].machine;
-                const dateFromIsBetween = moment(order.dateFrom).isBetween(ordersCopy[i].dateFrom, ordersCopy[i].dateTo, null, '[]');
-                const dateToIsBetween = moment(order.dateTo).isBetween(ordersCopy[i].dateFrom, ordersCopy[i].dateTo, null, '[]');
+
+                const dateFromMinusMinute = moment(ordersCopy[i].dateFrom);
+                const dateToMinusMinute = moment(ordersCopy[i].dateTo);
+                const dateFromIsBetween = moment(order.dateFrom).isBetween(dateFromMinusMinute, dateToMinusMinute, null, '[]');
+                const dateToIsBetween = moment(order.dateTo).isBetween(dateFromMinusMinute, dateToMinusMinute, null, '[]');
+                console.log(dateFromMinusMinute.toDate(), dateToMinusMinute.toDate(), i, ordersCopy.length);
 
                 if ((dateFromIsBetween || dateToIsBetween) && sameMachine) {
                     return alert('Datum je již obsazené');

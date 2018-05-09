@@ -199,9 +199,9 @@ export class Calendar extends React.Component {
             const momentDateTo = moment(parsedEvent.event.dateTo);
             const momentDateFrom = moment(parsedEvent.event.dateFrom);
 
-            const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
+            const hoursDifference = moment.duration(momentDateTo.diff(momentDateFrom)).asHours();
             const sign = Math.sign(hoursDifference);
-
+            console.log(hoursDifference);
             // set new dateFrom and dateTo on object and pass it to parent component
             dateFrom = dateOnDrop.format();
             dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').format();
@@ -390,8 +390,7 @@ export class Calendar extends React.Component {
             };
 
             const isPause = (pause === i) ? 'calendar--cell-pause' : null;
-
-            const td = <React.Fragment key={i}>
+            let td = <React.Fragment key={i}>
                 <CalendarCell
                     day={day}
                     hours={i}
@@ -407,6 +406,19 @@ export class Calendar extends React.Component {
                     {...cellAttrs}
                 />
             </React.Fragment>;
+
+            if (i === 20) {
+                td = <CalendarCell
+                    key={i}
+                    day={day}
+                    hours={i}
+                    minutes={0}
+                    colSpan={2}
+                    className={[isPause]}
+                    onClick={() => console.log('click', i)}
+                    {...cellAttrs}
+                />
+            }
 
             hours.push(td);
         }

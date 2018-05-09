@@ -89,7 +89,7 @@
 }
 
 .calendar-table .calendar-table--empty-hours {
-    min-width: 10px;
+    width: 10px;
 }
 
 .calendar-table .calendar-table--empty-hours:nth-child(odd) {
