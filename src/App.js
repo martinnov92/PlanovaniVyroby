@@ -270,7 +270,7 @@ class App extends React.Component {
             filterFinishedOrders,
         } = this.state;
 
-        const productsNameList = orders.map((o) => o.productName);
+        const productsNameList = [...new Set(orders.map((o) => o.productName))];
 
         return (
             <div className="app">
