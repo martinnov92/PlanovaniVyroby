@@ -355,13 +355,13 @@ class App extends React.Component {
                         />
                     }
 
-                    {this.renderPinOrders()}
+                    {this.renderHoverOrder()}
                 </div>
             </div>
         );
     }
 
-    renderPinOrders = () => {
+    renderHoverOrder = () => {
         const {
             orders,
             machines,
