@@ -119,6 +119,11 @@ class App extends React.Component {
     handleEventDrop = (order) => {
         const ordersCopy = [...this.state.orders];
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+        const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
+
+        if (isOverlaping) {
+            return alert('V tomto čase je daný stroj vytížen.');
+        }
 
         order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         ordersCopy.splice(findIndex, 1, order);
@@ -176,9 +181,7 @@ class App extends React.Component {
         order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
 
         if (!this.state.order.id) {
-            const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
-
-            if (isOverlaping) {
+            if (isDateRangeOverlaping(ordersCopy, order)) {
                 return alert('V tomto čase je daný stroj vytížen.');
             }
 
@@ -186,6 +189,15 @@ class App extends React.Component {
             ordersCopy.push(order);
         } else {
             const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+            const dateFromIsSame = moment(order.dateFrom).isSame(ordersCopy[findIndex].dateFrom);
+            const dateToIsSame = moment(order.dateTo).isSame(ordersCopy[findIndex].dateTo);
+
+            if (!dateFromIsSame || !dateToIsSame) {
+                if (isDateRangeOverlaping(ordersCopy, order)) {
+                    return alert('V tomto čase je daný stroj vytížen.');
+                }
+            }
+
             ordersCopy.splice(findIndex, 1, order);
         }
 
