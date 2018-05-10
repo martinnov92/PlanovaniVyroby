@@ -120,8 +120,8 @@ class App extends React.Component {
         const ordersCopy = [...this.state.orders];
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
         const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
-
-        if (isOverlaping && ordersCopy[findIndex].id !== order.id) {
+        // TODO: možnost přesunout událost např. o hodinu později
+        if (isOverlaping) {
             return alert('V tomto čase je daný stroj vytížen.');
         }
 
