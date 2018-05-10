@@ -363,7 +363,9 @@ class App extends React.Component {
 
     renderPinOrders = () => {
         const {
+            orders,
             machines,
+            orderList,
             hoverOrder: order,
         } = this.state;
 
@@ -371,13 +373,14 @@ class App extends React.Component {
             return;
         }
 
-        const o = this.state.orderList.find((o) => o.id === (order && order.orderId));
+        const mainOrder = orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
+        const totalMinutes = order.operation.time * order.operation.count;
 
         return <div
                 ref={this.card}
                 style={{
-                    borderTop: `10px solid ${o && o.color}`
+                    borderTop: `10px solid ${mainOrder && mainOrder.color}`
                 }}
                 className={createClassName([
                     order ? 'card--active' : null,
@@ -389,16 +392,31 @@ class App extends React.Component {
                     order
                     ? <React.Fragment>
                         <h5 className="card-title">
-                            <strong>{order.label}</strong>
+                            <strong>{mainOrder.id}</strong>
                         </h5>
+                        <h6 className="card-subtitle mb-2">
+                            <strong>{order.productName}</strong>
+                        </h6>
                         <h6 className="card-subtitle mb-2 text-muted">
                             <strong>{order.worker}</strong>
                         </h6>
                         <p className="card-text">
-                            {order.note}
+                            {machine.name}
                         </p>
                         <p className="card-text">
-                            {machine.name}
+                            {order.operation.order}. operace
+                        </p>
+                        <p className="card-text">
+                            {order.operation.count}ks
+                        </p>
+                        <p className="card-text">
+                            {order.operation.time}min/kus
+                        </p>
+                        <p className="card-text">
+                            Celkem: {totalMinutes}min ({(totalMinutes / 60).toFixed(1)}hod)
+                        </p>
+                        <p className="card-text">
+                            {order.note}
                         </p>
                         <p className="card-text">
                             <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>

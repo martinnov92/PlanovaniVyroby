@@ -375,7 +375,7 @@ export class Calendar extends React.Component {
                     colSpan={2}
                     className={createClassName([
                         'calendar-table--hours',
-                        current ? 'calendar-day--current bg-danger text-light' : null
+                        // current ? 'calendar-day--current bg-danger text-light' : null
                     ])}
                 >
                     {i}
