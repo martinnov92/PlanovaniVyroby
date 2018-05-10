@@ -121,7 +121,7 @@ class App extends React.Component {
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
         const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
 
-        if (isOverlaping) {
+        if (isOverlaping && ordersCopy[findIndex].id !== order.id) {
             return alert('V tomto čase je daný stroj vytížen.');
         }
 
@@ -192,7 +192,7 @@ class App extends React.Component {
             const dateFromIsSame = moment(order.dateFrom).isSame(ordersCopy[findIndex].dateFrom);
             const dateToIsSame = moment(order.dateTo).isSame(ordersCopy[findIndex].dateTo);
 
-            if (!dateFromIsSame || !dateToIsSame) {
+            if ((!dateFromIsSame || !dateToIsSame) && ordersCopy[findIndex].id !== order.id) {
                 if (isDateRangeOverlaping(ordersCopy, order)) {
                     return alert('V tomto čase je daný stroj vytížen.');
                 }
