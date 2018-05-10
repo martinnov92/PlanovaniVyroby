@@ -1,4 +1,7 @@
-import moment from 'moment';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+const moment = extendMoment(Moment);
 const fs = window.require('fs');
 
 export const FULL_FORMAT = 'D.M.YYYY dddd';
@@ -105,6 +108,27 @@ export function filterDataByDate(events, from, to) {
 
         return isInRange || isInWeek;
     });
+}
+
+export function isDateRangeOverlaping(arr, order) {
+    const arrCopy = [...arr];
+    const orderDateFrom = moment(order.dateFrom);
+    const orderDateTo = moment(order.dateTo);
+    const rangeOrder = moment.range(orderDateFrom, orderDateTo);
+
+    for (let i = 0; i < arrCopy.length; i++) {
+        const sameMachine = order.machine === arrCopy[i].machine;
+
+        const existingOrderDateFrom = moment(arrCopy[i].dateFrom);
+        const existingOrderDateTo = moment(arrCopy[i].dateTo);
+        const existingRange = moment.range(existingOrderDateFrom, existingOrderDateTo);
+
+        if (existingRange.overlaps(rangeOrder, { adjacent: false })) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 export function formatMinutesToTime(totalMinutes) {

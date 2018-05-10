@@ -61,6 +61,7 @@
 
 .calendar-table--header > tr > td {
     border-top: 1px solid #dee2e6;
+    border-bottom: 0;
 }
 
 .calendar-table--header > tr > td > tbody> tr:first-child > td {
@@ -72,7 +73,7 @@
     height: 40px;
 }
 
-.calendar-table--body > tr > td{
+.calendar-table--body > tr > td {
     border-bottom: 0;
 }
 

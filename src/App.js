@@ -5,7 +5,7 @@ import { OrderPopup, SettingsPopup } from './Scenes';
 import { Calendar } from './components/Calendar';
 import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
-import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime, saveFile } from './helpers';
+import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime, saveFile, isDateRangeOverlaping } from './helpers';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
@@ -172,22 +172,13 @@ class App extends React.Component {
         };
 
         if (!this.state.order.id) {
-            // TODO: najít události, které mají stejné datum
-            for (let i = 0; i < ordersCopy.length; i++) {
-                const sameMachine = order.machine === ordersCopy[i].machine;
+            const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
 
-                const dateFromMinusMinute = moment(ordersCopy[i].dateFrom);
-                const dateToMinusMinute = moment(ordersCopy[i].dateTo);
-                const dateFromIsBetween = moment(order.dateFrom).isBetween(dateFromMinusMinute, dateToMinusMinute, null, '[]');
-                const dateToIsBetween = moment(order.dateTo).isBetween(dateFromMinusMinute, dateToMinusMinute, null, '[]');
-                console.log(dateFromMinusMinute.toDate(), dateToMinusMinute.toDate(), i, ordersCopy.length);
-
-                if ((dateFromIsBetween || dateToIsBetween) && sameMachine) {
-                    return alert('Datum je již obsazené');
-                }
+            if (isOverlaping) {
+                return alert('V tomto čase je daný stroj vytížen.');
             }
 
-            order.id = moment().format();
+            order.id = moment().unix();
             ordersCopy.push(order);
         } else {
             const findIndex = ordersCopy.findIndex((o) => o.id === order.id);

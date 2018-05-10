@@ -201,10 +201,17 @@ export class Calendar extends React.Component {
 
             const hoursDifference = moment.duration(momentDateTo.diff(momentDateFrom)).asHours();
             const sign = Math.sign(hoursDifference);
-            console.log(hoursDifference);
+
+            if (moment(dateOnDrop).hours() >= 20) {
+                // pokud událost přesunu na pomezí dvou pracovních dnů, musím se přesunout na den další a přidat rozdíl počtu hodin
+                // a odečíst hodinu z předchozího dne (20:00)
+                dateTo = moment(dateOnDrop).add(1, 'days').hours(7).add((hoursDifference - 1) * sign, 'hours').format();
+            } else {
+                dateTo = moment(dateOnDrop).add(hoursDifference * sign, 'hours').format();
+            }
+
             // set new dateFrom and dateTo on object and pass it to parent component
             dateFrom = dateOnDrop.format();
-            dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').format();
         }
 
         const newEvent = {
