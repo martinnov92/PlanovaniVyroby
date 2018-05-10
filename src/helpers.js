@@ -71,6 +71,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     let result = 0;
     let breakMinutes = 0;
     let minutesWorked = 0;
+    let isAtEleven = false;
     const BREAK_AFTER_MINUTES = 360;
     
     dateFrom = moment(dateFrom).toDate();
@@ -84,23 +85,29 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
     let current = dateFrom;
     while (current <= dateTo) {
-        // TODO: pokud je zakázka v 11 hodin - odečíst čas na oběd (v tom případě neodečítát 30 min pokud je zakázka 6 hod. dlouhá)
         const currentTime = current.getHours() + (current.getMinutes() / 60);
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
         if (currentTime >= workHoursFrom && currentTime <= workHoursTo) {
+            if (currentTime === 11) {
+                isAtEleven = true;
+            }
+
             minutesWorked++;
         }
 
         if (minutesWorked % BREAK_AFTER_MINUTES === 0) {
             breakMinutes += pause * 60;
         }
-
+        
         // zvětšit čas o hodinu
         current.setTime(current.getTime() + 1000 * 60);
     }
 
-    minutesWorked -= breakMinutes;
+    const isLessThenSixHoursButAtEleven = (isAtEleven && (minutesWorked < BREAK_AFTER_MINUTES));
+    minutesWorked = minutesWorked - breakMinutes - (isLessThenSixHoursButAtEleven ? pause * 60 : 0);
+    isAtEleven = false;
+
     return Math.floor(minutesWorked / 10) * 10;
 }
 

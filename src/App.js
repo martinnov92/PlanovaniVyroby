@@ -137,6 +137,7 @@ class App extends React.Component {
         ordersCopy.splice(findIndex, 1, order);
 
         this.setState({
+            hoverOrder: null,
             orders: ordersCopy,
         }, () => this.saveToFile());
     }
