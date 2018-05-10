@@ -52,12 +52,14 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 [current.productName]: {
                     ...prevItem,
                     total: {
-                        time: Number(prevItem.total.time) + Number(current.operation.time),
-                        count: Number(prevItem.total.count) + Number(current.operation.count),
+                        time: Number(prevItem ? prevItem.total.time : 0) + Number(current.operation.time),
+                        count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
                     },
+                    done: order.done,
+                    color: order.color,
                     [current.operation.order]: {
-                        time: Number(prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
-                        count: Number(prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
+                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
+                        count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
                     }
                 }
             }
@@ -123,7 +125,7 @@ export function isDateRangeOverlaping(arr, order) {
         const existingOrderDateTo = moment(arrCopy[i].dateTo);
         const existingRange = moment.range(existingOrderDateFrom, existingOrderDateTo);
 
-        if (existingRange.overlaps(rangeOrder, { adjacent: false })) {
+        if (existingRange.overlaps(rangeOrder, { adjacent: false }) && sameMachine) {
             return true;
         }
     }
