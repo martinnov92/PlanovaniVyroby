@@ -84,6 +84,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
     let current = dateFrom;
     while (current <= dateTo) {
+        // TODO: pokud je zakázka v 11 hodin - odečíst čas na oběd (v tom případě neodečítát 30 min pokud je zakázka 6 hod. dlouhá)
         const currentTime = current.getHours() + (current.getMinutes() / 60);
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
@@ -113,19 +114,19 @@ export function filterDataByDate(events, from, to) {
 }
 
 export function isDateRangeOverlaping(arr, order) {
-    const arrCopy = [...arr];
     const orderDateFrom = moment(order.dateFrom);
     const orderDateTo = moment(order.dateTo);
     const rangeOrder = moment.range(orderDateFrom, orderDateTo);
 
-    for (let i = 0; i < arrCopy.length; i++) {
-        const sameMachine = order.machine === arrCopy[i].machine;
+    for (let i = 0; i < arr.length; i++) {
+        const o = arr[i];
+        const sameMachine = order.machine === o.machine;
 
-        const existingOrderDateFrom = moment(arrCopy[i].dateFrom);
-        const existingOrderDateTo = moment(arrCopy[i].dateTo);
+        const existingOrderDateFrom = moment(o.dateFrom);
+        const existingOrderDateTo = moment(o.dateTo);
         const existingRange = moment.range(existingOrderDateFrom, existingOrderDateTo);
 
-        if (existingRange.overlaps(rangeOrder, { adjacent: false }) && sameMachine) {
+        if (existingRange.overlaps(rangeOrder, { adjacent: false }) && sameMachine && order.id !== o.id) {
             return true;
         }
     }

@@ -5,13 +5,21 @@ import { OrderPopup, SettingsPopup } from './Scenes';
 import { Calendar } from './components/Calendar';
 import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
-import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime, saveFile, isDateRangeOverlaping } from './helpers';
+import {
+    saveFile,
+    createClassName, 
+    DATA_DATE_FORMAT,
+    getNetMachineTime, 
+    formatMinutesToTime,
+    isDateRangeOverlaping, 
+    INPUT_DATE_TIME_FORMAT,
+} from './helpers';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
 
 // nastavení souboru
-const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json'; // TODO: 'RITEK_PLANOVANI_ZAKAZEK.json'
+const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json';
 const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
 
 class App extends React.Component {
@@ -120,7 +128,7 @@ class App extends React.Component {
         const ordersCopy = [...this.state.orders];
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
         const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
-        // TODO: možnost přesunout událost např. o hodinu později
+
         if (isOverlaping) {
             return alert('V tomto čase je daný stroj vytížen.');
         }
@@ -419,9 +427,10 @@ class App extends React.Component {
                             {order.note}
                         </p>
                         <p className="card-text">
-                            <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
+                            {moment(order.dateFrom).format(DATA_DATE_FORMAT)}
                             {" - "}
-                            <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
+                            {moment(order.dateTo).format(DATA_DATE_FORMAT)}
+                            <strong> ({formatMinutesToTime(order.workingHours)})</strong>
                         </p>
                     </React.Fragment>
                     : null

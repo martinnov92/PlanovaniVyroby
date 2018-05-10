@@ -1,18 +1,16 @@
 # TODO:
 
-    - možnost nastavení času po půl hodině
+    X možnost nastavení času po půl hodině
     - opravit časový posun při změně události
     X kontrola vykreslení objednávek, které se táhnou přes více týdnů
     X možnost zvětšení eventy
     X možnost přidání strojů a jejich barev
     X pod jakým IDčkem ukládat zakázky? datum? nějaké číslo co si oni vymyslí?
-    - v kalendáři možnost nastavení pauzy (čas od-do, opakující se pro každý den)
-
-
 
 
 ### Nespěchá
     - možnost definovat pracovní dobu
+    - v kalendáři možnost nastavení pauzy (čas od-do, opakující se pro každý den)
 
 
 ## INFO

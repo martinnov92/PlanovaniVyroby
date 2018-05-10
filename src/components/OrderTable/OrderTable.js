@@ -133,8 +133,6 @@ export class OrderTable extends React.Component {
                         <td>
                             {product.total.time} * {product.total.count} = {((product.total.time * product.total.count) / 60).toFixed(1)}h
                         </td>
-                        <td>i</td>
-                        <td>j</td>
                     </ContextMenu>
                 );
             }
@@ -189,8 +187,6 @@ export class OrderTable extends React.Component {
                             <th scope="col">6.o Čas/ks (napl)</th>
                             <th scope="col">Čas na kus</th>
                             <th scope="col">Čas na zakázku</th>
-                            <th scope="col">Naplánováné</th>
-                            <th scope="col">Zbývá</th>
                         </tr>
                     </thead>
                 </table>
