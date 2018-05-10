@@ -119,6 +119,8 @@ class App extends React.Component {
     handleEventDrop = (order) => {
         const ordersCopy = [...this.state.orders];
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+
+        order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         ordersCopy.splice(findIndex, 1, order);
 
         this.setState({
@@ -170,6 +172,8 @@ class App extends React.Component {
             dateTo: moment(this.state.order.dateTo).format(),
             dateFrom: moment(this.state.order.dateFrom).format(),
         };
+
+        order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
 
         if (!this.state.order.id) {
             const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
