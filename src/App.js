@@ -33,6 +33,7 @@ class App extends React.Component {
             machines: [],
             orderList: [],
             settings: false,
+            ctrlDown: false,
             hoverOrder: null,
             filterFinishedOrders: true,
             startOfTheWeek: startOfTheWeek,
@@ -63,6 +64,18 @@ class App extends React.Component {
                 } catch (err) {}
             }
         });
+
+        document.addEventListener('keyup', this.handleKeyUp);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keyup', this.handleKeyUp);
+    }
+
+    handleKeyUp = (e) => {
+        if ((e.ctrlKey || e.key === 'Meta') && e.keyCode === 78) {
+            this.handleAddNewEvent();
+        }
     }
 
     handleWeekMove = (e, move) => {
@@ -90,10 +103,11 @@ class App extends React.Component {
     }
 
     handleAddNewEvent = () => {
-        this.setState({
-            open: true,
+        this.resetOrderState(null, null, null, () => {
+            this.setState({
+                open: true,
+            });
         });
-        this.resetOrderState();
     }
 
     handleEventEdit = (e, order) => {
