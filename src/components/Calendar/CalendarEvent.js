@@ -27,6 +27,31 @@ export class CalendarEvent extends React.Component {
         this.draggableParentDiv = React.createRef();
     }
 
+    componentDidMount() {
+        document.addEventListener('keyup', this.handleKeyUp);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keyup', this.handleKeyUp);
+    }
+
+    handleKeyUp = (e) => {
+        const {
+            event,
+            selectedEvent,
+        } = this.props;
+
+        if (!selectedEvent || (selectedEvent && (selectedEvent.id !== event.id))) {
+            return;
+        }
+
+        e.preventDefault();
+
+        if (e.keyCode === 46) {
+            this.props.onDeleteEvent(e, event);
+        }
+    }
+
     positionEvent = () => {
         const {
             row,
