@@ -102,80 +102,80 @@ export class OrderTable extends React.Component {
                         <td
                             style={createStyleObject(thWidth[3])}
                         >
-                            <Tooltip
-                                title={`Čas na kus: ${product['1'] ? product['1'].time : '-'} min.\nNahazování: ${product['1'] ? product['1'].casting : '-'} min.\nVýměna: ${product['1'] ? product['1'].exchange : '-'} min.`}
-                            >
-                                {
-                                    product['1']
-                                    ? `${product['1'].count} (${product['1'].time})`
-                                    : '-'
-                                }
-                            </Tooltip>
+                            {
+                                product['1']
+                                ? <Tooltip
+                                    title={`Čas na kus: ${product['1'] ? product['1'].time : '-'} min.\nNahazování: ${product['1'] ? product['1'].casting : '-'} min.\nVýměna: ${product['1'] ? product['1'].exchange : '-'} min.`}
+                                >
+                                    {product['1'].count} ({product['1'].time})
+                                </Tooltip>
+                                : '-'
+                            }
                         </td>
                         <td
                             style={createStyleObject(thWidth[4])}
                         >
-                            <Tooltip
-                                title={`Čas na kus: ${product['2'] ? product['2'].time : '-'} min.\nNahazování: ${product['2'] ? product['2'].casting : '-'} min.\nVýměna: ${product['2'] ? product['2'].exchange : '-'} min.`}
-                            >
-                                {
-                                    product['2']
-                                    ? `${product['2'].count} (${product['2'].time})`
-                                    : '-'
-                                }
-                            </Tooltip>
+                            {
+                                product['2']
+                                ? <Tooltip
+                                    title={`Čas na kus: ${product['2'] ? product['2'].time : '-'} min.\nNahazování: ${product['2'] ? product['2'].casting : '-'} min.\nVýměna: ${product['2'] ? product['2'].exchange : '-'} min.`}
+                                >
+                                    {product['2'].count} ({product['2'].time})
+                                </Tooltip>
+                                : '-'
+                            }
                         </td>
                         <td
                             style={createStyleObject(thWidth[5])}
                         >
-                            <Tooltip
-                                title={`Čas na kus: ${product['3'] ? product['3'].time : '-'} min.\nNahazování: ${product['3'] ? product['3'].casting : '-'} min.\nVýměna: ${product['3'] ? product['3'].exchange : '-'} min.`}
-                            >
-                                {
-                                    product['3']
-                                    ? `${product['3'].count} (${product['3'].time})`
-                                    : '-'
-                                }
-                            </Tooltip>
+                            {
+                                product['3']
+                                ? <Tooltip
+                                    title={`Čas na kus: ${product['3'] ? product['3'].time : '-'} min.\nNahazování: ${product['3'] ? product['3'].casting : '-'} min.\nVýměna: ${product['3'] ? product['3'].exchange : '-'} min.`}
+                                >
+                                    {product['3'].count} ({product['3'].time})
+                                </Tooltip>
+                                : '-'
+                            }
                         </td>
                         <td
                             style={createStyleObject(thWidth[6])}
                         >
-                            <Tooltip
-                                title={`Čas na kus: ${product['4'] ? product['4'].time : '-'} min.\nNahazování: ${product['4'] ? product['4'].casting : '-'} min.\nVýměna: ${product['4'] ? product['4'].exchange : '-'} min.`}
-                            >
-                                {
-                                    product['4']
-                                    ? `${product['4'].count} (${product['4'].time})`
-                                    : '-'
-                                }
-                            </Tooltip>
+                            {
+                                product['4']
+                                ? <Tooltip
+                                    title={`Čas na kus: ${product['4'] ? product['4'].time : '-'} min.\nNahazování: ${product['4'] ? product['4'].casting : '-'} min.\nVýměna: ${product['4'] ? product['4'].exchange : '-'} min.`}
+                                >
+                                    {product['4'].count} ({product['4'].time})
+                                </Tooltip>
+                                : '-'
+                            }
                         </td>
                         <td
                             style={createStyleObject(thWidth[7])}
                         >
-                            <Tooltip
-                                title={`Čas na kus: ${product['5'] ? product['5'].time : '-'} min.\nNahazování: ${product['5'] ? product['5'].casting : '-'} min.\nVýměna: ${product['5'] ? product['5'].exchange : '-'} min.`}
-                            >
-                                {
-                                    product['5']
-                                    ? `${product['5'].count} (${product['5'].time})`
-                                    : '-'
-                                }
-                            </Tooltip>
+                            {
+                                product['5']
+                                ? <Tooltip
+                                    title={`Čas na kus: ${product['5'] ? product['5'].time : '-'} min.\nNahazování: ${product['5'] ? product['5'].casting : '-'} min.\nVýměna: ${product['5'] ? product['5'].exchange : '-'} min.`}
+                                >
+                                    {product['5'].count} ({product['5'].time})
+                                </Tooltip>
+                                : '-'
+                            }
                         </td>
                         <td
                             style={createStyleObject(thWidth[8])}
                         >
-                            <Tooltip
-                                title={`Čas na kus: ${product['6'] ? product['6'].time : '-'} min.\nNahazování: ${product['6'] ? product['6'].casting : '-'} min.\nVýměna: ${product['6'] ? product['6'].exchange : '-'} min.`}
-                            >
-                                {
-                                    product['6']
-                                    ? `${product['6'].count} (${product['6'].time})`
-                                    : '-'
-                                }
-                            </Tooltip>
+                            {
+                                product['6']
+                                ? <Tooltip
+                                    title={`Čas na kus: ${product['6'] ? product['6'].time : '-'} min.\nNahazování: ${product['6'] ? product['6'].casting : '-'} min.\nVýměna: ${product['6'] ? product['6'].exchange : '-'} min.`}
+                                >
+                                    {product['6'].count} ({product['6'].time})
+                                </Tooltip>
+                                : '-'
+                            }
                         </td>
                         <td
                             style={createStyleObject(thWidth[9])}
