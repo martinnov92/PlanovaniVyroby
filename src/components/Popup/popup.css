@@ -19,12 +19,14 @@
 }
 
 .popup header {
+    cursor: move;
     display: flex;
     align-items: center;
     border-bottom: 1px solid #ddd;
 }
 
 .popup header h4 {
+    cursor: move;
     flex: 1 1 auto;
 } 
 

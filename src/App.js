@@ -354,22 +354,22 @@ class App extends React.Component {
                         />
                     }
 
-                    {
-                        !this.state.settings
-                        ? null
-                        : <SettingsPopup
-                            handleClose={this.closeSettings}
-                            filterFinishedOrders={filterFinishedOrders}
-                            handleFilterFinishedOrders={(e) => {
-                                this.setState({
-                                    filterFinishedOrders: !e.target.checked
-                                }, () => this.saveToFile());
-                            }}
-                        />
-                    }
-
                     {this.renderHoverOrder()}
                 </div>
+
+                {
+                    !this.state.settings
+                    ? null
+                    : <SettingsPopup
+                        handleClose={this.closeSettings}
+                        filterFinishedOrders={filterFinishedOrders}
+                        handleFilterFinishedOrders={(e) => {
+                            this.setState({
+                                filterFinishedOrders: !e.target.checked
+                            }, () => this.saveToFile());
+                        }}
+                    />
+                }
             </div>
         );
     }
