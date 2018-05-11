@@ -1,5 +1,5 @@
 {
-  "name": "ritek",
+  "name": "planovac",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
@@ -32,6 +32,8 @@
   },
   "build": {
     "appId": "com.martinnovak.Planovac",
+    "icon": "build/icon.png",
+    "type": "distribution",
     "files": [
       "build/**/*",
       "node_modules/**/*"
