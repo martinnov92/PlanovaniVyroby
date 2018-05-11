@@ -247,7 +247,7 @@ export class Calendar extends React.Component {
                         }}
                     >
                         <div style={{
-                                height: '44px',
+                                height: '43px',
                                 border: 0,
                             }}
                         />
