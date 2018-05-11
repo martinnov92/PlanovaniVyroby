@@ -138,6 +138,10 @@
 
 .calendar--event-text {
     overflow: hidden;
+}
+
+.calendar--event-text p {
+    width: 100%;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
