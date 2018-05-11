@@ -184,6 +184,7 @@ export class Calendar extends React.Component {
         });
 
         // získání eventu z drop eventy
+        const machineId = e.target.dataset.machine;
         const parsedEvent = JSON.parse(e.dataTransfer.getData('text'));
         const dateOnDrop = moment(e.target.dataset.date, DATA_DATE_FORMAT);
 
@@ -216,8 +217,9 @@ export class Calendar extends React.Component {
 
         const newEvent = {
             ...parsedEvent.event,
-            dateFrom: dateFrom,
             dateTo: dateTo,
+            dateFrom: dateFrom,
+            machine: machineId,
         };
 
         this.props.onEventDrop(newEvent);
@@ -302,7 +304,7 @@ export class Calendar extends React.Component {
                 key={machine.id}
                 ref={(node) => this[machine.id] = node}
             >
-                {this.renderDaysCell(true)}
+                {this.renderDaysCell(true, machine)}
             </tr>;
         });
 
@@ -313,7 +315,7 @@ export class Calendar extends React.Component {
         });
     }
 
-    renderDaysCell = (empty = false) => {
+    renderDaysCell = (empty = false, machine = {}) => {
         const days = [];
         let day;
         let current;
@@ -350,7 +352,7 @@ export class Calendar extends React.Component {
                                 </tr>
                             }
                             <tr>
-                                {this.renderHoursEmptyCell(empty, day)}
+                                {this.renderHoursEmptyCell(empty, day, machine)}
                             </tr>
                         </tbody>
                     </table>
@@ -362,7 +364,7 @@ export class Calendar extends React.Component {
         return days;
     }
 
-    renderHoursEmptyCell = (empty = false, day) => {
+    renderHoursEmptyCell = (empty = false, day, machine) => {
         const hours = [];
         const { pause } = this.props;
         // const current = moment().startOf('day').isSame(day);
@@ -401,6 +403,7 @@ export class Calendar extends React.Component {
                     day={day}
                     hours={i}
                     minutes={0}
+                    machine={machine}
                     className={[isPause]}
                     onClick={() => console.log('click', i)}
                     {...cellAttrs}
@@ -409,6 +412,7 @@ export class Calendar extends React.Component {
                     day={day}
                     hours={i}
                     minutes={30}
+                    machine={machine}
                     {...cellAttrs}
                 />
             </React.Fragment>;
@@ -420,6 +424,7 @@ export class Calendar extends React.Component {
                     hours={i}
                     minutes={0}
                     colSpan={2}
+                    machine={machine}
                     className={[isPause]}
                     onClick={() => console.log('click', i)}
                     {...cellAttrs}

@@ -19,6 +19,7 @@ export class CalendarCell extends React.Component {
             hours,
             minutes,
             colSpan,
+            machine,
         } = this.props;
 
         const dateTime = day.hours(hours).minutes(minutes).seconds(0).format(DATA_DATE_FORMAT);
@@ -31,8 +32,9 @@ export class CalendarCell extends React.Component {
             <td
                 colSpan={colSpan}
                 data-date={dateTime}
-                className={emptyCellclassNames}
                 onClick={this.props.onClick}
+                className={emptyCellclassNames}
+                data-machine={machine && machine.id}
 
                 // drag and drop
                 onDrop={this.props.onDrop}
