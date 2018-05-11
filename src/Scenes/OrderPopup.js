@@ -240,6 +240,8 @@ export class OrderPopup extends React.Component {
                             />
                         </div>
 
+                        <hr />
+
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <span className="input-group-text">Nahazování</span>
