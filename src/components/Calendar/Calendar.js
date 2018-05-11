@@ -365,7 +365,7 @@ export class Calendar extends React.Component {
     renderHoursEmptyCell = (empty = false, day) => {
         const hours = [];
         const { pause } = this.props;
-        const current = moment().startOf('day').isSame(day);
+        // const current = moment().startOf('day').isSame(day);
 
         if (empty === false) {
             for (let i = 7; i <= 20; i++) {

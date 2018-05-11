@@ -31,8 +31,6 @@ export class OrderPopup extends React.Component {
             order,
             machines,
             newOrder,
-            orderList,
-            productNameList,
         } = this.props;
 
         return (

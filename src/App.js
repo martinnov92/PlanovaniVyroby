@@ -376,7 +376,6 @@ class App extends React.Component {
 
     renderHoverOrder = () => {
         const {
-            orders,
             machines,
             orderList,
             hoverOrder: order,
