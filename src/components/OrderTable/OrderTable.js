@@ -87,6 +87,7 @@ export class OrderTable extends React.Component {
                         className={product.done ? 'order--finished' : null}
                     >
                         <td
+                            className="table--orders-first-column"
                             style={createStyleObject(thWidth[0])}
                         >
                             <span
@@ -236,7 +237,12 @@ export class OrderTable extends React.Component {
                 >
                     <thead>
                         <tr>
-                            <th scope="col">Zakázka</th>
+                            <th
+                                scope="col"
+                                className="table--orders-first-column"
+                            >
+                                Zakázka
+                            </th>
                             <th scope="col">Název výrobku</th>
                             <th scope="col">Počet kusů</th>
                             <th scope="col">1.o ks/čas (napl)</th>
