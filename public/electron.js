@@ -18,7 +18,7 @@ function createWindow() {
         minWidth: 500,
         minHeight: 400,
     });
-    mainWindow.setMenu(null);
+    // mainWindow.setMenu(null);
 
     // and load the index.html of the app.
     if (process.env.NODE_ENV === 'production') {
@@ -37,7 +37,7 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
