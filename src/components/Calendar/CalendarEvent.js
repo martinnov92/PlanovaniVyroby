@@ -194,9 +194,10 @@ export class CalendarEvent extends React.Component {
                     onDrag={(e) => this.props.onDrag(e, event)}
                     onClick={(e) => this.props.onClick(e, event)}
                     draggable={order.done ? false : !resizerActive}
+                    onDragStart={(e) => this.props.onDragStart(e, event)}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
-                    onDragStart={(e) => this.props.onDragStart(e, event)}
+                    onDoubleClick={(e) => this.props.onDoubleClick(e, event)}
                 >
                     <div
                         className="calendar--event-text"

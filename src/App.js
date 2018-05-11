@@ -338,6 +338,7 @@ class App extends React.Component {
                                 onEventDrop={this.handleEventDrop}
                                 onEventEnter={this.handleEventEnter}
                                 onEventLeave={this.handleEventLeave}
+                                onDoubleClick={this.handleEventEdit}
                                 onMouseUp={this.handleSelectingMouseUp}
         
                                 // context menu

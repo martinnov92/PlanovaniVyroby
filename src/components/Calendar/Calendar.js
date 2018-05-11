@@ -563,6 +563,7 @@ export class Calendar extends React.Component {
                     onDragStart={this.handleDragStart}
                     onMouseEnter={this.props.onEventEnter}
                     onMouseLeave={this.props.onEventLeave}
+                    onDoubleClick={this.props.onDoubleClick}
 
                     // context menu props
                     onEditEvent={this.props.onEditEvent}
