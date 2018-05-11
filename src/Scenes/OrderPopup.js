@@ -239,6 +239,32 @@ export class OrderPopup extends React.Component {
                                 onChange={this.props.handleInputChange}
                             />
                         </div>
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Nahazování</span>
+                            </div>
+                            <input
+                                type="number"
+                                name="operation.casting"
+                                className="form-control"
+                                value={order.operation.casting}
+                                onChange={this.props.handleInputChange}
+                            />
+                        </div>
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Výměna</span>
+                            </div>
+                            <input
+                                type="number"
+                                className="form-control"
+                                name="operation.exchange"
+                                value={order.operation.exchange}
+                                onChange={this.props.handleInputChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </Popup>

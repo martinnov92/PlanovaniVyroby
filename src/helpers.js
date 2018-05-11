@@ -23,6 +23,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
     return o.filter((o) => list.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
         const orderExists = prev[current.orderId];
         const order = list.find((l) => l.id === current.orderId);
+        const totalTime = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
 
         if (!orderExists) {
             return {
@@ -30,13 +31,13 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 [current.orderId]: {
                     [current.productName]: {
                         total: {
-                            time: Number(current.operation.time),
+                            time: totalTime,
                             count: Number(current.operation.count),
                         },
                         done: order.done,
                         color: order.color,
                         [current.operation.order]: {
-                            time: Number(current.operation.time),
+                            time: totalTime,
                             count: Number(current.operation.count),
                         }
                     }
@@ -52,13 +53,13 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 [current.productName]: {
                     ...prevItem,
                     total: {
-                        time: Number(prevItem ? prevItem.total.time : 0) + Number(current.operation.time),
+                        time: Number(prevItem ? prevItem.total.time : 0) + totalTime,
                         count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
                     },
                     done: order.done,
                     color: order.color,
                     [current.operation.order]: {
-                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
+                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + totalTime,
                         count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
                     }
                 }

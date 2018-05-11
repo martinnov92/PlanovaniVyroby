@@ -498,9 +498,11 @@ class App extends React.Component {
                 note: '',
                 dateTo: dateTo,
                 operation: {
+                    time: 0,        // čas na kus (sčítá se s nahazováním a výměnou)
                     order: 1,
-                    time: 0,
                     count: 0,
+                    casting: 0,     // nahazování
+                    exchange: 0,    // výměna
                 },
                 dateFrom: dateFrom,
                 workingHours: workingHours,
