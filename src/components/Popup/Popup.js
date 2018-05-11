@@ -41,8 +41,6 @@ export class Popup extends React.Component {
     }
 
     handleMouseDown = (e) => {
-        console.dir(e.target);
-        console.dir(this.popup.current);
         this.setState({
             mouseDown: true,
             offsetTop: e.clientY - this.popup.current.offsetTop,
@@ -89,9 +87,10 @@ export class Popup extends React.Component {
             clientY,
         } = this.state;
 
-        const style = {
-            transform: `translate(${clientX}px, ${clientY}px)`,
-        };
+        const style = {};
+        if (clientX !== 0 || clientY !== 0) {
+            style.transform = `translate(${clientX}px, ${clientY}px)`;
+        }
 
         return ReactDOM.createPortal(
             <div
