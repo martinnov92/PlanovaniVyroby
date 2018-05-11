@@ -1,4 +1,5 @@
 import React from 'react';
+import CONFIG from '../../statics/cog.svg';
 import ARROW_LEFT from '../../statics/arrow-left.svg';
 import ARROW_RIGHT from '../../statics/arrow-right.svg';
 
@@ -65,10 +66,16 @@ export class Nav extends React.Component {
 
                         <button
                             type="button"
+                            title="Nastavení"
                             onClick={this.props.openSettings}
                             className="btn btn-outline-success ml-3 text-light"
                         >
-                            Nastavení
+                            <img
+                                src={CONFIG}
+                                width="20px"
+                                height="20px"
+                                alt="Nastavení"
+                            />
                         </button>
                     </div>
             </nav>
