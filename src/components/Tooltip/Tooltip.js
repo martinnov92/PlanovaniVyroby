@@ -165,9 +165,9 @@ export class Tooltip extends React.Component {
             >
                 { children }
                 {
-                    //!isMouseOver
-                    //? null
-                    ReactDOM.createPortal(
+                    !isMouseOver
+                    ? null
+                    : ReactDOM.createPortal(
                         <div
                             ref={this.tooltip}
                             style={tooltipPositionObj}
