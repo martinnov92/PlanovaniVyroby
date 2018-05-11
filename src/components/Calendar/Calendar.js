@@ -274,12 +274,19 @@ export class Calendar extends React.Component {
         this.setState({
             selectingCells: false,
             selectingCellStart: e.target,
+            selectingCellStyle: {
+                top: `${0}px`,
+                left: `${0}px`,
+                width: `${0}px`,
+                height: `${0}px`,
+            },
         });
     }
 
     render() {
         const {
             lockScroll,
+            selectingCells,
             selectingCellStyle,
         } = this.state;
 
@@ -345,12 +352,16 @@ export class Calendar extends React.Component {
                         </div>
                     </div>
 
-                    <div
-                        className={createClassName([
-                            'calendar--event-selecting'
-                        ])}
-                        style={selectingCellStyle}
-                    />
+                    {
+                        selectingCells
+                        ? <div
+                            className={createClassName([
+                                'calendar--event-selecting'
+                            ])}
+                            style={selectingCellStyle}
+                        />
+                        : null
+                    }
                 </div>
             </React.Fragment>
         );
