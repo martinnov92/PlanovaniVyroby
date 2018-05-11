@@ -1,0 +1,64 @@
+.pd-tooltip {
+    display: inline-block;
+    position: relative;
+}
+
+.pd-tooltip__inner {
+    width: auto;
+    min-height: 34px;
+    position: fixed;
+    perspective: 1300px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    z-index: 12000;
+}
+
+.pd-tooltip__content {
+    padding: 8px 10px;
+    background-color: #424242;
+    color: #fff;
+    text-align: left;
+    text-decoration: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pd-tooltip--open .pd-tooltip__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.pd-tooltip--open.pd-tooltip__top .pd-tooltip__arrow {
+    bottom: -2px;
+    left: calc(50% + 1px);
+    transform: translate(0, 50%);
+    border-width: 5px 5px 0px 5px;
+    border-top-color: #424242;
+}
+
+.pd-tooltip--open.pd-tooltip__right .pd-tooltip__arrow {
+    top: 50%;
+    left: -5px;
+    transform: translate(0, -50%);
+    border-width: 5px 5px 5px 0px;
+    border-right-color: #424242;
+}
+
+.pd-tooltip--open.pd-tooltip__bottom .pd-tooltip__arrow {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 5px 5px 5px;
+    border-bottom-color: #424242;
+}
+
+.pd-tooltip--open.pd-tooltip__left .pd-tooltip__arrow {
+    top: 50%;
+    right: -5px;
+    transform: translate(0, -50%);
+    border-width: 5px 0px 5px 5px;
+    border-left-color: #424242;
+}

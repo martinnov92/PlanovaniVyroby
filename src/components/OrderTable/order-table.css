@@ -31,6 +31,10 @@
     min-width: auto;
 }
 
+.table--orders .pd-tooltip {
+    width: 100%;
+}
+
 .table-bordered {
     border: 0;
 }
