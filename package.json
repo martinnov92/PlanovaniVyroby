@@ -2,9 +2,13 @@
   "name": "ritek",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "author": "Martin Novák",
+  "main": "public/electron.js",
   "dependencies": {
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
+    "moment-range": "^4.0.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4"
@@ -14,6 +18,26 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "yarn run build && firebase deploy"
+    "deploy": "yarn run build && firebase deploy",
+    "electron": "electron .",
+    "electron-build-windows": "electron-builder -w",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-build": "yarn build && electron-builder -m"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "electron": "^2.0.0",
+    "electron-builder": "^20.11.1",
+    "wait-on": "^2.1.0"
+  },
+  "build": {
+    "appId": "com.martinnovak.Planovac",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
   }
 }

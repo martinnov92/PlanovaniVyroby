@@ -6,6 +6,7 @@ import { ContextMenu } from '../ContextMenu';
 export class CalendarEvent extends React.Component {
     static defaultProps = {
         event: {},
+        order: {},
         machine: {},
         scrollLeft: 0,
         selectedEvent: {},
@@ -30,7 +31,8 @@ export class CalendarEvent extends React.Component {
         const {
             row,
             event,
-            machine,
+            order,
+            scrollTop,
             scrollLeft,
             calendarWrapperClientRect,
         } = this.props;
@@ -53,7 +55,7 @@ export class CalendarEvent extends React.Component {
         if (!findStartDateOnRow && findEndDateOnRow) {
             endPosition = findEndDateOnRow.getBoundingClientRect();
             startPosition = {
-                top: rowClientRect.top + 1,
+                top: rowClientRect.top,
                 left: rowClientRect.left,
                 height: endPosition.height,
             };
@@ -69,9 +71,9 @@ export class CalendarEvent extends React.Component {
         } else {
             // událost přes více týdnů -> mělo by fungovat, protože dojde k vyfiltrování událostí v Calendar.js
             startPosition = {
-                top: rowClientRect.top + 1,
+                top: rowClientRect.top,
                 left: rowClientRect.left,
-                height: rowClientRect.height - 2,
+                height: rowClientRect.height,
             };
 
             endPosition = {
@@ -82,11 +84,12 @@ export class CalendarEvent extends React.Component {
 
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
-            backgroundColor: machine.color,
+            opacity: order.done ? .5 : 1,
             height: `${startPosition.height}px`,
+            backgroundColor: order.color || '#fff',
             width: `${endPosition.left - startPosition.left}px`,
-            top: `${startPosition.top - calendarWrapper.top - 1}px`,
-            left: `${startPosition.left - calendarWrapper.left + scrollLeft - 1}px`,
+            top: `${startPosition.top - calendarWrapper.top + scrollTop}px`,
+            left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,
         };
 
         return style;
@@ -120,6 +123,7 @@ export class CalendarEvent extends React.Component {
 
         const {
             event,
+            order,
             selectedEvent,
             draggingEvent
         } = this.props;
@@ -160,11 +164,11 @@ export class CalendarEvent extends React.Component {
                         event.note
                     }
                     style={style}
-                    draggable={!resizerActive}
+                    ref={this.draggableParentDiv}
                     onDragEnd={this.props.onDragEnd}
                     onDrag={(e) => this.props.onDrag(e, event)}
                     onClick={(e) => this.props.onClick(e, event)}
-                    ref={this.draggableParentDiv}
+                    draggable={order.done ? false : !resizerActive}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDragStart={(e) => this.props.onDragStart(e, event)}
@@ -181,18 +185,18 @@ export class CalendarEvent extends React.Component {
                     </div>
 
                     <div
-                        draggable={true}
                         data-resize="dateFrom"
-                        onDragStart={this.handleResizerDragStart}
                         onDragEnd={this.handleResizerDragEnd}
+                        draggable={order.done ? false : true}
+                        onDragStart={this.handleResizerDragStart}
                         className="calendar--event--resizer calendar--event--resizer-left"
                     />
 
                     <div
-                        draggable={true}
                         data-resize="dateTo"
-                        onDragStart={this.handleResizerDragStart}
                         onDragEnd={this.handleResizerDragEnd}
+                        draggable={order.done ? false : true}
+                        onDragStart={this.handleResizerDragStart}
                         className="calendar--event--resizer calendar--event--resizer-right"
                     />
                 </div>

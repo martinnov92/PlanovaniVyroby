@@ -1,6 +1,6 @@
 .table--orders,
 .table--orders.element--block {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     position: relative;
     padding: 0;
     overflow: hidden;

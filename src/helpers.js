@@ -1,23 +1,28 @@
-// @ts-check
-import moment from 'moment';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+const moment = extendMoment(Moment);
+const fs = window.require('fs');
 
 export const FULL_FORMAT = 'D.M.YYYY dddd';
 export const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
-export const INPUT_DATE_TIME_FORMAT = 'YYYY-MM-DDThh:mm';
+export const INPUT_DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
 
 export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
 
-export function createGroupedOrders(orders, filterDone = false) {
+export function createGroupedOrders(orders, orderList, displayFinishedOrders = false) {
     let o = [...orders];
+    let list = [...orderList]; 
 
-    if (filterDone) {
-        o = orders.filter((order) => order.done === false);
+    if (displayFinishedOrders) {
+        list = orderList.filter((order) => order.done === false);
     }
 
-    return o.reduce((prev, current) => {
+    return o.filter((o) => list.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
         const orderExists = prev[current.orderId];
+        const order = list.find((l) => l.id === current.orderId);
 
         if (!orderExists) {
             return {
@@ -28,28 +33,33 @@ export function createGroupedOrders(orders, filterDone = false) {
                             time: Number(current.operation.time),
                             count: Number(current.operation.count),
                         },
-                        done: current.done,
+                        done: order.done,
+                        color: order.color,
                         [current.operation.order]: {
-                            ...current,
+                            time: Number(current.operation.time),
+                            count: Number(current.operation.count),
                         }
                     }
                 }
             };
         }
 
+        const prevItem = prev[current.orderId][current.productName];
         return {
             ...prev,
             [current.orderId]: {
                 ...prev[current.orderId],
                 [current.productName]: {
-                    ...prev[current.orderId][current.productName],
+                    ...prevItem,
                     total: {
-                        time: Number(prev[current.orderId][current.productName].total.time) + Number(current.operation.time),
-                        count: Number(prev[current.orderId][current.productName].total.count) + Number(current.operation.count),
+                        time: Number(prevItem ? prevItem.total.time : 0) + Number(current.operation.time),
+                        count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
                     },
-                    done: current.done,
+                    done: order.done,
+                    color: order.color,
                     [current.operation.order]: {
-                        ...current
+                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
+                        count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
                     }
                 }
             }
@@ -61,6 +71,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     let result = 0;
     let breakMinutes = 0;
     let minutesWorked = 0;
+    let isAtEleven = false;
     const BREAK_AFTER_MINUTES = 360;
     
     dateFrom = moment(dateFrom).toDate();
@@ -78,19 +89,56 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
         if (currentTime >= workHoursFrom && currentTime <= workHoursTo) {
+            if (currentTime === 11) {
+                isAtEleven = true;
+            }
+
             minutesWorked++;
         }
 
         if (minutesWorked % BREAK_AFTER_MINUTES === 0) {
             breakMinutes += pause * 60;
         }
-
+        
         // zvětšit čas o hodinu
         current.setTime(current.getTime() + 1000 * 60);
     }
 
-    minutesWorked -= breakMinutes;
+    const isLessThenSixHoursButAtEleven = (isAtEleven && (minutesWorked < BREAK_AFTER_MINUTES));
+    minutesWorked = minutesWorked - breakMinutes - (isLessThenSixHoursButAtEleven ? pause * 60 : 0);
+    isAtEleven = false;
+
     return Math.floor(minutesWorked / 10) * 10;
+}
+
+export function filterDataByDate(events, from, to) {
+    return events.filter((event) => {
+        const isInRange = moment(event.dateFrom).isBefore(from) && moment(event.dateTo).isAfter(to);
+        const isInWeek = moment(event.dateFrom).isBetween(from, to) || moment(event.dateTo).isBetween(from, to);
+
+        return isInRange || isInWeek;
+    });
+}
+
+export function isDateRangeOverlaping(arr, order) {
+    const orderDateFrom = moment(order.dateFrom);
+    const orderDateTo = moment(order.dateTo);
+    const rangeOrder = moment.range(orderDateFrom, orderDateTo);
+
+    for (let i = 0; i < arr.length; i++) {
+        const o = arr[i];
+        const sameMachine = order.machine === o.machine;
+
+        const existingOrderDateFrom = moment(o.dateFrom);
+        const existingOrderDateTo = moment(o.dateTo);
+        const existingRange = moment.range(existingOrderDateFrom, existingOrderDateTo);
+
+        if (existingRange.overlaps(rangeOrder, { adjacent: false }) && sameMachine && order.id !== o.id) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 export function formatMinutesToTime(totalMinutes) {
@@ -103,4 +151,15 @@ export function formatMinutesToTime(totalMinutes) {
     const minutes = totalMinutes % 60;
 
     return `${hours}h ${minutes}m`;
+}
+
+export function saveFile(path, data) {
+    const d = JSON.stringify(data, null, 4);
+
+    return new Promise((resolve, reject) => {
+        fs.writeFile(path, d, (err) => {
+            if (err) reject(err);
+            resolve('Uloženo.');
+        });
+    });
 }

@@ -1,19 +1,19 @@
-// @ts-check
-
 import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName } from '../../helpers';
+import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName, filterDataByDate } from '../../helpers';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 
+const CELL_OVER_CLASS_NAME = 'calendar--event-dragging--over';
 
 export class Calendar extends React.Component {
     static defaultProps = {
         pause: 11,
         events: [],
         machines: [],
+        orderList: [],
         currentWeek: 1,
         onEventDrop: () => {},
         onEventClick: () => {},
@@ -38,7 +38,7 @@ export class Calendar extends React.Component {
             selectedEventElement: null,
         };
 
-        this.scrolledToCurrentDate = false;
+        this.calendarScrolled = false;
         this.currentDate = React.createRef();
     }
 
@@ -51,17 +51,28 @@ export class Calendar extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const dragging = prevState.draggingEvent !== this.state.draggingEvent;
+        const {
+            scrollTop,
+            scrollLeft,
+        } = this.state;
+
         const events = !isEqual(this.props.events, prevProps.events);
-        const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
+        const orderList = !isEqual(this.props.orderList, prevProps.orderList);
+        const dragging = prevState.draggingEvent !== this.state.draggingEvent;
+        const selectedEvent = prevState.selectedEvent !== this.state.selectedEvent;
+        // zkontrolovat scroll, pokud došlo k drop události a kalendář se sám zascroloval (vyrovnat zobrazení)
+        const scrollChanged = (prevState.scrollTop !== 0 && scrollTop === 0) || (prevState.scrollLeft !== 0 && scrollLeft === 0);
 
         if (currentWeek) {
-            this.scrolledToCurrentDate = false;
+            this.calendarScrolled = false;
+        }
+
+        if (currentWeek || events) {
             this.renderTableBody();
         }
 
-        if (dragging || selectedEvent || events) {
+        if (dragging || selectedEvent || events || orderList || scrollChanged) {
             this.renderEvents();
         }
     }
@@ -83,7 +94,7 @@ export class Calendar extends React.Component {
     }
 
     scrollToCurrentDate = () => {
-        if (this.scrolledToCurrentDate) {
+        if (this.calendarScrolled) {
             return;
         }
 
@@ -142,7 +153,7 @@ export class Calendar extends React.Component {
     }
 
     handleDragEnter = (e) => {
-        e.target.classList.add('calendar--event-dragging--over');
+        e.target.classList.add(CELL_OVER_CLASS_NAME);
     }
 
     handleDragOver = (e) => {
@@ -151,13 +162,18 @@ export class Calendar extends React.Component {
     }
 
     handleDragLeave = (e) => {
-        e.target.classList.remove('calendar--event-dragging--over');
+        e.target.classList.remove(CELL_OVER_CLASS_NAME);
     }
 
     handleDragEnd = (e) => {
         this.setState({
             draggingEvent: null,
         });
+
+        const classListToRemove = Array.from(this.calendar.getElementsByClassName(CELL_OVER_CLASS_NAME));
+        if (classListToRemove.length > 0) {
+            classListToRemove.forEach((node) => node.classList.remove(CELL_OVER_CLASS_NAME));
+        }
     }
 
     handleDrop = (e) => {
@@ -175,20 +191,27 @@ export class Calendar extends React.Component {
         let dateTo = parsedEvent.event.dateTo;
 
         if (parsedEvent.eventResize === 'dateFrom') {
-            dateFrom = dateOnDrop.toDate();
+            dateFrom = dateOnDrop.format();
         } else if (parsedEvent.eventResize === 'dateTo') {
-            dateTo = dateOnDrop.toDate();
+            dateTo = dateOnDrop.format();
         } else {
             // vypočet rozdílu hodin z původní eventy
             const momentDateTo = moment(parsedEvent.event.dateTo);
             const momentDateFrom = moment(parsedEvent.event.dateFrom);
 
-            const hoursDifference = Math.ceil(moment.duration(momentDateTo.diff(momentDateFrom)).asHours());
+            const hoursDifference = moment.duration(momentDateTo.diff(momentDateFrom)).asHours();
             const sign = Math.sign(hoursDifference);
 
+            if (moment(dateOnDrop).hours() >= 20) {
+                // pokud událost přesunu na pomezí dvou pracovních dnů, musím se přesunout na den další a přidat rozdíl počtu hodin
+                // a odečíst hodinu z předchozího dne (20:00)
+                dateTo = moment(dateOnDrop).add(1, 'days').hours(7).add((hoursDifference - 1) * sign, 'hours').format();
+            } else {
+                dateTo = moment(dateOnDrop).add(hoursDifference * sign, 'hours').format();
+            }
+
             // set new dateFrom and dateTo on object and pass it to parent component
-            dateFrom = dateOnDrop.toDate();
-            dateTo = dateOnDrop.add(hoursDifference * sign, 'hours').toDate();
+            dateFrom = dateOnDrop.format();
         }
 
         const newEvent = {
@@ -208,7 +231,7 @@ export class Calendar extends React.Component {
         const {
             machines
         } = this.props;
-
+        console.log(lockScroll);
         return (
             <React.Fragment>
                 {/* TABLE */}
@@ -222,15 +245,13 @@ export class Calendar extends React.Component {
                         <div style={{
                                 height: '44px',
                                 border: 0,
+                                borderRight: '1px solid #dee2e6'
                             }}
                         />
                         {
                             machines.map((machine) => {
                                 return <div
                                     key={machine.id}
-                                    style={{
-                                        borderLeft: `10px solid ${machine.color}`
-                                    }}
                                     className="calendar--machine"
                                 >
                                     <p>{machine.name}</p>
@@ -354,7 +375,7 @@ export class Calendar extends React.Component {
                     colSpan={2}
                     className={createClassName([
                         'calendar-table--hours',
-                        current ? 'calendar-day--current bg-danger text-light' : null
+                        // current ? 'calendar-day--current bg-danger text-light' : null
                     ])}
                 >
                     {i}
@@ -376,8 +397,7 @@ export class Calendar extends React.Component {
             };
 
             const isPause = (pause === i) ? 'calendar--cell-pause' : null;
-
-            const td = <React.Fragment key={i}>
+            let td = <React.Fragment key={i}>
                 <CalendarCell
                     day={day}
                     hours={i}
@@ -394,6 +414,19 @@ export class Calendar extends React.Component {
                 />
             </React.Fragment>;
 
+            if (i === 20) {
+                td = <CalendarCell
+                    key={i}
+                    day={day}
+                    hours={i}
+                    minutes={0}
+                    colSpan={2}
+                    className={[isPause]}
+                    onClick={() => console.log('click', i)}
+                    {...cellAttrs}
+                />
+            }
+
             hours.push(td);
         }
 
@@ -404,6 +437,7 @@ export class Calendar extends React.Component {
         const {
             events,
             machines,
+            orderList,
             startOfTheWeek,
         } = this.props;
 
@@ -415,14 +449,10 @@ export class Calendar extends React.Component {
 
         // vyfiltrovat eventy pouze pro daný týden
         const endOfTheWeek = moment(startOfTheWeek).endOf('week');
-        const filteredEvents = events.filter((event) => {
-            const isInRange = moment(event.dateFrom).isBefore(startOfTheWeek) && moment(event.dateTo).isAfter(endOfTheWeek);
-            const isInWeek = moment(event.dateFrom).isBetween(startOfTheWeek, endOfTheWeek) || moment(event.dateTo).isBetween(startOfTheWeek, endOfTheWeek);
-
-            return isInRange || isInWeek;
-        });
+        const filteredEvents = filterDataByDate(events, startOfTheWeek, endOfTheWeek);
 
         const eventsToRender = filteredEvents.map((event) => {
+            const order = orderList.find((o) => o.id === event.orderId);
             const machine = machines.find((machine) => machine.id === event.machine);
             let row = null;
 
@@ -433,11 +463,13 @@ export class Calendar extends React.Component {
             return (
                 <CalendarEvent
                     row={row}
+                    order={order}
                     event={event}
                     key={event.id}
                     machine={machine}
                     selectedEvent={selectedEvent}
                     draggingEvent={draggingEvent}
+                    scrollTop={this.state.scrollTop}
                     scrollLeft={this.state.scrollLeft}
                     calendarWrapperClientRect={calendarHolder}
 
@@ -464,10 +496,13 @@ export class Calendar extends React.Component {
         }, () => {
             if (moment().startOf('week').week() === this.props.currentWeek) {
                 this.scrollToCurrentDate();
-                this.scrolledToCurrentDate = true;
             } else {
-                this.calendar.scrollTo(0, 0);
+                if (!this.calendarScrolled) {
+                    this.calendar.scrollTo(0, 0);
+                }
             }
+
+            this.calendarScrolled = true;
         });
     }
 }

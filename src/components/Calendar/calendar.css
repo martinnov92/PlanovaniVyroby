@@ -5,7 +5,7 @@
 .calendar-wrapper,
 .calendar-wrapper.element--block {
     width: 100%;
-    flex: 1 0 235px;
+    flex: 1 0 209px;
     display: flex;
     overflow: hidden;
 }
@@ -20,12 +20,11 @@
 }
 
 .calendar--machine {
-    height: 42px;
+    height: 41px;
     display: flex;
     padding: 10px;
     align-items: center;
-    border: 1px solid black;
-    border-right: 0;
+    border: 1px solid #dee2e6;
 }
 
 .calendar--machine + .calendar--machine {
@@ -35,7 +34,6 @@
 .calendar {
     overflow-x: scroll;
     position: relative;
-    border: 1px solid #000;
     border-bottom: 0;
     z-index: 1;
 }
@@ -46,7 +44,7 @@
 }
 
 .calendar-table td {
-    border: 1px solid #000;
+    border: 1px solid #dee2e6;
     border-left: 0;
     border-top: 0;
 }
@@ -55,21 +53,28 @@
     border-right: 0;
 }
 
-.calendar-table--header {
-}
-
 .calendar-table--header td {
     height: 21px;
     max-height: 21px;
     min-height: 21px;
 }
 
-.calendar-table--body {
+.calendar-table--header > tr > td {
+    border-top: 1px solid #dee2e6;
+    border-bottom: 0;
+}
+
+.calendar-table--header > tr > td > tbody> tr:first-child > td {
+    border-bottom: 0;
 }
 
 .calendar-table--body td,
 .calendar-table--body th {
     height: 40px;
+}
+
+.calendar-table--body > tr > td {
+    border-bottom: 0;
 }
 
 .calendar-year--week {
@@ -85,7 +90,7 @@
 }
 
 .calendar-table .calendar-table--empty-hours {
-    min-width: 10px;
+    width: 10px;
 }
 
 .calendar-table .calendar-table--empty-hours:nth-child(odd) {
@@ -99,7 +104,7 @@
 .column-fixed {
     left: 0;
     top: auto;
-    border: 1px solid black;
+    border: 1px solid dee2e6;
     margin-top: 1px;
     width: var(--fixedWidth);
     position: absolute;
@@ -121,6 +126,7 @@
     display: flex;
     padding: 0 5px;
     position: absolute;
+    border: 1px solid #949494;
 }
 
 .calendar--event-text {
@@ -221,7 +227,7 @@
         45deg,
         #6c757d,
         #6c757d 5px,
-        #343a40 5px,
-        #343a40 10px
+        #aaaeb1 5px,
+        #aaaeb1 10px
     );
 }

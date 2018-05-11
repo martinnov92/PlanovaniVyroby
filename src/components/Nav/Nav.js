@@ -9,7 +9,7 @@ export class Nav extends React.Component {
                     <h2
                         className="navbar-brand"
                     >
-                        Plánovač
+                        
                     </h2>
 
                     <div>

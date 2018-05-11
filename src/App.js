@@ -5,31 +5,22 @@ import { OrderPopup, SettingsPopup } from './Scenes';
 import { Calendar } from './components/Calendar';
 import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
-import { DATA_DATE_FORMAT, INPUT_DATE_TIME_FORMAT, createClassName, getNetMachineTime } from './helpers';
+import {
+    saveFile,
+    createClassName, 
+    DATA_DATE_FORMAT,
+    getNetMachineTime, 
+    formatMinutesToTime,
+    isDateRangeOverlaping, 
+    INPUT_DATE_TIME_FORMAT,
+} from './helpers';
 
+const fs = window.require('fs');
+const electron = window.require('electron');
 
-const machines = [
-    {
-        id: 'finetech',
-        name: 'Finetech',
-        color: '#fb1'
-    },
-    {
-        id: 'haas',
-        name: 'Haas',
-        color: '#1ce'
-    },
-    {
-        id: 'st310',
-        name: 'CNC Soustruh ST310',
-        color: '#C01025'
-    },
-    {
-        id: 'ft1250a',
-        name: 'FTU 1250',
-        color: '#ACCE55'
-    },
-];
+// nastavení souboru
+const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json';
+const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
 
 class App extends React.Component {
     constructor(props) {
@@ -37,41 +28,10 @@ class App extends React.Component {
 
         const startOfTheWeek = moment().startOf('week').startOf('day');
         this.state = {
-            orders: [{
-                id: 'abc',
-                orderId: 'Z180xxx', // zakázka - může být jedna zakázka na více strojích a pak se zgrupují v order table
-                productName: 'Výrobek 1', // jméno výrobku (ve wordu v němčině)
-                machine: 'finetech',
-                worker: 'Petr',
-                done: false,
-                note: 'Poznámka k zakázce',
-                operation: {
-                    order: "4",
-                    time: 10,
-                    count: 10,
-                },
-                workingHours: getNetMachineTime(moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate()),
-                dateFrom: moment().subtract(2, 'days').hours(10).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(1, 'days').hours(14).minutes(0).seconds(0).toDate(),
-            },{
-                id: 'abcd',
-                orderId: 'Z180xxx',
-                productName: 'Výrobek 1',
-                machine: 'haas',
-                worker: 'Pavel',
-                done: false,
-                note: 'Poznámka k opravě',
-                operation: {
-                    order: "1",
-                    time: 15,
-                    count: 8,
-                },
-                workingHours: getNetMachineTime(moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(), moment().subtract(1, 'days').hours(7).minutes(0).seconds(0).toDate()),
-                dateFrom: moment().subtract(3, 'days').hours(7).minutes(0).seconds(0).toDate(),
-                dateTo: moment().subtract(1, 'days').hours(7).minutes(0).seconds(0).toDate(),
-            }],
-
+            orders: [],
             open: false,
+            machines: [],
+            orderList: [],
             settings: false,
             hoverOrder: null,
             filterFinishedOrders: true,
@@ -80,6 +40,29 @@ class App extends React.Component {
         };
 
         this.calendar = React.createRef();
+    }
+
+    componentDidMount() {
+        fs.readFile(path, 'utf-8', (err, data) => {
+            if (err) {
+                // pokud soubor neexistuje, tak ho vytvořit
+                fs.writeFile(path, '', (err) => {
+                    // pokud nastala chyba, zobrazí se error
+                    if (err) alert(err);
+                });
+            } else {
+                // načíst obsah souboru do state
+                try {
+                    const d = JSON.parse(data);
+                    this.setState({
+                        orders: d.orders,
+                        machines: d.machines,
+                        orderList: d.orderList,
+                        filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
+                    }, () => console.log(this.state));
+                } catch (err) {}
+            }
+        });
     }
 
     handleWeekMove = (e, move) => {
@@ -120,9 +103,12 @@ class App extends React.Component {
             dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
         };
 
+        const orderObject = this.state.orderList.find((o) => o.id === order.orderId);
+
         this.setState({
-            order: copyOrder,
             open: true,
+            order: copyOrder,
+            newOrderObject: orderObject,
         });
     }
 
@@ -141,17 +127,36 @@ class App extends React.Component {
     handleEventDrop = (order) => {
         const ordersCopy = [...this.state.orders];
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+        const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
+
+        if (isOverlaping) {
+            return alert('V tomto čase je daný stroj vytížen.');
+        }
+
+        order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         ordersCopy.splice(findIndex, 1, order);
 
         this.setState({
+            hoverOrder: null,
             orders: ordersCopy,
-        });
+        }, () => this.saveToFile());
     }
 
-    handleInputChange= (e) => {
+    handleInputChange = (e) => {
         const order = set(this.state.order, e.target.name, e.target.value);
 
         if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
+            const date = moment(e.target.value);
+            const hours = date.hours();
+            const minutes = date.minutes();
+
+            const shiftFrom = hours < 7;
+            const shiftTo = (hours > 20) || (hours > 20 && minutes > 0);
+
+            if ((e.target.name === 'dateFrom' && shiftFrom) || (e.target.name === 'dateFrom' && shiftTo) || e.target.name === 'dateTo' && shiftTo) {
+                return;
+            }
+
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         }
 
@@ -160,26 +165,68 @@ class App extends React.Component {
         });
     }
 
+    handleNewOrderChange = (e) => {
+        this.setState({
+            newOrderObject: {
+                ...this.state.newOrderObject,
+                [e.target.name]: e.target.value,
+            },
+        });
+    }
+
     handleSave = () => {
-        const copy = [...this.state.orders];
+        const {
+            newOrderObject,
+        } = this.state;
+        const ordersCopy = [...this.state.orders];
+        const orderListCopy = [...this.state.orderList];
+
         const order = {
             ...this.state.order,
-            dateTo: moment(this.state.order.dateTo).toDate(),
-            dateFrom: moment(this.state.order.dateFrom).toDate(),
+            dateTo: moment(this.state.order.dateTo).format(),
+            dateFrom: moment(this.state.order.dateFrom).format(),
         };
-        
+
+        order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
+
         if (!this.state.order.id) {
-            order.id = moment().toDate();
-            copy.push(order);
+            if (isDateRangeOverlaping(ordersCopy, order)) {
+                return alert('V tomto čase je daný stroj vytížen.');
+            }
+
+            order.id = moment().unix();
+            ordersCopy.push(order);
         } else {
-            const findIndex = copy.findIndex((o) => o.id === order.id);
-            copy.splice(findIndex, 1, order);
+            const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+            const dateFromIsSame = moment(order.dateFrom).isSame(ordersCopy[findIndex].dateFrom);
+            const dateToIsSame = moment(order.dateTo).isSame(ordersCopy[findIndex].dateTo);
+
+            if ((!dateFromIsSame || !dateToIsSame) && ordersCopy[findIndex].id !== order.id) {
+                if (isDateRangeOverlaping(ordersCopy, order)) {
+                    return alert('V tomto čase je daný stroj vytížen.');
+                }
+            }
+
+            ordersCopy.splice(findIndex, 1, order);
         }
-        // console.log(getNetMachineTime(order.dateFrom, order.dateTo));
+
+        if (newOrderObject.id !== '') {
+            // prolinkovat novou zakázku s novou objednávkou
+            order.orderId = newOrderObject.id;
+            const findIndex = orderListCopy.findIndex((o) => o.id === newOrderObject.id);
+
+            if (findIndex > -1) {
+                orderListCopy[findIndex] = newOrderObject;
+            } else {
+                orderListCopy.push(newOrderObject);
+            }
+        }
+
         this.setState({
-            orders: copy,
-            open: false
-        });
+            open: false,
+            orders: ordersCopy,
+            orderList: orderListCopy,
+        }, () => this.saveToFile());
         this.resetOrderState();
     }
 
@@ -195,22 +242,21 @@ class App extends React.Component {
         this.setState({
             orders: orders,
             open: false,
-        });
+        }, () => this.saveToFile());
         this.resetOrderState();
     };
 
-    handleEventDone = (e, orderId, order) => {
-        const orders = this.state.orders.map((order) => {
-            if (order.orderId === orderId) {
-                order.done = true;
-            }
+    handleCloseOrder = (e, orderId, order) => {
+        const orderListCopy = [...this.state.orderList];
+        const findOrder = orderListCopy.findIndex((o) => o.id === orderId);
 
-            return order;
-        });
+        if (findOrder > -1) {
+            orderListCopy[findOrder].done = true;
+        }
 
         this.setState({
-            orders,
-        });
+            orderList: orderListCopy,
+        }, () => this.saveToFile());
     }
 
     handleClose = () => {
@@ -234,10 +280,17 @@ class App extends React.Component {
 
     render() {
         const {
+            order,
+            orders,
+            machines,
+            orderList,
             currentWeek,
             startOfTheWeek,
+            newOrderObject,
             filterFinishedOrders,
         } = this.state;
+
+        const productsNameList = [...new Set(orders.map((o) => o.productName))];
 
         return (
             <div className="app">
@@ -252,36 +305,48 @@ class App extends React.Component {
                 <div
                     className="pt-3 pr-3 pb-3 pl-3 app-main--screen"
                 >
-                    <Calendar
-                        ref={this.calendar}
-                        machines={machines}
-                        currentWeek={currentWeek}
-                        events={this.state.orders}
-                        startOfTheWeek={startOfTheWeek}
-                        onEventDrop={this.handleEventDrop}
-                        onEventEnter={this.handleEventEnter}
-                        onEventLeave={this.handleEventLeave}
-
-                        // context menu
-                        onEditEvent={this.handleEventEdit}
-                        onDeleteEvent={this.handleOrderDelete}
-                    />
-
-                    <OrderTable
-                        events={this.state.orders}
-                        onCloseOrder={this.handleEventDone}
-                        filterFinishedOrders={filterFinishedOrders}
-                    />
+                    {
+                        machines.length === 0 && orders.length === 0
+                        ? null
+                        : <React.Fragment>
+                            <Calendar
+                                events={orders}
+                                machines={machines}
+                                ref={this.calendar}
+                                orderList={orderList}
+                                currentWeek={currentWeek}
+                                startOfTheWeek={startOfTheWeek}
+                                onEventDrop={this.handleEventDrop}
+                                onEventEnter={this.handleEventEnter}
+                                onEventLeave={this.handleEventLeave}
+        
+                                // context menu
+                                onEditEvent={this.handleEventEdit}
+                                onDeleteEvent={this.handleOrderDelete}
+                            />
+        
+                            <OrderTable
+                                events={orders}
+                                orderList={orderList}
+                                onCloseOrder={this.handleCloseOrder}
+                                filterFinishedOrders={filterFinishedOrders}
+                            />
+                        </React.Fragment>
+                    }
 
                     {
                         !this.state.open
                         ? null
                         : <OrderPopup
+                            order={order}
                             machines={machines}
-                            order={this.state.order}
+                            orderList={orderList}
+                            newOrder={newOrderObject}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
+                            productsNameList={productsNameList}
                             handleInputChange={this.handleInputChange}
+                            handleNewOrderChange={this.handleNewOrderChange}
                         />
                     }
 
@@ -291,24 +356,40 @@ class App extends React.Component {
                         : <SettingsPopup
                             handleClose={this.closeSettings}
                             filterFinishedOrders={filterFinishedOrders}
-                            handleFilterFinishedOrders={(e) => this.setState({ filterFinishedOrders: !e.target.checked })}
+                            handleFilterFinishedOrders={(e) => {
+                                this.setState({
+                                    filterFinishedOrders: !e.target.checked
+                                }, () => this.saveToFile());
+                            }}
                         />
                     }
 
-                    {this.renderPinOrders()}
+                    {this.renderHoverOrder()}
                 </div>
             </div>
         );
     }
 
-    renderPinOrders = () => {
-        const { hoverOrder: order } = this.state;
+    renderHoverOrder = () => {
+        const {
+            orders,
+            machines,
+            orderList,
+            hoverOrder: order,
+        } = this.state;
+
+        if (!order) {
+            return;
+        }
+
+        const mainOrder = orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
+        const totalMinutes = order.operation.time * order.operation.count;
 
         return <div
                 ref={this.card}
                 style={{
-                    borderTop: `10px solid ${machine && machine.color}`
+                    borderTop: `10px solid ${mainOrder && mainOrder.color}`
                 }}
                 className={createClassName([
                     order ? 'card--active' : null,
@@ -320,27 +401,58 @@ class App extends React.Component {
                     order
                     ? <React.Fragment>
                         <h5 className="card-title">
-                            <strong>{order.label}</strong>
+                            <strong>{mainOrder.id}</strong>
                         </h5>
+                        <h6 className="card-subtitle mb-2">
+                            <strong>{order.productName}</strong>
+                        </h6>
                         <h6 className="card-subtitle mb-2 text-muted">
                             <strong>{order.worker}</strong>
                         </h6>
                         <p className="card-text">
-                            {order.note}
-                        </p>
-                        <p className="card-text">
                             {machine.name}
                         </p>
                         <p className="card-text">
-                            <strong>{moment(order.dateFrom).format(DATA_DATE_FORMAT)}</strong>
+                            {order.operation.order}. operace
+                        </p>
+                        <p className="card-text">
+                            {order.operation.count}ks
+                        </p>
+                        <p className="card-text">
+                            {order.operation.time}min/kus
+                        </p>
+                        <p className="card-text">
+                            Celkem: {totalMinutes}min ({(totalMinutes / 60).toFixed(1)}hod)
+                        </p>
+                        <p className="card-text">
+                            {order.note}
+                        </p>
+                        <p className="card-text">
+                            {moment(order.dateFrom).format(DATA_DATE_FORMAT)}
                             {" - "}
-                            <strong>{moment(order.dateTo).format(DATA_DATE_FORMAT)}</strong>
+                            {moment(order.dateTo).format(DATA_DATE_FORMAT)}
+                            <strong> ({formatMinutesToTime(order.workingHours)})</strong>
                         </p>
                     </React.Fragment>
                     : null
                 }
                 </div>
             </div>;
+    }
+
+    saveToFile = () => {
+        saveFile(path, {
+            orders: this.state.orders,
+            machines: this.state.machines,
+            orderList: this.state.orderList,
+            filterFinishedOrders: this.state.filterFinishedOrders,
+        })
+        .then((value) => {
+            console.log(value);
+        })
+        .catch((err) => {
+            alert(err);
+        });
     }
 
     resetOrderState = () => {
@@ -354,7 +466,6 @@ class App extends React.Component {
                 productName: '',
                 worker: '',
                 note: '',
-                done: false, 
                 dateTo: dateTo,
                 operation: {
                     order: 1,
@@ -362,9 +473,14 @@ class App extends React.Component {
                     count: 0,
                 },
                 dateFrom: dateFrom,
-                machine: machines[0].id,
                 workingHours: workingHours,
-            }
+                machine: this.state.machines[0].id,
+            },
+            newOrderObject: {
+                id: '',
+                done: false,
+                color: '#ffffff',
+            },
         });
     }
 }
