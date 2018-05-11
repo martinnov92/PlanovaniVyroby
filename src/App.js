@@ -510,7 +510,7 @@ class App extends React.Component {
                 done: false,
                 color: '#ffffff',
             },
-        }, () => cb);
+        }, cb);
     }
 }
 

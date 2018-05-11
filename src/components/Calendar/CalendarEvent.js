@@ -47,7 +47,7 @@ export class CalendarEvent extends React.Component {
 
         e.preventDefault();
 
-        if (e.keyCode === 46) {
+        if (e.keyCode === 46 || e.keyCode === 8) {
             this.props.onDeleteEvent(e, event);
         }
     }
