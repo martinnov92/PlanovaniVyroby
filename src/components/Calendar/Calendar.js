@@ -34,8 +34,16 @@ export class Calendar extends React.Component {
             calendarHolder: null,
             dragActiveCell: null,
             selectedEvent: null,
+            selectingCells: false,
             calendarTableWidth: 0,
+            selectingCellStart: null,
             selectedEventElement: null,
+            selectingCellStyle: {
+                top: `${0}px`,
+                left: `${0}px`,
+                width: `${0}px`,
+                height: `${0}px`,
+            },
         };
 
         this.calendarScrolled = false;
@@ -46,7 +54,9 @@ export class Calendar extends React.Component {
         this.getDimensions();
         this.renderTableBody();
 
+        document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('click', this.handleClickOutside);
+        document.addEventListener('mousemove', this.handleMouseMove);
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
 
@@ -78,6 +88,9 @@ export class Calendar extends React.Component {
     }
 
     componentWillUnmount() {
+        document.removeEventListener('mouseup', this.handleMouseUp);
+        document.removeEventListener('click', this.handleClickOutside);
+        document.removeEventListener('mousemove', this.handleMouseMove);
         ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.handleScroll);
     }
 
@@ -227,15 +240,53 @@ export class Calendar extends React.Component {
         this.props.onEventDrop(newEvent);
     }
 
+    handleEventMouseDown = (e) => {
+        this.setState({
+            selectingCells: true,
+            selectingCellStart: e.target,
+        });
+    }
+
+    handleMouseMove = (e) => {
+        if (!this.state.selectingCells) {
+            return;
+        }
+
+        const startCell = this.state.selectingCellStart.getBoundingClientRect();
+        const endCell = e.target.getBoundingClientRect();
+
+        const top = startCell.top;
+        const left = startCell.left;
+        const height = startCell.height;
+        const width = endCell.x - startCell.x;
+
+        this.setState({
+            selectingCellStyle: {
+                top: `${top}px`,
+                left: `${left}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+            },
+        });
+    }
+
+    handleMouseUp = (e) => {
+        this.setState({
+            selectingCells: false,
+            selectingCellStart: e.target,
+        });
+    }
+
     render() {
         const {
             lockScroll,
+            selectingCellStyle,
         } = this.state;
 
         const {
             machines
         } = this.props;
-
+        console.log(selectingCellStyle);
         return (
             <React.Fragment>
                 {/* TABLE */}
@@ -293,6 +344,13 @@ export class Calendar extends React.Component {
                             {this.state.eventsToRender}
                         </div>
                     </div>
+
+                    <div
+                        className={createClassName([
+                            'calendar--event-selecting'
+                        ])}
+                        style={selectingCellStyle}
+                    />
                 </div>
             </React.Fragment>
         );
@@ -393,10 +451,10 @@ export class Calendar extends React.Component {
         for (let i = 7; i <= 20; i++) {
             const cellAttrs = {
                 onDrop: this.handleDrop,
-                onClick: (i) => console.log('klik', i),
                 onDragOver: this.handleDragOver,
                 onDragEnter: this.handleDragEnter,
                 onDragLeave: this.handleDragLeave,
+                onMouseDown: this.handleEventMouseDown,
             };
 
             const isPause = (pause === i) ? 'calendar--cell-pause' : null;

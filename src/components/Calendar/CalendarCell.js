@@ -32,13 +32,13 @@ export class CalendarCell extends React.Component {
             <td
                 colSpan={colSpan}
                 data-date={dateTime}
-                onClick={this.props.onClick}
                 className={emptyCellclassNames}
                 data-machine={machine && machine.id}
-
+                
                 // drag and drop
                 onDrop={this.props.onDrop}
                 onDragOver={this.props.onDragOver}
+                onMouseDown={this.props.onMouseDown}
                 onDragEnter={this.props.onDragEnter}
                 onDragLeave={this.props.onDragLeave}
             >
