@@ -33,7 +33,7 @@
   "build": {
     "appId": "com.martinnovak.Planovac",
     "icon": "build/icon.png",
-    "type": "distribution",
+    "copyright": "Copyright 2018 year ${author}",
     "files": [
       "build/**/*",
       "node_modules/**/*"
