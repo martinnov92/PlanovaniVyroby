@@ -231,7 +231,7 @@ export class Calendar extends React.Component {
         const {
             machines
         } = this.props;
-
+        console.log(lockScroll);
         return (
             <React.Fragment>
                 {/* TABLE */}

@@ -19,15 +19,15 @@ function createWindow() {
     mainWindow.setMenu(null);
 
     // and load the index.html of the app.
-    // if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, '../build/index.html'),
             protocol: 'file:',
             slashes: true
         }));
-    // } else {
-    //     mainWindow.loadURL('http://localhost:3000');
-    // }
+    } else {
+        mainWindow.loadURL('http://localhost:3000');
+    }
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.maximize();
@@ -35,7 +35,7 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
