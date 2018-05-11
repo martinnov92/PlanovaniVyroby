@@ -150,3 +150,7 @@ h1, h2, h3, h4, h5, h6 {
 .ml-3 {
     margin-left: 10px !important;
 }
+
+.no-p {
+    padding: 0 !important;
+}

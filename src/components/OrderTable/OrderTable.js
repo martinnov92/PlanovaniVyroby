@@ -100,6 +100,7 @@ export class OrderTable extends React.Component {
                         <td style={createStyleObject(thWidth[2])}>{product.total.count}</td>
                         <td
                             style={createStyleObject(thWidth[3])}
+                            title={`Čas na kus: ${product['1'] ? product['1'].time : '-'} min.\nNahazování: ${product['1'] ? product['1'].casting : '-'} min.\nVýměna: ${product['1'] ? product['1'].exchange : '-'} min.`}
                         >
                             {
                                 product['1']
@@ -109,6 +110,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td
                             style={createStyleObject(thWidth[4])}
+                            title={`Čas na kus: ${product['2'] ? product['2'].time : '-'} min.\nNahazování: ${product['2'] ? product['2'].casting : '-'} min.\nVýměna: ${product['2'] ? product['2'].exchange : '-'} min.`}
                         >
                             {
                                 product['2']
@@ -118,6 +120,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td
                             style={createStyleObject(thWidth[5])}
+                            title={`Čas na kus: ${product['3'] ? product['3'].time : '-'} min.\nNahazování: ${product['3'] ? product['3'].casting : '-'} min.\nVýměna: ${product['3'] ? product['3'].exchange : '-'} min.`}
                         >
                             {
                                 product['3']
@@ -127,6 +130,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td
                             style={createStyleObject(thWidth[6])}
+                            title={`Čas na kus: ${product['4'] ? product['4'].time : '-'} min.\nNahazování: ${product['4'] ? product['4'].casting : '-'} min.\nVýměna: ${product['4'] ? product['4'].exchange : '-'} min.`}
                         >
                             {
                                 product['4']
@@ -136,6 +140,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td
                             style={createStyleObject(thWidth[7])}
+                            title={`Čas na kus: ${product['5'] ? product['5'].time : '-'} min.\nNahazování: ${product['5'] ? product['5'].casting : '-'} min.\nVýměna: ${product['5'] ? product['5'].exchange : '-'} min.`}
                         >
                             {
                                 product['5']
@@ -145,6 +150,7 @@ export class OrderTable extends React.Component {
                         </td>
                         <td
                             style={createStyleObject(thWidth[8])}
+                            title={`Čas na kus: ${product['6'] ? product['6'].time : '-'} min.\nNahazování: ${product['6'] ? product['6'].casting : '-'} min.\nVýměna: ${product['6'] ? product['6'].exchange : '-'} min.`}
                         >
                             {
                                 product['6']

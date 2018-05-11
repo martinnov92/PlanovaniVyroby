@@ -20,11 +20,15 @@
     min-width: 120px;
 }
 
-.table--orders .table tr th:first-child,
-.table--orders .table tr td:first-child {
+.table--orders .table .table--orders-first-column {
     width: 150px;
     min-width: 150px;
     max-width: 150px;
+}
+
+.table--orders .table--orders--no-min-width td {
+    width: auto;
+    min-width: auto;
 }
 
 .table-bordered {

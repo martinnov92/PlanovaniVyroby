@@ -39,6 +39,8 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         [current.operation.order]: {
                             time: totalTime,
                             count: Number(current.operation.count),
+                            casting: Number(current.operation.casting),
+                            exchange: Number(current.operation.exchange),
                         }
                     }
                 }
@@ -59,8 +61,10 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     done: order.done,
                     color: order.color,
                     [current.operation.order]: {
-                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + totalTime,
+                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.count),
                         count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
+                        casting: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].casting : 0) + Number(current.operation.casting),
+                        exchange: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].exchange : 0) + Number(current.operation.exchange),
                     }
                 }
             }
