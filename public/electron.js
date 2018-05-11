@@ -15,6 +15,8 @@ function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         show: false,
+        minWidth: 500,
+        minHeight: 400,
     });
     mainWindow.setMenu(null);
 
