@@ -258,8 +258,9 @@ class App extends React.Component {
 
         orders.splice(findIndex, 1);
         this.setState({
-            orders: orders,
             open: false,
+            orders: orders,
+            hoverOrder: null,
         }, () => this.saveToFile());
         this.resetOrderState();
     };

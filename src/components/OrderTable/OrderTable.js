@@ -105,9 +105,10 @@ export class OrderTable extends React.Component {
                             {
                                 product['1']
                                 ? <Tooltip
+                                    className={`cursor--default`}
                                     title={`Čas na kus: ${product['1'] ? product['1'].time : '-'} min.\nNahazování: ${product['1'] ? product['1'].casting : '-'} min.\nVýměna: ${product['1'] ? product['1'].exchange : '-'} min.`}
                                 >
-                                    {product['1'].count} ({product['1'].time})
+                                    {product['1'].count}ks. ({product['1'].time} min.)
                                 </Tooltip>
                                 : '-'
                             }
@@ -118,9 +119,10 @@ export class OrderTable extends React.Component {
                             {
                                 product['2']
                                 ? <Tooltip
+                                    className={`cursor--default`}
                                     title={`Čas na kus: ${product['2'] ? product['2'].time : '-'} min.\nNahazování: ${product['2'] ? product['2'].casting : '-'} min.\nVýměna: ${product['2'] ? product['2'].exchange : '-'} min.`}
                                 >
-                                    {product['2'].count} ({product['2'].time})
+                                    {product['2'].count}ks. ({product['2'].time} min.)
                                 </Tooltip>
                                 : '-'
                             }
@@ -131,9 +133,10 @@ export class OrderTable extends React.Component {
                             {
                                 product['3']
                                 ? <Tooltip
+                                    className={`cursor--default`}
                                     title={`Čas na kus: ${product['3'] ? product['3'].time : '-'} min.\nNahazování: ${product['3'] ? product['3'].casting : '-'} min.\nVýměna: ${product['3'] ? product['3'].exchange : '-'} min.`}
                                 >
-                                    {product['3'].count} ({product['3'].time})
+                                    {product['3'].count}ks. ({product['3'].time} min.)
                                 </Tooltip>
                                 : '-'
                             }
@@ -144,9 +147,10 @@ export class OrderTable extends React.Component {
                             {
                                 product['4']
                                 ? <Tooltip
+                                    className={`cursor--default`}
                                     title={`Čas na kus: ${product['4'] ? product['4'].time : '-'} min.\nNahazování: ${product['4'] ? product['4'].casting : '-'} min.\nVýměna: ${product['4'] ? product['4'].exchange : '-'} min.`}
                                 >
-                                    {product['4'].count} ({product['4'].time})
+                                    {product['4'].count}ks. ({product['4'].time} min.)
                                 </Tooltip>
                                 : '-'
                             }
@@ -157,9 +161,10 @@ export class OrderTable extends React.Component {
                             {
                                 product['5']
                                 ? <Tooltip
+                                    className={`cursor--default`}
                                     title={`Čas na kus: ${product['5'] ? product['5'].time : '-'} min.\nNahazování: ${product['5'] ? product['5'].casting : '-'} min.\nVýměna: ${product['5'] ? product['5'].exchange : '-'} min.`}
                                 >
-                                    {product['5'].count} ({product['5'].time})
+                                    {product['5'].count}ks. ({product['5'].time} min.)
                                 </Tooltip>
                                 : '-'
                             }
@@ -170,9 +175,10 @@ export class OrderTable extends React.Component {
                             {
                                 product['6']
                                 ? <Tooltip
+                                    className={`cursor--default`}
                                     title={`Čas na kus: ${product['6'] ? product['6'].time : '-'} min.\nNahazování: ${product['6'] ? product['6'].casting : '-'} min.\nVýměna: ${product['6'] ? product['6'].exchange : '-'} min.`}
                                 >
-                                    {product['6'].count} ({product['6'].time})
+                                    {product['6'].count}ks. ({product['6'].time} min.)
                                 </Tooltip>
                                 : '-'
                             }
@@ -233,12 +239,12 @@ export class OrderTable extends React.Component {
                             <th scope="col">Zakázka</th>
                             <th scope="col">Název výrobku</th>
                             <th scope="col">Počet kusů</th>
-                            <th scope="col">1.o Čas/ks (napl)</th>
-                            <th scope="col">2.o Čas/ks (napl)</th>
-                            <th scope="col">3.o Čas/ks (napl)</th>
-                            <th scope="col">4.o Čas/ks (napl)</th>
-                            <th scope="col">5.o Čas/ks (napl)</th>
-                            <th scope="col">6.o Čas/ks (napl)</th>
+                            <th scope="col">1.o ks/čas (napl)</th>
+                            <th scope="col">2.o ks/čas (napl)</th>
+                            <th scope="col">3.o ks/čas (napl)</th>
+                            <th scope="col">4.o ks/čas (napl)</th>
+                            <th scope="col">5.o ks/čas (napl)</th>
+                            <th scope="col">6.o ks/čas (napl)</th>
                             <th scope="col">Čas na kus</th>
                             <th scope="col">Čas na zakázku</th>
                         </tr>
