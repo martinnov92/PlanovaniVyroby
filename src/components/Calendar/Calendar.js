@@ -271,6 +271,14 @@ export class Calendar extends React.Component {
     }
 
     handleMouseUp = (e) => {
+        if (e.target.dataset.date && e.target.dataset.machine) {
+            const machineId = this.state.selectingCellStart.dataset.machine;
+            const dateFrom = moment(this.state.selectingCellStart.dataset.date, DATA_DATE_FORMAT).format();
+            const dateTo = moment(e.target.dataset.date, DATA_DATE_FORMAT).format();
+
+            this.props.onMouseUp(dateFrom, dateTo, machineId);
+        }
+
         this.setState({
             selectingCells: false,
             selectingCellStart: e.target,
@@ -293,7 +301,7 @@ export class Calendar extends React.Component {
         const {
             machines
         } = this.props;
-        console.log(selectingCellStyle);
+
         return (
             <React.Fragment>
                 {/* TABLE */}
@@ -356,7 +364,7 @@ export class Calendar extends React.Component {
                         selectingCells
                         ? <div
                             className={createClassName([
-                                'calendar--event-selecting'
+                                'calendar--event-selecting', 'bg-secondary'
                             ])}
                             style={selectingCellStyle}
                         />

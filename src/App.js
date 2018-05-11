@@ -148,6 +148,14 @@ class App extends React.Component {
         }, () => this.saveToFile());
     }
 
+    handleSelectingMouseUp = (dateFrom, dateTo, machineId) => {
+        this.resetOrderState(dateFrom, dateTo, machineId, () => {
+            this.setState({
+                open: true,
+            }, () => console.log(this.state));
+        });
+    }
+
     handleInputChange = (e) => {
         const order = set(this.state.order, e.target.name, e.target.value);
 
@@ -330,6 +338,7 @@ class App extends React.Component {
                                 onEventDrop={this.handleEventDrop}
                                 onEventEnter={this.handleEventEnter}
                                 onEventLeave={this.handleEventLeave}
+                                onMouseUp={this.handleSelectingMouseUp}
         
                                 // context menu
                                 onEditEvent={this.handleEventEdit}
@@ -465,10 +474,20 @@ class App extends React.Component {
         });
     }
 
-    resetOrderState = () => {
-        const dateFrom = moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT);
-        const dateTo = moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT);
-        const workingHours = getNetMachineTime(dateFrom, dateTo);
+    resetOrderState = (from, to, machineId, cb) => {
+        let dateTo;
+        let dateFrom;
+        let workingHours;
+
+        if (from && to) {
+            dateFrom = moment(from).format(INPUT_DATE_TIME_FORMAT);
+            dateTo = moment(to).format(INPUT_DATE_TIME_FORMAT);
+            workingHours = getNetMachineTime(dateFrom, dateTo);
+        } else {
+            dateFrom = moment().hours(7).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT);
+            dateTo = moment().hours(10).minutes(0).seconds(0).format(INPUT_DATE_TIME_FORMAT);
+            workingHours = getNetMachineTime(dateFrom, dateTo);
+        }
 
         this.setState({
             order: {
@@ -484,14 +503,14 @@ class App extends React.Component {
                 },
                 dateFrom: dateFrom,
                 workingHours: workingHours,
-                machine: this.state.machines[0].id,
+                machine: machineId || this.state.machines[0].id,
             },
             newOrderObject: {
                 id: '',
                 done: false,
                 color: '#ffffff',
             },
-        });
+        }, () => cb);
     }
 }
 
