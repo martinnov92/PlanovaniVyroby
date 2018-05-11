@@ -32,6 +32,8 @@
   },
   "build": {
     "appId": "com.martinnovak.Planovac",
+    "name": "Plánovač",
+    "productName": "Plánovač",
     "icon": "build/icon.png",
     "copyright": "Copyright 2018 year ${author}",
     "files": [
