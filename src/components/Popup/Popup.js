@@ -67,6 +67,10 @@ export class Popup extends React.Component {
     }
 
     handleMouseUp = (e) => {
+        if (!this.state.mouseDown) {
+            return;
+        }
+
         const offsetTop = this.popup.current.offsetTop;
         const offsetLeft = this.popup.current.offsetLeft;
 
