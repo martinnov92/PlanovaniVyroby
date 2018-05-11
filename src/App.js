@@ -238,6 +238,10 @@ class App extends React.Component {
             return;
         }
 
+        if (!window.confirm('Přejete si smazat událost?')) {
+            return;
+        }
+
         orders.splice(findIndex, 1);
         this.setState({
             orders: orders,
