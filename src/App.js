@@ -124,6 +124,12 @@ class App extends React.Component {
         });
     }
 
+    handleDragStart = () => {
+        this.setState({
+            open: false,
+        });
+    }
+
     handleEventDrop = (order) => {
         const ordersCopy = [...this.state.orders];
         const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
@@ -137,7 +143,7 @@ class App extends React.Component {
         ordersCopy.splice(findIndex, 1, order);
 
         this.setState({
-            hoverOrder: null,
+            open: false,
             orders: ordersCopy,
         }, () => this.saveToFile());
     }
@@ -320,6 +326,7 @@ class App extends React.Component {
                                 orderList={orderList}
                                 currentWeek={currentWeek}
                                 startOfTheWeek={startOfTheWeek}
+                                onDragStart={this.handleDragStart}
                                 onEventDrop={this.handleEventDrop}
                                 onEventEnter={this.handleEventEnter}
                                 onEventLeave={this.handleEventLeave}

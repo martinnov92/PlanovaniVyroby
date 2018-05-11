@@ -146,6 +146,8 @@ export class Calendar extends React.Component {
         e.dataTransfer.setData('text', JSON.stringify({
             event: event
         }));
+
+        this.props.onDragStart();
     }
 
     handleDrag = (e, event) => {
