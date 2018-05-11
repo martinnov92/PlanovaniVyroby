@@ -18,6 +18,7 @@ export class OrderTable extends React.Component {
             width: 0,
             height: 0,
             scrollLeft: 0,
+            thWidth: []
         };
 
         this.fixedHeader = React.createRef();
@@ -38,16 +39,24 @@ export class OrderTable extends React.Component {
     }
 
     setDimension = () => {
-        const fixedHeader = this.fixedHeader.current.getBoundingClientRect();
-        const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeader.height;
+        const fixedHeader = this.fixedHeader.current;
+        const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
+
+        const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => node.offsetWidth);
+        const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
 
         this.setState({
-            width: fixedHeader.width,
             height,
+            thWidth: fixedHeaderTh,
+            width: fixedHeader.width,
         });
     }
 
     renderTableBody = (events) => {
+        const {
+            thWidth,
+        } = this.state;
+
         const {
             orderList,
             filterFinishedOrders,
@@ -76,7 +85,9 @@ export class OrderTable extends React.Component {
                         disabled={product.done}
                         className={product.done ? 'order--finished' : null}
                     >
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[0])}
+                        >
                             <span
                                 style={{
                                     backgroundColor: product.color
@@ -85,52 +96,70 @@ export class OrderTable extends React.Component {
                                 {key}
                             </span>
                         </td>
-                        <td>{keys[i]}</td>
-                        <td>{product.total.count}</td>
-                        <td>
+                        <td style={createStyleObject(thWidth[1])}>{keys[i]}</td>
+                        <td style={createStyleObject(thWidth[2])}>{product.total.count}</td>
+                        <td
+                            style={createStyleObject(thWidth[3])}
+                        >
                             {
                                 product['1']
                                 ? `${product['1'].count} (${product['1'].time})`
                                 : '-'
                             }
                         </td>
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[4])}
+                        >
                             {
                                 product['2']
                                 ? `${product['2'].count} (${product['2'].time})`
                                 : '-'
                             }
                         </td>
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[5])}
+                        >
                             {
                                 product['3']
                                 ? `${product['3'].count} (${product['3'].time})`
                                 : '-'
                             }
                         </td>
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[6])}
+                        >
                             {
                                 product['4']
                                 ? `${product['4'].count} (${product['4'].time})`
                                 : '-'
                             }
                         </td>
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[7])}
+                        >
                             {
                                 product['5']
                                 ? `${product['5'].count} (${product['5'].time})`
                                 : '-'
                             }
                         </td>
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[8])}
+                        >
                             {
                                 product['6']
                                 ? `${product['6'].count} (${product['6'].time})`
                                 : '-'
                             }
                         </td>
-                        <td>{product.total.time}</td>
-                        <td>
+                        <td
+                            style={createStyleObject(thWidth[9])}
+                        >
+                            {product.total.time}
+                        </td>
+                        <td
+                            style={createStyleObject(thWidth[10])}
+                        >
                             {product.total.time} * {product.total.count} = {((product.total.time * product.total.count) / 60).toFixed(1)}h
                         </td>
                     </ContextMenu>
@@ -208,4 +237,10 @@ export class OrderTable extends React.Component {
             </div>
         );
     } 
+}
+
+function createStyleObject(width) {
+    return {
+        width: `${width || 0}px`,
+    };
 }
