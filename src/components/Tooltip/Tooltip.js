@@ -132,6 +132,8 @@ export class Tooltip extends React.Component {
             case 'left':
                 tooltipPositionClassName = 'pd-tooltip__left';
                 break;
+            default:
+                break;
         }
 
         const classNames = [
