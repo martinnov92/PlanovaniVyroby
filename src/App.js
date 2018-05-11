@@ -252,7 +252,8 @@ class App extends React.Component {
             return;
         }
 
-        if (!window.confirm('Přejete si smazat událost?')) {
+        const confirm = window.confirm('Přejete si smazat událost?');
+        if (!confirm) {
             return;
         }
 
