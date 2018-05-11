@@ -1,4 +1,8 @@
 import React from 'react';
+import ARROW_LEFT from '../../statics/arrow-left.svg';
+import ARROW_RIGHT from '../../statics/arrow-right.svg';
+
+import './nav.css';
 
 export class Nav extends React.Component {
     render() {
@@ -22,7 +26,12 @@ export class Nav extends React.Component {
                                 className="btn text-weight--bold btn-success"
                                 onClick={(e) => this.props.onWeekMove(e, 'prev')}
                             >
-                                {"<"}
+                                <img
+                                    width="20px"
+                                    height="20px"
+                                    alt="Minulý týden"
+                                    src={ARROW_LEFT}
+                                />
                             </button>
 
                             <button
@@ -38,7 +47,12 @@ export class Nav extends React.Component {
                                 className="btn text-weight--bold btn-success"
                                 onClick={(e) => this.props.onWeekMove(e, 'next')}
                             >
-                                {">"}
+                                <img
+                                    width="20px"
+                                    height="20px"
+                                    alt="Další týden"
+                                    src={ARROW_RIGHT}
+                                />
                             </button>
                         </div>
 
