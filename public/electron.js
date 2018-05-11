@@ -9,6 +9,7 @@ const BrowserWindow = electron.BrowserWindow;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+const documentsPath = `${electron.app.getPath('documents')}`;
 
 function createWindow() {
     // Create the browser window.
@@ -18,15 +19,15 @@ function createWindow() {
     mainWindow.setMenu(null);
 
     // and load the index.html of the app.
-    if (process.env.NODE_ENV === 'production') {
+    // if (process.env.NODE_ENV === 'production') {
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, '../build/index.html'),
             protocol: 'file:',
             slashes: true
         }));
-    } else {
-        mainWindow.loadURL('http://localhost:3000');
-    }
+    // } else {
+    //     mainWindow.loadURL('http://localhost:3000');
+    // }
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.maximize();
@@ -35,6 +36,12 @@ function createWindow() {
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools();
+
+    // if the render process crashes, reload the window
+    mainWindow.webContents.on('crashed', () => {
+        mainWindow.destroy();
+        createWindow();
+    });
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
