@@ -125,6 +125,34 @@ export function filterDataByDate(events, from, to) {
     });
 }
 
+export function getCorrectDateAfterDrop(originalDateFrom, originalDateTo, dateFrom) {
+    const NIGHT_TIME = 11;
+
+    dateFrom = moment(dateFrom);
+    originalDateTo = moment(originalDateTo);
+    originalDateFrom = moment(originalDateFrom);
+
+    let hoursDiff = moment.duration(originalDateTo.diff(originalDateFrom)).asHours();
+    let sign = Math.sign(hoursDiff);
+
+    if (originalDateFrom.hours() >= 20) {
+        hoursDiff -= NIGHT_TIME;
+    }
+
+    let finalDateTo = dateFrom.add((hoursDiff * sign), 'hours');
+    let sameDay = dateFrom.isSame(finalDateTo, 'day');
+
+    // console.log((sameDay && dateFrom.hours() >= 20), finalDateTo.hours() >= 20);
+    // pokud se událost přesunula během jednoho dne, vrátím dateTo (ve správném formátu, který se uloží)
+    if (sameDay && finalDateTo.hours() <= 20) {
+        return finalDateTo.format();
+    } else {
+        const newDateFrom = dateFrom.add(1, 'days').hours(7);
+        const finalDateTo = originalDateFrom.add(1, 'days').hours(7).add(hoursDiff > 11 ? hoursDiff - 11 : hoursDiff, 'hours');
+        return getCorrectDateAfterDrop(newDateFrom, finalDateTo, newDateFrom);
+    }
+}
+
 export function isDateRangeOverlaping(arr, order) {
     const orderDateFrom = moment(order.dateFrom);
     const orderDateTo = moment(order.dateTo);

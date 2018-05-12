@@ -2,7 +2,13 @@ import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DATA_DATE_FORMAT, FULL_FORMAT, createClassName, filterDataByDate } from '../../helpers';
+import {
+    FULL_FORMAT,
+    createClassName,
+    filterDataByDate,
+    DATA_DATE_FORMAT,
+    getCorrectDateAfterDrop,
+} from '../../helpers';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 
@@ -203,29 +209,15 @@ export class Calendar extends React.Component {
         const parsedEvent = JSON.parse(e.dataTransfer.getData('text'));
         const dateOnDrop = moment(e.target.dataset.date, DATA_DATE_FORMAT);
 
-        let dateFrom = parsedEvent.event.dateFrom;
-        let dateTo = parsedEvent.event.dateTo;
+        let dateFrom = moment(parsedEvent.event.dateFrom);
+        let dateTo = moment(parsedEvent.event.dateTo);
 
         if (parsedEvent.eventResize === 'dateFrom') {
             dateFrom = dateOnDrop.format();
         } else if (parsedEvent.eventResize === 'dateTo') {
             dateTo = dateOnDrop.format();
         } else {
-            // vypočet rozdílu hodin z původní eventy
-            const momentDateTo = moment(parsedEvent.event.dateTo);
-            const momentDateFrom = moment(parsedEvent.event.dateFrom);
-
-            const hoursDifference = moment.duration(momentDateTo.diff(momentDateFrom)).asHours();
-            const sign = Math.sign(hoursDifference);
-
-            if (moment(dateOnDrop).hours() >= 20) {
-                // pokud událost přesunu na pomezí dvou pracovních dnů, musím se přesunout na den další a přidat rozdíl počtu hodin
-                // a odečíst hodinu z předchozího dne (20:00)
-                dateTo = moment(dateOnDrop).add(1, 'days').hours(7).add((hoursDifference - 1) * sign, 'hours').format();
-            } else {
-                dateTo = moment(dateOnDrop).add(hoursDifference * sign, 'hours').format();
-            }
-
+            dateTo = getCorrectDateAfterDrop(dateFrom, dateTo, dateOnDrop);
             // set new dateFrom and dateTo on object and pass it to parent component
             dateFrom = dateOnDrop.format();
         }
