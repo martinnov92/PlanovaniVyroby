@@ -39,10 +39,10 @@ export class Calendar extends React.Component {
             selectingCellStart: null,
             selectedEventElement: null,
             selectingCellStyle: {
-                top: `${0}px`,
-                left: `${0}px`,
-                width: `${0}px`,
-                height: `${0}px`,
+                top: 0,
+                left: 0,
+                width: 0,
+                height: 0,
             },
         };
 
@@ -252,20 +252,26 @@ export class Calendar extends React.Component {
             return;
         }
 
-        const startCell = this.state.selectingCellStart.getBoundingClientRect();
-        const endCell = e.target.getBoundingClientRect();
+        let startCell = this.state.selectingCellStart.getBoundingClientRect();
+        let endCell = e.target.getBoundingClientRect();
 
-        const top = startCell.top;
-        const left = startCell.left;
-        const height = startCell.height;
-        const width = endCell.x - startCell.x;
+        let top = startCell.top;
+        let left = startCell.left;
+        let height = startCell.height;
+        let width = endCell.x - startCell.x;
+
+        if (endCell.x === startCell.x) {
+            // fixnutí přeblíkávání při zmenšování události
+            const { width: stateWidth} = this.state.selectingCellStyle;
+            width = stateWidth - startCell.width;
+        }
 
         this.setState({
             selectingCellStyle: {
-                top: `${top}px`,
-                left: `${left}px`,
-                width: `${width}px`,
-                height: `${height}px`,
+                top: top,
+                left: left,
+                width: width,
+                height: height,
             },
         });
     }
@@ -283,10 +289,10 @@ export class Calendar extends React.Component {
             selectingCells: false,
             selectingCellStart: e.target,
             selectingCellStyle: {
-                top: `${0}px`,
-                left: `${0}px`,
-                width: `${0}px`,
-                height: `${0}px`,
+                top: 0,
+                left: 0,
+                width: 0,
+                height: 0,
             },
         });
     }
@@ -301,7 +307,7 @@ export class Calendar extends React.Component {
         const {
             machines
         } = this.props;
-
+        console.log(selectingCellStyle);
         return (
             <React.Fragment>
                 {/* TABLE */}
