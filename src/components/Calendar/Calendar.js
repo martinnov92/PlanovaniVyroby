@@ -307,7 +307,7 @@ export class Calendar extends React.Component {
         const {
             machines
         } = this.props;
-        console.log(selectingCellStyle);
+
         return (
             <React.Fragment>
                 {/* TABLE */}
