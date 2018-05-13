@@ -123,6 +123,8 @@ export class CalendarEvent extends React.Component {
     handleResizerDragStart = (e) => {
         e.stopPropagation();
 
+        window.dispatchEvent(new Event('resize'));
+
         setTimeout(() => {
             this.setState({
                 resizerActive: true,

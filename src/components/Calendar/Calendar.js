@@ -60,6 +60,7 @@ export class Calendar extends React.Component {
         this.getDimensions();
         this.renderTableBody();
 
+        window.addEventListener('resize', this.renderEvents);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('click', this.handleClickOutside);
         document.addEventListener('mousemove', this.handleMouseMove);
@@ -94,6 +95,7 @@ export class Calendar extends React.Component {
     }
 
     componentWillUnmount() {
+        window.removeEventListener('resize', this.renderEvents);
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('click', this.handleClickOutside);
         document.removeEventListener('mousemove', this.handleMouseMove);
