@@ -39,6 +39,10 @@ body {
     overflow: hidden;
 }
 
+.navbar {
+    padding: 10px;
+}
+
 .app-main--screen {
     height: calc(100% - 56px);
     display: flex;
