@@ -181,7 +181,7 @@ class App extends React.Component {
             const shiftFrom = hours < 7;
             const shiftTo = (hours > 20) || (hours > 20 && minutes > 0);
 
-            if ((e.target.name === 'dateFrom' && shiftFrom) || (e.target.name === 'dateFrom' && shiftTo) || e.target.name === 'dateTo' && shiftTo) {
+            if ((e.target.name === 'dateFrom' && shiftFrom) || (e.target.name === 'dateFrom' && shiftTo) || (e.target.name === 'dateTo' && shiftTo)) {
                 return;
             }
 
