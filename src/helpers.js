@@ -94,6 +94,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
         if (currentTime >= workHoursFrom && currentTime <= workHoursTo) {
+            // TODO: opravit odečítání času, teď se pauza odečte pokud je rozmezí od něco do 11:00
             if (currentTime === 11) {
                 isAtEleven = true;
             }
@@ -135,20 +136,32 @@ export function getCorrectDateAfterDrop(originalDateFrom, originalDateTo, dateFr
     let hoursDiff = moment.duration(originalDateTo.diff(originalDateFrom)).asHours();
     let sign = Math.sign(hoursDiff);
 
-    if (originalDateFrom.hours() >= 20) {
-        hoursDiff -= NIGHT_TIME;
-    }
+    
 
-    let finalDateTo = dateFrom.add((hoursDiff * sign), 'hours');
-    let sameDay = dateFrom.isSame(finalDateTo, 'day');
+    hoursDiff = (hoursDiff > NIGHT_TIME) ? (hoursDiff - NIGHT_TIME) : hoursDiff;
 
+
+
+    let finalDateTo = moment(dateFrom).add((hoursDiff * sign), 'hours');
+    let sameDay = moment(dateFrom).isSame(finalDateTo, 'day');
+    console.log(sameDay, dateFrom.toDate(), finalDateTo.toDate());
     // console.log((sameDay && dateFrom.hours() >= 20), finalDateTo.hours() >= 20);
     // pokud se událost přesunula během jednoho dne, vrátím dateTo (ve správném formátu, který se uloží)
     if (sameDay && finalDateTo.hours() <= 20) {
         return finalDateTo.format();
     } else {
-        const newDateFrom = dateFrom.add(1, 'days').hours(7);
-        const finalDateTo = originalDateFrom.add(1, 'days').hours(7).add(hoursDiff > 11 ? hoursDiff - 11 : hoursDiff, 'hours');
+        // odečíst čas před osmou
+        const diffUntilShiftEnds = moment.duration(moment(dateFrom).hours(20).diff(dateFrom)).asHours();
+        hoursDiff -= diffUntilShiftEnds;
+
+        const newDateFrom = moment(dateFrom).add(1, 'days').hours(7);
+        const finalDateTo = moment(dateFrom).add(1, 'days').hours(7).add(hoursDiff, 'hours');
+
+        console.log('diff', (hoursDiff > NIGHT_TIME) ? (hoursDiff - NIGHT_TIME) : hoursDiff);
+        console.log('diffUntilShiftEnds', diffUntilShiftEnds);
+        console.log(newDateFrom.toDate(), finalDateTo.toDate(), 'dateFrom', dateFrom.toDate());
+        console.log('-'.repeat(20));
+
         return getCorrectDateAfterDrop(newDateFrom, finalDateTo, newDateFrom);
     }
 }
