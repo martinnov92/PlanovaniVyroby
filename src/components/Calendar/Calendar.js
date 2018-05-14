@@ -7,6 +7,8 @@ import {
     createClassName,
     filterDataByDate,
     DATA_DATE_FORMAT,
+    getNetMachineTime,
+    formatMinutesToTime,
     getCorrectDateAfterDrop,
 } from '../../helpers';
 import { CalendarCell, CalendarEvent } from './';
@@ -50,6 +52,7 @@ export class Calendar extends React.Component {
                 width: 0,
                 height: 0,
             },
+            selectingCellTime: 0,
         };
 
         this.calendarScrolled = false;
@@ -246,12 +249,14 @@ export class Calendar extends React.Component {
             return;
         }
 
-        let startCell = this.state.selectingCellStart.getBoundingClientRect();
-        let endCell = e.target.getBoundingClientRect();
+        const selectingCellTime = getNetMachineTime(moment(this.state.selectingCellStart.dataset.date, DATA_DATE_FORMAT), moment(e.target.dataset.date, DATA_DATE_FORMAT));
 
-        let top = startCell.top;
-        let left = startCell.left;
-        let height = startCell.height;
+        const startCell = this.state.selectingCellStart.getBoundingClientRect();
+        const endCell = e.target.getBoundingClientRect();
+
+        const top = startCell.top;
+        const left = startCell.left;
+        const height = startCell.height;
         let width = endCell.x - startCell.x;
 
         if (endCell.x === startCell.x) {
@@ -267,6 +272,7 @@ export class Calendar extends React.Component {
                 width: width,
                 height: height,
             },
+            selectingCellTime: selectingCellTime,
         });
     }
 
@@ -295,6 +301,7 @@ export class Calendar extends React.Component {
         const {
             lockScroll,
             selectingCells,
+            selectingCellTime,
             selectingCellStyle,
         } = this.state;
 
@@ -364,10 +371,19 @@ export class Calendar extends React.Component {
                         selectingCells
                         ? <div
                             className={createClassName([
-                                'calendar--event-selecting', 'bg-secondary'
+                                'calendar--event',
+                                'calendar--event-selecting', 'bg-secondary',
                             ])}
                             style={selectingCellStyle}
-                        />
+                        >
+                            {
+                                selectingCellTime
+                                ? <p className="text-light">
+                                    <strong>{formatMinutesToTime(selectingCellTime)}</strong>
+                                </p>
+                                : null
+                            }
+                        </div>
                         : null
                     }
                 </div>
