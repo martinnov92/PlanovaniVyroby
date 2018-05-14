@@ -80,6 +80,18 @@ body {
     height: 500px;
 }
 
+.table--machines td:last-child .btn {
+    width: calc(50% - 5px);
+}
+
+.popup--settings .react-tabs {
+
+}
+
+.popup--settings .react-tabs .react-tabs__tab-panel {
+
+}
+
 .react-tabs__tab-list {
     border-bottom: 1px solid #ced4da;
 }
@@ -99,6 +111,11 @@ body {
 /* helpers */
 .table {
     margin-bottom: 0;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
 }
 
 p,

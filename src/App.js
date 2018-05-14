@@ -144,9 +144,39 @@ class App extends React.Component {
         });
     }
 
+    handleMachineDelete = (e, machine) => {
+        if (!window.confirm(`Opravdu si přejete smazat "${machine.name}"?`)) {
+            return;
+        }
+
+        const machinesCopy = [...this.state.machines];
+        const index = machinesCopy.findIndex((m) => m.id === machine.id);
+
+        machinesCopy.splice(index, 1);
+
+        this.setState({
+            machines: machinesCopy,
+        }, this.saveToFile);
+    }
+
+    handleMachineSave = (e, machine) => {
+        const machinesCopy = [...this.state.machines];
+        const findIndex = machinesCopy.findIndex((m) => m.id === machine.id);
+
+        if (findIndex > -1) {
+            machinesCopy[findIndex] = machine;
+        } else {
+            machinesCopy.push(machine);
+        }
+
+        this.setState({
+            machines: machinesCopy,
+        }, this.saveToFile);
+    }
+
     handleEventDrop = (order) => {
         const ordersCopy = [...this.state.orders];
-        const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+        const index = ordersCopy.findIndex((o) => o.id === order.id);
         const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
 
         if (isOverlaping) {
@@ -154,7 +184,7 @@ class App extends React.Component {
         }
 
         order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
-        ordersCopy.splice(findIndex, 1, order);
+        ordersCopy.splice(index, 1, order);
 
         this.setState({
             open: false,
@@ -344,10 +374,7 @@ class App extends React.Component {
                         ? null
                         : <React.Fragment>
                             <Calendar
-                                events={orders}
-                                machines={machines}
                                 ref={this.calendar}
-                                orderList={orderList}
                                 currentWeek={currentWeek}
                                 startOfTheWeek={startOfTheWeek}
                                 onDragStart={this.handleDragStart}
@@ -356,10 +383,15 @@ class App extends React.Component {
                                 onEventLeave={this.handleEventLeave}
                                 onDoubleClick={this.handleEventEdit}
                                 onMouseUp={this.handleSelectingMouseUp}
-        
+
                                 // context menu
                                 onEditEvent={this.handleEventEdit}
                                 onDeleteEvent={this.handleOrderDelete}
+
+                                // data
+                                events={orders}
+                                machines={machines}
+                                orderList={orderList}
                             />
         
                             <OrderTable
@@ -394,6 +426,7 @@ class App extends React.Component {
                     !this.state.settings
                     ? null
                     : <SettingsPopup
+                        machines={machines}
                         handleClose={this.closeSettings}
                         filterFinishedOrders={filterFinishedOrders}
                         handleFilterFinishedOrders={(e) => {
@@ -401,6 +434,10 @@ class App extends React.Component {
                                 filterFinishedOrders: !e.target.checked
                             }, () => this.saveToFile());
                         }}
+
+                        // machines
+                        onMachineSave={this.handleMachineSave}
+                        onMachineDelete={this.handleMachineDelete}
                     />
                 }
             </div>
