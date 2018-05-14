@@ -75,6 +75,27 @@ body {
     opacity: .5;
 }
 
+.popup--settings {
+    width: 750px;
+    height: 500px;
+}
+
+.react-tabs__tab-list {
+    border-bottom: 1px solid #ced4da;
+}
+
+.react-tabs__tab {
+    margin-left: 5px;
+    border-radius: 3px 3px 0 0;
+    border: 1px solid #ced4da;
+    border-bottom: 0;
+}
+
+.settings--tabs-selected {
+    font-weight: bold;
+    background-color: white;
+}
+
 /* helpers */
 .table {
     margin-bottom: 0;
