@@ -91,6 +91,11 @@ export class SettingsPopup extends React.Component {
                         >
                             Stroje
                         </Tab>
+                        <Tab
+                            selectedClassName="settings--tabs-selected"
+                        >
+                            Zakázky
+                        </Tab>
                     </TabList>
 
                     <TabPanel>

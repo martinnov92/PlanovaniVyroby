@@ -245,6 +245,10 @@ class App extends React.Component {
             dateFrom: moment(this.state.order.dateFrom).format(),
         };
 
+        if (!order.orderId || !order.machine || !order.productName) {
+            return alert('Při zakládání zakázky musí být vyplněna zakázka, výrobek a stroj.');
+        } 
+
         order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
 
         if (!this.state.order.id) {
