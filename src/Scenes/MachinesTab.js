@@ -6,7 +6,6 @@ export class MachinesTab extends React.Component {
         super(props);
 
         this.state = {
-            tabIndex: 0,
             tempMachine: {
                 id: null,
             },
@@ -57,7 +56,6 @@ export class MachinesTab extends React.Component {
 
     render() {
         const {
-            tabIndex,
             tempMachine,
         } = this.state;
 

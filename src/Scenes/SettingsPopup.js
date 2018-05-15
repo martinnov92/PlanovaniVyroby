@@ -19,11 +19,9 @@ export class SettingsPopup extends React.Component {
     render() {
         const {
             tabIndex,
-            tempMachine,
         } = this.state;
 
         const {
-            machines,
             filterFinishedOrders,
             handleFilterFinishedOrders,
         } = this.props;
@@ -84,6 +82,10 @@ export class SettingsPopup extends React.Component {
                             onMachineSave={this.props.onMachineSave}
                             onMachineDelete={this.props.onMachineDelete}
                         />
+                    </TabPanel>
+
+                    <TabPanel>
+                        sda
                     </TabPanel>
                 </Tabs>
             </Popup>

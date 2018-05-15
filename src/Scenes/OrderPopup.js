@@ -35,6 +35,7 @@ export class OrderPopup extends React.Component {
 
         return (
             <Popup
+                center={false}
                 className="popup-order"
                 title="Přidání zakázky"
                 footerButtons={() => {

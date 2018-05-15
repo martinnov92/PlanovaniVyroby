@@ -8,6 +8,7 @@ import './popup.css';
 
 export class Popup extends React.Component {
     static defaultProps = {
+        center: true,
         footerButtons: () => {},
     };
 
@@ -29,6 +30,10 @@ export class Popup extends React.Component {
     }
 
     componentDidMount() {
+        if (this.props.center) {
+            this.centerPopup();
+        }
+
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mousemove', this.handleMouseMove);
         this.header.current.addEventListener('mousedown', this.handleMouseDown);
@@ -38,6 +43,18 @@ export class Popup extends React.Component {
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('mousemove', this.handleMouseMove);
         this.header.current.removeEventListener('mousedown', this.handleMouseDown);
+    }
+
+    centerPopup = () => {
+        const clientX = (window.innerWidth / 2) - ((this.popup.current.offsetWidth / 2) + this.popup.current.offsetLeft);
+        const clientY = (window.innerHeight / 2) - ((this.popup.current.offsetHeight / 2) + this.popup.current.offsetTop);
+
+        this.setState({
+            clientX,
+            clientY,
+            lastX: clientX,
+            lastY: clientY,
+        });
     }
 
     handleMouseDown = (e) => {
@@ -55,12 +72,14 @@ export class Popup extends React.Component {
 
         e.preventDefault();
 
-        const offsetTop = this.popup.current.offsetTop;
-        const offsetLeft = this.popup.current.offsetLeft;
+        const { offsetTop } = this.popup.current;
+        const { offsetLeft } = this.popup.current;
+        const clientX = this.state.lastX + e.clientX - offsetLeft - this.state.offsetLeft;
+        const clientY = this.state.lastY + e.clientY - offsetTop - this.state.offsetTop;
 
         this.setState({
-            clientX: this.state.lastX + e.clientX - offsetLeft - this.state.offsetLeft,
-            clientY: this.state.lastY + e.clientY - offsetTop - this.state.offsetTop,
+            clientX: clientX,
+            clientY: clientY,
         });
     }
 
@@ -69,15 +88,17 @@ export class Popup extends React.Component {
             return;
         }
 
-        const offsetTop = this.popup.current.offsetTop;
-        const offsetLeft = this.popup.current.offsetLeft;
+        const { offsetTop } = this.popup.current;
+        const { offsetLeft } = this.popup.current;
+        const clientX = this.state.lastX + e.clientX - offsetLeft - this.state.offsetLeft;
+        const clientY = this.state.lastY + e.clientY - offsetTop - this.state.offsetTop;
 
         this.setState({
             offsetTop: 0,
             offsetLeft: 0,
+            lastX: clientX,
+            lastY: clientY,
             mouseDown: false,
-            lastX: this.state.lastX + e.clientX - offsetLeft - this.state.offsetLeft,
-            lastY: this.state.lastY + e.clientY - offsetTop - this.state.offsetTop,
         });
     }
 
@@ -87,10 +108,9 @@ export class Popup extends React.Component {
             clientY,
         } = this.state;
 
-        const style = {};
-        if (clientX !== 0 || clientY !== 0) {
-            style.transform = `translate(${clientX}px, ${clientY}px)`;
-        }
+        const style = {
+            transform: `translate(${clientX}px, ${clientY}px)`,
+        };
 
         return ReactDOM.createPortal(
             <div
