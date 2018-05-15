@@ -32,6 +32,7 @@ class App extends React.Component {
             open: false,
             machines: [],
             orderList: [],
+            loading: false,
             settings: false,
             ctrlDown: false,
             hoverOrder: null,
@@ -44,24 +45,37 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({
+            loading: true,
+        });
+
         fs.readFile(path, 'utf-8', (err, data) => {
             if (err) {
                 // pokud soubor neexistuje, tak ho vytvořit
                 fs.writeFile(path, '', (err) => {
                     // pokud nastala chyba, zobrazí se error
                     if (err) alert(err);
+
+                    this.setState({
+                        loading: false,
+                    });
                 });
             } else {
                 // načíst obsah souboru do state
                 try {
                     const d = JSON.parse(data);
                     this.setState({
+                        loading: false,
                         orders: d.orders,
                         machines: d.machines,
                         orderList: d.orderList,
                         filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
-                    }, () => console.log(this.state));
-                } catch (err) {}
+                    });
+                } catch (err) {
+                    this.setState({
+                        loading: false,
+                    });
+                }
             }
         });
 
@@ -350,6 +364,7 @@ class App extends React.Component {
         const {
             order,
             orders,
+            loading,
             machines,
             orderList,
             currentWeek,
@@ -374,7 +389,9 @@ class App extends React.Component {
                     className="pt-3 pr-3 pb-3 pl-3 app-main--screen"
                 >
                     {
-                        machines.length === 0 && orders.length === 0
+                        loading
+                        ? null
+                        : (machines.length === 0 && orders.length === 0)
                         ? <div className="jumbotron">
                             <h4>
                                 Zatím nejsou vytvořeny žádné záznamy.
