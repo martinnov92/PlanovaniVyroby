@@ -1,7 +1,7 @@
 # TODO:
 
     X možnost nastavení času po půl hodině
-    - opravit časový posun při změně události
+    X opravit časový posun při změně události
     X kontrola vykreslení objednávek, které se táhnou přes více týdnů
     X možnost zvětšení eventy
     X možnost přidání strojů a jejich barev
