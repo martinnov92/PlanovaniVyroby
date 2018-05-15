@@ -457,18 +457,21 @@ class App extends React.Component {
                     !this.state.settings
                     ? null
                     : <SettingsPopup
-                        machines={machines}
                         handleClose={this.closeSettings}
+
+                        // machines
+                        machines={machines}
+                        onMachineSave={this.handleMachineSave}
+                        onMachineDelete={this.handleMachineDelete}
+
+                        // orders
+                        orders={orderList}
                         filterFinishedOrders={filterFinishedOrders}
                         handleFilterFinishedOrders={(e) => {
                             this.setState({
                                 filterFinishedOrders: !e.target.checked
                             }, () => this.saveToFile());
                         }}
-
-                        // machines
-                        onMachineSave={this.handleMachineSave}
-                        onMachineDelete={this.handleMachineDelete}
                     />
                 }
             </div>

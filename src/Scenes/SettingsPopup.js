@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-    MachinesTab
+    OrdersTab,
+    MachinesTab,
 } from './';
 import { Popup } from '../components/Popup';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -85,7 +86,11 @@ export class SettingsPopup extends React.Component {
                     </TabPanel>
 
                     <TabPanel>
-                        sda
+                        <OrdersTab
+                            orders={this.props.orders}
+                            onOrderSave={this.props.onOrderSave}
+                            onOrderDelete={this.props.onOrderDelete}
+                        />
                     </TabPanel>
                 </Tabs>
             </Popup>
