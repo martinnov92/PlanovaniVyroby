@@ -237,15 +237,6 @@ class App extends React.Component {
         });
     }
 
-    handleNewOrderChange = (e) => {
-        this.setState({
-            newOrderObject: {
-                ...this.state.newOrderObject,
-                [e.target.name]: e.target.value,
-            },
-        });
-    }
-
     handleSave = () => {
         const {
             newOrderObject,
@@ -446,7 +437,6 @@ class App extends React.Component {
                             handleClose={this.handleClose}
                             productsNameList={productsNameList}
                             handleInputChange={this.handleInputChange}
-                            handleNewOrderChange={this.handleNewOrderChange}
                         />
                     }
 
@@ -597,6 +587,7 @@ class App extends React.Component {
             },
             newOrderObject: {
                 id: '',
+                name: '',
                 done: false,
                 color: '#ffffff',
             },

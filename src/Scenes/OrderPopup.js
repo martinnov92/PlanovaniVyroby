@@ -5,8 +5,6 @@ import { formatMinutesToTime } from '../helpers';
 export class OrderPopup extends React.Component {
     static defaultProps = {
         order: {},
-        // newOrder -> vytvořená zakázka (pouze ID a barva a jestli je done)
-        newOrder: {},
         orderList: [],
         productNameList: [],
         footerButtons: () => {},
@@ -14,11 +12,6 @@ export class OrderPopup extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            orderIs: null,
-        };
-
         this.product = React.createRef();
     }
 
@@ -30,7 +23,6 @@ export class OrderPopup extends React.Component {
         const {
             order,
             machines,
-            newOrder,
         } = this.props;
 
         return (
@@ -54,21 +46,30 @@ export class OrderPopup extends React.Component {
                     <div className="col">
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
-                                <span className="input-group-text">
-                                    {
-                                        this.state.orderIs !== null
-                                        ? <strong
-                                            onClick={() => this.setState({ orderIs: null })}
-                                        >
-                                            Zpět
-                                        </strong>
-                                        : <strong>
-                                            Zakázka
-                                        </strong>
-                                    }
-                                </span>
+                                <span className="input-group-text">Zakázka</span>
                             </div>
-                            {this.renderOrderInput(order, newOrder)}
+                            <select
+                                name="orderId"
+                                value={order.orderId}
+                                className="custom-select"
+                                onChange={this.props.handleInputChange}
+                            >
+                                <option>
+                                    Vybrat zakázku
+                                </option>
+                                {
+                                    this.props.orderList.filter((o) => !o.done).map((order) => {
+                                        return (
+                                            <option
+                                                key={order.id}
+                                                value={order.id}
+                                            >
+                                                {order.name}
+                                            </option>
+                                        );
+                                    })
+                                }
+                            </select>
                         </div>
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
@@ -272,94 +273,5 @@ export class OrderPopup extends React.Component {
                 </div>
             </Popup>
         );
-    }
-
-    renderOrderInput = (order, newOrder) => {
-        if (this.state.orderIs === 'new' || newOrder.id !== '') {
-            return (
-                <React.Fragment>
-                    <input
-                        name="id"
-                        type="text"
-                        value={newOrder.id}
-                        placeholder="Zakázka"
-                        className="form-control"
-                        disabled={newOrder.id !== ''}
-                        onChange={this.props.handleNewOrderChange}
-                    />
-                    <div className="input-group-append">
-                        <input
-                            type="color"
-                            style={{
-                                height: '100%',
-                                backgroundColor: '#e9ecef',
-                                borderRadius: '0 5px 5px 0',
-                            }}
-                            name="color"
-                            value={newOrder.color}
-                            disabled={newOrder.id !== ''}
-                            onChange={this.props.handleNewOrderChange}
-                        />
-                    </div>
-                </React.Fragment>
-            );
-        } else if (this.state.orderIs === 'exists') {
-            return (
-                <select
-                    name="orderId"
-                    value={order.orderId}
-                    className="custom-select"
-                    onChange={this.props.handleInputChange}
-                >
-                    <option>
-                        Vybrat zakázku
-                    </option>
-                    {
-                        this.props.orderList.filter((o) => !o.done).map((order) => {
-                            return (
-                                <option
-                                    key={order.id}
-                                    value={order.id}
-                                >
-                                    {order.id}
-                                </option>
-                            );
-                        })
-                    }
-                </select>
-            );
-        } else {
-            return (
-                <div
-                    role="group"
-                    style={{
-                        width: 'calc(100% - 100px)'
-                    }}
-                    className="btn-group"
-                >
-                    <button
-                        title="Nová zakázka"
-                        style={{
-                            width: '100%'
-                        }}
-                        className="btn btn-secondary"
-                        onClick={(e) => this.setState({ orderIs: 'new' })}
-                    >
-                        Nová
-                    </button>
-
-                    <button
-                        title="Vybrat existující zakázku"
-                        style={{
-                            width: '100%'
-                        }}
-                        className="btn btn-secondary"
-                        onClick={(e) => this.setState({ orderIs: 'exists' })}
-                    >
-                        Vybrat
-                    </button>
-                </div>
-            );
-        }
     }
 }

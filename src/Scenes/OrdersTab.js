@@ -12,6 +12,32 @@ export class OrdersTab extends React.Component {
         };
     }
 
+    handleOrderAdd = (e) => {
+        this.setState({
+            tempOrder: {
+                name: '',
+                new: true,
+                done: false,
+                id: Date.now(),
+                color: '#ffffff',
+            },
+        });
+    }
+
+    handleOrderInputChange = (e) => {
+        const orderCopy = {...this.state.tempOrder};
+        console.log(e.target.type, e.target.checked);
+        if (e.target.type === 'checkbox') {
+            orderCopy[e.target.name] = e.target.checked;
+        } else {
+            orderCopy[e.target.name] = e.target.value;
+        }
+        console.log(orderCopy);
+        this.setState({
+            tempOrder: orderCopy,
+        });
+    }
+
     handleOrderSave = (e) => {
         const orderCopy = { ...this.state.tempOrder };
 
@@ -25,16 +51,9 @@ export class OrdersTab extends React.Component {
             },
         });
 
+        delete orderCopy.new;
+        orderCopy.id = orderCopy.name.toLowerCase();
         this.props.onOrderSave(e, orderCopy);
-    }
-
-    handleOrderInputChange = (e) => {
-        const orderCopy = {...this.state.tempOrder};
-        orderCopy[e.target.name] = e.target.value;
-
-        this.setState({
-            tempOrder: orderCopy,
-        });
     }
 
     render() {
@@ -45,9 +64,20 @@ export class OrdersTab extends React.Component {
         const {
             orders,
         } = this.props;
-        console.log(tempOrder);
+
         return (
             <React.Fragment>
+                <div
+                    className="clearfix"
+                >
+                    <button
+                        onClick={this.handleOrderAdd}
+                        className="btn btn-success pull-right"
+                    >
+                        Přidat zakázku
+                    </button>
+                </div>
+
                 <table
                     className="table table-bordered mt-3 table--machines"
                 >
@@ -97,7 +127,14 @@ export class OrdersTab extends React.Component {
                     }
                 </td>
                 <td>
-                    { order.done ? 'Ano' : 'Ne' }
+                    <input
+                        name="done"
+                        type="checkbox"
+                        className="form-control"
+                        disabled={tempOrder.id !== order.id}
+                        onChange={this.handleOrderInputChange}
+                        checked={tempOrder.id !== order.id ? order.done : tempOrder.done}
+                    />
                 </td>
                 <td style={{ padding: 0, position: 'relative' }}>
                     {
@@ -114,7 +151,7 @@ export class OrdersTab extends React.Component {
                                 width: '100%',
                                 height: '100%',
                                 position: 'absolute',
-                                backgroundColor: order.color,
+                                backgroundColor: tempOrder.color,
                             }}
                             onChange={this.handleOrderInputChange}
                         />
