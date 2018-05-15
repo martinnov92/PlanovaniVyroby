@@ -1,5 +1,6 @@
 import React from 'react';
 import { Popup } from '../components/Popup';
+import { Autocomplete } from '../components/Autocomplete';
 import { formatMinutesToTime } from '../helpers';
 
 export class OrderPopup extends React.Component {
@@ -16,13 +17,14 @@ export class OrderPopup extends React.Component {
     }
 
     componentDidMount() {
-        this.product.current.focus();
+        // this.product.current.focus();
     }
 
     render() {
         const {
             order,
             machines,
+            productsNameList,
         } = this.props;
 
         return (
@@ -75,14 +77,21 @@ export class OrderPopup extends React.Component {
                             <div className="input-group-prepend">
                                 <span className="input-group-text">Výrobek</span>
                             </div>
-                            <input
+                            <Autocomplete
+                                name="productName"
+                                data={productsNameList}
+                                // ref={this.product}
+                                value={order.productName}
+                                onChange={this.props.handleInputChange}
+                            />
+                            {/* <input
                                 type="text"
                                 name="productName"
                                 ref={this.product}
                                 className="form-control"
                                 value={order.productName}
                                 onChange={this.props.handleInputChange}
-                            />
+                            /> */}
                         </div>
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">

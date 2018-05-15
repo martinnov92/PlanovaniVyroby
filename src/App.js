@@ -228,7 +228,7 @@ class App extends React.Component {
 
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         }
-
+        console.log(order);
         this.setState({
             order: order
         });
