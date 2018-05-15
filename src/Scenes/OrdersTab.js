@@ -22,8 +22,6 @@ export class OrdersTab extends React.Component {
         this.setState({
             tempOrder: {
                 id: null,
-                name: '',
-                new: false,
             },
         });
 
@@ -47,7 +45,7 @@ export class OrdersTab extends React.Component {
         const {
             orders,
         } = this.props;
-
+        console.log(tempOrder);
         return (
             <React.Fragment>
                 <table
@@ -56,13 +54,9 @@ export class OrdersTab extends React.Component {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th
-                                style={{
-                                    width: '65%'
-                                }}
-                            >
-                                Zakázka
-                            </th>
+                            <th style={{ width: '45%' }}>Zakázka</th>
+                            <th style={{ width: '100px' }}>Dokončená</th>
+                            <th style={{ width: '50px' }}>Barva</th>
                             <th>Akce</th>
                         </tr>
                     </thead>
@@ -94,12 +88,46 @@ export class OrdersTab extends React.Component {
                         tempOrder.id === order.id
                         ? <input
                             type="text"
-                            name="id"
+                            name="name"
+                            value={tempOrder.name}
                             className="form-control"
-                            value={tempOrder.id}
-                            onChange={(e) => this.handleOrderInputChange(e, order)}
+                            onChange={this.handleOrderInputChange}
                         />
                         : order.id
+                    }
+                </td>
+                <td>
+                    { order.done ? 'Ano' : 'Ne' }
+                </td>
+                <td style={{ padding: 0, position: 'relative' }}>
+                    {
+                        tempOrder.id === order.id
+                        ? <input
+                            type="color"
+                            name="color"
+                            value={tempOrder.color}
+                            className="form-control"
+                            style={{
+                                top: 0,
+                                left: 0,
+                                padding: 0,
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute',
+                                backgroundColor: order.color,
+                            }}
+                            onChange={this.handleOrderInputChange}
+                        />
+                        : <div
+                            style={{
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute',
+                                backgroundColor: order.color,
+                            }}
+                        />
                     }
                 </td>
                 <td>

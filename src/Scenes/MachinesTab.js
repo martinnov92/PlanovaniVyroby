@@ -123,7 +123,7 @@ export class MachinesTab extends React.Component {
                             name="name"
                             className="form-control"
                             value={tempMachine.name}
-                            onChange={(e) => this.handleMachineInputChange(e, machine)}
+                            onChange={this.handleMachineInputChange}
                         />
                         : machine.name
                     }
