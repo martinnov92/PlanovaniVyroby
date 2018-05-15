@@ -35,10 +35,10 @@
 }
 
 .calendar {
+    z-index: 1;
+    border-bottom: 0;
     overflow-x: scroll;
     position: relative;
-    border-bottom: 0;
-    z-index: 1;
 }
 
 .calendar table {

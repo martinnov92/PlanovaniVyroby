@@ -388,7 +388,7 @@ export class Calendar extends React.Component {
                             style={selectingCellStyle}
                         >
                             {
-                                selectingCellTime
+                                selectingCellStyle.width > 0 && selectingCellTime
                                 ? <p className="text-light">
                                     <strong>{formatMinutesToTime(selectingCellTime)}</strong>
                                 </p>

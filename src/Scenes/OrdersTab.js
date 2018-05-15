@@ -26,13 +26,13 @@ export class OrdersTab extends React.Component {
 
     handleOrderInputChange = (e) => {
         const orderCopy = {...this.state.tempOrder};
-        console.log(e.target.type, e.target.checked);
+
         if (e.target.type === 'checkbox') {
             orderCopy[e.target.name] = e.target.checked;
         } else {
             orderCopy[e.target.name] = e.target.value;
         }
-        console.log(orderCopy);
+
         this.setState({
             tempOrder: orderCopy,
         });

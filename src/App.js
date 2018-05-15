@@ -158,33 +158,33 @@ class App extends React.Component {
         });
     }
 
-    handleMachineDelete = (e, machine) => {
-        if (!window.confirm(`Opravdu si přejete smazat "${machine.name}"?`)) {
+    handleItemDelete = (e, item, which) => {
+        if (!window.confirm(`Opravdu si přejete smazat "${item.name}"?`)) {
             return;
         }
 
-        const machinesCopy = [...this.state.machines];
-        const index = machinesCopy.findIndex((m) => m.id === machine.id);
+        const itemsCopy = [...this.state[which]];
+        const index = itemsCopy.findIndex((m) => m.id === item.id);
 
-        machinesCopy.splice(index, 1);
+        itemsCopy.splice(index, 1);
 
         this.setState({
-            machines: machinesCopy,
+            [which]: itemsCopy,
         }, this.saveToFile);
     }
 
-    handleMachineSave = (e, machine) => {
-        const machinesCopy = [...this.state.machines];
-        const findIndex = machinesCopy.findIndex((m) => m.id === machine.id);
+    handleItemSave = (e, item, which) => {
+        const itemsCopy = [...this.state[which]];
+        const findIndex = itemsCopy.findIndex((m) => m.id === item.id);
 
         if (findIndex > -1) {
-            machinesCopy[findIndex] = machine;
+            itemsCopy[findIndex] = item;
         } else {
-            machinesCopy.push(machine);
+            itemsCopy.push(item);
         }
 
         this.setState({
-            machines: machinesCopy,
+            [which]: itemsCopy,
         }, this.saveToFile);
     }
 
@@ -451,11 +451,15 @@ class App extends React.Component {
 
                         // machines
                         machines={machines}
-                        onMachineSave={this.handleMachineSave}
-                        onMachineDelete={this.handleMachineDelete}
+                        onMachineSave={(e, item) => this.handleItemSave(e, item, 'machines')}
+                        onMachineDelete={(e, item) => this.handleItemDelete(e, item, 'machines')}
 
                         // orders
                         orders={orderList}
+                        onOrderSave={(e, item) => this.handleItemSave(e, item, 'orderList')}
+                        onOrderDelete={(e, item) => this.handleItemDelete(e, item, 'orderList')}
+
+                        // general
                         filterFinishedOrders={filterFinishedOrders}
                         handleFilterFinishedOrders={(e) => {
                             this.setState({
