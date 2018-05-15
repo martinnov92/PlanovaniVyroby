@@ -239,6 +239,12 @@ export class Calendar extends React.Component {
     }
 
     handleEventMouseDown = (e) => {
+        if (e.nativeEvent.button === 1 || e.nativeEvent.button === 2) {
+            return;
+        }
+
+        e.preventDefault();
+
         this.setState({
             selectingCells: true,
             selectingCellStart: e.target,
@@ -278,6 +284,10 @@ export class Calendar extends React.Component {
     }
 
     handleMouseUp = (e) => {
+        if (!this.state.selectingCells) {
+            return;
+        }
+
         if (e.target.dataset.date && e.target.dataset.machine) {
             const machineId = this.state.selectingCellStart.dataset.machine;
             const dateFrom = moment(this.state.selectingCellStart.dataset.date, DATA_DATE_FORMAT).format();
