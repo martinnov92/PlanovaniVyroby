@@ -72,6 +72,7 @@ export class OrderTable extends React.Component {
 
             for (let i = 0; i < keys.length; i++) {
                 const product = order[keys[i]];
+                const o = orderList.find((_o) => _o.id === key);
 
                 row.push(
                     <ContextMenu
@@ -95,7 +96,7 @@ export class OrderTable extends React.Component {
                                     backgroundColor: product.color
                                 }}
                             >
-                                {key}
+                                {o.name}
                             </span>
                         </td>
                         <td style={createStyleObject(thWidth[1])}>{keys[i]}</td>

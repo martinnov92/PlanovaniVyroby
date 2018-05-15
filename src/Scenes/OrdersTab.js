@@ -127,7 +127,7 @@ export class OrdersTab extends React.Component {
                             className="form-control"
                             onChange={this.handleOrderInputChange}
                         />
-                        : order.id
+                        : order.name
                     }
                 </td>
                 <td>
