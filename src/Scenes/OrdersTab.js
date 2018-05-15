@@ -51,8 +51,11 @@ export class OrdersTab extends React.Component {
             },
         });
 
-        delete orderCopy.new;
-        orderCopy.id = orderCopy.name.toLowerCase();
+        if (orderCopy.new) {
+            delete orderCopy.new;
+            orderCopy.id = orderCopy.name.toString().toLowerCase();
+        }
+
         this.props.onOrderSave(e, orderCopy);
     }
 
