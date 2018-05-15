@@ -19,7 +19,7 @@ export class OrdersTab extends React.Component {
                 new: true,
                 done: false,
                 id: Date.now(),
-                color: '#ffffff',
+                color: '#e5e5e5',
             },
         });
     }
@@ -122,6 +122,7 @@ export class OrdersTab extends React.Component {
                         ? <input
                             type="text"
                             name="name"
+                            placeholder="Název"
                             value={tempOrder.name}
                             className="form-control"
                             onChange={this.handleOrderInputChange}

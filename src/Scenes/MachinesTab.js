@@ -121,6 +121,7 @@ export class MachinesTab extends React.Component {
                         ? <input
                             type="text"
                             name="name"
+                            placeholder="Název"
                             className="form-control"
                             value={tempMachine.name}
                             onChange={this.handleMachineInputChange}

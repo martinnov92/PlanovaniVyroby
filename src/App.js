@@ -131,12 +131,9 @@ class App extends React.Component {
             dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
         };
 
-        const orderObject = this.state.orderList.find((o) => o.id === order.orderId);
-
         this.setState({
             open: true,
             order: copyOrder,
-            newOrderObject: orderObject,
         });
     }
 
@@ -238,9 +235,6 @@ class App extends React.Component {
     }
 
     handleSave = () => {
-        const {
-            newOrderObject,
-        } = this.state;
         const ordersCopy = [...this.state.orders];
         const orderListCopy = [...this.state.orderList];
 
@@ -275,18 +269,6 @@ class App extends React.Component {
             }
 
             ordersCopy.splice(findIndex, 1, order);
-        }
-
-        if (newOrderObject.id !== '') {
-            // prolinkovat novou zakázku s novou objednávkou
-            order.orderId = newOrderObject.id;
-            const findIndex = orderListCopy.findIndex((o) => o.id === newOrderObject.id);
-
-            if (findIndex > -1) {
-                orderListCopy[findIndex] = newOrderObject;
-            } else {
-                orderListCopy.push(newOrderObject);
-            }
         }
 
         this.setState({
@@ -360,7 +342,6 @@ class App extends React.Component {
             orderList,
             currentWeek,
             startOfTheWeek,
-            newOrderObject,
             filterFinishedOrders,
         } = this.state;
 
@@ -432,7 +413,6 @@ class App extends React.Component {
                             order={order}
                             machines={machines}
                             orderList={orderList}
-                            newOrder={newOrderObject}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             productsNameList={productsNameList}
@@ -588,12 +568,6 @@ class App extends React.Component {
                 dateFrom: dateFrom,
                 workingHours: workingHours,
                 machine: machineId || this.state.machines[0].id,
-            },
-            newOrderObject: {
-                id: '',
-                name: '',
-                done: false,
-                color: '#ffffff',
             },
         }, cb);
     }
