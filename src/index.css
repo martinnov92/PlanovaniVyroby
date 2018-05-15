@@ -102,6 +102,7 @@ body {
     margin-left: 5px;
     border-radius: 3px 3px 0 0;
     border: 1px solid #ced4da;
+    border-top: 0;
     border-bottom: 0;
 }
 
