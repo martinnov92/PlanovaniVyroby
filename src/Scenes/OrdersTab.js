@@ -81,27 +81,31 @@ export class OrdersTab extends React.Component {
                     </button>
                 </div>
 
-                <table
-                    className="table table-bordered mt-3 table--machines"
+                <div
+                    className="settings--overflow"
                 >
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th style={{ width: '45%' }}>Zakázka</th>
-                            <th style={{ width: '100px' }}>Dokončená</th>
-                            <th style={{ width: '50px' }}>Barva</th>
-                            <th>Akce</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            tempOrder.new
-                            ? this.renderOrderTr(tempOrder)
-                            : null
-                        }
-                        { orders.map(this.renderOrderTr) }
-                    </tbody>
-                </table>
+                    <table
+                        className="table table-bordered table--machines"
+                    >
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th style={{ width: '45%' }}>Zakázka</th>
+                                <th style={{ width: '100px' }}>Dokončená</th>
+                                <th style={{ width: '50px' }}>Barva</th>
+                                <th>Akce</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                tempOrder.new
+                                ? this.renderOrderTr(tempOrder)
+                                : null
+                            }
+                            { orders.map(this.renderOrderTr) }
+                        </tbody>
+                    </table>
+                </div>
             </React.Fragment>
         );
     }

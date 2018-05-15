@@ -84,16 +84,18 @@ body {
     width: calc(50% - 5px);
 }
 
-.popup--settings .react-tabs {
-
+.popup--settings section {
+    padding: 0;
 }
 
-.popup--settings .react-tabs .react-tabs__tab-panel {
-
+.popup--settings .react-tabs__tab-panel {
+    padding: 10px;
+    overflow: auto;
 }
 
 .react-tabs__tab-list {
     border-bottom: 1px solid #ced4da;
+    margin-bottom: 0;
 }
 
 .react-tabs__tab {
@@ -106,6 +108,12 @@ body {
 .settings--tabs-selected {
     font-weight: bold;
     background-color: white;
+}
+
+.settings--overflow {
+    height: 345px;
+    overflow: auto;
+    margin-top: 10px;
 }
 
 /* helpers */

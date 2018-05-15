@@ -76,31 +76,35 @@ export class MachinesTab extends React.Component {
                     </button>
                 </div>
 
-                <table
-                    className="table table-bordered mt-3 table--machines"
+                <div
+                    className="settings--overflow"
                 >
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th
-                                style={{
-                                    width: '65%'
-                                }}
-                            >
-                                Stroj
-                            </th>
-                            <th>Akce</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            tempMachine.new
-                            ? this.renderMachineTr(tempMachine)
-                            : null
-                        }
-                        { machines.map(this.renderMachineTr) }
-                    </tbody>
-                </table>
+                    <table
+                        className="table table-bordered table--machines"
+                    >
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th
+                                    style={{
+                                        width: '65%'
+                                    }}
+                                >
+                                    Stroj
+                                </th>
+                                <th>Akce</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                tempMachine.new
+                                ? this.renderMachineTr(tempMachine)
+                                : null
+                            }
+                            { machines.map(this.renderMachineTr) }
+                        </tbody>
+                    </table>
+                </div>
             </React.Fragment>
         );
     }
