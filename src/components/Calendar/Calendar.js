@@ -77,6 +77,7 @@ export class Calendar extends React.Component {
         } = this.state;
 
         const events = !isEqual(this.props.events, prevProps.events);
+        const machines = !isEqual(this.props.machines, prevProps.machines);
         const currentWeek = prevProps.currentWeek !== this.props.currentWeek;
         const orderList = !isEqual(this.props.orderList, prevProps.orderList);
         const dragging = prevState.draggingEvent !== this.state.draggingEvent;
@@ -88,7 +89,7 @@ export class Calendar extends React.Component {
             this.calendarScrolled = false;
         }
 
-        if (currentWeek || events) {
+        if (currentWeek || events || machines) {
             this.renderTableBody();
         }
 
