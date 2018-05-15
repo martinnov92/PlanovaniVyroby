@@ -375,7 +375,17 @@ class App extends React.Component {
                 >
                     {
                         machines.length === 0 && orders.length === 0
-                        ? null
+                        ? <div className="jumbotron">
+                            <h4>
+                                Zatím nejsou vytvořeny žádné záznamy.
+                            </h4>
+
+                            <hr className="mt-3 mb-3" />
+
+                            <p>
+                                Začnětě přidáním stroje v nastavení aplikace.
+                            </p>
+                        </div>
                         : <React.Fragment>
                             <Calendar
                                 ref={this.calendar}
