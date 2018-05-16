@@ -54,11 +54,13 @@ class App extends React.Component {
         } else {
             this.readFile(filePath);
         }
-        console.log(electron);
-        document.addEventListener('keyup', this.handleKeyUp);
-    }
 
+        document.addEventListener('keyup', this.handleKeyUp);
+        electron.ipcRenderer.on('menu', this.handleElectronMenu);
+    }
+    
     componentWillUnmount() {
+        electron.ipcRenderer.removeAllListeners('menu');
         document.removeEventListener('keyup', this.handleKeyUp);
     }
 
@@ -85,6 +87,7 @@ class App extends React.Component {
                 }
 
                 window.localStorage.setItem('filePath', resultPath);
+                this.saveToFile();
                 this.setState({
                     loading: false,
                     fileLoaded: true,
@@ -120,6 +123,11 @@ class App extends React.Component {
 
         return fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
+                this.setState({
+                    loading: false,
+                    fileLoaded: false,
+                });
+
                 return alert(`Při načítání souboru nasatala chyba.\n Cesta k souboru: ${filePath}`);
             } else {
                 // načíst obsah souboru do state
@@ -164,6 +172,20 @@ class App extends React.Component {
 
         // save as
         if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 83) {
+            this.showSaveDialog();
+        }
+    }
+
+    handleElectronMenu = (evt, arg) => {
+        if (arg === 'openFile') {
+            this.showOpenDialog();
+        }
+
+        if (arg === 'saveFile') {
+            this.saveToFile()
+        }
+
+        if (arg === 'saveAsFile') {
             this.showSaveDialog();
         }
     }

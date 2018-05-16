@@ -2,12 +2,11 @@ const url = require('url');
 const path = require('path');
 const electron = require('electron');
 
-const Menu = electron.Menu;
-const globalShortcut = electron.globalShortcut;
-// Module to control application life.
 const app = electron.app;
-// Module to create native browser window.
+const Menu = electron.Menu;
+const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
+const globalShortcut = electron.globalShortcut;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -22,16 +21,28 @@ let template = [
                 label: 'Otevřít',
                 accelerator: 'CmdOrCtrl+O',
                 role: 'open',
+                click: () => {
+                    mainWindow.webContents.send('openFile');
+                    mainWindow.webContents.send('menu', 'openFile');
+                }
             },
             {
                 label: 'Uložit',
                 accelerator: 'CmdOrCtrl+S',
                 role: 'save',
+                click: () => {
+                    mainWindow.webContents.send('saveFile');
+                    mainWindow.webContents.send('menu', 'saveFile');
+                }
             },
             {
                 label: 'Uložit jako',
                 accelerator: 'CmdOrCtrl+Shift+S',
                 role: 'save',
+                click: () => {
+                    mainWindow.webContents.send('saveAsFile');
+                    mainWindow.webContents.send('menu', 'saveAsFile');
+                }
             }
         ]
     }
@@ -85,7 +96,8 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-app.on('ready', function () {
+app.on('ready', () => {
+    // extend menu
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 });
