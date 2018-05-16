@@ -137,7 +137,7 @@ class App extends React.Component {
                 return electron.ipcRenderer.send(
                     'open-error-dialog',
                     'Chyba při čtení',
-                    `Při načítání souboru nasatala chyba.\n Cesta k souboru: ${filePath}`
+                    `Při načítání souboru nasatala chyba.\nCesta k souboru:\n${filePath}`
                 );
             } else {
                 // načíst obsah souboru do state
@@ -500,7 +500,7 @@ class App extends React.Component {
                                 className="btn btn-info"
                                 onClick={this.showSaveDialog}
                             >
-                                Vytvořit soubor
+                                Nový soubor
                             </button>
 
                             <button

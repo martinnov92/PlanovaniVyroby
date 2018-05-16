@@ -105,6 +105,26 @@ function createWindow() {
         createWindow();
     });
 
+    /*
+        mainWindow.webContents.on('unresponsive', () => {
+            const options = {
+                type: 'info',
+                title: 'Aplikace přestala reagovat',
+                message: 'Aplikace přestala reagovat',
+                buttons: ['Obnovit', 'Ukončit']
+            };
+
+            electron.dialog.showMessageBox(options, (index) => {
+                if (index === 0) {
+                    mainWindow.reload();
+                }
+                else {
+                    mainWindow.close();
+                }
+            });
+        });
+    */
+
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
