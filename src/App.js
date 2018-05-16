@@ -20,7 +20,7 @@ const electron = window.require('electron');
 
 // nastavení souboru
 const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json';
-const path = `${electron.remote.app.getPath('documents')}/${fileName}`;
+const path = `${electron.remote.app.getPath('documents')}`;
 
 class App extends React.Component {
     constructor(props) {
@@ -36,6 +36,7 @@ class App extends React.Component {
             settings: false,
             ctrlDown: false,
             hoverOrder: null,
+            fileLoaded: false,
             filterFinishedOrders: true,
             startOfTheWeek: startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
@@ -45,40 +46,15 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({
-            loading: true,
-        });
-
-        fs.readFile(path, 'utf-8', (err, data) => {
-            if (err) {
-                // pokud soubor neexistuje, tak ho vytvořit
-                fs.writeFile(path, '', (err) => {
-                    // pokud nastala chyba, zobrazí se error
-                    if (err) alert(err);
-
-                    this.setState({
-                        loading: false,
-                    });
-                });
-            } else {
-                // načíst obsah souboru do state
-                try {
-                    const d = JSON.parse(data);
-                    this.setState({
-                        loading: false,
-                        orders: d.orders,
-                        machines: d.machines,
-                        orderList: d.orderList,
-                        filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
-                    });
-                } catch (err) {
-                    this.setState({
-                        loading: false,
-                    });
-                }
-            }
-        });
-
+        const filePath = window.localStorage.getItem('filePath');
+        if (!filePath) {
+            this.setState({
+                fileLoaded: false,
+            })
+        } else {
+            this.readFile(filePath);
+        }
+        console.log(electron);
         document.addEventListener('keyup', this.handleKeyUp);
     }
 
@@ -86,9 +62,109 @@ class App extends React.Component {
         document.removeEventListener('keyup', this.handleKeyUp);
     }
 
+    showSaveDialog = () => {
+        return electron.remote.dialog.showSaveDialog({
+            defaultPath: path + '/' + fileName,
+            filters: [{ name: 'JSON', extension: ['json'] }]
+        }, (resultPath) => {
+            if (!resultPath && !this.state.fileLoaded) {
+                this.setState({
+                    loading: false,
+                    fileLoaded: false,
+                });
+
+                return;
+            } else if (!resultPath && this.state.fileLoaded) {
+                return;
+            }
+
+            fs.writeFile(resultPath, '', (err) => {
+                // pokud nastala chyba, zobrazí se error
+                if (err) {
+                    alert(err);
+                }
+
+                window.localStorage.setItem('filePath', resultPath);
+                this.setState({
+                    loading: false,
+                    fileLoaded: true,
+                });
+            });
+        });
+    }
+
+    showOpenDialog = () => {
+        return electron.remote.dialog.showOpenDialog({
+            defaultPath: path + '/' + fileName,
+            filters: [{ name: 'JSON', extension: ['json'] }]
+        }, (resultPath) => {
+            if (!resultPath && !this.state.fileLoaded) {
+                this.setState({
+                    loading: false,
+                    fileLoaded: false,
+                });
+
+                return;
+            } else if (!resultPath && this.state.fileLoaded) {
+                return;
+            }
+
+            this.readFile(resultPath[0]);
+        });
+    }
+
+    readFile = (filePath) => {
+        this.setState({
+            loading: true,
+        });
+
+        return fs.readFile(filePath, 'utf-8', (err, data) => {
+            if (err) {
+                return alert(`Při načítání souboru nasatala chyba.\n Cesta k souboru: ${filePath}`);
+            } else {
+                // načíst obsah souboru do state
+                try {
+                    const d = JSON.parse(data);
+                    this.setState({
+                        loading: false,
+                        orders: d.orders,
+                        fileLoaded: true,
+                        machines: d.machines,
+                        orderList: d.orderList,
+                        filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
+                    });
+
+                    window.localStorage.setItem('filePath', filePath);
+                } catch (err) {
+                    this.setState({
+                        loading: false,
+                        fileLoaded: false,
+                    });
+
+                    return alert('Nečitelný soubor.');
+                }
+            }
+        });
+    }
+
     handleKeyUp = (e) => {
-        if ((e.ctrlKey || e.key === 'Meta') && e.keyCode === 78) {
+        if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 78) {
             this.handleAddNewEvent();
+        }
+
+        // open
+        if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 79) {
+            this.showOpenDialog();
+        }
+
+        // save
+        if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 83) {
+            this.saveToFile();
+        }
+
+        // save as
+        if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 83) {
+            this.showSaveDialog();
         }
     }
 
@@ -340,6 +416,7 @@ class App extends React.Component {
             loading,
             machines,
             orderList,
+            fileLoaded,
             currentWeek,
             startOfTheWeek,
             filterFinishedOrders,
@@ -363,7 +440,7 @@ class App extends React.Component {
                     {
                         loading
                         ? null
-                        : (machines.length === 0 && orders.length === 0)
+                        : (machines.length === 0 && orders.length === 0 && fileLoaded)
                         ? <div className="jumbotron">
                             <h4>
                                 Zatím nejsou vytvořeny žádné záznamy.
@@ -374,6 +451,28 @@ class App extends React.Component {
                             <p>
                                 Začnětě přidáním stroje v nastavení aplikace.
                             </p>
+                        </div>
+                        : !fileLoaded
+                        ? <div className="jumbotron">
+                            <h4>
+                                Soubor nenalezen.
+                            </h4>
+
+                            <hr className="mt-3 mb-3" />
+
+                            <button
+                                className="btn btn-info"
+                                onClick={this.showSaveDialog}
+                            >
+                                Vytvořit soubor
+                            </button>
+
+                            <button
+                                className="btn btn-info ml-3"
+                                onClick={this.showOpenDialog}
+                            >
+                                Otevřít soubor
+                            </button>
                         </div>
                         : <React.Fragment>
                             <Calendar
@@ -522,7 +621,13 @@ class App extends React.Component {
     }
 
     saveToFile = () => {
-        saveFile(path, {
+        const filePath = window.localStorage.getItem('filePath');
+
+        if (!filePath) {
+            return alert('Soubor nenalezen.');
+        }
+
+        saveFile(filePath, {
             orders: this.state.orders,
             machines: this.state.machines,
             orderList: this.state.orderList,

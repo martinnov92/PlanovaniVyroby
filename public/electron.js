@@ -1,6 +1,9 @@
 const url = require('url');
 const path = require('path');
 const electron = require('electron');
+
+const Menu = electron.Menu;
+const globalShortcut = electron.globalShortcut;
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -9,7 +12,30 @@ const BrowserWindow = electron.BrowserWindow;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-const documentsPath = `${electron.app.getPath('documents')}`;
+let documentsPath = `${electron.app.getPath('documents')}`;
+
+let template = [
+    {
+        label: 'Soubor',
+        submenu: [
+            {
+                label: 'Otevřít',
+                accelerator: 'CmdOrCtrl+O',
+                role: 'open',
+            },
+            {
+                label: 'Uložit',
+                accelerator: 'CmdOrCtrl+S',
+                role: 'save',
+            },
+            {
+                label: 'Uložit jako',
+                accelerator: 'CmdOrCtrl+Shift+S',
+                role: 'save',
+            }
+        ]
+    }
+];
 
 function createWindow() {
     // Create the browser window.
@@ -37,7 +63,7 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
@@ -58,6 +84,11 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+app.on('ready', function () {
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
