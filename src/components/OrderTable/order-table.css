@@ -6,6 +6,10 @@
     overflow: hidden;
 }
 
+.table-header--fixed tr {
+    padding-right: 10px;
+}
+
 .table--scrollable {
     overflow: auto;
 }

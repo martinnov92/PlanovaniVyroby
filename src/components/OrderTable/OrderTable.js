@@ -18,8 +18,9 @@ export class OrderTable extends React.Component {
         this.state = {
             width: 0,
             height: 0,
+            thWidth: [],
             scrollLeft: 0,
-            thWidth: []
+            scrollableWidth: 0,
         };
 
         this.fixedHeader = React.createRef();
@@ -45,9 +46,11 @@ export class OrderTable extends React.Component {
 
         const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => node.offsetWidth);
         const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
+        const scrollableWidth = this.scrollableDiv.current.offsetWidth - this.scrollableDiv.current.scrollWidth;
 
         this.setState({
             height,
+            scrollableWidth,
             thWidth: fixedHeaderTh,
             width: fixedHeader.width,
         });
@@ -233,6 +236,7 @@ export class OrderTable extends React.Component {
                     ref={this.fixedHeader}
                     className={classNamesHeader}
                     style={{
+                        width: `calc(100% - ${this.state.scrollableWidth}px)`,
                         transform: `translateX(${this.state.scrollLeft * -1}px)`
                     }}
                 >
