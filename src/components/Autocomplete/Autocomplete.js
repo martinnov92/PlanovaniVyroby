@@ -8,15 +8,30 @@ export class Autocomplete extends React.Component {
         super(props);
 
         this.state = {
-            focus: false,
             value: '',
+            focus: false,
+            valueFromProps: false,
         };
 
         this.autocomplete = React.createRef();
     }
 
     componentDidMount() {
+        this.setState({
+            value: this.props.value || '',
+            valueFromProps: !!this.props.value,
+        });
+
         document.addEventListener('click', this.handleClickOutside)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.value !== nextProps.value) {
+            this.setState({
+                value: nextProps.value,
+                valueFromProps: !!nextProps.value,
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -44,6 +59,15 @@ export class Autocomplete extends React.Component {
     handleChange = (e) => {
         this.setState({
             value: e.target.value,
+            valueFromProps: false,
+        });
+    }
+
+    handleAdd = (e) => {
+        this.props.onChange({ target: { name: this.props.name, value: this.state.value } });
+
+        this.setState({
+            focus: false,
         });
     }
 
@@ -53,6 +77,14 @@ export class Autocomplete extends React.Component {
         });
 
         this.props.onChange({ target: { name: this.props.name, value: item } });
+    }
+
+    displayAddButton = (data) => {
+        if ((this.state.value.length > 0 && data.length === 0) && !this.state.valueFromProps) {
+            return true;
+        }
+
+        return false;
     }
 
     render() {
@@ -66,7 +98,7 @@ export class Autocomplete extends React.Component {
         } = this.props;
 
         const filterData = data.filter((item) => item.toLowerCase().includes(value.toLowerCase()));
-        const showAddButton = value.length > 0 && filterData.length === 0;
+        const showAddButton = this.displayAddButton(filterData);
         const listClassNames = createClassName([
             'list-group',
             'mn-autocomplete--list',
@@ -114,6 +146,7 @@ export class Autocomplete extends React.Component {
                 {
                     showAddButton
                     ? <button
+                        onClick={this.handleAdd}
                         className="mn-autocomplete--btn btn btn-outline-success input-group-append"
                     >
                         + přidat
