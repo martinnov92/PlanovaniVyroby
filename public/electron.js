@@ -112,6 +112,35 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null;
     });
+
+    // events from renderer
+    ipc.on('open-file-dialog', (event) => {
+        const w = BrowserWindow.fromWebContents(event.sender);
+    
+        electron.dialog.showOpenDialog(w, {
+            title: 'Otevřít soubor',
+            defaultPath: documentsPath + '/' + fileName,
+            filters: [{ name: 'JSON', extension: ['json'] }]
+        }, (resultPath) => {
+            event.sender.send('selected-directory', 'open', resultPath);
+        });
+    });
+    
+    ipc.on('open-save-dialog', (event) => {
+        const w = BrowserWindow.fromWebContents(event.sender);
+    
+        electron.dialog.showSaveDialog(w, {
+            title: 'Uložit soubor',
+            defaultPath: path + '/' + fileName,
+            filters: [{ name: 'JSON', extension: ['json'] }]
+        }, (resultPath) => {
+            event.sender.send('selected-directory', 'save', resultPath);
+        });
+    });
+    
+    ipc.on('open-error-dialog', (event, title = 'Chyba', content) => {
+        electron.dialog.showErrorBox(title, content);
+    });
 }
 
 // This method will be called when Electron has finished
@@ -138,27 +167,3 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-ipc.on('open-file-dialog', (event) => {
-    const w = BrowserWindow.fromWebContents(event.sender);
-
-    electron.dialog.showOpenDialog(w, {
-        title: 'Otevřít soubor',
-        defaultPath: documentsPath + '/' + fileName,
-        filters: [{ name: 'JSON', extension: ['json'] }]
-    }, (resultPath) => {
-        event.sender.send('selected-directory', 'open', resultPath);
-    });
-});
-
-ipc.on('open-save-dialog', (event) => {
-    const w = BrowserWindow.fromWebContents(event.sender);
-
-    electron.dialog.showSaveDialog(w, {
-        title: 'Uložit soubor',
-        defaultPath: path + '/' + fileName,
-        filters: [{ name: 'JSON', extension: ['json'] }]
-    }, (resultPath) => {
-        event.sender.send('selected-directory', 'save', resultPath);
-    });
-})
-

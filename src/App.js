@@ -110,7 +110,7 @@ class App extends React.Component {
         fs.writeFile(path, '', (err) => {
             // pokud nastala chyba, zobrazí se error
             if (err) {
-                return alert(err);
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při zápisu', 'Při ukládání souboru nastala chyba.');
             }
 
             window.localStorage.setItem('filePath', path);
@@ -134,7 +134,11 @@ class App extends React.Component {
                     fileLoaded: false,
                 });
 
-                return alert(`Při načítání souboru nasatala chyba.\n Cesta k souboru: ${filePath}`);
+                return electron.ipcRenderer.send(
+                    'open-error-dialog',
+                    'Chyba při čtení',
+                    `Při načítání souboru nasatala chyba.\n Cesta k souboru: ${filePath}`
+                );
             } else {
                 // načíst obsah souboru do state
                 try {
@@ -155,7 +159,7 @@ class App extends React.Component {
                         fileLoaded: false,
                     });
 
-                    return alert('Nečitelný soubor.');
+                    return electron.ipcRenderer.send('open-error-dialog', 'Chyba při čtení', 'Nečitelný soubor.');
                 }
             }
         });
@@ -299,7 +303,7 @@ class App extends React.Component {
         const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
 
         if (isOverlaping) {
-            return alert('V tomto čase je daný stroj vytížen.');
+            return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj již vytížen.');
         }
 
         order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
@@ -353,14 +357,14 @@ class App extends React.Component {
         };
 
         if (!order.orderId || !order.machine || !order.productName) {
-            return alert('Při zakládání zakázky musí být vyplněna zakázka, výrobek a stroj.');
+            return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'Při zakládání zakázky musí být vyplněna zakázka, výrobek a stroj.');
         } 
 
         order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
 
         if (!this.state.order.id) {
             if (isDateRangeOverlaping(ordersCopy, order)) {
-                return alert('V tomto čase je daný stroj vytížen.');
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
             }
 
             order.id = moment().unix();
@@ -372,7 +376,7 @@ class App extends React.Component {
 
             if ((!dateFromIsSame || !dateToIsSame) && ordersCopy[findIndex].id !== order.id) {
                 if (isDateRangeOverlaping(ordersCopy, order)) {
-                    return alert('V tomto čase je daný stroj vytížen.');
+                    return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
                 }
             }
 
@@ -656,7 +660,7 @@ class App extends React.Component {
         const filePath = window.localStorage.getItem('filePath');
 
         if (!filePath) {
-            return alert('Soubor nenalezen.');
+            return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
         }
 
         saveFile(filePath, {
@@ -669,7 +673,7 @@ class App extends React.Component {
             console.log(value);
         })
         .catch((err) => {
-            alert(err);
+            return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
         });
     }
 
