@@ -207,7 +207,7 @@ class App extends React.Component {
         this.resetOrderState(dateFrom, dateTo, machineId, () => {
             this.setState({
                 open: true,
-            }, () => console.log(this.state));
+            });
         });
     }
 
@@ -228,7 +228,7 @@ class App extends React.Component {
 
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         }
-        console.log(order);
+
         this.setState({
             order: order
         });
