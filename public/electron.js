@@ -11,7 +11,8 @@ const globalShortcut = electron.globalShortcut;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-let documentsPath = `${electron.app.getPath('documents')}`;
+const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json';
+const documentsPath = `${electron.app.getPath('documents')}`;
 
 let template = [
     {
@@ -51,6 +52,18 @@ let template = [
                 }
             }
         ]
+    },
+    {
+        label: 'Zakázky',
+        submenu: [
+            {
+                label: 'Přidat zakázku',
+                accelerator: 'CmdOrCtrl+N',
+                click: () => {
+                    mainWindow.webContents.send('menu', 'newEvent');
+                }
+            },
+        ]
     }
 ];
 
@@ -84,7 +97,7 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
@@ -97,7 +110,7 @@ function createWindow() {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        mainWindow = null
+        mainWindow = null;
     });
 }
 
@@ -125,3 +138,25 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipc.on('open-file-dialog', (event) => {
+    const w = BrowserWindow.fromWebContents(event.sender);
+
+    electron.dialog.showOpenDialog(w, {
+        title: 'Otevřít soubor',
+        defaultPath: documentsPath + '/' + fileName,
+        filters: [{ name: 'JSON', extension: ['json'] }]
+    }, (resultPath) => {
+        event.sender.send('selected-directory', 'open', resultPath);
+    });
+});
+
+ipc.on('open-save-dialog', (event) => {
+    electron.dialog.showSaveDialog({
+        title: 'Uložit soubor',
+        defaultPath: path + '/' + fileName,
+        filters: [{ name: 'JSON', extension: ['json'] }]
+    }, (resultPath) => {
+        event.sender.send('selected-directory', 'save', resultPath);
+    });
+})
+

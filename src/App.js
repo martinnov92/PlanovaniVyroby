@@ -18,10 +18,6 @@ import {
 const fs = window.require('fs');
 const electron = window.require('electron');
 
-// nastavení souboru
-const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json';
-const path = `${electron.remote.app.getPath('documents')}`;
-
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -57,62 +53,72 @@ class App extends React.Component {
 
         document.addEventListener('keyup', this.handleKeyUp);
         electron.ipcRenderer.on('menu', this.handleElectronMenu);
+        electron.ipcRenderer.on('selected-directory', this.handleElectronDialogs);
     }
     
     componentWillUnmount() {
         electron.ipcRenderer.removeAllListeners('menu');
+        electron.ipcRenderer.removeAllListeners('selected-directory');
         document.removeEventListener('keyup', this.handleKeyUp);
     }
 
+    handleElectronDialogs = (sender, type, path) => {
+        if (type === 'open' && path) {
+            this.openFile(path[0]);
+        }
+
+        if (type === 'save') {
+            this.saveFile(path);
+        } 
+    }
+
     showSaveDialog = () => {
-        return electron.remote.dialog.showSaveDialog({
-            defaultPath: path + '/' + fileName,
-            filters: [{ name: 'JSON', extension: ['json'] }]
-        }, (resultPath) => {
-            if (!resultPath && !this.state.fileLoaded) {
-                this.setState({
-                    loading: false,
-                    fileLoaded: false,
-                });
-
-                return;
-            } else if (!resultPath && this.state.fileLoaded) {
-                return;
-            }
-
-            fs.writeFile(resultPath, '', (err) => {
-                // pokud nastala chyba, zobrazí se error
-                if (err) {
-                    alert(err);
-                }
-
-                window.localStorage.setItem('filePath', resultPath);
-                this.saveToFile();
-                this.setState({
-                    loading: false,
-                    fileLoaded: true,
-                });
-            });
-        });
+        electron.ipcRenderer.send('open-save-dialog');
     }
 
     showOpenDialog = () => {
-        return electron.remote.dialog.showOpenDialog({
-            defaultPath: path + '/' + fileName,
-            filters: [{ name: 'JSON', extension: ['json'] }]
-        }, (resultPath) => {
-            if (!resultPath && !this.state.fileLoaded) {
-                this.setState({
-                    loading: false,
-                    fileLoaded: false,
-                });
+        electron.ipcRenderer.send('open-file-dialog');
+    }
 
-                return;
-            } else if (!resultPath && this.state.fileLoaded) {
-                return;
+    openFile = (path) => {
+        if (!path && !this.state.fileLoaded) {
+            this.setState({
+                loading: false,
+                fileLoaded: false,
+            });
+
+            return;
+        } else if (!path && this.state.fileLoaded) {
+            return;
+        }
+
+        return this.readFile(path);
+    }
+
+    saveFile = (path) => {
+        if (!path && !this.state.fileLoaded) {
+            this.setState({
+                loading: false,
+                fileLoaded: false,
+            });
+
+            return;
+        } else if (!path && this.state.fileLoaded) {
+            return;
+        }
+
+        fs.writeFile(path, '', (err) => {
+            // pokud nastala chyba, zobrazí se error
+            if (err) {
+                return alert(err);
             }
 
-            this.readFile(resultPath[0]);
+            window.localStorage.setItem('filePath', path);
+            this.saveToFile();
+            this.setState({
+                loading: false,
+                fileLoaded: true,
+            });
         });
     }
 
@@ -177,6 +183,10 @@ class App extends React.Component {
     }
 
     handleElectronMenu = (evt, arg) => {
+        if (arg === 'newEvent') {
+            this.handleAddNewEvent();
+        }
+
         if (arg === 'openFile') {
             this.showOpenDialog();
         }
