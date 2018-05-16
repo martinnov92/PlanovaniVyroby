@@ -6,7 +6,7 @@
 .mn-autocomplete--list {
     border: 1px solid #ced4da;
     max-height: calc(50px * 5);
-    overflow: scroll;
+    overflow: auto;
     position: absolute;
     width: 100%;
     z-index: 1;

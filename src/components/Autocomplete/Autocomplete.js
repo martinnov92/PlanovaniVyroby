@@ -101,6 +101,7 @@ export class Autocomplete extends React.Component {
         const showAddButton = this.displayAddButton(filterData);
         const listClassNames = createClassName([
             'list-group',
+            'shadow--light',
             'mn-autocomplete--list',
         ]);
         const wrapperClassNames = createClassName([
