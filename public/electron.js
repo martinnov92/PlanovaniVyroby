@@ -22,7 +22,6 @@ let template = [
                 accelerator: 'CmdOrCtrl+O',
                 role: 'open',
                 click: () => {
-                    mainWindow.webContents.send('openFile');
                     mainWindow.webContents.send('menu', 'openFile');
                 }
             },
@@ -31,7 +30,6 @@ let template = [
                 accelerator: 'CmdOrCtrl+S',
                 role: 'save',
                 click: () => {
-                    mainWindow.webContents.send('saveFile');
                     mainWindow.webContents.send('menu', 'saveFile');
                 }
             },
@@ -40,8 +38,16 @@ let template = [
                 accelerator: 'CmdOrCtrl+Shift+S',
                 role: 'save',
                 click: () => {
-                    mainWindow.webContents.send('saveAsFile');
                     mainWindow.webContents.send('menu', 'saveAsFile');
+                }
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Konec',
+                click: () => {
+                    app.quit();
                 }
             }
         ]
@@ -68,13 +74,17 @@ function createWindow() {
         mainWindow.loadURL('http://localhost:3000');
     }
 
+    // TODO: při buildění odkomentovat
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+
     mainWindow.once('ready-to-show', () => {
         mainWindow.maximize();
         mainWindow.show();
     });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
@@ -95,12 +105,6 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
-
-app.on('ready', () => {
-    // extend menu
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
-});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
