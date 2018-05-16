@@ -122,7 +122,7 @@ export class Autocomplete extends React.Component {
                 />
 
                 {
-                    value.length > 0 || focus
+                    (value.length > 0 && !this.state.valueFromProps) || focus
                     ? <ul
                         className={listClassNames}
                     >
