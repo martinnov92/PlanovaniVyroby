@@ -151,7 +151,9 @@ ipc.on('open-file-dialog', (event) => {
 });
 
 ipc.on('open-save-dialog', (event) => {
-    electron.dialog.showSaveDialog({
+    const w = BrowserWindow.fromWebContents(event.sender);
+
+    electron.dialog.showSaveDialog(w, {
         title: 'Uložit soubor',
         defaultPath: path + '/' + fileName,
         filters: [{ name: 'JSON', extension: ['json'] }]
