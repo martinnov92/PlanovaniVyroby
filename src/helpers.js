@@ -144,7 +144,7 @@ export function getCorrectDateAfterDrop(originalDateFrom, originalDateTo, dateFr
     let sameDay = moment(dateFrom).isSame(finalDateTo, 'day');
 
     // pokud se událost přesunula během jednoho dne, vrátím dateTo (ve správném formátu, který se uloží)
-    if (sameDay && finalDateTo.hours() <= 20) {
+    if (sameDay && finalDateTo.hours() < 20) {
         return finalDateTo.format();
     } else {
         // odečíst čas před osmou
