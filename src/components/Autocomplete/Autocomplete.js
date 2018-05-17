@@ -13,6 +13,7 @@ export class Autocomplete extends React.Component {
             valueFromProps: false,
         };
 
+        this.input = React.createRef();
         this.autocomplete = React.createRef();
     }
 
@@ -117,6 +118,7 @@ export class Autocomplete extends React.Component {
                 <input
                     type="text"
                     value={value}
+                    ref={this.input}
                     className="form-control"
                     onFocus={this.handleFocus}
                     onChange={this.handleChange}

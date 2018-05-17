@@ -17,7 +17,7 @@ export class OrderPopup extends React.Component {
     }
 
     componentDidMount() {
-        // this.product.current.focus();
+        this.product.current.input.current.focus();
     }
 
     render() {
@@ -80,7 +80,7 @@ export class OrderPopup extends React.Component {
                             <Autocomplete
                                 name="productName"
                                 data={productsNameList}
-                                // ref={this.product}
+                                ref={this.product}
                                 value={order.productName}
                                 onChange={this.props.handleInputChange}
                             />
