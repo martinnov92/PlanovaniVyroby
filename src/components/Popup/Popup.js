@@ -34,12 +34,14 @@ export class Popup extends React.Component {
             this.centerPopup();
         }
 
+        document.addEventListener('keyup', this.handleKeyUp);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mousemove', this.handleMouseMove);
         this.header.current.addEventListener('mousedown', this.handleMouseDown);
     }
 
     componentWillUnmount() {
+        document.removeEventListener('keyup', this.handleKeyUp);
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('mousemove', this.handleMouseMove);
         this.header.current.removeEventListener('mousedown', this.handleMouseDown);
@@ -100,6 +102,14 @@ export class Popup extends React.Component {
             lastY: clientY,
             mouseDown: false,
         });
+    }
+
+    handleKeyUp = (e) => {
+        if (e.keyCode !== 27) {
+            return;
+        }
+
+        return this.props.onClose();
     }
 
     render() {
