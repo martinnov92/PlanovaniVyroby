@@ -40,7 +40,7 @@ export class OrderCard extends React.Component {
                     order
                     ? <React.Fragment>
                         <h5 className="card-title">
-                            <strong>{mainOrder.id}</strong>
+                            <strong>{mainOrder ? mainOrder.id : 'Bez zakázky'}</strong>
                         </h5>
                         <h6 className="card-subtitle mb-2">
                             <strong>{order.productName}</strong>
