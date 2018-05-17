@@ -87,7 +87,6 @@ function createWindow() {
         mainWindow.loadURL('http://localhost:3000');
     }
 
-    // TODO: při buildění odkomentovat
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 

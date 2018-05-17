@@ -2,15 +2,15 @@ import set from 'lodash/set';
 import moment from 'moment';
 import React from 'react';
 import { OrderPopup, SettingsPopup } from './Scenes';
-import { Calendar } from './components/Calendar';
+import {
+    Calendar,
+    OrderCard,
+} from './components/Calendar';
 import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
 import {
     saveFile,
-    createClassName, 
-    DATA_DATE_FORMAT,
     getNetMachineTime, 
-    formatMinutesToTime,
     isDateRangeOverlaping, 
     INPUT_DATE_TIME_FORMAT,
 } from './helpers';
@@ -452,6 +452,7 @@ class App extends React.Component {
             loading,
             machines,
             orderList,
+            hoverOrder,
             fileLoaded,
             currentWeek,
             startOfTheWeek,
@@ -555,7 +556,15 @@ class App extends React.Component {
                         />
                     }
 
-                    {this.renderHoverOrder()}
+                    {
+                        !hoverOrder
+                        ? null
+                        : <OrderCard
+                            order={hoverOrder}
+                            machines={machines}
+                            orderList={orderList}
+                        />
+                    }
                 </div>
 
                 {
@@ -585,75 +594,6 @@ class App extends React.Component {
                 }
             </div>
         );
-    }
-
-    renderHoverOrder = () => {
-        const {
-            machines,
-            orderList,
-            hoverOrder: order,
-        } = this.state;
-
-        if (!order) {
-            return;
-        }
-
-        const mainOrder = orderList.find((o) => o.id === (order && order.orderId));
-        const machine = machines.find((machine) => machine.id === (order && order.machine));
-        const totalMinutes = order.operation.time * order.operation.count;
-
-        return <div
-                ref={this.card}
-                style={{
-                    borderTop: `10px solid ${mainOrder && mainOrder.color}`
-                }}
-                className={createClassName([
-                    order ? 'card--active' : null,
-                    'card shadow--light calendar--event-card',
-                ])}
-            >
-                <div className="card-body">
-                {
-                    order
-                    ? <React.Fragment>
-                        <h5 className="card-title">
-                            <strong>{mainOrder.id}</strong>
-                        </h5>
-                        <h6 className="card-subtitle mb-2">
-                            <strong>{order.productName}</strong>
-                        </h6>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                            <strong>{order.worker}</strong>
-                        </h6>
-                        <p className="card-text">
-                            {machine.name}
-                        </p>
-                        <p className="card-text">
-                            {order.operation.order}. operace
-                        </p>
-                        <p className="card-text">
-                            {order.operation.count}ks
-                        </p>
-                        <p className="card-text">
-                            {order.operation.time}min/kus
-                        </p>
-                        <p className="card-text">
-                            Celkem: {totalMinutes}min ({(totalMinutes / 60).toFixed(1)}hod)
-                        </p>
-                        <p className="card-text">
-                            {order.note}
-                        </p>
-                        <p className="card-text">
-                            {moment(order.dateFrom).format(DATA_DATE_FORMAT)}
-                            {" - "}
-                            {moment(order.dateTo).format(DATA_DATE_FORMAT)}
-                            <strong> ({formatMinutesToTime(order.workingHours)})</strong>
-                        </p>
-                    </React.Fragment>
-                    : null
-                }
-                </div>
-            </div>;
     }
 
     saveToFile = () => {

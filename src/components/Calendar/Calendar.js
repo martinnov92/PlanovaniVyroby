@@ -568,6 +568,8 @@ export class Calendar extends React.Component {
 
             if (machine) {
                 row = ReactDOM.findDOMNode(this[machine.id]);
+            } else {
+                return null;
             }
 
             return (
