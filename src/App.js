@@ -135,6 +135,7 @@ class App extends React.Component {
                     fileLoaded: false,
                 });
 
+                this.resetState();
                 return electron.ipcRenderer.send(
                     'open-error-dialog',
                     'Chyba při čtení',
@@ -160,6 +161,7 @@ class App extends React.Component {
                         fileLoaded: false,
                     });
 
+                    this.resetState();
                     return electron.ipcRenderer.send('open-error-dialog', 'Chyba při čtení', 'Nečitelný soubor.');
                 }
             }
@@ -633,6 +635,20 @@ class App extends React.Component {
         })
         .catch((err) => {
             return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
+        });
+    }
+
+    resetState = () => {
+        this.setState({
+            orders: [],
+            open: false,
+            machines: [],
+            orderList: [],
+            loading: false,
+            settings: false,
+            ctrlDown: false,
+            hoverOrder: null,
+            fileLoaded: false,
         });
     }
 
