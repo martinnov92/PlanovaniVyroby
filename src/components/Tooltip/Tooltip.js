@@ -85,7 +85,7 @@ export class Tooltip extends React.Component {
 
                 tooltipPositionObj = {
                     left: parentRect.left - (tooltipRect.width / 2) + (parentRect.width / 2) + "px",
-                    top: parentRect.bottom + "px"
+                    top: parentRect.bottom - tooltipRect.height + "px"
                 };
             }
         }

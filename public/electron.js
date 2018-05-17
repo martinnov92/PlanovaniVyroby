@@ -47,6 +47,7 @@ let template = [
             },
             {
                 label: 'Konec',
+                accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Alt+F4',
                 click: () => {
                     app.quit();
                 }
@@ -96,7 +97,7 @@ function createWindow() {
     });
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
