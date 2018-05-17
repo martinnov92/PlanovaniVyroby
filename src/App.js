@@ -1,4 +1,5 @@
 import set from 'lodash/set';
+import differenceBy from 'lodash/differenceBy';
 import moment from 'moment';
 import React from 'react';
 import { OrderPopup, SettingsPopup } from './Scenes';
@@ -272,13 +273,29 @@ class App extends React.Component {
             return;
         }
 
-        const itemsCopy = [...this.state[which]];
-        const index = itemsCopy.findIndex((m) => m.id === item.id);
+        let linkedItems = [];
+        let itemsCopy = [...this.state[which]];
+        let diffOrdersArr = [...this.state.orders];
 
+        if (which === 'machines') {
+            linkedItems = this.state.orders.filter((order) => order.machine === item.id);
+        } else if (which === 'orderList') {
+            linkedItems = this.state.orders.filter((order) => order.orderId === item.id);
+        }
+
+        const linkedItemsLength = linkedItems.length;
+        const message = `Přejete si smazat položky (${linkedItemsLength}) související s "${item.name}"?`;
+
+        if ((linkedItemsLength > 0) && window.confirm(message)) {
+                diffOrdersArr = differenceBy(this.state.orders, linkedItems);
+        }
+
+        const index = itemsCopy.findIndex((m) => m.id === item.id);
         itemsCopy.splice(index, 1);
 
         this.setState({
             [which]: itemsCopy,
+            orders: diffOrdersArr,
         }, this.saveToFile);
     }
 
@@ -447,10 +464,12 @@ class App extends React.Component {
 
     render() {
         const {
+            open,
             order,
             orders,
             loading,
             machines,
+            settings,
             orderList,
             hoverOrder,
             fileLoaded,
@@ -543,7 +562,7 @@ class App extends React.Component {
                     }
 
                     {
-                        !this.state.open
+                        !open
                         ? null
                         : <OrderPopup
                             order={order}
@@ -568,7 +587,7 @@ class App extends React.Component {
                 </div>
 
                 {
-                    !this.state.settings
+                    !settings
                     ? null
                     : <SettingsPopup
                         handleClose={this.closeSettings}

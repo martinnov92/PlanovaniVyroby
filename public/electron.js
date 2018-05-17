@@ -11,7 +11,8 @@ const globalShortcut = electron.globalShortcut;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-const fileName = 'RITEK_PLANOVANI_ZAKAZEK.json';
+const date = new Date();
+const fileName = `PLANOVANI_ZAKAZEK_${date.getFullYear()}.json`;
 const documentsPath = `${electron.app.getPath('documents')}`;
 
 let template = [
@@ -104,25 +105,23 @@ function createWindow() {
         createWindow();
     });
 
-    /*
-        mainWindow.webContents.on('unresponsive', () => {
-            const options = {
-                type: 'info',
-                title: 'Aplikace přestala reagovat',
-                message: 'Aplikace přestala reagovat',
-                buttons: ['Obnovit', 'Ukončit']
-            };
+    // mainWindow.webContents.on('unresponsive', () => {
+    //     const options = {
+    //         type: 'info',
+    //         title: 'Aplikace přestala reagovat',
+    //         message: 'Aplikace přestala reagovat',
+    //         buttons: ['Obnovit', 'Ukončit']
+    //     };
 
-            electron.dialog.showMessageBox(options, (index) => {
-                if (index === 0) {
-                    mainWindow.reload();
-                }
-                else {
-                    mainWindow.close();
-                }
-            });
-        });
-    */
+    //     electron.dialog.showMessageBox(options, (index) => {
+    //         if (index === 0) {
+    //             mainWindow.reload();
+    //         }
+    //         else {
+    //             mainWindow.close();
+    //         }
+    //     });
+    // });
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
