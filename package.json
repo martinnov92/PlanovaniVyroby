@@ -19,9 +19,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "yarn run build && firebase deploy",
     "electron": "electron .",
-    "electron-build-windows": "electron-builder -w",
+    "electron-bw": "electron-builder -w",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-build": "yarn build && electron-builder -m"
   },
