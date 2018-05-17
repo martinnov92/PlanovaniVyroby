@@ -288,8 +288,10 @@ class App extends React.Component {
         const linkedItemsLength = linkedItems.length;
         const message = `Přejete si smazat položky (${linkedItemsLength}) související s "${item.name}"?`;
 
-        if ((linkedItemsLength > 0) && window.confirm(message)) {
+        if ((linkedItemsLength > 0)) {
+            if (window.confirm(message)) {
                 diffOrdersArr = differenceBy(this.state.orders, linkedItems);
+            }
         }
 
         const index = itemsCopy.findIndex((m) => m.id === item.id);
