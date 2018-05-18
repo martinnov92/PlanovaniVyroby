@@ -349,6 +349,10 @@ class App extends React.Component {
     }
 
     handleInputChange = (e) => {
+        const {
+            products,
+        } = this.state;
+
         const order = set(this.state.order, e.target.name, e.target.value);
 
         if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
@@ -364,6 +368,22 @@ class App extends React.Component {
             }
 
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
+        }
+
+        if (e.target.name === 'operation.order' || e.target.name === 'productName') {
+            const productOperation = products.find((product) => product.name === order.productName);
+
+            if (productOperation && productOperation.operation.hasOwnProperty(order.operation.order)) {
+                order.operation = productOperation.operation[order.operation.order];
+            } else {
+                order.operation = {
+                    time: 0,
+                    count: 0,
+                    casting: 0,
+                    exchange: 0,
+                    order: order.operation.order,
+                };
+            }
         }
 
         this.setState({
@@ -722,8 +742,8 @@ class App extends React.Component {
                 dateTo: dateTo,
                 operation: {
                     time: 0,        // čas na kus (sčítá se s nahazováním a výměnou)
-                    order: 1,
                     count: 0,
+                    order: "1",
                     casting: 0,     // nahazování
                     exchange: 0,    // výměna
                 },
