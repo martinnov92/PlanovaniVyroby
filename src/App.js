@@ -28,6 +28,7 @@ class App extends React.Component {
             orders: [],
             open: false,
             machines: [],
+            products: [],
             orderList: [],
             infoText: '',
             loading: false,
@@ -636,26 +637,31 @@ class App extends React.Component {
             filterFinishedOrders: this.state.filterFinishedOrders,
         })
         .then((value) => {
-            this.setState({
-                infoText: value,
-            });
-
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                this.setState({
-                    infoText: ''
-                });
-            }, 3000);
+            this.showInfoMessage(value);
         })
         .catch((err) => {
             return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
         });
     }
 
+    showInfoMessage = (value) => {
+        this.setState({
+            infoText: value,
+        });
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState({
+                infoText: ''
+            });
+        }, 3000);
+    }
+
     resetState = () => {
         this.setState({
             orders: [],
             open: false,
+            products: [],
             machines: [],
             orderList: [],
             loading: false,
