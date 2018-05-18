@@ -7,22 +7,14 @@ export class OrderPopup extends React.Component {
     static defaultProps = {
         order: {},
         orderList: [],
-        productNameList: [],
+        products: [],
         footerButtons: () => {},
     };
-
-    constructor(props) {
-        super(props);
-        this.product = React.createRef();
-    }
-
-    componentDidMount() {
-        this.product.current.input.current.focus();
-    }
 
     render() {
         const {
             order,
+            products,
             machines,
             productsNameList,
         } = this.props;
@@ -78,9 +70,9 @@ export class OrderPopup extends React.Component {
                                 <span className="input-group-text">Výrobek</span>
                             </div>
                             <Autocomplete
+                                data={products}
                                 name="productName"
-                                ref={this.product}
-                                data={productsNameList}
+                                propertyName="name"
                                 value={order.productName}
                                 onChange={this.props.handleInputChange}
                             />

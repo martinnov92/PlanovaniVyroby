@@ -96,9 +96,10 @@ export class Autocomplete extends React.Component {
 
         const {
             data,
+            propertyName,
         } = this.props;
 
-        const filterData = data.filter((item) => item.toLowerCase().includes(value.toLowerCase()));
+        const filterData = data.filter((item) => item[propertyName].toLowerCase().includes(value.toLowerCase()));
         const showAddButton = this.displayAddButton(filterData);
         const listClassNames = createClassName([
             'list-group',
@@ -133,11 +134,11 @@ export class Autocomplete extends React.Component {
                             filterData.map((item) => {
                                 return (
                                     <li
-                                        key={item}
-                                        onClick={(e) => this.handleClick(e, item)}
+                                        key={item[propertyName]}
+                                        onClick={(e) => this.handleClick(e, item[propertyName])}
                                         className="list-group-item list-group-item-action"
                                     >
-                                        { item }
+                                        { item[propertyName] }
                                     </li>
                                 );
                             })

@@ -152,6 +152,7 @@ class App extends React.Component {
                         loading: false,
                         orders: d.orders,
                         fileLoaded: true,
+                        products: d.products,
                         machines: d.machines,
                         orderList: d.orderList,
                         filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
@@ -407,8 +408,33 @@ class App extends React.Component {
             ordersCopy.splice(findIndex, 1, order);
         }
 
+        const products = [...this.state.products];
+        const findIndex = products.findIndex((product) => order.productName === product.name);
+
+        if (findIndex < 0) {
+            products.push({
+                name: order.productName,
+                operation: {
+                    [order.operation.order]: {
+                        ...order.operation,
+                    },
+                },
+            });
+        } else {
+            products[findIndex] = {
+                ...products[findIndex],
+                operation: {
+                    ...products[findIndex].operation,
+                    [order.operation.order]: {
+                        ...order.operation,
+                    },
+                },
+            };
+        }
+
         this.setState({
             open: false,
+            products: products,
             orders: ordersCopy,
             orderList: orderListCopy,
         }, () => this.saveToFile());
@@ -477,6 +503,7 @@ class App extends React.Component {
             loading,
             machines,
             settings,
+            products,
             orderList,
             hoverOrder,
             fileLoaded,
@@ -484,8 +511,6 @@ class App extends React.Component {
             startOfTheWeek,
             filterFinishedOrders,
         } = this.state;
-
-        const productsNameList = [...new Set(orders.map((o) => o.productName))];
 
         return (
             <div className="app">
@@ -574,11 +599,11 @@ class App extends React.Component {
                         ? null
                         : <OrderPopup
                             order={order}
+                            products={products}
                             machines={machines}
                             orderList={orderList}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
-                            productsNameList={productsNameList}
                             handleInputChange={this.handleInputChange}
                         />
                     }
@@ -632,6 +657,7 @@ class App extends React.Component {
 
         saveFile(filePath, {
             orders: this.state.orders,
+            products: this.state.products,
             machines: this.state.machines,
             orderList: this.state.orderList,
             filterFinishedOrders: this.state.filterFinishedOrders,
