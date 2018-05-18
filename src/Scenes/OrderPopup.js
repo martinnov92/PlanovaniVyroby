@@ -79,19 +79,11 @@ export class OrderPopup extends React.Component {
                             </div>
                             <Autocomplete
                                 name="productName"
-                                data={productsNameList}
                                 ref={this.product}
+                                data={productsNameList}
                                 value={order.productName}
                                 onChange={this.props.handleInputChange}
                             />
-                            {/* <input
-                                type="text"
-                                name="productName"
-                                ref={this.product}
-                                className="form-control"
-                                value={order.productName}
-                                onChange={this.props.handleInputChange}
-                            /> */}
                         </div>
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">

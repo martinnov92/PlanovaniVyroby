@@ -29,6 +29,7 @@ class App extends React.Component {
             open: false,
             machines: [],
             orderList: [],
+            infoText: '',
             loading: false,
             settings: false,
             ctrlDown: false,
@@ -39,6 +40,7 @@ class App extends React.Component {
             currentWeek: startOfTheWeek.week(),
         };
 
+        this.timeout = null;
         this.calendar = React.createRef();
     }
 
@@ -488,6 +490,7 @@ class App extends React.Component {
             <div className="app">
                 <Nav
                     currentWeek={currentWeek}
+                    infoText={this.state.infoText}
                     openSettings={this.openSettings}
                     onWeekMove={this.handleWeekMove}
                     addNewEvent={this.handleAddNewEvent}
@@ -633,7 +636,16 @@ class App extends React.Component {
             filterFinishedOrders: this.state.filterFinishedOrders,
         })
         .then((value) => {
-            console.log(value);
+            this.setState({
+                infoText: value,
+            });
+
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                this.setState({
+                    infoText: ''
+                });
+            }, 3000);
         })
         .catch((err) => {
             return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);

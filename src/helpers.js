@@ -196,7 +196,7 @@ export function saveFile(path, data) {
     return new Promise((resolve, reject) => {
         fs.writeFile(path, d, (err) => {
             if (err) reject(err);
-            resolve('Uloženo.');
+            resolve('Uloženo');
         });
     });
 }
