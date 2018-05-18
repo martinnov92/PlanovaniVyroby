@@ -172,8 +172,8 @@ export class OrderPopup extends React.Component {
                             </div>
                             <select
                                 name="operation.order"
-                                value={order.operation.order}
                                 className="custom-select"
+                                value={order.operation.order}
                                 onChange={this.props.handleInputChange}
                             >
                                 <option

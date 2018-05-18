@@ -373,7 +373,7 @@ class App extends React.Component {
         if (e.target.name === 'operation.order' || e.target.name === 'productName') {
             const productOperation = products.find((product) => product.name === order.productName);
 
-            if (productOperation && productOperation.operation.hasOwnProperty(order.operation.order)) {
+            if (productOperation && productOperation.operation[order.operation.order]) {
                 order.operation = productOperation.operation[order.operation.order];
             } else {
                 order.operation = {
