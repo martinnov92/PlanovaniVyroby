@@ -191,6 +191,11 @@ class App extends React.Component {
         if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 83) {
             this.showSaveDialog();
         }
+
+        // open dev tools
+        if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 73) {
+            electron.ipcRenderer.send('show-dev-tools');
+        }
     }
 
     handleElectronMenu = (evt, arg) => {
