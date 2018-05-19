@@ -94,8 +94,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
         if (currentTime >= workHoursFrom && currentTime <= workHoursTo) {
-            // TODO: opravit odečítání času, teď se pauza odečte pokud je rozmezí od něco do 11:00
-            if (currentTime === 11) {
+            if ((currentTime > 11) && (currentTime < 11.1)) {
                 isAtEleven = true;
             }
 

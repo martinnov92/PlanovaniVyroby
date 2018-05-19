@@ -46,12 +46,12 @@ export class SettingsPopup extends React.Component {
                         <Tab
                             selectedClassName="settings--tabs-selected"
                         >
-                            Zakázky
+                            Stroje
                         </Tab>
                         <Tab
                             selectedClassName="settings--tabs-selected"
                         >
-                            Stroje
+                            Zakázky
                         </Tab>
                     </TabList>
 
@@ -78,18 +78,18 @@ export class SettingsPopup extends React.Component {
                     </TabPanel>
 
                     <TabPanel>
-                        <OrdersTab
-                            orders={this.props.orders}
-                            onOrderSave={this.props.onOrderSave}
-                            onOrderDelete={this.props.onOrderDelete}
-                        />
-                    </TabPanel>
-
-                    <TabPanel>
                         <MachinesTab
                             machines={this.props.machines}
                             onMachineSave={this.props.onMachineSave}
                             onMachineDelete={this.props.onMachineDelete}
+                        />
+                    </TabPanel>
+
+                    <TabPanel>
+                        <OrdersTab
+                            orders={this.props.orders}
+                            onOrderSave={this.props.onOrderSave}
+                            onOrderDelete={this.props.onOrderDelete}
                         />
                     </TabPanel>
                 </Tabs>
