@@ -150,11 +150,11 @@ class App extends React.Component {
                     const d = JSON.parse(data);
                     this.setState({
                         loading: false,
-                        orders: d.orders,
                         fileLoaded: true,
-                        products: d.products,
-                        machines: d.machines,
-                        orderList: d.orderList,
+                        orders: d.orders || [],
+                        products: d.products || [],
+                        machines: d.machines || [],
+                        orderList: d.orderList || [],
                         filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
                     });
 
