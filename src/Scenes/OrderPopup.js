@@ -16,7 +16,6 @@ export class OrderPopup extends React.Component {
             order,
             products,
             machines,
-            productsNameList,
         } = this.props;
 
         return (
@@ -176,6 +175,11 @@ export class OrderPopup extends React.Component {
                                 value={order.operation.order}
                                 onChange={this.props.handleInputChange}
                             >
+                                <option
+                                    value="-"
+                                >
+                                    Zvolte operaci
+                                </option>
                                 <option
                                     value="1"
                                 >

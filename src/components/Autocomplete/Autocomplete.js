@@ -58,6 +58,10 @@ export class Autocomplete extends React.Component {
     }
 
     handleChange = (e) => {
+        if (e.target.value.length === 0) {
+            this.props.onChange({ target: { name: this.props.name, value: e.target.value } });
+        }
+
         this.setState({
             value: e.target.value,
             valueFromProps: false,

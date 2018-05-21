@@ -169,7 +169,7 @@ function ipcListeners() {
             event.sender.send('selected-directory', 'open', resultPath);
         });
     });
-    
+
     ipc.on('open-save-dialog', (event) => {
         const w = BrowserWindow.fromWebContents(event.sender);
     
@@ -181,7 +181,7 @@ function ipcListeners() {
             event.sender.send('selected-directory', 'save', resultPath);
         });
     });
-    
+
     ipc.on('open-error-dialog', (event, title = 'Chyba', content) => {
         electron.dialog.showErrorBox(title, content);
     });
