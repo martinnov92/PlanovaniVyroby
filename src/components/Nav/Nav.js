@@ -57,12 +57,16 @@ export class Nav extends React.Component {
                             </button>
                         </div>
 
-                        <button
-                            className="btn btn-success ml-3"
-                            onClick={this.props.addNewEvent}
-                        >
-                            Přidat zakázku
-                        </button>
+                        {
+                            this.props.disabledNewOrder
+                            ? null
+                            : <button
+                                className="btn btn-success ml-3"
+                                onClick={this.props.addNewEvent}
+                            >
+                                Přidat zakázku
+                            </button>
+                        }
 
                         <button
                             type="button"

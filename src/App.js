@@ -562,6 +562,7 @@ class App extends React.Component {
                     openSettings={this.openSettings}
                     onWeekMove={this.handleWeekMove}
                     addNewEvent={this.handleAddNewEvent}
+                    disabledNewOrder={machines.length === 0}
                     onCurrentWeekClick={this.resetCurrentWeek}
                 />
 
