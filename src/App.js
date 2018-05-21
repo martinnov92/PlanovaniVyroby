@@ -358,8 +358,16 @@ class App extends React.Component {
         const { products } = this.state;
         const { name, value } = e.target;
 
+        if ((name === 'orderId' || name === 'machine') && value === '-') {
+            return;
+        }
+
         if (name === 'orderId' && value === 'new') {
             return this.openSettings(null, 2);
+        }
+
+        if (name === 'machine' && value === 'new') {
+            return this.openSettings(null, 1);
         }
 
         const order = set(this.state.order, name, value);

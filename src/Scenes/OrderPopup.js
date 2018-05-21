@@ -48,13 +48,14 @@ export class OrderPopup extends React.Component {
                                 onChange={this.props.handleInputChange}
                             >
                                 <option>
-                                    Vybrat zakázku
+                                    Vyberte zakázku
                                 </option>
                                 <option
                                     value="new"
                                 >
                                     Přidat novou zakázka
                                 </option>
+                                <option value="-" />
                                 {
                                     this.props.orderList.filter((o) => !o.done).map((order) => {
                                         return (
@@ -91,6 +92,12 @@ export class OrderPopup extends React.Component {
                                 className="custom-select"
                                 onChange={this.props.handleInputChange}
                             >
+                                <option
+                                    value="new"
+                                >
+                                    Přidat nový stroj
+                                </option>
+                                <option value="-" />
                                 {machines.map((machine) => {
                                     return <option
                                         key={machine.id}
