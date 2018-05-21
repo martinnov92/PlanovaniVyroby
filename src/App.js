@@ -354,39 +354,40 @@ class App extends React.Component {
     }
 
     handleInputChange = (e) => {
-        const {
-            products,
-        } = this.state;
+        const { products } = this.state;
+        const { name, value } = e.target;
+        const order = set(this.state.order, name, value);
 
-        const order = set(this.state.order, e.target.name, e.target.value);
-
-        if (e.target.name === 'dateFrom' || e.target.name === 'dateTo') {
-            const date = moment(e.target.value);
+        if (name === 'dateFrom' || name === 'dateTo') {
+            const date = moment(value);
             const hours = date.hours();
             const minutes = date.minutes();
 
             const shiftFrom = hours < 7;
             const shiftTo = (hours > 20) || (hours > 20 && minutes > 0);
 
-            if ((e.target.name === 'dateFrom' && shiftFrom) || (e.target.name === 'dateFrom' && shiftTo) || (e.target.name === 'dateTo' && shiftTo)) {
+            if ((name === 'dateFrom' && shiftFrom) || (name === 'dateFrom' && shiftTo) || (name === 'dateTo' && shiftTo)) {
                 return;
             }
 
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
         }
 
-        if (e.target.name === 'operation.order' || e.target.name === 'productName') {
+        if (name === 'operation.order' || name === 'productName') {
             const productOperation = products.find((product) => product.name === order.productName);
 
-            if (productOperation && productOperation.operation[order.operation.order]) {
-                order.operation = productOperation.operation[order.operation.order];
+            if (productOperation && productOperation.operation[value]) {
+                order.operation = {
+                    ...productOperation.operation[value],
+                    order: value,
+                };
             } else {
                 order.operation = {
                     time: 0,
                     count: 0,
                     casting: 0,
                     exchange: 0,
-                    order: order.operation.order,
+                    order: name === 'operation.order' ? value : '-',
                 };
             }
         }
@@ -436,7 +437,7 @@ class App extends React.Component {
         const products = [...this.state.products];
         const findIndex = products.findIndex((product) => order.productName === product.name);
 
-        if (findIndex < 0) {
+        if (findIndex === -1) {
             products.push({
                 name: order.productName,
                 operation: {
@@ -459,8 +460,8 @@ class App extends React.Component {
 
         this.setState({
             open: false,
-            products: products,
             orders: ordersCopy,
+            products: products,
             orderList: orderListCopy,
         }, () => this.saveToFile());
         this.resetOrderState();
@@ -748,7 +749,7 @@ class App extends React.Component {
                 operation: {
                     time: 0,        // čas na kus (sčítá se s nahazováním a výměnou)
                     count: 0,
-                    order: "1",
+                    order: '-',
                     casting: 0,     // nahazování
                     exchange: 0,    // výměna
                 },
