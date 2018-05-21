@@ -50,6 +50,11 @@ export class OrderPopup extends React.Component {
                                 <option>
                                     Vybrat zakázku
                                 </option>
+                                <option
+                                    value="new"
+                                >
+                                    Přidat novou zakázka
+                                </option>
                                 {
                                     this.props.orderList.filter((o) => !o.done).map((order) => {
                                         return (

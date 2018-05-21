@@ -17,6 +17,12 @@ export class SettingsPopup extends React.Component {
         };
     }
 
+    setTabIndex = (tabIndex = 0) => {
+        this.setState({
+            tabIndex,
+        });
+    }
+
     render() {
         const {
             tabIndex,

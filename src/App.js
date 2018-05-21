@@ -42,6 +42,7 @@ class App extends React.Component {
         };
 
         this.timeout = null;
+        this.settings = React.createRef();
         this.calendar = React.createRef();
     }
 
@@ -356,6 +357,11 @@ class App extends React.Component {
     handleInputChange = (e) => {
         const { products } = this.state;
         const { name, value } = e.target;
+
+        if (name === 'orderId' && value === 'new') {
+            return this.openSettings(null, 2);
+        }
+
         const order = set(this.state.order, name, value);
 
         if (name === 'dateFrom' || name === 'dateTo') {
@@ -509,9 +515,11 @@ class App extends React.Component {
         this.resetOrderState();
     }
 
-    openSettings = () => {
+    openSettings = (e, tabIndex = 0) => {
         this.setState({
             settings: true,
+        }, () => {
+            this.settings.current.setTabIndex(tabIndex);
         });
     }
 
@@ -649,6 +657,7 @@ class App extends React.Component {
                     !settings
                     ? null
                     : <SettingsPopup
+                        ref={this.settings}
                         handleClose={this.closeSettings}
 
                         // machines
