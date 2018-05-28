@@ -230,6 +230,7 @@ export class OrderPopup extends React.Component {
                                 <span className="input-group-text">Počet kusů</span>
                             </div>
                             <input
+                                min={0}
                                 type="number"
                                 name="operation.count"
                                 className="form-control"
@@ -243,6 +244,7 @@ export class OrderPopup extends React.Component {
                                 <span className="input-group-text">Čas na kus</span>
                             </div>
                             <input
+                                min={0}
                                 type="number"
                                 name="operation.time"
                                 className="form-control"
@@ -261,6 +263,7 @@ export class OrderPopup extends React.Component {
                                 <span className="input-group-text">Nahazování</span>
                             </div>
                             <input
+                                min={0}
                                 type="number"
                                 name="operation.casting"
                                 className="form-control"
@@ -277,6 +280,7 @@ export class OrderPopup extends React.Component {
                                 <span className="input-group-text">Výměna</span>
                             </div>
                             <input
+                                min={0}
                                 type="number"
                                 className="form-control"
                                 name="operation.exchange"
