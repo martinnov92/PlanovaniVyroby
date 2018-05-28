@@ -252,7 +252,7 @@ export class OrderPopup extends React.Component {
                                 onChange={this.props.handleInputChange}
                             />
                             <div className="input-group-append">
-                                <span className="input-group-text">min</span>
+                                <span className="input-group-text">min.</span>
                             </div>
                         </div>
 
@@ -271,7 +271,7 @@ export class OrderPopup extends React.Component {
                                 onChange={this.props.handleInputChange}
                             />
                             <div className="input-group-append">
-                                <span className="input-group-text">min</span>
+                                <span className="input-group-text">min.</span>
                             </div>
                         </div>
 
@@ -288,7 +288,7 @@ export class OrderPopup extends React.Component {
                                 onChange={this.props.handleInputChange}
                             />
                             <div className="input-group-append">
-                                <span className="input-group-text">min</span>
+                                <span className="input-group-text">min.</span>
                             </div>
                         </div>
                     </div>
