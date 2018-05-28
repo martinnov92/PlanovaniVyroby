@@ -2,6 +2,7 @@
 
     - opravit sčítání počtu kusů u zakázek na více strojích
     - zkontrolovat proč se ukládají u products "-"
+    X opravit pozici tooltipu
     X možnost nastavení času po půl hodině
     X opravit časový posun při změně události
     X kontrola vykreslení objednávek, které se táhnou přes více týdnů

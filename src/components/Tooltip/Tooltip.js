@@ -54,14 +54,13 @@ export class Tooltip extends React.Component {
             const parentRect = this.parentDiv.current.getBoundingClientRect();
             const tooltipRect = this.tooltip.current.getBoundingClientRect();
 
-            if (parentRect.bottom > (window.innerHeight - parentRect.height)) {
+            if (parentRect.bottom > (window.innerHeight - tooltipRect.height)) {
                 // tooltip on top
                 tooltipPositionStr = 'top';
 
                 tooltipPositionObj = {
-                    left: parentRect.left + "px",
-                    top: parentRect.top - ((parentRect.height / 2) + (tooltipRect.height / 2)) + "px",
-                    transform: `translate(-50%, 0)`,
+                    left: parentRect.left - (tooltipRect.width / 2) + (parentRect.width / 2) + "px",
+                    top: parentRect.top - ((parentRect.height / 2) + (tooltipRect.height)) + "px",
                 };
             } else if (tooltipRect.width > parentRect.left) {
                 // tooltip on right
