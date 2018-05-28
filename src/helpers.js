@@ -55,8 +55,9 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 [current.productName]: {
                     ...prevItem,
                     total: {
+                        // ...prevItem.total,
                         time: Number(prevItem ? prevItem.total.time : 0) + totalTime,
-                        count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
+                        // count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
                     },
                     done: order.done,
                     color: order.color,

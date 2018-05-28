@@ -537,20 +537,105 @@ class App extends React.Component {
         });
     }
 
+    renderMainScreen = () => {
+        const {
+            orders,
+            loading,
+            machines,
+            orderList,
+            fileLoaded,
+            currentWeek,
+            startOfTheWeek,
+            filterFinishedOrders,
+        } = this.state;
+
+        if (loading) {
+            return null;
+        }
+
+        if ((machines.length === 0) && (orders.length === 0) && fileLoaded) {
+            return (
+                <div className="jumbotron">
+                    <h4>
+                        Zatím nejsou vytvořeny žádné záznamy.
+                    </h4>
+
+                    <hr className="mt-3 mb-3" />
+
+                    <p>
+                        Začnětě přidáním stroje v nastavení aplikace.
+                    </p>
+                </div>
+            );
+        } else if (!fileLoaded) {
+            return (
+                <div className="jumbotron">
+                    <h4>
+                        Soubor nenalezen.
+                    </h4>
+
+                    <hr className="mt-3 mb-3" />
+
+                    <button
+                        className="btn btn-info"
+                        onClick={this.showSaveDialog}
+                    >
+                        Nový soubor
+                    </button>
+
+                    <button
+                        className="btn btn-info ml-3"
+                        onClick={this.showOpenDialog}
+                    >
+                        Otevřít soubor
+                    </button>
+                </div>
+            );
+        }
+
+        return (
+            <React.Fragment>
+                <Calendar
+                    ref={this.calendar}
+                    currentWeek={currentWeek}
+                    startOfTheWeek={startOfTheWeek}
+                    onDragStart={this.handleDragStart}
+                    onEventDrop={this.handleEventDrop}
+                    onEventEnter={this.handleEventEnter}
+                    onEventLeave={this.handleEventLeave}
+                    onDoubleClick={this.handleEventEdit}
+                    onMouseUp={this.handleSelectingMouseUp}
+
+                    // context menu
+                    onEditEvent={this.handleEventEdit}
+                    onDeleteEvent={this.handleOrderDelete}
+
+                    // data
+                    events={orders}
+                    machines={machines}
+                    orderList={orderList}
+                />
+
+                <OrderTable
+                    events={orders}
+                    orderList={orderList}
+                    onCloseOrder={this.handleCloseOrder}
+                    filterFinishedOrders={filterFinishedOrders}
+                />
+            </React.Fragment>
+        );
+    }
+
     render() {
         const {
             open,
             order,
-            orders,
-            loading,
             machines,
             settings,
             products,
             orderList,
             hoverOrder,
-            fileLoaded,
             currentWeek,
-            startOfTheWeek,
             filterFinishedOrders,
         } = this.state;
 
@@ -569,73 +654,7 @@ class App extends React.Component {
                 <div
                     className="pt-3 pr-3 pb-3 pl-3 app-main--screen"
                 >
-                    {
-                        loading
-                        ? null
-                        : (machines.length === 0 && orders.length === 0 && fileLoaded)
-                        ? <div className="jumbotron">
-                            <h4>
-                                Zatím nejsou vytvořeny žádné záznamy.
-                            </h4>
-
-                            <hr className="mt-3 mb-3" />
-
-                            <p>
-                                Začnětě přidáním stroje v nastavení aplikace.
-                            </p>
-                        </div>
-                        : !fileLoaded
-                        ? <div className="jumbotron">
-                            <h4>
-                                Soubor nenalezen.
-                            </h4>
-
-                            <hr className="mt-3 mb-3" />
-
-                            <button
-                                className="btn btn-info"
-                                onClick={this.showSaveDialog}
-                            >
-                                Nový soubor
-                            </button>
-
-                            <button
-                                className="btn btn-info ml-3"
-                                onClick={this.showOpenDialog}
-                            >
-                                Otevřít soubor
-                            </button>
-                        </div>
-                        : <React.Fragment>
-                            <Calendar
-                                ref={this.calendar}
-                                currentWeek={currentWeek}
-                                startOfTheWeek={startOfTheWeek}
-                                onDragStart={this.handleDragStart}
-                                onEventDrop={this.handleEventDrop}
-                                onEventEnter={this.handleEventEnter}
-                                onEventLeave={this.handleEventLeave}
-                                onDoubleClick={this.handleEventEdit}
-                                onMouseUp={this.handleSelectingMouseUp}
-
-                                // context menu
-                                onEditEvent={this.handleEventEdit}
-                                onDeleteEvent={this.handleOrderDelete}
-
-                                // data
-                                events={orders}
-                                machines={machines}
-                                orderList={orderList}
-                            />
-        
-                            <OrderTable
-                                events={orders}
-                                orderList={orderList}
-                                onCloseOrder={this.handleCloseOrder}
-                                filterFinishedOrders={filterFinishedOrders}
-                            />
-                        </React.Fragment>
-                    }
+                    { this.renderMainScreen() }
 
                     {
                         !open
