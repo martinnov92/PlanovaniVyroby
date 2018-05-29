@@ -1,7 +1,8 @@
 import React from 'react';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
-import { createClassName, createGroupedOrders } from '../../helpers';
+import { createClassName, createGroupedOrders, formatMinutesToTime } from '../../helpers';
+
 import './order-table.css';
 
 export class OrderTable extends React.Component {
@@ -196,7 +197,12 @@ export class OrderTable extends React.Component {
                         <td
                             style={createStyleObject(thWidth[10])}
                         >
-                            {product.total.time} * {product.total.count} = {((product.total.time * product.total.count) / 60).toFixed(1)}h
+                            <Tooltip
+                                className={`cursor--default`}
+                                title={`Čas na zakázku: ${product.total.time}m * ${product.total.count}ks. = ${formatMinutesToTime(product.total.time * product.total.count)}`}
+                            >
+                                {formatMinutesToTime(product.total.time * product.total.count)}
+                            </Tooltip>
                         </td>
                     </ContextMenu>
                 );

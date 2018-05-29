@@ -1,7 +1,7 @@
+import React from 'react';
+import moment from 'moment';
 import set from 'lodash/set';
 import differenceBy from 'lodash/differenceBy';
-import moment from 'moment';
-import React from 'react';
 import { OrderPopup, SettingsPopup } from './Scenes';
 import {
     Calendar,
@@ -11,7 +11,7 @@ import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
 import {
     saveFile,
-    getNetMachineTime, 
+    getNetMachineTime,
     isDateRangeOverlaping, 
     INPUT_DATE_TIME_FORMAT,
 } from './helpers';

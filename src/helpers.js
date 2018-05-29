@@ -1,8 +1,8 @@
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 
-const moment = extendMoment(Moment);
 const fs = window.require('fs');
+const moment = extendMoment(Moment);
 
 export const FULL_FORMAT = 'D.M.YYYY dddd';
 export const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
@@ -21,9 +21,15 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
     }
 
     return o.filter((o) => list.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
+        let totalTime = 0;
         const orderExists = prev[current.orderId];
         const order = list.find((l) => l.id === current.orderId);
-        const totalTime = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+
+        if (current.hasOwnProperty('operation')) {
+            totalTime = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+        } else {
+            return prev;
+        }
 
         if (!orderExists) {
             return {
@@ -57,7 +63,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     total: {
                         // ...prevItem.total,
                         time: Number(prevItem ? prevItem.total.time : 0) + totalTime,
-                        // count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
+                        count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
                     },
                     done: order.done,
                     color: order.color,
@@ -184,10 +190,11 @@ export function formatMinutesToTime(totalMinutes) {
         return `0h 0m`;
     }
 
-    const hours = Math.floor(totalMinutes / 60);
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
     const minutes = totalMinutes % 60;
 
-    return `${hours}h ${minutes}m`;
+    return days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
 }
 
 export function saveFile(path, data) {
