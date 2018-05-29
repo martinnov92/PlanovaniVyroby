@@ -63,12 +63,14 @@ export class OrderTable extends React.Component {
         } = this.state;
 
         const {
+            products,
             orderList,
             filterFinishedOrders,
         } = this.props;
 
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
+        const orders = createGroupedOrders(events, orderList, products, filterFinishedOrders);
+        console.log(orders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];

@@ -560,6 +560,7 @@ class App extends React.Component {
             orders,
             loading,
             machines,
+            products,
             orderList,
             fileLoaded,
             currentWeek,
@@ -636,6 +637,7 @@ class App extends React.Component {
 
                 <OrderTable
                     events={orders}
+                    products={products}
                     orderList={orderList}
                     onCloseOrder={this.handleCloseOrder}
                     filterFinishedOrders={filterFinishedOrders}
