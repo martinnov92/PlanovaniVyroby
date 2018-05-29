@@ -12,72 +12,139 @@ export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
 
-export function createGroupedOrders(orders, orderList, displayFinishedOrders = false) {
-    let o = [...orders];
-    let list = [...orderList]; 
-
+export function createGroupedOrders(orders, orderList, products, displayFinishedOrders = false) {
     if (displayFinishedOrders) {
-        list = orderList.filter((order) => order.done === false);
+        orderList = orderList.filter((order) => !order.done);
     }
 
-    return o.filter((o) => list.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
-        let totalTime = 0;
-        const orderExists = prev[current.orderId];
-        const order = list.find((l) => l.id === current.orderId);
+    const ordersWithIds = orders.filter((order) => orderList.findIndex((listItem) => listItem.id === order.orderId) > -1);
+    const groupedOrders = ordersWithIds.reduce((prev, current) => {
+        console.log(prev, current);
 
-        if (current.hasOwnProperty('operation')) {
+        let totalTime = 0;
+        const prevOrder = prev[current.orderId];
+        const order = orderList.find((listItem) => listItem.id === current.orderId);
+        const product = products.find((product) => product.name === current.productName);
+        const totalCount = (product && product.count) ? Number(product.count) : 0;
+
+        if (current.operation) {
             totalTime = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
-        } else {
-            return prev;
         }
 
-        if (!orderExists) {
-            return {
-                ...prev,
-                [current.orderId]: {
-                    [current.productName]: {
-                        total: {
-                            time: totalTime,
-                            count: Number(current.operation.count),
-                        },
-                        done: order.done,
-                        color: order.color,
-                        [current.operation.order]: {
-                            time: Number(current.operation.time),
-                            count: Number(current.operation.count),
-                            casting: Number(current.operation.casting),
-                            exchange: Number(current.operation.exchange),
-                        }
-                    }
-                }
+        if (prevOrder && prevOrder[current.productName] && current.operation) {
+
+            if (prevOrder[current.productName][current.operation.order]) {
+                totalTime += Number(current.operation.time);
+            }
+        }
+
+        let groupedOrder = {
+            [current.productName]: {
+                total: {
+                    time: totalTime,
+                    count: totalCount,
+                },
+                done: order.done,
+                color: order.color,
+            },
+        };
+
+        if (prevOrder && prevOrder[current.productName]) {
+            groupedOrder = {
+                [current.productName]: {
+                    ...prevOrder[current.productName],
+                },
+            };
+            console.log(groupedOrder);
+        }
+
+        if (current.operation) {
+            groupedOrder[current.productName][current.operation.order] = {
+                time: Number(current.operation.time),
+                count: Number(current.operation.count),
+                casting: Number(current.operation.casting),
+                exchange: Number(current.operation.exchange),
             };
         }
 
-        const prevItem = prev[current.orderId][current.productName];
         return {
             ...prev,
-            [current.orderId]: {
-                ...prev[current.orderId],
-                [current.productName]: {
-                    ...prevItem,
-                    total: {
-                        // ...prevItem.total,
-                        time: Number(prevItem ? prevItem.total.time : 0) + totalTime,
-                        count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
-                    },
-                    done: order.done,
-                    color: order.color,
-                    [current.operation.order]: {
-                        time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
-                        count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
-                        casting: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].casting : 0) + Number(current.operation.casting),
-                        exchange: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].exchange : 0) + Number(current.operation.exchange),
-                    }
-                }
-            }
+            [current.orderId]: groupedOrder,
         };
     }, {});
+
+    console.table(ordersWithIds);
+    console.table(groupedOrders);
+
+    return groupedOrders;
 }
+
+// export function createGroupedOrders(orders, orderList, displayFinishedOrders = false) {
+//     let o = [...orders];
+//     let list = [...orderList]; 
+
+//     if (displayFinishedOrders) {
+//         list = orderList.filter((order) => order.done === false);
+//     }
+
+//     return o.filter((o) => list.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
+//         let totalTime = 0;
+//         const orderExists = prev[current.orderId];
+//         const order = list.find((l) => l.id === current.orderId);
+
+//         if (current.hasOwnProperty('operation')) {
+//             totalTime = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+//         } else {
+//             return prev;
+//         }
+
+//         if (!orderExists) {
+//             return {
+//                 ...prev,
+//                 [current.orderId]: {
+//                     [current.productName]: {
+//                         total: {
+//                             time: totalTime,
+//                             count: Number(current.operation.count),
+//                         },
+//                         done: order.done,
+//                         color: order.color,
+//                         [current.operation.order]: {
+//                             time: Number(current.operation.time),
+//                             count: Number(current.operation.count),
+//                             casting: Number(current.operation.casting),
+//                             exchange: Number(current.operation.exchange),
+//                         }
+//                     }
+//                 }
+//             };
+//         }
+
+//         const prevItem = prev[current.orderId][current.productName];
+//         return {
+//             ...prev,
+//             [current.orderId]: {
+//                 ...prev[current.orderId],
+//                 [current.productName]: {
+//                     ...prevItem,
+//                     total: {
+//                         // ...prevItem.total,
+//                         time: Number(prevItem ? prevItem.total.time : 0) + totalTime,
+//                         count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
+//                     },
+//                     done: order.done,
+//                     color: order.color,
+//                     [current.operation.order]: {
+//                         time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
+//                         count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
+//                         casting: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].casting : 0) + Number(current.operation.casting),
+//                         exchange: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].exchange : 0) + Number(current.operation.exchange),
+//                     }
+//                 }
+//             }
+//         };
+//     }, {});
+// }
 
 export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHoursTo = 20, pause = 0.5) {
     let result = 0;

@@ -8,6 +8,7 @@ import './order-table.css';
 export class OrderTable extends React.Component {
     static defaultProps = {
         events: [],
+        products: [],
         orderList: [],
         onCloseOrder: () => {},
         filterFinishedOrders: true,
@@ -63,12 +64,13 @@ export class OrderTable extends React.Component {
         } = this.state;
 
         const {
+            products,
             orderList,
             filterFinishedOrders,
         } = this.props;
 
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
+        const orders = createGroupedOrders(events, orderList, products, filterFinishedOrders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
