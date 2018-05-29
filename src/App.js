@@ -358,7 +358,7 @@ class App extends React.Component {
         const { products } = this.state;
         const { name, value } = e.target;
 
-        if ((name === 'orderId' || name === 'machine') && value === '-') {
+        if ((name === 'orderId' || name === 'machine' || name === 'operation.order') && value === '-') {
             return;
         }
 
@@ -412,6 +412,7 @@ class App extends React.Component {
     }
 
     handleSave = () => {
+        const products = [...this.state.products];
         const ordersCopy = [...this.state.orders];
         const orderListCopy = [...this.state.orderList];
 
@@ -448,28 +449,31 @@ class App extends React.Component {
             ordersCopy.splice(findIndex, 1, order);
         }
 
-        const products = [...this.state.products];
-        const findIndex = products.findIndex((product) => order.productName === product.name);
-
-        if (findIndex === -1) {
-            products.push({
-                name: order.productName,
-                operation: {
-                    [order.operation.order]: {
-                        ...order.operation,
-                    },
-                },
-            });
+        if (order.operation.order === '-') {
+            delete order.operation;
         } else {
-            products[findIndex] = {
-                ...products[findIndex],
-                operation: {
-                    ...products[findIndex].operation,
-                    [order.operation.order]: {
-                        ...order.operation,
+            const findIndex = products.findIndex((product) => order.productName === product.name);
+    
+            if (findIndex === -1) {
+                products.push({
+                    name: order.productName,
+                    operation: {
+                        [order.operation.order]: {
+                            ...order.operation,
+                        },
                     },
-                },
-            };
+                });
+            } else {
+                products[findIndex] = {
+                    ...products[findIndex],
+                    operation: {
+                        ...products[findIndex].operation,
+                        [order.operation.order]: {
+                            ...order.operation,
+                        },
+                    },
+                };
+            }
         }
 
         this.setState({

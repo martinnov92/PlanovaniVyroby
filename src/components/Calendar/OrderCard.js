@@ -20,13 +20,17 @@ export class OrderCard extends React.Component {
             orderList,
         } = this.props;
 
+        let totalMinutes = 0;
         const classNames = createClassName([
             order ? 'card--active' : null,
             'card shadow--light calendar--event-card',
         ]);
         const mainOrder = orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
-        const totalMinutes = order.operation.time * order.operation.count;
+
+        if (order.hasOwnProperty('operation')) {
+            totalMinutes = order.operation.time * order.operation.count;
+        }
 
         return (
             <div
@@ -51,15 +55,21 @@ export class OrderCard extends React.Component {
                         <p className="card-text">
                             {machine ? machine.name : 'Bez stroje'}
                         </p>
-                        <p className="card-text">
-                            {order.operation.order}. operace
-                        </p>
-                        <p className="card-text">
-                            {order.operation.count}ks
-                        </p>
-                        <p className="card-text">
-                            {order.operation.time}min/kus
-                        </p>
+                        {
+                            order.operation
+                            ? <React.Fragment>
+                                <p className="card-text">
+                                    {order.operation.order}. operace
+                                </p>
+                                <p className="card-text">
+                                    {order.operation.count}ks
+                                </p>
+                                <p className="card-text">
+                                    {order.operation.time}min/kus
+                                </p>
+                            </React.Fragment>
+                            : null
+                        }
                         <p className="card-text">
                             Celkem: {totalMinutes}min ({(totalMinutes / 60).toFixed(1)}hod)
                         </p>

@@ -199,7 +199,7 @@ export class OrderTable extends React.Component {
                         >
                             <Tooltip
                                 className={`cursor--default`}
-                                title={`Čas na zakázku: ${product.total.time}m * ${product.total.count}ks. = ${formatMinutesToTime(product.total.time * product.total.count)}`}
+                                title={`Čas na zakázku: <br /> ${product.total.time}m * ${product.total.count}ks. = ${formatMinutesToTime(product.total.time * product.total.count)}`}
                             >
                                 {formatMinutesToTime(product.total.time * product.total.count)}
                             </Tooltip>
