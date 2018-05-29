@@ -382,6 +382,11 @@ class App extends React.Component {
         }
 
         const order = set(this.state.order, name, value);
+        const product = products.find((p) => p.name === order.productName);
+
+        if (product) {
+            order.count = product && product.count ? product.count : '0';
+        }
 
         if (name === 'dateFrom' || name === 'dateTo') {
             const date = moment(value);
