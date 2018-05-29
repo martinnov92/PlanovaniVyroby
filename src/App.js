@@ -255,12 +255,10 @@ class App extends React.Component {
             dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
         };
 
-        const product = this.state.products.find((product) => product.name === copyOrder.productName);
-
-        copyOrder.count = product && product.count ? product.count : '0';
         if (!copyOrder.operation) {
             copyOrder.operation = {
                 time: 0,
+                count: 0,
                 order: '-',
                 casting: 0,
                 exchange: 0,
@@ -382,11 +380,6 @@ class App extends React.Component {
         }
 
         const order = set(this.state.order, name, value);
-        const product = products.find((p) => p.name === order.productName);
-
-        if (product) {
-            order.count = product && product.count ? product.count : '0';
-        }
 
         if (name === 'dateFrom' || name === 'dateTo') {
             const date = moment(value);
@@ -414,6 +407,7 @@ class App extends React.Component {
             } else {
                 order.operation = {
                     time: 0,
+                    count: 0,
                     casting: 0,
                     exchange: 0,
                     order: name === 'operation.order' ? value : '-',
@@ -471,7 +465,6 @@ class App extends React.Component {
             if (findIndex === -1) {
                 products.push({
                     name: order.productName,
-                    count: order.count,
                     operation: {
                         [order.operation.order]: {
                             ...order.operation,
@@ -481,7 +474,6 @@ class App extends React.Component {
             } else {
                 products[findIndex] = {
                     ...products[findIndex],
-                    count: order.count,
                     operation: {
                         ...products[findIndex].operation,
                         [order.operation.order]: {
@@ -491,9 +483,6 @@ class App extends React.Component {
                 };
             }
         }
-
-        products[findIndex].count = order.count;
-        delete order.count;
 
         this.setState({
             open: false,
@@ -806,10 +795,10 @@ class App extends React.Component {
                 productName: '',
                 worker: '',
                 note: '',
-                count: 0,
                 dateTo: dateTo,
                 operation: {
                     time: 0,        // čas na kus (sčítá se s nahazováním a výměnou)
+                    count: 0,
                     order: '-',
                     casting: 0,     // nahazování
                     exchange: 0,    // výměna

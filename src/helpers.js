@@ -13,32 +13,65 @@ export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
 
-export function createGroupedOrders(orders, orderList, products, displayFinishedOrders = false) {
+export function createGroupedOrders(orders, orderList, displayFinishedOrders = false) {
     if (displayFinishedOrders) {
         orderList = orderList.filter((order) => order.done === false);
     }
 
-    const groupedProducts = products.reduce((prevObj, currentObj) => {
-        return {
-            ...prevObj,
-            [currentObj.name]: {
-                totalCount: Number(currentObj.count ? currentObj.count : 0),
-            }
-        }
-    }, {});
-
+    orders = orders.filter((o) => orderList.findIndex((l) => (l.id === o.orderId)) > -1);
     const groupedByOrders = groupBy(orders, (o) => o.orderId);
     const groupedByProducts = {};
     for (let order in groupedByOrders) {
         groupedByProducts[order] = groupBy(groupedByOrders[order], (n) => n.productName);
     }
 
-    console.log(groupedProducts, groupedByProducts);
+    const groupedOrders = {};
+    for (let order in groupedByProducts) {
+        const orderInfo = orderList.find((o) => o.id === order);
+        groupedOrders[order] = {
+            done: orderInfo.done,
+            color: orderInfo.color,
+        };
+
+        for (let product in groupedByProducts[order]) {
+            groupedOrders[order][product] = {};
+
+            for (let operation in groupedByProducts[order][product]) {
+                const groupedProduct = groupedByProducts[order][product];
+
+                const total = groupedProduct.reduce((prev, current) => {
+                    const total = {}
+
+                    if (current.operation) {
+                        if (current.operation.count > 0) {
+                            total.count = Number(current.operation.count > 0 ? current.operation.count : prev.total.count);
+                        }
+
+                        total.time = prev.time + Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+
+                        return total;
+                    }
+
+                    return prev;
+                }, { time: 0, count: 0, });
+
+                if (groupedProduct[operation].operation) {
+                    groupedOrders[order][product] = {
+                        ...groupedOrders[order][product],
+                        [groupedProduct[operation].operation.order]: groupedProduct[operation].operation,
+                        totalTime: total.time,
+                        totalCount: total.count,
+                    };
+                }
+            }
+        }
+    }
+    console.log(groupedOrders);
 
     return orders.filter((o) => orderList.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
         const orderExists = prev[current.orderId];
         const order = orderList.find((l) => l.id === current.orderId);
-        console.log(current);
+        // console.log(current);
         return {
             [order.id]: {
                 // ...prev[current.orderId],
@@ -47,7 +80,7 @@ export function createGroupedOrders(orders, orderList, products, displayFinished
                     done: order.done,
                     color: order.color,
                     total: {
-                        count: groupedProducts[current.productName].totalCount,
+                        count: 0,
                     },
                     //[current.operation.order]: groupedOrders[order.id]
                 },

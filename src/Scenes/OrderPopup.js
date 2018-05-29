@@ -86,20 +86,6 @@ export class OrderPopup extends React.Component {
 
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
-                                <span className="input-group-text">Počet kusů</span>
-                            </div>
-                            <input
-                                min={0}
-                                type="number"
-                                name="count"
-                                value={order.count}
-                                className="form-control"
-                                onChange={this.props.handleInputChange}
-                            />
-                        </div>
-
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
                                 <span className="input-group-text">Stroj</span>
                             </div>
                             <select
@@ -239,6 +225,20 @@ export class OrderPopup extends React.Component {
                                     6. operace
                                 </option>
                             </select>
+                        </div>
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Počet kusů</span>
+                            </div>
+                            <input
+                                min={0}
+                                type="number"
+                                name="operation.count"
+                                className="form-control"
+                                value={order.operation.count}
+                                onChange={this.props.handleInputChange}
+                            />
                         </div>
 
                         <div className="input-group mb-3">
