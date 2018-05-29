@@ -33,7 +33,6 @@ class App extends React.Component {
             infoText: '',
             loading: false,
             settings: false,
-            ctrlDown: false,
             hoverOrder: null,
             fileLoaded: false,
             filterFinishedOrders: true,
@@ -759,7 +758,6 @@ class App extends React.Component {
             orderList: [],
             loading: false,
             settings: false,
-            ctrlDown: false,
             hoverOrder: null,
             fileLoaded: false,
         });
