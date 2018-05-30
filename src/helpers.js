@@ -1,5 +1,6 @@
 import Moment from 'moment';
 import groupBy from 'lodash/groupBy';
+import isEqual from 'lodash/isEqual';
 import { extendMoment } from 'moment-range';
 
 const fs = window.require('fs');
@@ -40,32 +41,44 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
 
             for (let operation in groupedByProducts[order][product]) {
                 const groupedProduct = groupedByProducts[order][product];
-
-                const total = groupedProduct.reduce((prev, current) => {
-                    const total = {}
-
-                    if (current.operation) {
-                        if ((Number.isNaN(prev.count) || prev.count <= 0) && current.operation.count > 0) {
-                            total.count = Number(current.operation.count);
-                        } else {
-                            total.count = 0;
-                        }
-
-                        total.time = prev.time + Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
-
-                        return total;
+                // ! získání největšího čísla z operation
+                const maxCount = Math.max.apply(null, groupedProduct.map((p) => {
+                    if (p.operation) {
+                        return Number(p.operation.count);
                     }
 
-                    return prev;
-                }, { time: 0, count: 0, });
+                    return 0;
+                }));
+
+                const usedOperation = {};
+                const totalTime = groupedProduct.reduce((prev, current) => {
+                    let total = prev;
+
+                    if (current.operation) {
+                        if (!usedOperation[current.operation.order]) {
+                            usedOperation[current.operation.order] = current.operation;
+                            total += Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+                        } else {
+                            if (!isEqual(usedOperation[current.operation.order], current.operation)) {
+                                total += Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+                            }
+                        }
+                    }
+
+                    return total;
+                }, 0);
 
                 if (groupedProduct[operation].operation) {
                     groupedOrders[order][product] = {
                         ...groupedOrders[order][product],
-                        [groupedProduct[operation].operation.order]: groupedProduct[operation].operation,
-                        totalTime: total.time,
-                        totalCount: total.count,
+                        totalCount: maxCount,
+                        totalTime: totalTime,
                     };
+
+                    const gp = groupedProduct[operation];
+                    if (gp.operation && (gp.operation.time != 0 || gp.operation.exchange != 0 || gp.operation.casting != 0)) {
+                        groupedOrders[order][product][groupedProduct[operation].operation.order] = groupedProduct[operation].operation;
+                    }
                 }
             }
         }

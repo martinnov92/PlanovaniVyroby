@@ -1,4 +1,5 @@
 import React from 'react';
+import isEqual from 'lodash/isEqual';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import { createClassName, createGroupedOrders, formatMinutesToTime } from '../../helpers';
@@ -19,6 +20,7 @@ export class OrderTable extends React.Component {
         this.state = {
             width: 0,
             height: 0,
+            orders: [],
             thWidth: [],
             scrollLeft: 0,
             scrollableWidth: 0,
@@ -33,6 +35,27 @@ export class OrderTable extends React.Component {
         this.setDimension();
         window.addEventListener('resize', this.setDimension)
         this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
+        this.saveOrdersToState(this.props.events, this.props.orderList, this.props.filterFinishedOrders);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {
+            events,
+            orderList,
+            filterFinishedOrders,
+        } = this.props;
+
+        if (!isEqual(events, nextProps.events) || !isEqual(orderList, nextProps.orderList) || filterFinishedOrders !== nextProps.filterFinishedOrders) {
+            this.saveOrdersToState(nextProps.events, nextProps.orderList, nextProps.filterFinishedOrders);
+        }
+    }
+
+    saveOrdersToState = (events, orderList, filterFinishedOrders) => {
+        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
+        console.log(orders);
+        this.setState({
+            orders,
+        });
     }
 
     handleScroll = () => {
@@ -59,23 +82,19 @@ export class OrderTable extends React.Component {
 
     renderTableBody = (events) => {
         const {
+            orders,
             thWidth,
         } = this.state;
 
         const {
-            products,
             orderList,
             filterFinishedOrders,
         } = this.props;
 
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
-            const keys = Object.keys(order);
-            console.log(order);
-
             const o = orderList.find((_o) => _o.id === key);
 
             row.push(
@@ -115,7 +134,9 @@ export class OrderTable extends React.Component {
                                     <table key={productKey}>
                                         <tbody>
                                             <tr>
-                                                <td style={createStyleObject(thWidth[1])}>{productKey}</td>
+                                                <td style={createStyleObject(thWidth[1])} title={productKey}>
+                                                    {productKey}
+                                                </td>
                                                 <td style={createStyleObject(thWidth[2])}>{product.totalCount}</td>
                                                 <td
                                                     style={createStyleObject(thWidth[3])}
