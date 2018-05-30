@@ -43,19 +43,21 @@ export class OrderTable extends React.Component {
     }
 
     setDimension = () => {
-        const fixedHeader = this.fixedHeader.current;
-        const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
-
-        const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => node.offsetWidth);
-        const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
-        const scrollableWidth = this.scrollableDiv.current.offsetWidth - this.scrollableDiv.current.scrollWidth;
-
-        this.setState({
-            height,
-            scrollableWidth,
-            thWidth: fixedHeaderTh,
-            width: fixedHeader.width,
-        });
+        try {
+            const fixedHeader = this.fixedHeader.current;
+            const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
+    
+            const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => node.offsetWidth);
+            const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
+            const scrollableWidth = this.scrollableDiv.current.offsetWidth - this.scrollableDiv.current.scrollWidth;
+    
+            this.setState({
+                height,
+                scrollableWidth,
+                thWidth: fixedHeaderTh,
+                width: fixedHeader.width,
+            });
+        } catch (err) {}
     }
 
     renderTableBody = (events) => {

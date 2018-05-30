@@ -55,12 +55,14 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     let total = prev;
 
                     if (current.operation) {
+                        const t = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+
                         if (!usedOperation[current.operation.order]) {
                             usedOperation[current.operation.order] = current.operation;
-                            total += Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+                            total += t;
                         } else {
                             if (!isEqual(usedOperation[current.operation.order], current.operation)) {
-                                total += Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+                                total += t;
                             }
                         }
                     }
