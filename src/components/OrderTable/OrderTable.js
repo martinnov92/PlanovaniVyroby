@@ -70,145 +70,161 @@ export class OrderTable extends React.Component {
 
         // zgrupovat zakázky podle orderId
         const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
-        console.log(orders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
             const keys = Object.keys(order);
+            console.log(order);
 
-            for (let i = 0; i < keys.length; i++) {
-                const product = order[keys[i]];
-                const o = orderList.find((_o) => _o.id === key);
+            const o = orderList.find((_o) => _o.id === key);
 
-                row.push(
-                    <ContextMenu
-                        key={keys[i]}
-                        buttons={[
-                            {
-                                label: 'Uzavřít zakázku',
-                                onClick: (e) => this.props.onCloseOrder(e, key, order),
-                            }
-                        ]}
-                        useAsTableRow={true}
-                        disabled={product.done}
-                        className={product.done ? 'order--finished' : null}
+            row.push(
+                <ContextMenu
+                    key={key}
+                    buttons={[
+                        {
+                            label: 'Uzavřít zakázku',
+                            onClick: (e) => this.props.onCloseOrder(e, key, order),
+                        }
+                    ]}
+                    useAsTableRow={true}
+                    disabled={order._info.done}
+                    className={order._info.done ? 'order--finished' : null}
+                >
+                    <td
+                        className="table--orders-first-column"
+                        style={createStyleObject(thWidth[0])}
                     >
-                        <td
-                            className="table--orders-first-column"
-                            style={createStyleObject(thWidth[0])}
+                        <span
+                            style={{
+                                backgroundColor: order._info.color
+                            }}
                         >
-                            <span
-                                style={{
-                                    backgroundColor: product.color
-                                }}
-                            >
-                                {o.name}
-                            </span>
-                        </td>
-                        <td style={createStyleObject(thWidth[1])}>{keys[i]}</td>
-                        <td style={createStyleObject(thWidth[2])}>{product.total.count}</td>
-                        <td
-                            style={createStyleObject(thWidth[3])}
-                        >
-                            {
-                                product['1']
-                                ? <Tooltip
-                                    className={`cursor--default`}
-                                    title={`Čas na kus: ${product['1'] ? product['1'].time : '-'} min.\nNahazování: ${product['1'] ? product['1'].casting : '-'} min.\nVýměna: ${product['1'] ? product['1'].exchange : '-'} min.`}
-                                >
-                                    {product['1'].count}ks. ({product['1'].time} min.)
-                                </Tooltip>
-                                : '-'
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[4])}
-                        >
-                            {
-                                product['2']
-                                ? <Tooltip
-                                    className={`cursor--default`}
-                                    title={`Čas na kus: ${product['2'] ? product['2'].time : '-'} min.\nNahazování: ${product['2'] ? product['2'].casting : '-'} min.\nVýměna: ${product['2'] ? product['2'].exchange : '-'} min.`}
-                                >
-                                    {product['2'].count}ks. ({product['2'].time} min.)
-                                </Tooltip>
-                                : '-'
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[5])}
-                        >
-                            {
-                                product['3']
-                                ? <Tooltip
-                                    className={`cursor--default`}
-                                    title={`Čas na kus: ${product['3'] ? product['3'].time : '-'} min.\nNahazování: ${product['3'] ? product['3'].casting : '-'} min.\nVýměna: ${product['3'] ? product['3'].exchange : '-'} min.`}
-                                >
-                                    {product['3'].count}ks. ({product['3'].time} min.)
-                                </Tooltip>
-                                : '-'
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[6])}
-                        >
-                            {
-                                product['4']
-                                ? <Tooltip
-                                    className={`cursor--default`}
-                                    title={`Čas na kus: ${product['4'] ? product['4'].time : '-'} min.\nNahazování: ${product['4'] ? product['4'].casting : '-'} min.\nVýměna: ${product['4'] ? product['4'].exchange : '-'} min.`}
-                                >
-                                    {product['4'].count}ks. ({product['4'].time} min.)
-                                </Tooltip>
-                                : '-'
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[7])}
-                        >
-                            {
-                                product['5']
-                                ? <Tooltip
-                                    className={`cursor--default`}
-                                    title={`Čas na kus: ${product['5'] ? product['5'].time : '-'} min.\nNahazování: ${product['5'] ? product['5'].casting : '-'} min.\nVýměna: ${product['5'] ? product['5'].exchange : '-'} min.`}
-                                >
-                                    {product['5'].count}ks. ({product['5'].time} min.)
-                                </Tooltip>
-                                : '-'
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[8])}
-                        >
-                            {
-                                product['6']
-                                ? <Tooltip
-                                    className={`cursor--default`}
-                                    title={`Čas na kus: ${product['6'] ? product['6'].time : '-'} min.\nNahazování: ${product['6'] ? product['6'].casting : '-'} min.\nVýměna: ${product['6'] ? product['6'].exchange : '-'} min.`}
-                                >
-                                    {product['6'].count}ks. ({product['6'].time} min.)
-                                </Tooltip>
-                                : '-'
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[9])}
-                        >
-                            {product.total.time}
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth[10])}
-                        >
-                            <Tooltip
-                                className={`cursor--default`}
-                                title={`Čas na zakázku: <br /> ${product.total.time}m * ${product.total.count}ks. = ${formatMinutesToTime(product.total.time * product.total.count)}`}
-                            >
-                                {formatMinutesToTime(product.total.time * product.total.count)}
-                            </Tooltip>
-                        </td>
-                    </ContextMenu>
-                );
-            }
+                            {o.name}
+                        </span>
+                    </td>
+                    <td className="table--orders-inner-table">
+                        {
+                            Object.keys(orders[key]).map((productKey) => {
+                                const product = orders[key][productKey];
+                                if (productKey.startsWith('_')) {
+                                    return null;
+                                }
+
+                                return (
+                                    <table key={productKey}>
+                                        <tbody>
+                                            <tr>
+                                                <td style={createStyleObject(thWidth[1])}>{productKey}</td>
+                                                <td style={createStyleObject(thWidth[2])}>{product.totalCount}</td>
+                                                <td
+                                                    style={createStyleObject(thWidth[3])}
+                                                >
+                                                    {
+                                                        product['1']
+                                                        ? <Tooltip
+                                                            className={`cursor--default`}
+                                                            title={`Čas na kus: ${product['1'] ? product['1'].time : '-'} min.\nNahazování: ${product['1'] ? product['1'].casting : '-'} min.\nVýměna: ${product['1'] ? product['1'].exchange : '-'} min.`}
+                                                        >
+                                                            {product['1'].count}ks. ({product['1'].time} min.)
+                                                        </Tooltip>
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[4])}
+                                                >
+                                                    {
+                                                        product['2']
+                                                        ? <Tooltip
+                                                            className={`cursor--default`}
+                                                            title={`Čas na kus: ${product['2'] ? product['2'].time : '-'} min.\nNahazování: ${product['2'] ? product['2'].casting : '-'} min.\nVýměna: ${product['2'] ? product['2'].exchange : '-'} min.`}
+                                                        >
+                                                            {product['2'].count}ks. ({product['2'].time} min.)
+                                                        </Tooltip>
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[5])}
+                                                >
+                                                    {
+                                                        product['3']
+                                                        ? <Tooltip
+                                                            className={`cursor--default`}
+                                                            title={`Čas na kus: ${product['3'] ? product['3'].time : '-'} min.\nNahazování: ${product['3'] ? product['3'].casting : '-'} min.\nVýměna: ${product['3'] ? product['3'].exchange : '-'} min.`}
+                                                        >
+                                                            {product['3'].count}ks. ({product['3'].time} min.)
+                                                        </Tooltip>
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[6])}
+                                                >
+                                                    {
+                                                        product['4']
+                                                        ? <Tooltip
+                                                            className={`cursor--default`}
+                                                            title={`Čas na kus: ${product['4'] ? product['4'].time : '-'} min.\nNahazování: ${product['4'] ? product['4'].casting : '-'} min.\nVýměna: ${product['4'] ? product['4'].exchange : '-'} min.`}
+                                                        >
+                                                            {product['4'].count}ks. ({product['4'].time} min.)
+                                                        </Tooltip>
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[7])}
+                                                >
+                                                    {
+                                                        product['5']
+                                                        ? <Tooltip
+                                                            className={`cursor--default`}
+                                                            title={`Čas na kus: ${product['5'] ? product['5'].time : '-'} min.\nNahazování: ${product['5'] ? product['5'].casting : '-'} min.\nVýměna: ${product['5'] ? product['5'].exchange : '-'} min.`}
+                                                        >
+                                                            {product['5'].count}ks. ({product['5'].time} min.)
+                                                        </Tooltip>
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[8])}
+                                                >
+                                                    {
+                                                        product['6']
+                                                        ? <Tooltip
+                                                            className={`cursor--default`}
+                                                            title={`Čas na kus: ${product['6'] ? product['6'].time : '-'} min.\nNahazování: ${product['6'] ? product['6'].casting : '-'} min.\nVýměna: ${product['6'] ? product['6'].exchange : '-'} min.`}
+                                                        >
+                                                            {product['6'].count}ks. ({product['6'].time} min.)
+                                                        </Tooltip>
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[9])}
+                                                >
+                                                    {product.totalTime}
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[10])}
+                                                >
+                                                    <Tooltip
+                                                        className={`cursor--default`}
+                                                        title={`Čas na zakázku: <br /> ${product.totalTime}m * ${product.totalCount}ks. = ${formatMinutesToTime(product.totalTime * product.totalCount)}`}
+                                                    >
+                                                        {formatMinutesToTime(product.totalTime * product.totalCount)}
+                                                    </Tooltip>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                )
+                            })
+                        }
+                    </td>
+                </ContextMenu>
+            );
 
             return row;
         });
@@ -291,6 +307,9 @@ export class OrderTable extends React.Component {
 
 function createStyleObject(width) {
     return {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
         width: `${width || 0}px`,
+        maxWidth: `${width || 0}px`,
     };
 }

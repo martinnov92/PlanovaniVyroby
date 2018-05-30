@@ -29,8 +29,10 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
     for (let order in groupedByProducts) {
         const orderInfo = orderList.find((o) => o.id === order);
         groupedOrders[order] = {
-            done: orderInfo.done,
-            color: orderInfo.color,
+            _info: {
+                done: orderInfo.done,
+                color: orderInfo.color,
+            },
         };
 
         for (let product in groupedByProducts[order]) {
