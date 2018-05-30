@@ -20,7 +20,6 @@ export class OrderTable extends React.Component {
         this.state = {
             width: 0,
             height: 0,
-            orders: [],
             thWidth: [],
             scrollLeft: 0,
             scrollableWidth: 0,
@@ -35,27 +34,6 @@ export class OrderTable extends React.Component {
         this.setDimension();
         window.addEventListener('resize', this.setDimension)
         this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
-        this.saveOrdersToState(this.props.events, this.props.orderList, this.props.filterFinishedOrders);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const {
-            events,
-            orderList,
-            filterFinishedOrders,
-        } = this.props;
-
-        if (!isEqual(events, nextProps.events) || !isEqual(orderList, nextProps.orderList) || filterFinishedOrders !== nextProps.filterFinishedOrders) {
-            this.saveOrdersToState(nextProps.events, nextProps.orderList, nextProps.filterFinishedOrders);
-        }
-    }
-
-    saveOrdersToState = (events, orderList, filterFinishedOrders) => {
-        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
-        console.log(orders);
-        this.setState({
-            orders,
-        });
     }
 
     handleScroll = () => {
@@ -82,7 +60,6 @@ export class OrderTable extends React.Component {
 
     renderTableBody = (events) => {
         const {
-            orders,
             thWidth,
         } = this.state;
 
@@ -92,6 +69,7 @@ export class OrderTable extends React.Component {
         } = this.props;
 
         // zgrupovat zakázky podle orderId
+        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
@@ -329,6 +307,7 @@ export class OrderTable extends React.Component {
 function createStyleObject(width) {
     return {
         overflow: 'hidden',
+        whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width: `${width || 0}px`,
         maxWidth: `${width || 0}px`,
