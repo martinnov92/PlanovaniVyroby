@@ -83,74 +83,8 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             }
         }
     }
-    console.log(groupedOrders);
 
     return groupedOrders;
-
-    // return orders.filter((o) => orderList.findIndex((l) => l.id === o.orderId) > -1).reduce((prev, current) => {
-    //     const orderExists = prev[current.orderId];
-    //     const order = orderList.find((l) => l.id === current.orderId);
-    //     console.log(current);
-    //     return {
-    //         [order.id]: {
-    //             ...prev[current.orderId],
-    //             [current.productName]: {
-    //                 ...prev[current.orderId][current.productName],
-    //                 done: order.done,
-    //                 color: order.color,
-    //                 total: {
-    //                     count: 0,
-    //                 },
-    //                 [current.operation.order]: groupedOrders[order.id]
-    //             },
-    //         },
-    //     };
-
-    //     if (!orderExists) {
-    //         return {
-    //             ...prev,
-    //             [current.orderId]: {
-    //                 [current.productName]: {
-    //                     total: {
-    //                         time: totalTime,
-    //                         count: Number(current.operation.count),
-    //                     },
-    //                     done: order.done,
-    //                     color: order.color,
-    //                     [current.operation.order]: {
-    //                         time: Number(current.operation.time),
-    //                         count: Number(current.operation.count),
-    //                         casting: Number(current.operation.casting),
-    //                         exchange: Number(current.operation.exchange),
-    //                     }
-    //                 }
-    //             }
-    //         };
-    //     }
-
-    //     const prevItem = prev[current.orderId][current.productName];
-    //     return {
-    //         ...prev,
-    //         [current.orderId]: {
-    //             ...prev[current.orderId],
-    //             [current.productName]: {
-    //                 ...prevItem,
-    //                 total: {
-    //                     time: Number(prevItem ? prevItem.total.time : 0) + totalTime,
-    //                     count: Number(prevItem ? prevItem.total.count : 0) + Number(current.operation.count),
-    //                 },
-    //                 done: order.done,
-    //                 color: order.color,
-    //                 [current.operation.order]: {
-    //                     time: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].time : 0) + Number(current.operation.time),
-    //                     count: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].count : 0) + Number(current.operation.count),
-    //                     casting: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].casting : 0) + Number(current.operation.casting),
-    //                     exchange: Number(prevItem && prevItem[current.operation.order] ? prevItem[current.operation.order].exchange : 0) + Number(current.operation.exchange),
-    //                 }
-    //             }
-    //         }
-    //     };
-    // }, {});
 }
 
 export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHoursTo = 20, pause = 0.5) {
