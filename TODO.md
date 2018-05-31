@@ -1,5 +1,10 @@
 # TODO:
 
+    X ztmavit rámeček při pokládání události
+    - úprava času výpočtu na operaci
+    - zobrazení operace v tabulce
+    - zobrazení času jednotlivých operací
+    -
     X opravit sčítání počtu kusů u zakázek na více strojích
     X zkontrolovat proč se ukládají u products "-"
     X opravit pozici tooltipu

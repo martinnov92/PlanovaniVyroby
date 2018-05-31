@@ -58,7 +58,7 @@ body {
 }
 
 .popup-order .input-group-prepend {
-    width: 100px;
+    width: 150px;
 }
 
 .popup-order .input-group-prepend > span {
@@ -71,11 +71,15 @@ body {
 }
 
 .popup-order .mn-autocomplete {
-    width: calc(100% - 100px);
+    width: calc(100% - 150px);
 }
 
 .popup-order .mn-autocomplete .form-control {
     border-radius: 0 .25rem .25rem 0;
+}
+
+.popup-order .spacer {
+    height: 6px;
 }
 
 .orders--detail {

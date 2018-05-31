@@ -153,7 +153,7 @@ export class OrderPopup extends React.Component {
 
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
-                                <span className="input-group-text">Počet hodin</span>
+                                <span className="input-group-text">Naplánovaný čas</span>
                             </div>
                             <input
                                 type="text"
@@ -258,11 +258,38 @@ export class OrderPopup extends React.Component {
                             </div>
                         </div>
 
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span
+                                    title="Čas na kus"
+                                    className="input-group-text"
+                                >
+                                    Výměna
+                                </span>
+                            </div>
+                            <input
+                                min={0}
+                                type="number"
+                                className="form-control"
+                                name="operation.exchange"
+                                value={order.operation.exchange}
+                                onChange={this.props.handleInputChange}
+                            />
+                            <div className="input-group-append">
+                                <span className="input-group-text">min.</span>
+                            </div>
+                        </div>
+
                         <hr />
 
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
-                                <span className="input-group-text">Nahazování</span>
+                                <span
+                                    className="input-group-text"
+                                    title="Čas na operaci"
+                                >
+                                    Nahazování
+                                </span>
                             </div>
                             <input
                                 min={0}
@@ -277,21 +304,22 @@ export class OrderPopup extends React.Component {
                             </div>
                         </div>
 
+                        <hr />
+
+                        <div className="spacer" />
+
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
-                                <span className="input-group-text">Výměna</span>
+                                <span className="input-group-text">Čas na operaci</span>
                             </div>
                             <input
-                                min={0}
-                                type="number"
+                                type="text"
+                                disabled={true}
+                                name="workingHours"
                                 className="form-control"
-                                name="operation.exchange"
-                                value={order.operation.exchange}
                                 onChange={this.props.handleInputChange}
+                                value={formatMinutesToTime(order.workingHours)}
                             />
-                            <div className="input-group-append">
-                                <span className="input-group-text">min.</span>
-                            </div>
                         </div>
                     </div>
                 </div>
