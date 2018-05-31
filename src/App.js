@@ -415,6 +415,8 @@ class App extends React.Component {
             }
         }
 
+        order.operationTime = (Number(order.operation.count) * (Number(order.operation.time) + Number(order.operation.exchange))) + Number(order.operation.casting);
+
         this.setState({
             order: order
         });
@@ -803,6 +805,7 @@ class App extends React.Component {
                     casting: 0,     // nahazování
                     exchange: 0,    // výměna
                 },
+                operationTime: 0,
                 dateFrom: dateFrom,
                 workingHours: workingHours,
                 machine: machineId || this.state.machines[0].id,
