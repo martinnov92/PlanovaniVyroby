@@ -207,7 +207,7 @@ export class OrderTable extends React.Component {
 
                         <hr className="bg-white" />
 
-                        <p>Celkem na operaci: {formatMinutesToTime(totalOperation)}}</p>
+                        <p>Celkem na operaci: {formatMinutesToTime(totalOperation)}</p>
                         <p>Naplánováno: DODĚLAT</p>
                         <p>Zbývá: DODĚLAT</p>
                     </div>
