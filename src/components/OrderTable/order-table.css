@@ -26,6 +26,8 @@
 
 .table--orders .table .table--orders-first-column {
     width: 150px;
+    border-top: 0;
+    border-left: 0;
     border-right: 0;
     min-width: 150px;
     max-width: 150px;
@@ -41,10 +43,18 @@
     padding: 0;
 }
 
+.table td.table--orders-inner-table > table tr td {
+    border-top: 0;
+}
+
 .table--orders .pd-tooltip {
     width: 100%;
 }
 
 .table-bordered {
     border: 0;
+}
+
+.table--orders .context-menu--open {
+    background-color: #eeeff0;
 }

@@ -89,6 +89,7 @@ export class ContextMenu extends React.Component {
         const { disabled } = this.props;
         const classNames = createClassName([
             this.props.className,
+            this.state.open ? 'context-menu--open' : null,
         ]);
 
         if (this.props.useAsTableRow) {

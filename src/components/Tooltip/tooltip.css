@@ -10,7 +10,7 @@
     perspective: 1300px;
     word-wrap: break-word;
     white-space: pre-wrap;
-    z-index: 12000;
+    z-index: 9998;
 }
 
 .pd-tooltip__content {

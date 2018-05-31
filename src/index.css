@@ -7,7 +7,7 @@
 body {
     overflow: hidden;
     font-family: sans-serif;
-    background-color: #f3f3f3;
+    background-color: #f8f9fa;
 }
 
 * {
@@ -84,7 +84,8 @@ body {
     grid-template-columns: repeat(3, 1fr);
 }
 
-.order--finished {
+.order--finished > td > table > tbody > tr > td,
+.order--finished > .table--orders-first-column > span {
     opacity: .5;
 }
 

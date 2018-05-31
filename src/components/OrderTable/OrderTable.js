@@ -1,5 +1,4 @@
 import React from 'react';
-import isEqual from 'lodash/isEqual';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import { createClassName, createGroupedOrders, formatMinutesToTime } from '../../helpers';
