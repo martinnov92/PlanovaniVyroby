@@ -202,9 +202,11 @@ export function formatMinutesToTime(totalMinutes) {
 
     const days = Math.floor(totalMinutes / (60 * 24));
     const hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
-    const minutes = totalMinutes % 60;
+    const minutes = Math.floor(totalMinutes % 60);
+    const secs = Math.floor((totalMinutes * 60) - (hours * 3600) - (minutes * 60));
 
     return days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
+    // return days > 0 ? `${days}d ${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}` : `${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}`;
 }
 
 export function calculateOperationTime(count, time, exchange, casting) {

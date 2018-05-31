@@ -154,7 +154,7 @@ export class Tooltip extends React.Component {
             split = title.split('<br />');
             text = split.map((part) => <p key={part}>{part.trim()}</p>);
         } else {
-            text = title.map((part) => <p key={part}>{part.trim()}</p>);
+            text = title;
         }
 
         return (
