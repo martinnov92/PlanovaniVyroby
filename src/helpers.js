@@ -55,7 +55,14 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     let total = prev;
 
                     if (current.operation) {
-                        const t = Number(current.operation.time) + Number(current.operation.casting) + Number(current.operation.exchange);
+                        let t = 0;
+                        const { count, time, casting, exchange, operationTime } = current.operation;
+
+                        if (!operationTime) {
+                            t = calculateOperationTime(count, time, exchange, casting);
+                        } else {
+                            t = operationTime;
+                        }
 
                         if (!usedOperation[current.operation.order]) {
                             usedOperation[current.operation.order] = current.operation;
@@ -203,7 +210,7 @@ export function formatMinutesToTime(totalMinutes) {
     const days = Math.floor(totalMinutes / (60 * 24));
     const hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
     const minutes = Math.floor(totalMinutes % 60);
-    const secs = Math.floor((totalMinutes * 60) - (hours * 3600) - (minutes * 60));
+    // const secs = Math.floor((totalMinutes * 60) - (hours * 3600) - (minutes * 60));
 
     return days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
     // return days > 0 ? `${days}d ${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}` : `${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}`;

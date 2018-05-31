@@ -156,17 +156,12 @@ export class OrderTable extends React.Component {
                                                 <td
                                                     style={createStyleObject(thWidth[9])}
                                                 >
-                                                    {product.totalTime}
+                                                    {/* {product.totalTime} */}
                                                 </td>
                                                 <td
                                                     style={createStyleObject(thWidth[10])}
                                                 >
-                                                    <Tooltip
-                                                        className={`cursor--default`}
-                                                        title={`Čas na zakázku: <br /> ${product.totalTime}m * ${product.totalCount}ks. = ${formatMinutesToTime(product.totalTime * product.totalCount)}`}
-                                                    >
-                                                        {formatMinutesToTime(product.totalTime * product.totalCount)}
-                                                    </Tooltip>
+                                                    {formatMinutesToTime(product.totalTime)}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -192,8 +187,15 @@ export class OrderTable extends React.Component {
             count,
             casting,
             exchange,
-            operationTime,
         } = operation;
+
+        let operationTime = 0;
+
+        if (operation.operationTime) {
+            operationTime = operation.operationTime;
+        } else {
+            operationTime = calculateOperationTime(count, time, exchange, casting);
+        }
 
         return (
             <Tooltip
@@ -201,9 +203,10 @@ export class OrderTable extends React.Component {
                 title={
                     <div>
                         <p>Čas na kus: {time} min.</p>
-                        <p>Nahazování: {casting} min.</p>
                         <p>Výměna: {exchange} min.</p>
 
+                        <hr className="bg-white" />
+                        <p>Nahazování: {casting} min.</p>
                         <hr className="bg-white" />
 
                         <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
@@ -267,7 +270,7 @@ export class OrderTable extends React.Component {
                             <th scope="col">4.o ks/čas (napl)</th>
                             <th scope="col">5.o ks/čas (napl)</th>
                             <th scope="col">6.o ks/čas (napl)</th>
-                            <th scope="col">Čas na kus</th>
+                            <th scope="col">Napl. čas na zakázku</th>
                             <th scope="col">Čas na zakázku</th>
                         </tr>
                     </thead>
