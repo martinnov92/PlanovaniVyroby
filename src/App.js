@@ -411,13 +411,14 @@ class App extends React.Component {
                     count: 0,
                     casting: 0,
                     exchange: 0,
+                    operationTime: 0,
                     order: name === 'operation.order' ? value : '-',
                 };
             }
         }
 
         const { count, time, exchange, casting } = order.operation;
-        order.operationTime = calculateOperationTime(count, time, exchange, casting);
+        order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
 
         this.setState({
             order: order
@@ -806,8 +807,8 @@ class App extends React.Component {
                     order: '-',
                     casting: 0,     // nahazování
                     exchange: 0,    // výměna
+                    operationTime: 0, // vypočítá čas (pomocná funkce calculateOperationTime)
                 },
-                operationTime: 0,
                 dateFrom: dateFrom,
                 workingHours: workingHours,
                 machine: machineId || this.state.machines[0].id,

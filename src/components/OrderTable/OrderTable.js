@@ -192,9 +192,8 @@ export class OrderTable extends React.Component {
             count,
             casting,
             exchange,
+            operationTime,
         } = operation;
-
-        const totalOperation = calculateOperationTime(count, time, exchange, casting);
 
         return (
             <Tooltip
@@ -207,13 +206,13 @@ export class OrderTable extends React.Component {
 
                         <hr className="bg-white" />
 
-                        <p>Celkem na operaci: {formatMinutesToTime(totalOperation)}</p>
+                        <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
                         <p>Naplánováno: DODĚLAT</p>
                         <p>Zbývá: DODĚLAT</p>
                     </div>
                 }
             >
-                { `${count}ks. (${formatMinutesToTime(totalOperation)})` }
+                { `${count}ks. (${formatMinutesToTime(operationTime)})` }
             </Tooltip>
         );
     } 

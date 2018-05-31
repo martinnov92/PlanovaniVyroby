@@ -315,10 +315,10 @@ export class OrderPopup extends React.Component {
                             <input
                                 type="text"
                                 disabled={true}
-                                name="operationTime"
                                 className="form-control"
+                                name="operation.operationTime"
                                 onChange={this.props.handleInputChange}
-                                value={formatMinutesToTime(order.operationTime)}
+                                value={formatMinutesToTime(order.operation.operationTime)}
                             />
                         </div>
                     </div>
