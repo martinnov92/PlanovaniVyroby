@@ -12,7 +12,8 @@ import { OrderTable } from './components/OrderTable';
 import {
     saveFile,
     getNetMachineTime,
-    isDateRangeOverlaping, 
+    isDateRangeOverlaping,
+    calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
 } from './helpers';
 
@@ -415,7 +416,8 @@ class App extends React.Component {
             }
         }
 
-        order.operationTime = (Number(order.operation.count) * (Number(order.operation.time) + Number(order.operation.exchange))) + Number(order.operation.casting);
+        const { count, time, exchange, casting } = order.operation;
+        order.operationTime = calculateOperationTime(count, time, exchange, casting);
 
         this.setState({
             order: order

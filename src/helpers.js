@@ -207,6 +207,10 @@ export function formatMinutesToTime(totalMinutes) {
     return days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
 }
 
+export function calculateOperationTime(count, time, exchange, casting) {
+    return (Number(count) * (Number(time) + Number(exchange))) + Number(casting);
+}
+
 export function saveFile(path, data) {
     const d = JSON.stringify(data, null, 4);
 
