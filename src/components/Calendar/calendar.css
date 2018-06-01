@@ -247,8 +247,10 @@ td.calendar-table--empty-hours.calendar--shift-hours {
     display: block;
 }
 
-.calendar--event-dragging--over {
+td.calendar--event-dragging--over,
+td.calendar--shift-hours.calendar--event-dragging--over {
     background-color: var(--selectingCellColor);
+    opacity: 1;
 }
 
 .calendar--event-selecting {

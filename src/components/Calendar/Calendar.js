@@ -11,6 +11,7 @@ import {
     formatMinutesToTime,
     getCorrectDateAfterDrop,
 } from '../../helpers';
+import { Tooltip } from '../Tooltip';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 
@@ -46,6 +47,7 @@ export class Calendar extends React.Component {
             selectedEvent: null,
             selectingCells: false,
             calendarTableWidth: 0,
+            dragActiveCellInfo: '',
             selectingCellStart: null,
             selectedEventElement: null,
             selectingCellStyle: {
@@ -183,6 +185,16 @@ export class Calendar extends React.Component {
 
     handleDragEnter = (e) => {
         e.target.classList.add(CELL_OVER_CLASS_NAME);
+        let targetRect = {};
+
+        if (e.target) {
+            targetRect = e.target.getBoundingClientRect();
+        }
+
+        this.setState({
+            dragActiveCell: targetRect,
+            dragActiveCellInfo: e.target.dataset.date,
+        });
     }
 
     handleDragOver = (e) => {
@@ -197,6 +209,7 @@ export class Calendar extends React.Component {
     handleDragEnd = (e) => {
         this.setState({
             draggingEvent: null,
+            dragActiveCell: null,
         });
 
         const classListToRemove = Array.from(this.calendar.getElementsByClassName(CELL_OVER_CLASS_NAME));
@@ -398,6 +411,21 @@ export class Calendar extends React.Component {
                             }
                         </div>
                         : null
+                    }
+
+                    {
+                        !this.state.dragActiveCell
+                        ? null
+                        : <div
+                            className="pd-tooltip__inner"
+                            style={{
+                                position: 'absolute',
+                                top: `${this.state.dragActiveCell.top - this.state.dragActiveCell.height}px`,
+                                left: `${this.state.dragActiveCell.left}px`,
+                            }}
+                        >
+                            { this.state.dragActiveCellInfo }
+                        </div>
                     }
                 </div>
             </React.Fragment>
