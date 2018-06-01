@@ -11,6 +11,7 @@
     word-wrap: break-word;
     white-space: pre-wrap;
     z-index: 9998;
+    pointer-events: none;
 }
 
 .pd-tooltip__content {
