@@ -530,7 +530,7 @@ export class Calendar extends React.Component {
                     hours={i}
                     minutes={30}
                     machine={machine}
-                    className={isShift}
+                    className={[isShift]}
                     {...cellAttrs}
                 />
             </React.Fragment>;

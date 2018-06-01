@@ -3,6 +3,7 @@
     --selectingCellColor: #FC3A51;
     --calendarBorderColor: #dee2e6;
     --calendarWeekendColor: #FFFDC0;
+    --calendarDayBorderColor: #6c757d;
 }
 
 .calendar-wrapper,
@@ -69,9 +70,17 @@
     border-top: 0;
 }
 
+.calendar-table--body > tr > td,
 .calendar-table--header > tr > td,
 .calendar-table--header > tr > td > tbody> tr:first-child > td {
     border-bottom: 0;
+    border-right: 5px solid var(--calendarDayBorderColor);
+}
+
+.calendar-table--body > tr > td:last-child,
+.calendar-table--header > tr > td:last-child,
+.calendar-table--header > tr > td > tbody> tr:first-child > td:last-child {
+    border-right: 0;
 }
 
 .calendar-day--weekend {
@@ -81,10 +90,6 @@
 .calendar-table--body td,
 .calendar-table--body th {
     height: 40px;
-}
-
-.calendar-table--body > tr > td {
-    border-bottom: 0;
 }
 
 .calendar-year--week {
@@ -116,7 +121,8 @@
 }
 
 td.calendar-table--empty-hours.calendar--shift-hours {
-    border-bottom: 1px solid var(--selectingCellColor);
+    background-color: #a2a2a2;
+    opacity: .2;
 }
 
 .column-fixed {
@@ -259,4 +265,5 @@ td.calendar-table--empty-hours.calendar--shift-hours {
         #aaaeb1 5px,
         #aaaeb1 10px
     );
+    opacity: .5 !important;
 }
