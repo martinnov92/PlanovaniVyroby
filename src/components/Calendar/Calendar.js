@@ -11,7 +11,6 @@ import {
     formatMinutesToTime,
     getCorrectDateAfterDrop,
 } from '../../helpers';
-import { Tooltip } from '../Tooltip';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 
@@ -417,14 +416,22 @@ export class Calendar extends React.Component {
                         !this.state.dragActiveCell
                         ? null
                         : <div
-                            className="pd-tooltip__inner"
+                            className="pd-tooltip"
                             style={{
+                                width: '130px',
                                 position: 'absolute',
+                                left: `${this.state.dragActiveCell.left - 65}px`,
                                 top: `${this.state.dragActiveCell.top - this.state.dragActiveCell.height}px`,
-                                left: `${this.state.dragActiveCell.left}px`,
                             }}
                         >
-                            { this.state.dragActiveCellInfo }
+                            <div
+                                className="pd-tooltip__inner pd-tooltip__top pd-tooltip--open"
+                            >
+                                <div className="pd-tooltip__content">
+                                    <div className="pd-tooltip__arrow" />
+                                    { this.state.dragActiveCellInfo }
+                                </div>
+                            </div>
                         </div>
                     }
                 </div>
