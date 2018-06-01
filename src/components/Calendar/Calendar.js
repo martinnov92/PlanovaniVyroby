@@ -538,9 +538,6 @@ export class Calendar extends React.Component {
         }
 
         // from 7:00 to 20:00
-        const shiftStartSplit = shiftStart.split(':');
-        const shiftEndSplit = shiftEnd.split(':');
-
         for (let i = 7; i <= 20; i++) {
             const cellAttrs = {
                 onDrop: this.handleDrop,
@@ -551,7 +548,6 @@ export class Calendar extends React.Component {
             };
 
             const isPause = (pause === i) ? 'calendar--cell-pause' : null;
-            const isShift = (i >= shiftStartSplit[0] && i <= shiftEndSplit[0]) ? 'calendar--shift-hours' : null;
  
             let td = <React.Fragment key={i}>
                 <CalendarCell
@@ -559,7 +555,9 @@ export class Calendar extends React.Component {
                     hours={i}
                     minutes={0}
                     machine={machine}
-                    className={[isPause, isShift]}
+                    shiftEnd={shiftEnd}
+                    shiftStart={shiftStart}
+                    className={[isPause]}
                     {...cellAttrs}
                     // onClick={() => console.log('click', i)}
                 />
@@ -568,7 +566,8 @@ export class Calendar extends React.Component {
                     hours={i}
                     minutes={30}
                     machine={machine}
-                    className={[isShift]}
+                    shiftEnd={shiftEnd}
+                    shiftStart={shiftStart}
                     {...cellAttrs}
                 />
             </React.Fragment>;
