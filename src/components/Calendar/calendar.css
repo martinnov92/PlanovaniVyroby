@@ -1,5 +1,8 @@
 :root {
     --fixedWidth: 8.57rem;
+    --selectingCellColor: #FC3A51;
+    --calendarBorderColor: #dee2e6;
+    --calendarWeekendColor: #FFFDC0;
 }
 
 .calendar-wrapper,
@@ -13,7 +16,7 @@
 .calendar-column--fixed {
     min-width: 150px;
     overflow: visible;
-    border-right: 1px solid #dee2e6;
+    border-right: 1px solid var(--calendarBorderColor);
 }
 
 .calendar-column--fixed[style*="transform: translateY(0px)"] {
@@ -25,7 +28,7 @@
     display: flex;
     padding: 10px;
     align-items: center;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--calendarBorderColor);
     border-left: 0;
     border-right: 0;
 }
@@ -47,7 +50,7 @@
 }
 
 .calendar-table td {
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--calendarBorderColor);
     border-left: 0;
     border-top: 0;
 }
@@ -69,6 +72,10 @@
 .calendar-table--header > tr > td,
 .calendar-table--header > tr > td > tbody> tr:first-child > td {
     border-bottom: 0;
+}
+
+.calendar-day--weekend {
+    background-color: var(--calendarWeekendColor);
 }
 
 .calendar-table--body td,
@@ -105,13 +112,17 @@
 }
 
 .calendar-table--body .calendar-table--empty-hours:last-child {
-    border-right: 1px solid #dee2e6;
+    border-right: 1px solid var(--calendarBorderColor);
+}
+
+td.calendar-table--empty-hours.calendar--shift-hours {
+    border-bottom: 1px solid var(--selectingCellColor);
 }
 
 .column-fixed {
     left: 0;
     top: auto;
-    border: 1px solid dee2e6;
+    border: 1px solid var(--calendarBorderColor);
     margin-top: 1px;
     width: var(--fixedWidth);
     position: absolute;
@@ -203,10 +214,6 @@
     display: none;
 }
 
-.calendar--event-dragging--over {
-    background-color: #737373;
-}
-
 .calendar--event-selected {
     border: 1px solid black;
 }
@@ -234,9 +241,13 @@
     display: block;
 }
 
+.calendar--event-dragging--over {
+    background-color: var(--selectingCellColor);
+}
+
 .calendar--event-selecting {
     position: absolute;
-    background-color: #fff;
+    background-color: var(--selectingCellColor);
     z-index: 1;
 }
 
