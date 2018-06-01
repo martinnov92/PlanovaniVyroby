@@ -325,9 +325,11 @@ export class Calendar extends React.Component {
     render() {
         const {
             lockScroll,
+            dragActiveCell,
             selectingCells,
             selectingCellTime,
             selectingCellStyle,
+            dragActiveCellInfo,
         } = this.state;
 
         const {
@@ -412,28 +414,29 @@ export class Calendar extends React.Component {
                         : null
                     }
 
-                    {
-                        !this.state.dragActiveCell
-                        ? null
-                        : <div
-                            className="pd-tooltip"
-                            style={{
-                                width: '130px',
-                                position: 'absolute',
-                                left: `${this.state.dragActiveCell.left - 65}px`,
-                                top: `${this.state.dragActiveCell.top - this.state.dragActiveCell.height}px`,
-                            }}
-                        >
-                            <div
-                                className="pd-tooltip__inner pd-tooltip__top pd-tooltip--open"
-                            >
-                                <div className="pd-tooltip__content">
-                                    <div className="pd-tooltip__arrow" />
-                                    { this.state.dragActiveCellInfo }
-                                </div>
+                <div
+                    className="pd-tooltip"
+                    style={{
+                        position: 'absolute',
+                        pointerEvents: 'none',
+                        display: dragActiveCell ? 'block' : 'none',
+                        left: `${dragActiveCell ? (dragActiveCell.left - 65) : '0'}px`,
+                        top: `${dragActiveCell ? (dragActiveCell.top - dragActiveCell.height - 5) : '0'}px`,
+                    }}
+                >
+                    <div
+                        style={{
+                            width: '130px',
+                            minWidth: '130px',
+                        }}
+                        className="pd-tooltip__inner pd-tooltip__top pd-tooltip--open"
+                    >
+                        <div className="pd-tooltip__content">
+                            <div className="pd-tooltip__arrow" />
+                            { dragActiveCellInfo }
                             </div>
                         </div>
-                    }
+                    </div>
                 </div>
             </React.Fragment>
         );
@@ -536,7 +539,7 @@ export class Calendar extends React.Component {
 
         // from 7:00 to 20:00
         const shiftStartSplit = shiftStart.split(':');
-        const shiftStartEnd = shiftEnd.split(':');
+        const shiftEndSplit = shiftEnd.split(':');
 
         for (let i = 7; i <= 20; i++) {
             const cellAttrs = {
@@ -548,7 +551,7 @@ export class Calendar extends React.Component {
             };
 
             const isPause = (pause === i) ? 'calendar--cell-pause' : null;
-            const isShift = (i >= shiftStartSplit[0] && i <= shiftStartEnd[0]) ? 'calendar--shift-hours' : '';
+            const isShift = (i >= shiftStartSplit[0] && i <= shiftEndSplit[0]) ? 'calendar--shift-hours' : null;
  
             let td = <React.Fragment key={i}>
                 <CalendarCell
