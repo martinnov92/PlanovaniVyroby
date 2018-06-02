@@ -408,7 +408,7 @@ export class Calendar extends React.Component {
                         ? <div
                             className={createClassName([
                                 'calendar--event',
-                                'calendar--event-selecting', 'bg-secondary',
+                                'calendar--event-selecting',
                             ])}
                             style={selectingCellStyle}
                         >
@@ -430,7 +430,7 @@ export class Calendar extends React.Component {
                         pointerEvents: 'none',
                         display: dragActiveCell ? 'block' : 'none',
                         left: `${dragActiveCell ? (dragActiveCell.left - 65) : '0'}px`,
-                        top: `${dragActiveCell ? (dragActiveCell.top - dragActiveCell.height - 5) : '0'}px`,
+                        top: `${dragActiveCell ? (dragActiveCell.top - dragActiveCell.height - 2) : '0'}px`,
                     }}
                 >
                     <div
