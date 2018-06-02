@@ -93,7 +93,12 @@ class App extends React.Component {
 
                 <button
                     className="btn btn-link"
-                    onClick={() => this.readFile(path)}
+                    onClick={() => {
+                        this.readFile(path);
+                        this.setState({
+                            infoText: null,
+                        });
+                    }}
                 >
                     <img
                         alt="Sync"
