@@ -13,6 +13,7 @@ const globalShortcut = electron.globalShortcut;
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let fileWatcher;
+let localChange = false;
 const date = new Date();
 const fileName = `PLANOVANI_ZAKAZEK_${date.getFullYear()}.json`;
 const documentsPath = `${electron.app.getPath('documents')}`;
@@ -193,6 +194,10 @@ function ipcListeners() {
         mainWindow.webContents.openDevTools();
     });
 
+    ipc.on('file-watcher-localsave', (event, local) => {
+        localChange = local;
+        console.log('lokální změny', local, localChange);
+    });
     ipc.on('file-stop-watching', stopWatchingForFileChanges);
     ipc.on('file-start-watching', startWatchingForFileChanges);
 }
@@ -201,13 +206,19 @@ function startWatchingForFileChanges(event, filePath) {
     try {
         fileWatcher = chokidar.watch(filePath, {
             usePolling: true, // pro sledování změn na síťovém úložišti (více vytěžuje CPU - ukládat do nastavení?)
+            awaitWriteFinish: true,
         });
     
         fileWatcher.on('change', (path, stats) => {
-            console.log(path, stats);
-            event.sender.send('file-watcher-change', path, stats);
+            console.log('lokální změna v change', localChange);
+
+            if (!localChange) {
+                event.sender.send('file-watcher-change', path, stats);
+            }
+
+            localChange = false;
         });
-    
+
         fileWatcher.on('error', (error) => {
             console.log('Chyba při sledování změn souboru', error);
         });

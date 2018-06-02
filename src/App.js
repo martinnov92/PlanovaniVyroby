@@ -16,6 +16,7 @@ import {
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
 } from './helpers';
+import sync from './statics/sync.svg';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
@@ -81,8 +82,28 @@ class App extends React.Component {
         } 
     }
 
-    handleFileWatcherChange = (path, stats) => {
-        this.showInfoMessage(<p>Soubor byl změněn</p>);
+    handleFileWatcherChange = (event, path, stats) => {
+        if (!path) {
+            return;
+        }
+
+        this.showInfoMessage(
+            <React.Fragment>
+                Soubor byl změněn
+
+                <button
+                    className="btn btn-link"
+                    onClick={() => this.readFile(path)}
+                >
+                    <img
+                        alt="Sync"
+                        src={sync}
+                        width="20"
+                        height="20"
+                    />
+                </button>
+            </React.Fragment>
+        );
     }
 
     handleFileWatcherError = (error) => {
@@ -124,6 +145,7 @@ class App extends React.Component {
             return;
         }
 
+        this.sendLocalChangeMessage();
         fs.writeFile(path, '', (err) => {
             // pokud nastala chyba, zobrazí se error
             if (err) {
@@ -750,6 +772,7 @@ class App extends React.Component {
             return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
         }
 
+        this.sendLocalChangeMessage();
         saveFile(filePath, {
             orders: this.state.orders,
             products: this.state.products,
@@ -829,6 +852,11 @@ class App extends React.Component {
                 machine: machineId || this.state.machines[0].id,
             },
         }, cb);
+    }
+
+    sendLocalChangeMessage = () => {
+        // ! poslat zprávu o tom, že se jedná o lokální změnu, aby se nezobrazila hláška "Soubor byl změněn"
+        electron.ipcRenderer.send('file-watcher-localsave', true);
     }
 }
 

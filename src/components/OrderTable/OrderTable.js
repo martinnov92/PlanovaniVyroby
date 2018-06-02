@@ -110,7 +110,7 @@ export class OrderTable extends React.Component {
                         {
                             Object.keys(orders[key]).map((productKey) => {
                                 const product = orders[key][productKey];
-                                console.log(product);
+
                                 if (productKey.startsWith('_')) {
                                     return null;
                                 }

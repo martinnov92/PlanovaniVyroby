@@ -68,7 +68,6 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                             usedOperation[current.operation.order] = current.operation;
                             total += t;
                         } else {
-                            console.log(usedOperation[current.operation.order], current.operation);
                             if (!isEqual(usedOperation[current.operation.order], current.operation)) {
                                 total += t;
                             }
