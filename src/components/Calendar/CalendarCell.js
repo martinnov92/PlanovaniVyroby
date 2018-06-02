@@ -27,16 +27,18 @@ export class CalendarCell extends React.Component {
             shiftStart,
         } = this.props;
 
+        let isShift = false;
+        const [endHours, endMinutes] = shiftEnd.split(':');
         const dateTime = day.hours(hours).minutes(minutes).seconds(0).format(DATA_DATE_FORMAT);
-        const [startHour, startMinute] = shiftStart.split(':');
-        const [endHour, endMinute] = shiftEnd.split(':');
 
-        const isShift =
-            (hours >= startHour && minutes >= startMinute) && (hours <= endHour && minutes < endMinute) ? 'calendar--shift-hours' : null;
-        console.log(hours, minutes, startHour, startMinute, endHour, endMinute);
+        if (endHours && endMinutes) {
+            const endShiftDataTime = moment(day).hours(endHours).minutes(endMinutes).seconds(0);
+            isShift = moment(dateTime, DATA_DATE_FORMAT).isBefore(endShiftDataTime);
+        }
+
         const emptyCellclassNames = createClassName([
-            isShift,
             'calendar-table--empty-hours',
+            isShift ? 'calendar--shift-hours' : null,
             ...this.props.className,
         ]);
 
