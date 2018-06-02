@@ -11,11 +11,9 @@ export class Nav extends React.Component {
             <nav
                 className="navbar navbar-dark bg-dark shadow--light"
             >
-                    <p
-                        className="text-light"
-                    >
+                    <div className="text-light">
                         {this.props.infoText}
-                    </p>
+                    </div>
 
                     <div>
                         <div

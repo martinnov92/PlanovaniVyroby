@@ -25,6 +25,7 @@
     "electron-build": "yarn build && electron-builder -m"
   },
   "devDependencies": {
+    "chokidar": "^2.0.3",
     "concurrently": "^3.5.1",
     "electron": "^2.0.0",
     "electron-builder": "^20.11.1",

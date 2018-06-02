@@ -1,5 +1,6 @@
 const url = require('url');
 const path = require('path');
+const chokidar = require('chokidar');
 const electron = require('electron');
 
 const app = electron.app;
@@ -11,6 +12,7 @@ const globalShortcut = electron.globalShortcut;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let fileWatcher;
 const date = new Date();
 const fileName = `PLANOVANI_ZAKAZEK_${date.getFullYear()}.json`;
 const documentsPath = `${electron.app.getPath('documents')}`;
@@ -126,6 +128,7 @@ function createWindow() {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null;
+        stopWatchingForFileChanges();
     });
 
     ipcListeners();
@@ -189,4 +192,37 @@ function ipcListeners() {
     ipc.on('show-dev-tools', (event) => {
         mainWindow.webContents.openDevTools();
     });
+
+    ipc.on('file-stop-watching', stopWatchingForFileChanges);
+    ipc.on('file-start-watching', startWatchingForFileChanges);
+}
+
+function startWatchingForFileChanges(event, filePath) {
+    try {
+        fileWatcher = chokidar.watch(filePath, {
+            usePolling: true, // pro sledování změn na síťovém úložišti (více vytěžuje CPU - ukládat do nastavení?)
+        });
+    
+        fileWatcher.on('change', (path, stats) => {
+            console.log(path, stats);
+            event.sender.send('file-watcher-change', path, stats);
+        });
+    
+        fileWatcher.on('error', (error) => {
+            console.log('Chyba při sledování změn souboru', error);
+        });
+    } catch (err) {
+        event.sender.send('file-watcher-error', error);
+    }
+}
+
+function stopWatchingForFileChanges(event, filePath) {
+    if (fileWatcher) {
+        // zastavit sledování
+        if (filePath) {
+            fileWatcher.unwatch(filePath);
+        }
+
+        fileWatcher.close();
+    }
 }

@@ -31,7 +31,7 @@ class App extends React.Component {
             machines: [],
             products: [],
             orderList: [],
-            infoText: '',
+            infoText: null,
             loading: false,
             settings: false,
             hoverOrder: null,
@@ -59,11 +59,15 @@ class App extends React.Component {
         document.addEventListener('keyup', this.handleKeyUp);
         electron.ipcRenderer.on('menu', this.handleElectronMenu);
         electron.ipcRenderer.on('selected-directory', this.handleElectronDialogs);
+        electron.ipcRenderer.on('file-watcher-error', this.handleFileWatcherError);
+        electron.ipcRenderer.on('file-watcher-change', this.handleFileWatcherChange);
     }
     
     componentWillUnmount() {
         electron.ipcRenderer.removeAllListeners('menu');
+        electron.ipcRenderer.removeAllListeners('file-watcher-error');
         electron.ipcRenderer.removeAllListeners('selected-directory');
+        electron.ipcRenderer.removeAllListeners('file-watcher-change');
         document.removeEventListener('keyup', this.handleKeyUp);
     }
 
@@ -75,6 +79,14 @@ class App extends React.Component {
         if (type === 'save') {
             this.saveFile(path);
         } 
+    }
+
+    handleFileWatcherChange = (path, stats) => {
+        this.showInfoMessage(<p>Soubor byl změněn</p>);
+    }
+
+    handleFileWatcherError = (error) => {
+        alert('Nastala chyba při sledování změn souboru: ' + error);
     }
 
     showSaveDialog = () => {
@@ -160,6 +172,7 @@ class App extends React.Component {
                     });
 
                     window.localStorage.setItem('filePath', filePath);
+                    electron.ipcRenderer.send('file-start-watching', filePath);
                 } catch (err) {
                     this.setState({
                         loading: false,
@@ -745,24 +758,26 @@ class App extends React.Component {
             filterFinishedOrders: this.state.filterFinishedOrders,
         })
         .then((value) => {
-            this.showInfoMessage(value);
+            this.showInfoMessage(<p>{value}</p>, 3000);
         })
         .catch((err) => {
             return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
         });
     }
 
-    showInfoMessage = (value) => {
+    showInfoMessage = (value, timeout) => {
         this.setState({
             infoText: value,
         });
 
         clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-            this.setState({
-                infoText: ''
-            });
-        }, 3000);
+        if (timeout) {
+            this.timeout = setTimeout(() => {
+                this.setState({
+                    infoText: null,
+                });
+            }, timeout);
+        }
     }
 
     resetState = () => {

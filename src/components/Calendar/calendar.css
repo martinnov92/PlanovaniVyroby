@@ -79,7 +79,7 @@
 
 .calendar-table--body > tr > td:last-child,
 .calendar-table--header > tr > td:last-child,
-.calendar-table--header > tr > td > tbody> tr:first-child > td:last-child {
+.calendar-table--header > tr > td > table > tbody> tr:first-child > td:last-child {
     border-right: 0;
 }
 
