@@ -280,6 +280,13 @@ export class Calendar extends React.Component {
         const height = startCell.height;
         let width = endCell.x - startCell.x;
 
+        if (e.target && e.target.dataset.hasOwnProperty('date')) {
+            this.setState({
+                dragActiveCellInfo: e.target.dataset.date,
+                dragActiveCell: e.target.getBoundingClientRect(),
+            });
+        }
+
         if (endCell.x === startCell.x) {
             // fixnutí přeblíkávání při zmenšování události
             const { width: stateWidth} = this.state.selectingCellStyle;
@@ -319,6 +326,8 @@ export class Calendar extends React.Component {
                 width: 0,
                 height: 0,
             },
+            dragActiveCell: null,
+            dragActiveCellInfo: null,
         });
     }
 
