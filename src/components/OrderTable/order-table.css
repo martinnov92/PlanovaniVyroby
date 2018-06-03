@@ -58,3 +58,13 @@
 .table--orders .context-menu--open {
     background-color: #eeeff0;
 }
+
+.order--finished > td > table > tbody > tr > td,
+.order--finished > .table--orders-first-column > span {
+    opacity: .5;
+}
+
+.product--finished > td,
+.product--finished > td > * {
+    text-decoration: line-through;
+}

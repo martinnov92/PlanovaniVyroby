@@ -24,7 +24,6 @@ export class CalendarCell extends React.Component {
             colSpan,
             machine,
             shiftEnd,
-            shiftStart,
         } = this.props;
 
         let isShift = false;

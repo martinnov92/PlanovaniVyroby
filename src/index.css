@@ -88,11 +88,6 @@ body {
     grid-template-columns: repeat(3, 1fr);
 }
 
-.order--finished > td > table > tbody > tr > td,
-.order--finished > .table--orders-first-column > span {
-    opacity: .5;
-}
-
 .popup--settings {
     width: 750px;
     height: 500px;

@@ -64,8 +64,10 @@ class App extends React.Component {
         electron.ipcRenderer.on('file-watcher-error', this.handleFileWatcherError);
         electron.ipcRenderer.on('file-watcher-change', this.handleFileWatcherChange);
     }
-    
+
     componentWillUnmount() {
+        this.unwatchFileChanges();
+
         electron.ipcRenderer.removeAllListeners('menu');
         electron.ipcRenderer.removeAllListeners('file-watcher-error');
         electron.ipcRenderer.removeAllListeners('selected-directory');
@@ -151,6 +153,7 @@ class App extends React.Component {
         }
 
         this.sendLocalChangeMessage();
+        console.log('vyčištění souboru');
         fs.writeFile(path, '', (err) => {
             // pokud nastala chyba, zobrazí se error
             if (err) {
@@ -172,6 +175,8 @@ class App extends React.Component {
             infoText: null,
         });
 
+        // zastavit sledování souborů před každým novým čtením souboru
+        this.unwatchFileChanges(filePath);
         return fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
                 this.setState({
@@ -200,8 +205,8 @@ class App extends React.Component {
                         filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
                     });
 
+                    this.watchFileChanges(filePath);
                     window.localStorage.setItem('filePath', filePath);
-                    electron.ipcRenderer.send('file-start-watching', filePath);
                 } catch (err) {
                     this.setState({
                         loading: false,
@@ -589,6 +594,20 @@ class App extends React.Component {
         }, () => this.saveToFile());
     }
 
+    handleProductClose = (e, productName, orderId) => {
+        const setProductInOrderToDone = this.state.orders.map((order) => {
+            if ((order.orderId === orderId) && (order.productName === productName)) {
+                order.done = true;
+            }
+
+            return order;
+        });
+
+        this.setState({
+            orders: setProductInOrderToDone,
+        }, this.saveToFile);
+    }
+
     handleClose = () => {
         this.setState({
             open: false,
@@ -695,6 +714,7 @@ class App extends React.Component {
                     products={products}
                     orderList={orderList}
                     onCloseOrder={this.handleCloseOrder}
+                    onProductClose={this.handleProductClose}
                     filterFinishedOrders={filterFinishedOrders}
                 />
             </React.Fragment>
@@ -795,6 +815,7 @@ class App extends React.Component {
             }
     
             this.sendLocalChangeMessage();
+            console.log('ukládání JSON');
             saveFile(filePath, {
                 orders: this.state.orders,
                 products: this.state.products,
@@ -869,6 +890,7 @@ class App extends React.Component {
                 productName: '',
                 worker: '',
                 note: '',
+                done: false,
                 dateTo: dateTo,
                 operation: {
                     time: 0,        // čas na kus (sčítá se s nahazováním a výměnou)
@@ -883,6 +905,18 @@ class App extends React.Component {
                 machine: machineId || this.state.machines[0].id,
             },
         }, cb);
+    }
+
+    watchFileChanges = (filePath) => {
+        electron.ipcRenderer.send('file-start-watching', filePath);
+    }
+
+    unwatchFileChanges = (filePath) => {
+        if (!filePath) {
+            filePath = window.localStorage.getItem('filePath');
+        }
+
+        electron.ipcRenderer.send('file-stop-watching', filePath);
     }
 
     sendLocalChangeMessage = () => {

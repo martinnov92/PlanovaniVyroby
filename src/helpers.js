@@ -77,6 +77,11 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     return total;
                 }, 0);
 
+                groupedOrders[order][product] = {
+                    ...groupedOrders[order][product],
+                    done: (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false,
+                };
+
                 if (groupedProduct[operation].operation) {
                     groupedOrders[order][product] = {
                         ...groupedOrders[order][product],

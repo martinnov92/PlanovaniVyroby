@@ -82,18 +82,7 @@ export class OrderTable extends React.Component {
             const o = orderList.find((_o) => _o.id === key);
 
             row.push(
-                <ContextMenu
-                    key={key}
-                    buttons={[
-                        {
-                            label: 'Uzavřít zakázku',
-                            onClick: (e) => this.props.onCloseOrder(e, key, order),
-                        }
-                    ]}
-                    useAsTableRow={true}
-                    disabled={order._info.done}
-                    className={order._info.done ? 'order--finished' : null}
-                >
+                <tr key={key}>
                     <td
                         className="table--orders-first-column"
                         style={createStyleObject(thWidth[0])}
@@ -114,11 +103,21 @@ export class OrderTable extends React.Component {
                                 if (productKey.startsWith('_')) {
                                     return null;
                                 }
-
+                                console.log(product);
                                 return (
                                     <table key={productKey}>
                                         <tbody>
-                                            <tr>
+                                            <ContextMenu
+                                                buttons={[
+                                                    {
+                                                        label: 'Uzavřít výrobek',
+                                                        onClick: (e) => this.props.onProductClose(e, productKey, key),
+                                                    }
+                                                ]}
+                                                useAsTableRow={true}
+                                                disabled={product.done}
+                                                className={product.done ? 'product--finished' : null}
+                                            >
                                                 <td style={createStyleObject(thWidth[1])} title={productKey}>
                                                     {productKey}
                                                 </td>
@@ -163,14 +162,14 @@ export class OrderTable extends React.Component {
                                                 >
                                                     {formatMinutesToTime(product.totalTime)}
                                                 </td>
-                                            </tr>
+                                            </ContextMenu>
                                         </tbody>
                                     </table>
                                 )
                             })
                         }
                     </td>
-                </ContextMenu>
+                </tr>
             );
 
             return row;
