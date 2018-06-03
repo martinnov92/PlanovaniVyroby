@@ -34,6 +34,7 @@ export class ContextMenu extends React.Component {
 
     handleRightClick = (e) => {
         e.preventDefault();
+        e.stopPropagation();
 
         this.setState({
             open: true,
@@ -48,7 +49,7 @@ export class ContextMenu extends React.Component {
         if (!this.mounted || !this.state.open) {
             return;
         }
-    
+
         const root = ReactDOM.findDOMNode(this.div);
         const isInRoot = !root.contains(e.target);
 

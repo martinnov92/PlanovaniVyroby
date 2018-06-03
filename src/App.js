@@ -644,16 +644,25 @@ class App extends React.Component {
         });
     };
 
-    handleCloseOrder = (e, orderId, order) => {
-        const orderListCopy = [...this.state.orderList];
+    handleOrderClose = (e, orderId, order) => {
+        let orderListCopy = [...this.state.orderList];
+        let setProductInOrderToDone = [...this.state.orders];
         const findOrder = orderListCopy.findIndex((o) => o.id === orderId);
 
         if (findOrder > -1) {
             orderListCopy[findOrder].done = true;
+            setProductInOrderToDone = this.state.orders.map((order) => {
+                if (order.orderId === orderId) {
+                    order.done = true;
+                }
+    
+                return order;
+            });
         }
 
         this.setState({
             orderList: orderListCopy,
+            orders: setProductInOrderToDone,
         }, () => this.saveToFile());
     }
 
@@ -782,7 +791,7 @@ class App extends React.Component {
                     events={orders}
                     products={products}
                     orderList={orderList}
-                    onCloseOrder={this.handleCloseOrder}
+                    onCloseOrder={this.handleOrderClose}
                     onProductClose={this.handleProductClose}
                     filterFinishedOrders={filterFinishedOrders}
                 />

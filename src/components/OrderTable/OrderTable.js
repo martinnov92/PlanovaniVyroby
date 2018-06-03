@@ -82,7 +82,18 @@ export class OrderTable extends React.Component {
             const o = orderList.find((_o) => _o.id === key);
 
             row.push(
-                <tr key={key}>
+                <ContextMenu
+                    key={key}
+                    buttons={[
+                        {
+                            label: 'Uzavřít zakázku',
+                            onClick: (e) => this.props.onCloseOrder(e, key, order),
+                        }
+                    ]}
+                    useAsTableRow={true}
+                    disabled={order._info.done}
+                    className={order._info.done ? 'order--finished' : null}
+                >
                     <td
                         className="table--orders-first-column"
                         style={createStyleObject(thWidth[0])}
@@ -169,7 +180,7 @@ export class OrderTable extends React.Component {
                             })
                         }
                     </td>
-                </tr>
+                </ContextMenu>
             );
 
             return row;
