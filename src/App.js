@@ -48,6 +48,7 @@ class App extends React.Component {
         this.calendar = React.createRef();
     }
 
+    // * OVLÁDÁNÍ APLIKACE + ELECTRON
     componentDidMount() {
         const filePath = window.localStorage.getItem('filePath');
         if (!filePath) {
@@ -264,6 +265,46 @@ class App extends React.Component {
         }
     }
 
+    watchFileChanges = (filePath) => {
+        electron.ipcRenderer.send('file-start-watching', filePath);
+    }
+
+    unwatchFileChanges = (filePath) => {
+        if (!filePath) {
+            filePath = window.localStorage.getItem('filePath');
+        }
+
+        electron.ipcRenderer.send('file-stop-watching', filePath);
+    }
+
+    sendLocalChangeMessage = () => {
+        // ! poslat zprávu o tom, že se jedná o lokální změnu, aby se nezobrazila hláška "Soubor byl změněn"
+        electron.ipcRenderer.send('file-watcher-localsave', true);
+    }
+
+    showInfoMessage = (value, timeout) => {
+        this.setState({
+            infoText: value,
+        });
+
+        clearTimeout(this.timeout);
+        if (timeout) {
+            this.timeout = setTimeout(() => {
+                this.setState({
+                    infoText: null,
+                });
+            }, timeout);
+        }
+    }
+
+    handleReadOnly = (next) => {
+        if (this.state.readOnly) {
+            return electron.ipcRenderer.send('open-error-dialog', 'Pouze pro čtení', 'Soubor je pouze pro čtení. Prosím otevřete nejnovější verzi souboru.');
+        }
+
+        next();
+    }
+
     handleWeekMove = (e, move) => {
         let startOfTheWeek = moment(this.state.startOfTheWeek);
 
@@ -288,6 +329,46 @@ class App extends React.Component {
         });
     }
 
+    handleClose = () => {
+        this.setState({
+            open: false,
+        });
+        this.resetOrderState();
+    }
+
+    openSettings = (e, tabIndex = 0) => {
+        this.setState({
+            settings: true,
+        }, () => {
+            this.settings.current.setTabIndex(tabIndex);
+        });
+    }
+
+    closeSettings = () => {
+        this.setState({
+            settings: false,
+        });
+    }
+
+    handleEventEnter = (e, order) => {
+        this.setState({
+            hoverOrder: order,
+        });
+    }
+
+    handleEventLeave = (e, order) => {
+        this.setState({
+            hoverOrder: null,
+        });
+    }
+
+    handleDragStart = () => {
+        this.setState({
+            open: false,
+        });
+    }
+
+    // * PRÁCE S DATY
     handleAddNewEvent = () => {
         this.handleReadOnly(() => {
             this.resetOrderState(null, null, null, () => {
@@ -320,24 +401,6 @@ class App extends React.Component {
                 open: true,
                 order: copyOrder,
             });
-        });
-    }
-
-    handleEventEnter = (e, order) => {
-        this.setState({
-            hoverOrder: order,
-        });
-    }
-
-    handleEventLeave = (e, order) => {
-        this.setState({
-            hoverOrder: null,
-        });
-    }
-
-    handleDragStart = () => {
-        this.setState({
-            open: false,
         });
     }
 
@@ -608,27 +671,33 @@ class App extends React.Component {
         }, this.saveToFile);
     }
 
-    handleClose = () => {
-        this.setState({
-            open: false,
+    saveToFile = () => {
+        this.handleReadOnly(() => {
+            const filePath = window.localStorage.getItem('filePath');
+    
+            if (!filePath) {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
+            }
+    
+            this.sendLocalChangeMessage();
+            console.log('ukládání JSON');
+            saveFile(filePath, {
+                orders: this.state.orders,
+                products: this.state.products,
+                machines: this.state.machines,
+                orderList: this.state.orderList,
+                filterFinishedOrders: this.state.filterFinishedOrders,
+            })
+            .then((value) => {
+                this.showInfoMessage(<p>{value}</p>, 3000);
+            })
+            .catch((err) => {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
+            });
         });
-        this.resetOrderState();
     }
 
-    openSettings = (e, tabIndex = 0) => {
-        this.setState({
-            settings: true,
-        }, () => {
-            this.settings.current.setTabIndex(tabIndex);
-        });
-    }
-
-    closeSettings = () => {
-        this.setState({
-            settings: false,
-        });
-    }
-
+    // * RENDEROVÁNÍ APLIKACE
     renderMainScreen = () => {
         const {
             orders,
@@ -806,55 +875,7 @@ class App extends React.Component {
         );
     }
 
-    saveToFile = () => {
-        this.handleReadOnly(() => {
-            const filePath = window.localStorage.getItem('filePath');
-    
-            if (!filePath) {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
-            }
-    
-            this.sendLocalChangeMessage();
-            console.log('ukládání JSON');
-            saveFile(filePath, {
-                orders: this.state.orders,
-                products: this.state.products,
-                machines: this.state.machines,
-                orderList: this.state.orderList,
-                filterFinishedOrders: this.state.filterFinishedOrders,
-            })
-            .then((value) => {
-                this.showInfoMessage(<p>{value}</p>, 3000);
-            })
-            .catch((err) => {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
-            });
-        });
-    }
-
-    showInfoMessage = (value, timeout) => {
-        this.setState({
-            infoText: value,
-        });
-
-        clearTimeout(this.timeout);
-        if (timeout) {
-            this.timeout = setTimeout(() => {
-                this.setState({
-                    infoText: null,
-                });
-            }, timeout);
-        }
-    }
-
-    handleReadOnly = (next) => {
-        if (this.state.readOnly) {
-            return electron.ipcRenderer.send('open-error-dialog', 'Pouze pro čtení', 'Soubor je pouze pro čtení. Prosím otevřete nejnovější verzi souboru.');
-        }
-
-        next();
-    }
-
+    // * RESETY
     resetState = () => {
         this.setState({
             orders: [],
@@ -905,23 +926,6 @@ class App extends React.Component {
                 machine: machineId || this.state.machines[0].id,
             },
         }, cb);
-    }
-
-    watchFileChanges = (filePath) => {
-        electron.ipcRenderer.send('file-start-watching', filePath);
-    }
-
-    unwatchFileChanges = (filePath) => {
-        if (!filePath) {
-            filePath = window.localStorage.getItem('filePath');
-        }
-
-        electron.ipcRenderer.send('file-stop-watching', filePath);
-    }
-
-    sendLocalChangeMessage = () => {
-        // ! poslat zprávu o tom, že se jedná o lokální změnu, aby se nezobrazila hláška "Soubor byl změněn"
-        electron.ipcRenderer.send('file-watcher-localsave', true);
     }
 }
 
