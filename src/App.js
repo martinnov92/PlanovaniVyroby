@@ -34,6 +34,7 @@ class App extends React.Component {
             orderList: [],
             infoText: null,
             loading: false,
+            readOnly: false,
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
@@ -87,18 +88,17 @@ class App extends React.Component {
             return;
         }
 
+        this.setState({
+            readOnly: true,
+        });
+
         this.showInfoMessage(
             <React.Fragment>
-                Soubor byl změněn
+                Soubor byl změněn a již není možné editovat zakázky.
 
                 <button
                     className="btn btn-link"
-                    onClick={() => {
-                        this.readFile(path);
-                        this.setState({
-                            infoText: null,
-                        });
-                    }}
+                    onClick={() => this.readFile(path)}
                 >
                     <img
                         alt="Sync"
@@ -169,6 +169,7 @@ class App extends React.Component {
     readFile = (filePath) => {
         this.setState({
             loading: true,
+            infoText: null,
         });
 
         return fs.readFile(filePath, 'utf-8', (err, data) => {
@@ -190,6 +191,7 @@ class App extends React.Component {
                     const d = JSON.parse(data);
                     this.setState({
                         loading: false,
+                        readOnly: false,
                         fileLoaded: true,
                         orders: d.orders || [],
                         products: d.products || [],
@@ -282,33 +284,37 @@ class App extends React.Component {
     }
 
     handleAddNewEvent = () => {
-        this.resetOrderState(null, null, null, () => {
-            this.setState({
-                open: true,
+        this.handleReadOnly(() => {
+            this.resetOrderState(null, null, null, () => {
+                this.setState({
+                    open: true,
+                });
             });
         });
     }
 
     handleEventEdit = (e, order) => {
-        const copyOrder = {
-            ...order,
-            dateFrom: moment(order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
-            dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
-        };
-
-        if (!copyOrder.operation) {
-            copyOrder.operation = {
-                time: 0,
-                count: 0,
-                order: '-',
-                casting: 0,
-                exchange: 0,
+        this.handleReadOnly(() => {
+            const copyOrder = {
+                ...order,
+                dateFrom: moment(order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
+                dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
             };
-        }
-
-        this.setState({
-            open: true,
-            order: copyOrder,
+    
+            if (!copyOrder.operation) {
+                copyOrder.operation = {
+                    time: 0,
+                    count: 0,
+                    order: '-',
+                    casting: 0,
+                    exchange: 0,
+                };
+            }
+    
+            this.setState({
+                open: true,
+                order: copyOrder,
+            });
         });
     }
 
@@ -331,69 +337,75 @@ class App extends React.Component {
     }
 
     handleItemDelete = (e, item, which) => {
-        if (!window.confirm(`Opravdu si přejete smazat "${item.name}"?`)) {
-            return;
-        }
-
-        let linkedItems = [];
-        let itemsCopy = [...this.state[which]];
-        let diffOrdersArr = [...this.state.orders];
-
-        if (which === 'machines') {
-            linkedItems = this.state.orders.filter((order) => order.machine === item.id);
-        } else if (which === 'orderList') {
-            linkedItems = this.state.orders.filter((order) => order.orderId === item.id);
-        }
-
-        const linkedItemsLength = linkedItems.length;
-        const message = `Přejete si smazat položky (${linkedItemsLength}) související s "${item.name}"?`;
-
-        if ((linkedItemsLength > 0)) {
-            if (window.confirm(message)) {
-                diffOrdersArr = differenceBy(this.state.orders, linkedItems);
+        this.handleReadOnly(() => {
+            if (!window.confirm(`Opravdu si přejete smazat "${item.name}"?`)) {
+                return;
             }
-        }
-
-        const index = itemsCopy.findIndex((m) => m.id === item.id);
-        itemsCopy.splice(index, 1);
-
-        this.setState({
-            [which]: itemsCopy,
-            orders: diffOrdersArr,
-        }, this.saveToFile);
+    
+            let linkedItems = [];
+            let itemsCopy = [...this.state[which]];
+            let diffOrdersArr = [...this.state.orders];
+    
+            if (which === 'machines') {
+                linkedItems = this.state.orders.filter((order) => order.machine === item.id);
+            } else if (which === 'orderList') {
+                linkedItems = this.state.orders.filter((order) => order.orderId === item.id);
+            }
+    
+            const linkedItemsLength = linkedItems.length;
+            const message = `Přejete si smazat položky (${linkedItemsLength}) související s "${item.name}"?`;
+    
+            if ((linkedItemsLength > 0)) {
+                if (window.confirm(message)) {
+                    diffOrdersArr = differenceBy(this.state.orders, linkedItems);
+                }
+            }
+    
+            const index = itemsCopy.findIndex((m) => m.id === item.id);
+            itemsCopy.splice(index, 1);
+    
+            this.setState({
+                [which]: itemsCopy,
+                orders: diffOrdersArr,
+            }, this.saveToFile);
+        });
     }
 
     handleItemSave = (e, item, which) => {
-        const itemsCopy = [...this.state[which]];
-        const findIndex = itemsCopy.findIndex((m) => m.id === item.id);
-
-        if (findIndex > -1) {
-            itemsCopy[findIndex] = item;
-        } else {
-            itemsCopy.push(item);
-        }
-
-        this.setState({
-            [which]: itemsCopy,
-        }, this.saveToFile);
+        this.handleReadOnly(() => {
+            const itemsCopy = [...this.state[which]];
+            const findIndex = itemsCopy.findIndex((m) => m.id === item.id);
+    
+            if (findIndex > -1) {
+                itemsCopy[findIndex] = item;
+            } else {
+                itemsCopy.push(item);
+            }
+    
+            this.setState({
+                [which]: itemsCopy,
+            }, this.saveToFile);
+        });
     }
 
     handleEventDrop = (order) => {
-        const ordersCopy = [...this.state.orders];
-        const index = ordersCopy.findIndex((o) => o.id === order.id);
-        const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
-
-        if (isOverlaping) {
-            return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj již vytížen.');
-        }
-
-        order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
-        ordersCopy.splice(index, 1, order);
-
-        this.setState({
-            open: false,
-            orders: ordersCopy,
-        }, () => this.saveToFile());
+        this.handleReadOnly(() => {
+            const ordersCopy = [...this.state.orders];
+            const index = ordersCopy.findIndex((o) => o.id === order.id);
+            const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
+    
+            if (isOverlaping) {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj již vytížen.');
+            }
+    
+            order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
+            ordersCopy.splice(index, 1, order);
+    
+            this.setState({
+                open: false,
+                orders: ordersCopy,
+            }, () => this.saveToFile());
+        });
     }
 
     handleSelectingMouseUp = (dateFrom, dateTo, machineId) => {
@@ -466,98 +478,102 @@ class App extends React.Component {
     }
 
     handleSave = () => {
-        const products = [...this.state.products];
-        const ordersCopy = [...this.state.orders];
-        const orderListCopy = [...this.state.orderList];
-
-        const order = {
-            ...this.state.order,
-            dateTo: moment(this.state.order.dateTo).format(),
-            dateFrom: moment(this.state.order.dateFrom).format(),
-        };
-
-        if (!order.orderId || !order.machine || !order.productName) {
-            return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'Při zakládání zakázky musí být vyplněna zakázka, výrobek a stroj.');
-        } 
-
-        order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
-
-        if (!this.state.order.id) {
-            if (isDateRangeOverlaping(ordersCopy, order)) {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
-            }
-
-            order.id = moment().unix();
-            ordersCopy.push(order);
-        } else {
-            const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
-            const dateFromIsSame = moment(order.dateFrom).isSame(ordersCopy[findIndex].dateFrom);
-            const dateToIsSame = moment(order.dateTo).isSame(ordersCopy[findIndex].dateTo);
-
-            if ((!dateFromIsSame || !dateToIsSame) && ordersCopy[findIndex].id !== order.id) {
+        this.handleReadOnly(() => {
+            const products = [...this.state.products];
+            const ordersCopy = [...this.state.orders];
+            const orderListCopy = [...this.state.orderList];
+    
+            const order = {
+                ...this.state.order,
+                dateTo: moment(this.state.order.dateTo).format(),
+                dateFrom: moment(this.state.order.dateFrom).format(),
+            };
+    
+            if (!order.orderId || !order.machine || !order.productName) {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'Při zakládání zakázky musí být vyplněna zakázka, výrobek a stroj.');
+            } 
+    
+            order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
+    
+            if (!this.state.order.id) {
                 if (isDateRangeOverlaping(ordersCopy, order)) {
                     return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
                 }
-            }
-
-            ordersCopy.splice(findIndex, 1, order);
-        }
-
-        const findIndex = products.findIndex((product) => order.productName === product.name);
-        if (order.operation.order === '-') {
-            delete order.operation;
-        } else {
-            if (findIndex === -1) {
-                products.push({
-                    name: order.productName,
-                    operation: {
-                        [order.operation.order]: {
-                            ...order.operation,
-                        },
-                    },
-                });
+    
+                order.id = moment().unix();
+                ordersCopy.push(order);
             } else {
-                products[findIndex] = {
-                    ...products[findIndex],
-                    operation: {
-                        ...products[findIndex].operation,
-                        [order.operation.order]: {
-                            ...order.operation,
-                        },
-                    },
-                };
+                const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
+                const dateFromIsSame = moment(order.dateFrom).isSame(ordersCopy[findIndex].dateFrom);
+                const dateToIsSame = moment(order.dateTo).isSame(ordersCopy[findIndex].dateTo);
+    
+                if ((!dateFromIsSame || !dateToIsSame) && ordersCopy[findIndex].id !== order.id) {
+                    if (isDateRangeOverlaping(ordersCopy, order)) {
+                        return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
+                    }
+                }
+    
+                ordersCopy.splice(findIndex, 1, order);
             }
-        }
-
-        this.setState({
-            open: false,
-            orders: ordersCopy,
-            products: products,
-            orderList: orderListCopy,
-        }, () => this.saveToFile());
-        this.resetOrderState();
+    
+            const findIndex = products.findIndex((product) => order.productName === product.name);
+            if (order.operation.order === '-') {
+                delete order.operation;
+            } else {
+                if (findIndex === -1) {
+                    products.push({
+                        name: order.productName,
+                        operation: {
+                            [order.operation.order]: {
+                                ...order.operation,
+                            },
+                        },
+                    });
+                } else {
+                    products[findIndex] = {
+                        ...products[findIndex],
+                        operation: {
+                            ...products[findIndex].operation,
+                            [order.operation.order]: {
+                                ...order.operation,
+                            },
+                        },
+                    };
+                }
+            }
+    
+            this.setState({
+                open: false,
+                orders: ordersCopy,
+                products: products,
+                orderList: orderListCopy,
+            }, () => this.saveToFile());
+            this.resetOrderState();
+        });
     }
 
     handleOrderDelete = (e, passedOrder) => {
-        const orders = [...this.state.orders];
-        const findIndex = orders.findIndex((o) => o.id === passedOrder.id);
-
-        if (findIndex < 0) {
-            return;
-        }
-
-        const confirm = window.confirm('Přejete si smazat událost?');
-        if (!confirm) {
-            return;
-        }
-
-        orders.splice(findIndex, 1);
-        this.setState({
-            open: false,
-            orders: orders,
-            hoverOrder: null,
-        }, () => this.saveToFile());
-        this.resetOrderState();
+        this.handleReadOnly(() => {
+            const orders = [...this.state.orders];
+            const findIndex = orders.findIndex((o) => o.id === passedOrder.id);
+    
+            if (findIndex < 0) {
+                return;
+            }
+    
+            const confirm = window.confirm('Přejete si smazat událost?');
+            if (!confirm) {
+                return;
+            }
+    
+            orders.splice(findIndex, 1);
+            this.setState({
+                open: false,
+                orders: orders,
+                hoverOrder: null,
+            }, () => this.saveToFile());
+            this.resetOrderState();
+        });
     };
 
     handleCloseOrder = (e, orderId, order) => {
@@ -771,25 +787,27 @@ class App extends React.Component {
     }
 
     saveToFile = () => {
-        const filePath = window.localStorage.getItem('filePath');
-
-        if (!filePath) {
-            return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
-        }
-
-        this.sendLocalChangeMessage();
-        saveFile(filePath, {
-            orders: this.state.orders,
-            products: this.state.products,
-            machines: this.state.machines,
-            orderList: this.state.orderList,
-            filterFinishedOrders: this.state.filterFinishedOrders,
-        })
-        .then((value) => {
-            this.showInfoMessage(<p>{value}</p>, 3000);
-        })
-        .catch((err) => {
-            return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
+        this.handleReadOnly(() => {
+            const filePath = window.localStorage.getItem('filePath');
+    
+            if (!filePath) {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
+            }
+    
+            this.sendLocalChangeMessage();
+            saveFile(filePath, {
+                orders: this.state.orders,
+                products: this.state.products,
+                machines: this.state.machines,
+                orderList: this.state.orderList,
+                filterFinishedOrders: this.state.filterFinishedOrders,
+            })
+            .then((value) => {
+                this.showInfoMessage(<p>{value}</p>, 3000);
+            })
+            .catch((err) => {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
+            });
         });
     }
 
@@ -806,6 +824,14 @@ class App extends React.Component {
                 });
             }, timeout);
         }
+    }
+
+    handleReadOnly = (next) => {
+        if (this.state.readOnly) {
+            return electron.ipcRenderer.send('open-error-dialog', 'Pouze pro čtení', 'Soubor je pouze pro čtení. Prosím otevřete nejnovější verzi souboru.');
+        }
+
+        next();
     }
 
     resetState = () => {

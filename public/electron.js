@@ -196,7 +196,6 @@ function ipcListeners() {
 
     ipc.on('file-watcher-localsave', (event, local) => {
         localChange = local;
-        console.log('lokální změny', local, localChange);
     });
     ipc.on('file-stop-watching', stopWatchingForFileChanges);
     ipc.on('file-start-watching', startWatchingForFileChanges);
@@ -206,11 +205,10 @@ function startWatchingForFileChanges(event, filePath) {
     try {
         fileWatcher = chokidar.watch(filePath, {
             usePolling: true, // pro sledování změn na síťovém úložišti (více vytěžuje CPU - ukládat do nastavení?)
-            awaitWriteFinish: true,
         });
     
         fileWatcher.on('change', (path, stats) => {
-            console.log('lokální změna v change', localChange);
+            console.log('lokální změna v change', path, localChange);
 
             if (!localChange) {
                 event.sender.send('file-watcher-change', path, stats);
