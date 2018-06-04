@@ -49,7 +49,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
 
                     return 0;
                 }));
-
+                console.log(groupedProduct);
                 const usedOperation = {};
                 const totalTime = groupedProduct.reduce((prev, current) => {
                     let total = prev;
@@ -63,16 +63,17 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         } else {
                             t = operationTime;
                         }
-
+                        console.warn('použité operace', product, usedOperation);
                         if (!usedOperation[current.operation.order]) {
                             usedOperation[current.operation.order] = current.operation;
                             total += t;
                         } else {
-                            console.log(current);
-                            console.log(usedOperation, current.operation);
-                            console.log('-'.repeat(30));
-                            if (!isEqual(usedOperation[current.operation.order], current.operation)) {
-                                total += t;
+                            const used = usedOperation[current.operation.order];
+                            if (used.time != time || used.casting != casting || used.exchange != exchange || used.count !== count) {
+                                console.warn('něco není stejné', used, current.operation);
+                                // total = t + 
+                            } else {
+                                console.wanr('stejné objekty');
                             }
                         }
                     }
