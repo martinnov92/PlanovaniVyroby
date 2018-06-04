@@ -154,7 +154,6 @@ class App extends React.Component {
         }
 
         this.sendLocalChangeMessage();
-        console.log('vyčištění souboru');
         fs.writeFile(path, '', (err) => {
             // pokud nastala chyba, zobrazí se error
             if (err) {
@@ -685,7 +684,6 @@ class App extends React.Component {
             }
     
             this.sendLocalChangeMessage();
-            console.log('ukládání JSON');
             saveFile(filePath, {
                 orders: this.state.orders,
                 products: this.state.products,
