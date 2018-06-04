@@ -110,6 +110,7 @@
 
 .calendar-table .calendar-table--empty-hours:nth-child(odd) {
     border-right: 0;
+    border-left: 0;
 }
 
 .calendar-table .calendar-table--empty-hours:nth-child(even) {

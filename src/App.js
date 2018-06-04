@@ -270,11 +270,7 @@ class App extends React.Component {
     }
 
     unwatchFileChanges = (filePath) => {
-        if (!filePath) {
-            filePath = window.localStorage.getItem('filePath');
-        }
-
-        electron.ipcRenderer.send('file-stop-watching', filePath);
+        electron.ipcRenderer.send('file-stop-watching');
     }
 
     sendLocalChangeMessage = () => {

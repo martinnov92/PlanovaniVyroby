@@ -14,6 +14,7 @@ const globalShortcut = electron.globalShortcut;
 let mainWindow;
 let fileWatcher;
 let localChange = false;
+
 const date = new Date();
 const fileName = `PLANOVANI_ZAKAZEK_${date.getFullYear()}.json`;
 const documentsPath = `${electron.app.getPath('documents')}`;
@@ -205,11 +206,10 @@ function startWatchingForFileChanges(event, filePath) {
     try {
         fileWatcher = chokidar.watch(filePath, {
             usePolling: true, // pro sledování změn na síťovém úložišti (více vytěžuje CPU - ukládat do nastavení?)
+            awaitWriteFinish: true,
         });
-    
-        fileWatcher.on('change', (path, stats) => {
-            console.log('lokální změna v change', path, localChange);
 
+        fileWatcher.on('change', (path, stats) => {
             if (!localChange) {
                 event.sender.send('file-watcher-change', path, stats);
             }
@@ -225,13 +225,17 @@ function startWatchingForFileChanges(event, filePath) {
     }
 }
 
-function stopWatchingForFileChanges(event, filePath) {
+function stopWatchingForFileChanges(event) {
     if (fileWatcher) {
         // zastavit sledování
-        if (filePath) {
-            fileWatcher.unwatch(filePath);
+        const watchedFiles = fileWatcher.getWatched();
+        for (let path in watchedFiles) {
+            watchedFiles[path].forEach((file) => {
+                fileWatcher.unwatch(path + '/' +file);
+            });
         }
 
         fileWatcher.close();
+        fileWatcher = null;
     }
 }
