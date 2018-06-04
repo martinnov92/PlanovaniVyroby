@@ -4,6 +4,7 @@ import {
     createClassName, 
     DATA_DATE_FORMAT,
     formatMinutesToTime,
+    calculateOperationTime,
 } from '../../helpers';
 
 export class OrderCard extends React.Component {
@@ -28,8 +29,11 @@ export class OrderCard extends React.Component {
         const mainOrder = orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
 
-        if (order.hasOwnProperty('operation')) {
-            totalMinutes = order.operation.time * order.operation.count;
+        if (order.operation && order.operation.operationTime) {
+            totalMinutes = order.operation.operationTime;
+        } else {
+            const { count, time, exchange, casting } = order.operation;
+            totalMinutes = calculateOperationTime(count, time, exchange, casting);
         }
 
         return (
@@ -71,7 +75,7 @@ export class OrderCard extends React.Component {
                             : null
                         }
                         <p className="card-text">
-                            Celkem: {totalMinutes}min ({(totalMinutes / 60).toFixed(1)}hod)
+                            Celkem: {totalMinutes}min ({formatMinutesToTime(totalMinutes)})
                         </p>
                         <p className="card-text">
                             {order.note}

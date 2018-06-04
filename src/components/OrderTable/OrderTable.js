@@ -114,7 +114,7 @@ export class OrderTable extends React.Component {
                                 if (productKey.startsWith('_')) {
                                     return null;
                                 }
-                                console.log(product);
+
                                 return (
                                     <table key={productKey}>
                                         <tbody>
