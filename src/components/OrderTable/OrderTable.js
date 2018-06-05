@@ -1,4 +1,5 @@
 import React from 'react';
+import isEqual from 'lodash/isEqual';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import {
@@ -24,9 +25,13 @@ export class OrderTable extends React.Component {
         this.state = {
             width: 0,
             height: 0,
+            orders: [],
+            events: [],
             thWidth: [],
+            orderList: [],
             scrollLeft: 0,
             scrollableWidth: 0,
+            filterFinishedOrders: true,
         };
 
         this.fixedHeader = React.createRef();
@@ -38,6 +43,40 @@ export class OrderTable extends React.Component {
         this.setDimension();
         window.addEventListener('resize', this.setDimension)
         this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
+
+        // vytvoření sdružených zakázek po načtení komponenty
+        this.saveEventsToState(this.props.events, this.props.orderList, this.props.filterFinishedOrders);
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const equalEvents = isEqual(nextProps.events, prevState.events);
+        const equalOrderList = isEqual(nextProps.orderList, prevState.orderList);
+
+        // vytvoření sdružených zakázek, pokud se změní obsah nextPropsů, aby zbytečně nedocházelo ke spuštění createGroupedOrders
+        // jako předtím
+        if (!equalEvents || !equalOrderList || prevState.filterFinishedOrders !== nextProps.filterFinishedOrders) {
+            const orders = createGroupedOrders(nextProps.events, nextProps.orderList, nextProps.filterFinishedOrders);
+
+            return {
+                orders,
+                events: nextProps.events,
+                orderList: nextProps.orderList,
+                filterFinishedOrders: nextProps.filterFinishedOrders,
+            };
+        }
+
+        return null;
+    }
+
+    saveEventsToState = (events, orderList, filterFinishedOrders) => {
+        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
+
+        this.setState({
+            orders,
+            events,
+            orderList,
+            filterFinishedOrders,
+        });
     }
 
     handleScroll = () => {
@@ -64,18 +103,17 @@ export class OrderTable extends React.Component {
         } catch (err) {}
     }
 
-    renderTableBody = (events) => {
+    renderTableBody = () => {
         const {
+            orders,
             thWidth,
         } = this.state;
 
         const {
             orderList,
-            filterFinishedOrders,
         } = this.props;
 
         // zgrupovat zakázky podle orderId
-        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
@@ -296,7 +334,7 @@ export class OrderTable extends React.Component {
                         style={tableStyle}
                     >
                         <tbody>
-                            {this.renderTableBody(this.props.events)}
+                            {this.renderTableBody()}
                         </tbody>
                     </table>
                 </div>
