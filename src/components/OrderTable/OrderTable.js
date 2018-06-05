@@ -40,12 +40,11 @@ export class OrderTable extends React.Component {
     }
 
     componentDidMount() {
-        this.setDimension();
-        window.addEventListener('resize', this.setDimension)
+        window.addEventListener('resize', this.setDimension);
         this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
-
         // vytvoření sdružených zakázek po načtení komponenty
         this.saveEventsToState(this.props.events, this.props.orderList, this.props.filterFinishedOrders);
+        this.setDimension();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -76,6 +75,8 @@ export class OrderTable extends React.Component {
             events,
             orderList,
             filterFinishedOrders,
+        }, () => {
+            this.setDimension();
         });
     }
 
@@ -93,7 +94,7 @@ export class OrderTable extends React.Component {
             const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => node.offsetWidth);
             const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
             const scrollableWidth = this.scrollableDiv.current.offsetWidth - this.scrollableDiv.current.scrollWidth;
-    
+
             this.setState({
                 height,
                 scrollableWidth,
@@ -117,6 +118,7 @@ export class OrderTable extends React.Component {
         return Object.keys(orders).map((key) => {
             const row = [];
             const order = orders[key];
+            const orderKeys = Object.keys(order);
             const o = orderList.find((_o) => _o.id === key);
 
             row.push(
@@ -146,8 +148,8 @@ export class OrderTable extends React.Component {
                     </td>
                     <td className="table--orders-inner-table">
                         {
-                            Object.keys(orders[key]).map((productKey) => {
-                                const product = orders[key][productKey];
+                            orderKeys.map((productKey, i) => {
+                                const product = order[productKey];
 
                                 if (productKey.startsWith('_')) {
                                     return null;
@@ -212,6 +214,18 @@ export class OrderTable extends React.Component {
                                                     {formatMinutesToTime(product.totalTime)}
                                                 </td>
                                             </ContextMenu>
+                                            {
+                                                (orderKeys.length - 1) === i
+                                                ? <tr className="row--total">
+                                                    <td colSpan={9}>
+                                                        <strong>Celkový čas na zakázku</strong>
+                                                    </td>
+                                                    <td style={createStyleObject(thWidth[10])}>
+                                                        <strong>výsledek</strong>
+                                                    </td>
+                                                </tr>
+                                                : null
+                                            }
                                         </tbody>
                                     </table>
                                 )
@@ -318,8 +332,8 @@ export class OrderTable extends React.Component {
                             <th scope="col">4.o ks/čas (napl)</th>
                             <th scope="col">5.o ks/čas (napl)</th>
                             <th scope="col">6.o ks/čas (napl)</th>
-                            <th scope="col">Napl. čas na zakázku</th>
-                            <th scope="col">Čas na zakázku</th>
+                            <th scope="col">Napl. čas na výrobek</th>
+                            <th scope="col">Čas na výrobek</th>
                         </tr>
                     </thead>
                 </table>

@@ -59,6 +59,10 @@
     background-color: #eeeff0;
 }
 
+.row--total {
+    border-top: 4px double #dee2e6;
+}
+
 .order--finished > td > table > tbody > tr > td,
 .order--finished > .table--orders-first-column > span {
     opacity: .5;
