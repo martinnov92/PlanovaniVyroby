@@ -122,8 +122,7 @@
 }
 
 td.calendar-table--empty-hours.calendar--shift-hours {
-    background-color: #a2a2a2;
-    opacity: .2;
+    background-color: #f1f1f1;
 }
 
 .column-fixed {
