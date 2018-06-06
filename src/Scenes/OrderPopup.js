@@ -323,13 +323,10 @@ export class OrderPopup extends React.Component {
                                 value={formatMinutesToTime(order.operation.operationTime)}
                             />
                         </div>
-                        {
-                            sameOperationRestTime > 0
-                            ? <p>
-                                Zbývá doplánovat: {formatMinutesToTime(sameOperationRestTime)}
-                            </p>
-                            : null
-                        }
+
+                        <p>
+                            Zbývá doplánovat: {formatMinutesToTime(sameOperationRestTime)}
+                        </p>
                     </div>
                 </div>
             </Popup>
