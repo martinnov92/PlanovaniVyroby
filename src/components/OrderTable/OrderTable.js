@@ -257,7 +257,7 @@ export class OrderTable extends React.Component {
 
         const calculateHoursRemainder = operationTime - workingHoursForOperation;
         const sign = Math.sign(calculateHoursRemainder);
-        console.log(sign);
+
         return (
             <Tooltip
                 className={`cursor--default`}
