@@ -272,11 +272,11 @@ export class OrderTable extends React.Component {
 
                         <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
                         <p>Naplánováno: {formatMinutesToTime(workingHoursForOperation)}</p>
-                        <p>Zbývá: {sign === -1 ? '-' : ''}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
+                        <p>Zbývá: {sign === -1 ? '+' : '-'}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
                     </div>
                 }
             >
-                { `${count}ks. (${formatMinutesToTime(operationTime)})` }
+                { `${count}ks. (${formatMinutesToTime(operationTime)}) [${formatMinutesToTime(workingHoursForOperation)}] {${sign === -1 ? '+' : '-'}${formatMinutesToTime(Math.abs(calculateHoursRemainder))}}` }
             </Tooltip>
         );
     } 
