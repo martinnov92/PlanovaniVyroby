@@ -29,12 +29,14 @@ export class OrderCard extends React.Component {
         const mainOrder = orderList.find((o) => o.id === (order && order.orderId));
         const machine = machines.find((machine) => machine.id === (order && order.machine));
 
-        if (order.operation && order.operation.operationTime) {
-            totalMinutes = order.operation.operationTime;
-        } else {
-            const { count, time, exchange, casting } = order.operation;
-            totalMinutes = calculateOperationTime(count, time, exchange, casting);
-        }
+        try {
+            if (order.operation && order.operation.operationTime) {
+                totalMinutes = order.operation.operationTime;
+            } else {
+                const { count, time, exchange, casting } = order.operation;
+                totalMinutes = calculateOperationTime(count, time, exchange, casting);
+            }
+        } catch (err) {}
 
         return (
             <div
