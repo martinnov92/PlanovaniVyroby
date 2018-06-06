@@ -62,7 +62,22 @@ export class CalendarEvent extends React.Component {
             calendarWrapperClientRect,
         } = this.props;
 
-        const { dateFrom, dateTo } = event;
+        let { dateFrom, dateTo } = event;
+        let minutesFrom = moment(dateFrom).get('minutes');
+        let minutesTo = moment(dateTo).get('minutes');
+
+        if (minutesFrom > 0 && minutesFrom < 30) {
+            dateFrom = moment(dateFrom).minutes(0);
+        } else if (minutesFrom > 30 && minutesFrom < 59) {
+            dateFrom = moment(dateFrom).minutes(30);
+        }
+
+        if (minutesTo > 0 && minutesTo < 30) {
+            dateTo = moment(dateTo).minutes(0);
+        } else if (minutesTo > 30 && minutesTo < 59) {
+            dateTo = moment(dateTo).minutes(30);
+        }
+
         const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
         const endDate = moment(dateTo).format(DATA_DATE_FORMAT);
 
