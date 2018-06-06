@@ -24,7 +24,7 @@ export class OrderPopup extends React.Component {
             <Popup
                 center={false}
                 className="popup-order"
-                title="Přidání zakázky"
+                title="Přidání práce"
                 footerButtons={() => {
                     return <React.Fragment>
                         <button

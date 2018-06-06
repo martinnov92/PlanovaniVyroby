@@ -62,7 +62,7 @@ export class Nav extends React.Component {
                                 className="btn btn-success ml-3"
                                 onClick={this.props.addNewEvent}
                             >
-                                Přidat zakázku
+                                + Práce
                             </button>
                         }
 
