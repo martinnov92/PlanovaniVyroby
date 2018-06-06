@@ -38,6 +38,7 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
+            sameOperationRestTime: 0,
             filterFinishedOrders: true,
             startOfTheWeek: startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
@@ -480,7 +481,7 @@ class App extends React.Component {
     }
 
     handleInputChange = (e) => {
-        const { products } = this.state;
+        const { products, orders, } = this.state;
         const { name, value } = e.target;
 
         if ((name === 'orderId' || name === 'machine' || name === 'operation.order') && value === '-') {
@@ -533,10 +534,26 @@ class App extends React.Component {
         }
 
         const { count, time, exchange, casting } = order.operation;
-        order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
+        const sameOperationOnSameOrder = orders.filter((o) => {
+            if ((o.orderId === order.orderId) && (o.productName === order.productName) && o.operation) {
+                if (
+                    (o.operation.time === order.operation.time) &&
+                    (o.operation.order === order.operation.order) &&
+                    (o.operation.casting === order.operation.casting) &&
+                    (o.operation.exchange === order.operation.exchange)
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }).reduce((prev, current) => prev + current.workingHours, 0);
+
+        order.operation.operationTime = calculateOperationTime(count, time, exchange, casting) /* - sameOperationOnSameOrder */;
 
         this.setState({
-            order: order
+            order: order,
+            sameOperationRestTime: order.operation.operationTime - sameOperationOnSameOrder,
         });
     }
 
@@ -804,6 +821,7 @@ class App extends React.Component {
             hoverOrder,
             currentWeek,
             filterFinishedOrders,
+            sameOperationRestTime,
         } = this.state;
 
         return (
@@ -834,6 +852,7 @@ class App extends React.Component {
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             handleInputChange={this.handleInputChange}
+                            sameOperationRestTime={sameOperationRestTime}
                         />
                     }
 
@@ -890,6 +909,7 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
+            sameOperationRestTime: 0,
         });
     }
 
@@ -928,6 +948,7 @@ class App extends React.Component {
                 workingHours: workingHours,
                 machine: machineId || this.state.machines[0].id,
             },
+            sameOperationRestTime: 0,
         }, cb);
     }
 }

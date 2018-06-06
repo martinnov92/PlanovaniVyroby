@@ -9,6 +9,7 @@ export class OrderPopup extends React.Component {
         orderList: [],
         products: [],
         footerButtons: () => {},
+        sameOperationRestTime: 0,
     };
 
     render() {
@@ -16,6 +17,7 @@ export class OrderPopup extends React.Component {
             order,
             products,
             machines,
+            sameOperationRestTime,
         } = this.props;
 
         return (
@@ -321,6 +323,13 @@ export class OrderPopup extends React.Component {
                                 value={formatMinutesToTime(order.operation.operationTime)}
                             />
                         </div>
+                        {
+                            sameOperationRestTime > 0
+                            ? <p>
+                                Zbývá doplánovat: {formatMinutesToTime(sameOperationRestTime)}
+                            </p>
+                            : null
+                        }
                     </div>
                 </div>
             </Popup>
