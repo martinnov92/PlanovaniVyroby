@@ -66,7 +66,6 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 totalOperationTime: 0,
             };
 
-            let totalOrderTime = 0;
             let groupedProduct = groupedByProducts[order][product];
             for (let operation in groupedProduct) {
                 // ! získání největšího čísla z operation
@@ -120,7 +119,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                                 };
                                 totalOperationTime += t;
                             } else {
-                                if ((time > used.time) || (casting > used.casting) || (exchange > used.exchange) || (count > used.count)) {
+                                if ((Number(time) > Number(used.time)) || (Number(casting) > Number(used.casting)) || (Number(exchange) > Number(used.exchange)) || (Number(count) > Number(used.count)) || (Number(operationTime) > Number(used.operationTime))) {
                                     totalOperationTime -= used.operationTime;
                                     totalOperationTime += t;
                                     usedOperation[current.operation.order] = {
@@ -170,11 +169,10 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         // existuje na výrobku dané zakázky daná operace?
                         if (groupedOrder[gp.operation.order]) {
                             // pokud ano zkontroluj, jestli je jedna operace větší než druhá
-                            const { order, time, casting, exchange, count, operationTime, } = gp.operation;
-                            const used = groupedOrder[order];
+                            const used = groupedOrder[gp.operation.order];
+                            const { time, casting, exchange, count, operationTime, } = gp.operation;
 
-                            if ((time > used.time) || (casting > used.casting) || (exchange > used.exchange) || (count > used.count) || (operationTime > used.operationTime)) {
-                                console.warn('je tam!', gp, groupedOrder[gp.operation.order]);
+                            if ((Number(time) > Number(used.time)) || (Number(casting) > Number(used.casting)) || (Number(exchange) > Number(used.exchange)) || (Number(count) > Number(used.count)) || (Number(operationTime) > Number(used.operationTime))) {
                                 // a pokud je, tak nastav tu větší jako hlavní
                                 groupedOrder[gp.operation.order] = {
                                     ...gp.operation,
