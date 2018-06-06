@@ -562,9 +562,18 @@ class App extends React.Component {
             const products = [...this.state.products];
             const ordersCopy = [...this.state.orders];
             const orderListCopy = [...this.state.orderList];
-    
+            const ordersDone = ordersCopy.filter((o) => {
+                if ((o.orderId === this.state.order.orderId) && (o.productName === this.state.order.productName)) {
+                    return true;
+                }
+
+                return false;
+            });
+            const done = ordersDone.length > 0 ? (ordersDone[0].done ? ordersDone[0].done : false) : false;
+
             const order = {
                 ...this.state.order,
+                done: done,
                 dateTo: moment(this.state.order.dateTo).format(),
                 dateFrom: moment(this.state.order.dateFrom).format(),
             };
