@@ -20,6 +20,9 @@ export class OrderPopup extends React.Component {
             sameOperationRestTime,
         } = this.props;
 
+        const restTimeSign = Math.sign(sameOperationRestTime);
+        const sameOperationRemainderTime = Math.abs(sameOperationRestTime);
+
         return (
             <Popup
                 center={false}
@@ -324,9 +327,22 @@ export class OrderPopup extends React.Component {
                             />
                         </div>
 
-                        <p>
-                            Zbývá doplánovat: {formatMinutesToTime(sameOperationRestTime)}
-                        </p>
+                        {
+                            sameOperationRemainderTime >= 0
+                            ? <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text">Zbývá doplánovat</span>
+                                </div>
+                                <input
+                                    type="text"
+                                    disabled={true}
+                                    className="form-control"
+                                    onChange={this.props.handleInputChange}
+                                    value={(restTimeSign === -1 ? '+' : (restTimeSign === 0 ? '' : '-')) + formatMinutesToTime(sameOperationRemainderTime)}
+                                />
+                            </div>
+                            : null
+                        }
                     </div>
                 </div>
             </Popup>
