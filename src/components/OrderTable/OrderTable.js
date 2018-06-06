@@ -206,21 +206,16 @@ export class OrderTable extends React.Component {
                                                 <td
                                                     style={createStyleObject(thWidth[9])}
                                                 >
-                                                    {/* {product.totalTime} */}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[10])}
-                                                >
                                                     {formatMinutesToTime(product.totalOperationTime)}
                                                 </td>
                                             </ContextMenu>
                                             {
                                                 (orderKeys.length - 1) === i
                                                 ? <tr className="row--total">
-                                                    <td colSpan={9}>
+                                                    <td colSpan={8}>
                                                         <strong>Celkový čas na zakázku</strong>
                                                     </td>
-                                                    <td style={createStyleObject(thWidth[10])}>
+                                                    <td style={createStyleObject(thWidth[9])}>
                                                         <strong>{formatMinutesToTime(order._info.totalTime)}</strong>
                                                     </td>
                                                 </tr>
@@ -336,7 +331,6 @@ export class OrderTable extends React.Component {
                             <th scope="col">4.o ks/čas (napl)</th>
                             <th scope="col">5.o ks/čas (napl)</th>
                             <th scope="col">6.o ks/čas (napl)</th>
-                            <th scope="col">Napl. čas na výrobek</th>
                             <th scope="col">Čas na výrobek</th>
                         </tr>
                     </thead>
