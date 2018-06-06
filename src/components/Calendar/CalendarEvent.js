@@ -109,9 +109,9 @@ export class CalendarEvent extends React.Component {
 
         const calendarWrapper = calendarWrapperClientRect.getBoundingClientRect();
         let style = {
-            opacity: order.done ? .5 : 1,
             height: `${startPosition.height}px`,
             backgroundColor: order.color || '#fff',
+            opacity: (order.done || event.done) ? '0.5' : 1,
             width: `${endPosition.left - startPosition.left}px`,
             top: `${startPosition.top - calendarWrapper.top + scrollTop}px`,
             left: `${startPosition.left - calendarWrapper.left + scrollLeft}px`,
@@ -157,7 +157,7 @@ export class CalendarEvent extends React.Component {
         const style = Object.assign({}, this.positionEvent());
 
         if (resizerActive) {
-            style.opacity = .5;
+            style.opacity = '0.5';
             style.pointerEvents = 'none';
         }
 
@@ -196,11 +196,11 @@ export class CalendarEvent extends React.Component {
                     onDragEnd={this.props.onDragEnd}
                     onDrag={(e) => this.props.onDrag(e, event)}
                     onClick={(e) => this.props.onClick(e, event)}
-                    draggable={order.done ? false : !resizerActive}
                     onDragStart={(e) => this.props.onDragStart(e, event)}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDoubleClick={(e) => this.props.onDoubleClick(e, event)}
+                    draggable={(order.done || event.done) ? false : !resizerActive}
                 >
                     <div
                         className="calendar--event-text"
@@ -216,16 +216,16 @@ export class CalendarEvent extends React.Component {
                     <div
                         data-resize="dateFrom"
                         onDragEnd={this.handleResizerDragEnd}
-                        draggable={order.done ? false : true}
                         onDragStart={this.handleResizerDragStart}
+                        draggable={(order.done || event.done) ? false : true}
                         className="calendar--event--resizer calendar--event--resizer-left"
                     />
 
                     <div
                         data-resize="dateTo"
                         onDragEnd={this.handleResizerDragEnd}
-                        draggable={order.done ? false : true}
                         onDragStart={this.handleResizerDragStart}
+                        draggable={(order.done || event.done) ? false : true}
                         className="calendar--event--resizer calendar--event--resizer-right"
                     />
                 </div>
