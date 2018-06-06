@@ -157,7 +157,8 @@ export class CalendarEvent extends React.Component {
         const style = Object.assign({}, this.positionEvent());
 
         if (resizerActive) {
-            style.zIndex = -1;
+            style.opacity = .5;
+            style.pointerEvents = 'none';
         }
 
         return (

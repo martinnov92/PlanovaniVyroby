@@ -52,7 +52,8 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
              * Celá zakázka -> Výrobek
              * {
              *      Výrobek: {
-             *          
+             *          totalTime: 0,
+             *          totalCount: 0,
              *      },
              *      _info: {
              *          done: false,
@@ -76,8 +77,6 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
 
                     return 0;
                 }));
-                // console.log(groupedProduct);
-                const usedOperation = {};
 
                 /**
                  * Celá zakázka -> Výrobek
@@ -91,10 +90,8 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                  *      },
                  * }
                  */
-                groupedOrders[order][product] = {
-                    ...groupedOrders[order][product],
-                    done: (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false,
-                };
+                const usedOperation = {};
+                groupedOrders[order][product].done = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false;
 
                 if (groupedProduct[operation].operation) {
                     const totalTime = groupedProduct.reduce((prev, current) => {
@@ -152,7 +149,6 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     groupedOrders[order][product].totalTime = totalTime;
 
                     const gp = groupedProduct[operation];
-                    // console.log(groupedOrders[order][product]);
                     if (gp.operation /*&& (gp.operation.time != 0 || gp.operation.exchange != 0 || gp.operation.casting != 0)*/) {
                         if (groupedOrders[order][product][groupedProduct[operation].operation.order]) {
                             const used = groupedOrders[order][product][groupedProduct[operation].operation.order];
