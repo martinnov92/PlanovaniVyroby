@@ -211,7 +211,7 @@ export class OrderTable extends React.Component {
                                                 <td
                                                     style={createStyleObject(thWidth[10])}
                                                 >
-                                                    {formatMinutesToTime(product.totalTime)}
+                                                    {formatMinutesToTime(product.totalOperationTime)}
                                                 </td>
                                             </ContextMenu>
                                             {
