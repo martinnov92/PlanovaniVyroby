@@ -249,6 +249,7 @@ export class OrderTable extends React.Component {
             count,
             casting,
             exchange,
+            workingHoursForOperation = 0,
         } = operation;
 
         let operationTime = 0;
@@ -259,6 +260,10 @@ export class OrderTable extends React.Component {
             operationTime = calculateOperationTime(count, time, exchange, casting);
         }
 
+        const calculateHoursRemainder = operationTime - workingHoursForOperation;
+        const sign = Math.sign(calculateHoursRemainder);
+
+        console.log(operationTime + ' - ' + workingHoursForOperation + ' = ' + calculateHoursRemainder);
         return (
             <Tooltip
                 className={`cursor--default`}
@@ -272,8 +277,8 @@ export class OrderTable extends React.Component {
                         <hr className="bg-white" />
 
                         <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
-                        <p>Naplánováno: DODĚLAT</p>
-                        <p>Zbývá: DODĚLAT</p>
+                        <p>Naplánováno: {formatMinutesToTime(workingHoursForOperation)}</p>
+                        <p>Zbývá: {sign === -1 ? '-' : ''}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
                     </div>
                 }
             >

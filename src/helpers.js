@@ -92,17 +92,21 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                  * }
                  */
                 const usedOperation = {};
+                const workingHoursForOperation = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, };
                 groupedOrders[order][product].done = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false;
 
                 if (groupedProduct[operation].operation) {
                     const totalTime = groupedProduct.reduce((prev, current) => {
                         let totalOperationTime = prev.totalOperationTime;
                         let totalWorkingTime = prev.totalWorkingTime + current.workingHours;
-  
+
+                        
                         if (current.operation) {
                             let t = 0;
                             const { count, time, casting, exchange, operationTime } = current.operation;
-    
+                            
+                            workingHoursForOperation[current.operation.order] += current.workingHours;
+
                             if (!operationTime) {
                                 t = calculateOperationTime(count, time, exchange, casting);
                             } else {
@@ -131,7 +135,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         totalWorkingTime: 0,
                         totalOperationTime: 0,
                     });
-    
+
                     /**
                      * Celá zakázka -> Výrobek -> Operace
                      * {
@@ -169,6 +173,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         } else {
                             groupedOrders[order][product][groupedProduct[operation].operation.order] = {
                                 ...groupedProduct[operation].operation,
+                                workingHoursForOperation: workingHoursForOperation[groupedProduct[operation].operation.order]
                             };
                         }
                     }
