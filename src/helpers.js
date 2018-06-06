@@ -1,6 +1,5 @@
 import Moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import isEqual from 'lodash/isEqual';
 import { extendMoment } from 'moment-range';
 
 const fs = window.require('fs');
@@ -26,19 +25,47 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
         groupedByProducts[order] = groupBy(groupedByOrders[order], (n) => n.productName);
     }
 
+    console.log(groupedByProducts);
     const groupedOrders = {};
     for (let order in groupedByProducts) {
         const orderInfo = orderList.find((o) => o.id === order);
+        /**
+         * Celá zakázka
+         * {
+         *      _info: {
+         *          done: false,
+         *          color: red,
+         *      },
+         * }
+         * 
+         */
         groupedOrders[order] = {
             _info: {
+                totalTime: 0,
                 done: orderInfo.done,
                 color: orderInfo.color,
             },
         };
 
         for (let product in groupedByProducts[order]) {
-            groupedOrders[order][product] = {};
+            /**
+             * Celá zakázka -> Výrobek
+             * {
+             *      Výrobek: {
+             *          
+             *      },
+             *      _info: {
+             *          done: false,
+             *          color: red,
+             *      },
+             * }
+             */
+            groupedOrders[order][product] = {
+                totalCount: 0,
+                totalTime: 0,
+            };
 
+            let totalOrderTime = 0;
             for (let operation in groupedByProducts[order][product]) {
                 const groupedProduct = groupedByProducts[order][product];
                 // ! získání největšího čísla z operation
@@ -49,59 +76,103 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
 
                     return 0;
                 }));
-                console.log(groupedProduct);
+                // console.log(groupedProduct);
                 const usedOperation = {};
-                const totalTime = groupedProduct.reduce((prev, current) => {
-                    let total = prev;
 
-                    if (current.operation) {
-                        let t = 0;
-                        const { count, time, casting, exchange, operationTime } = current.operation;
-
-                        if (!operationTime) {
-                            t = calculateOperationTime(count, time, exchange, casting);
-                        } else {
-                            t = operationTime;
-                        }
-                        console.warn('použité operace', product, usedOperation);
-                        if (!usedOperation[current.operation.order]) {
-                            usedOperation[current.operation.order] = current.operation;
-                            total += t;
-                        } else {
-                            const used = usedOperation[current.operation.order];
-                            if (used.time != time || used.casting != casting || used.exchange != exchange || used.count !== count) {
-                                console.warn('něco není stejné', used, current.operation);
-                                // total = t + 
-                            } else {
-                                console.wanr('stejné objekty');
-                            }
-                        }
-                    }
-
-                    return total;
-                }, 0);
-
+                /**
+                 * Celá zakázka -> Výrobek
+                 * {
+                 *      Výrobek: {
+                 *          done: false,
+                 *      },
+                 *      _info: {
+                 *          done: false,
+                 *          color: red,
+                 *      },
+                 * }
+                 */
                 groupedOrders[order][product] = {
                     ...groupedOrders[order][product],
                     done: (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false,
                 };
 
                 if (groupedProduct[operation].operation) {
-                    groupedOrders[order][product] = {
-                        ...groupedOrders[order][product],
-                        totalCount: maxCount,
-                        totalTime: totalTime,
-                    };
+                    const totalTime = groupedProduct.reduce((prev, current) => {
+                        let total = prev;
+    
+                        if (current.operation) {
+                            let t = 0;
+                            const { count, time, casting, exchange, operationTime } = current.operation;
+    
+                            if (!operationTime) {
+                                t = calculateOperationTime(count, time, exchange, casting);
+                            } else {
+                                t = operationTime;
+                            }
+                            // console.warn('použité operace', product, usedOperation);
+                            if (!usedOperation[current.operation.order]) {
+                                usedOperation[current.operation.order] = current.operation;
+                                total += t;
+                            } else {
+                                const used = usedOperation[current.operation.order];
+                                if (used.time != time || used.casting != casting || used.exchange != exchange || used.count !== count) {
+                                    // console.warn('něco není stejné', used, current.operation);
+                                    // total = t + 
+                                } else {
+                                    // console.wanr('stejné objekty');
+                                }
+                            }
+                        }
+    
+                        return total;
+                    }, 0);
+    
+                    /**
+                     * Celá zakázka -> Výrobek -> Operace
+                     * {
+                     *      Výrobek: {
+                     *          done: false,
+                     *          totalTime: 200,
+                     *          totalCount: 200,
+                     *          1: {
+                     *              casting: 2,
+                     *              count: 2,
+                     *              time: 2,
+                     *              order: 1,
+                     *              operationTime: CELKOVÝ ČAS OPERACE
+                     *          },
+                     *      },
+                     *      _info: {
+                     *          done: false,
+                     *          color: red,
+                     *      },
+                     * }
+                     */
+                    groupedOrders[order][product].totalCount = maxCount;
+                    groupedOrders[order][product].totalTime = totalTime;
 
                     const gp = groupedProduct[operation];
-                    if (gp.operation && (gp.operation.time != 0 || gp.operation.exchange != 0 || gp.operation.casting != 0)) {
-                        groupedOrders[order][product][groupedProduct[operation].operation.order] = groupedProduct[operation].operation;
+                    // console.log(groupedOrders[order][product]);
+                    if (gp.operation /*&& (gp.operation.time != 0 || gp.operation.exchange != 0 || gp.operation.casting != 0)*/) {
+                        if (groupedOrders[order][product][groupedProduct[operation].operation.order]) {
+                            const used = groupedOrders[order][product][groupedProduct[operation].operation.order];
+                            // console.log(used);
+                            // if (used.time != time || used.casting != casting || used.exchange != exchange || used.count !== count) {
+                            //     console.warn('něco není stejné', used, current.operation);
+                            //     // total = t + 
+                            // }
+                        } else {
+                            groupedOrders[order][product][groupedProduct[operation].operation.order] = groupedProduct[operation].operation;
+                        }
                     }
                 }
             }
+
+            // součet časů všech totalTime produktů
+            groupedOrders[order]._info.totalTime += Number(groupedOrders[order][product].totalTime);
         }
     }
-
+    console.log(groupedOrders);
     return groupedOrders;
 }
 

@@ -221,7 +221,7 @@ export class OrderTable extends React.Component {
                                                         <strong>Celkový čas na zakázku</strong>
                                                     </td>
                                                     <td style={createStyleObject(thWidth[10])}>
-                                                        <strong>výsledek</strong>
+                                                        <strong>{formatMinutesToTime(order._info.totalTime)}</strong>
                                                     </td>
                                                 </tr>
                                                 : null
