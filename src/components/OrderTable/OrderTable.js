@@ -257,7 +257,7 @@ export class OrderTable extends React.Component {
 
         const calculateHoursRemainder = operationTime - workingHoursForOperation;
         const sign = Math.sign(calculateHoursRemainder);
-
+        console.log(sign);
         return (
             <Tooltip
                 className={`cursor--default`}
@@ -272,7 +272,7 @@ export class OrderTable extends React.Component {
 
                         <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
                         <p>Naplánováno: {formatMinutesToTime(workingHoursForOperation)}</p>
-                        <p>Zbývá: {sign === -1 ? '+' : '-'}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
+                        <p>Zbývá: {sign === -1 ? '+' : (sign === 0 ? '' : '-')}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
                     </div>
                 }
             >
