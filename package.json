@@ -1,5 +1,5 @@
 {
-  "name": "planovac",
+  "name": "planovanivyroby",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
@@ -32,8 +32,8 @@
     "wait-on": "^2.1.0"
   },
   "build": {
-    "appId": "com.martinnovak.Planovac",
-    "productName": "Planovac",
+    "appId": "com.martinnovak.PlanovaniVyroby",
+    "productName": "Planovani vyroby",
     "icon": "build/icon.png",
     "copyright": "Copyright 2018 year ${author}",
     "files": [
