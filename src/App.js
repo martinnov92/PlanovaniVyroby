@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import set from 'lodash/set';
 import differenceBy from 'lodash/differenceBy';
-import { OrderPopup, SettingsPopup } from './Scenes';
+import { OrderPopup, SettingsPopup, CloseProductModal } from './Scenes';
 import {
     Calendar,
     OrderCard,
@@ -38,6 +38,7 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
+            productToBeClosed: null,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             startOfTheWeek: startOfTheWeek,
@@ -684,16 +685,30 @@ class App extends React.Component {
         }, () => this.saveToFile());
     }
 
-    handleProductClose = (e, productName, orderId) => {
+    displayProductCloseModal = (e, productName, orderId) => {
+        this.setState({
+            productToBeClosed: {
+                orderId,
+                productName,
+            },
+        });
+    }
+
+    handleProductClose = (date) => {
+        const formatedDate = moment(date).format();
+        const { orderId, productName } = this.state.productToBeClosed;
+
         const setProductInOrderToDone = this.state.orders.map((order) => {
             if ((order.orderId === orderId) && (order.productName === productName)) {
                 order.done = true;
+                order.finishDate = formatedDate;
             }
 
             return order;
         });
 
         this.setState({
+            productToBeClosed: null,
             orders: setProductInOrderToDone,
         }, this.saveToFile);
     }
@@ -809,8 +824,8 @@ class App extends React.Component {
                     products={products}
                     orderList={orderList}
                     onCloseOrder={this.handleOrderClose}
-                    onProductClose={this.handleProductClose}
                     filterFinishedOrders={filterFinishedOrders}
+                    onProductClose={this.displayProductCloseModal}
                 />
             </React.Fragment>
         );
@@ -826,6 +841,7 @@ class App extends React.Component {
             orderList,
             hoverOrder,
             currentWeek,
+            productToBeClosed,
             filterFinishedOrders,
             sameOperationRestTime,
         } = this.state;
@@ -899,6 +915,15 @@ class App extends React.Component {
                         }}
                     />
                 }
+
+                {
+                    productToBeClosed
+                    ? <CloseProductModal
+                        onConfirm={this.handleProductClose}
+                        onCancel={() => this.setState({ productToBeClosed: null })}
+                    />
+                    : null
+                }
             </div>
         );
     }
@@ -915,6 +940,7 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
+            productToBeClosed: null,
             sameOperationRestTime: 0,
         });
     }
