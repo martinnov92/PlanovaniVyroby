@@ -54,6 +54,7 @@ export class OrderTable extends React.Component {
         // vytvoření sdružených zakázek, pokud se změní obsah nextPropsů, aby zbytečně nedocházelo ke spuštění createGroupedOrders
         // jako předtím
         if (!equalEvents || !equalOrderList || prevState.filterFinishedOrders !== nextProps.filterFinishedOrders) {
+            // ! TODO: opravit refresh tabulky
             const orders = createGroupedOrders(nextProps.events, nextProps.orderList, nextProps.filterFinishedOrders);
 
             return {

@@ -228,6 +228,7 @@ class App extends React.Component {
 
         // open
         if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 79) {
+            // ! TODO: opravit zobrazování dialogu (zobrazí se 2x)
             this.showOpenDialog();
         }
 

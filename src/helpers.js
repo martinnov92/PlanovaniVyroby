@@ -219,15 +219,15 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
         if (currentTime >= workHoursFrom && currentTime < workHoursTo) {
+            minutesWorked++;
+
             if ((currentTime > 11) && (currentTime < 11.1)) {
                 isAtEleven = true;
             }
 
-            minutesWorked++;
-        }
-
-        if (minutesWorked % BREAK_AFTER_MINUTES === 0) {
-            breakMinutes += pause * 60;
+            if (minutesWorked % BREAK_AFTER_MINUTES === 0) {
+                breakMinutes += pause * 60;
+            }
         }
 
         // zvětšit čas o hodinu
