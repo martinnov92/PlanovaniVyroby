@@ -534,14 +534,9 @@ class App extends React.Component {
         }
 
         const { count, time, exchange, casting } = order.operation;
-        const sameOperationOnSameOrder = orders.filter((o) => {
+        let sameOperationOnSameOrder = orders.filter((o) => {
             if ((o.orderId === order.orderId) && (o.productName === order.productName) && o.operation) {
-                if (
-                    (o.operation.time == order.operation.time) &&
-                    (o.operation.order == order.operation.order) &&
-                    (o.operation.casting == order.operation.casting) &&
-                    (o.operation.exchange == order.operation.exchange)
-                ) {
+                if (o.operation.order == order.operation.order) {
                     return true;
                 }
             }

@@ -193,7 +193,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             groupedOrders[order]._info.totalTime += Number(groupedOrders[order][product].totalOperationTime);
         }
     }
-    console.log(groupedOrders);
+
     return groupedOrders;
 }
 
@@ -331,3 +331,9 @@ export function saveFile(path, data) {
         });
     });
 }
+
+window._mn = {
+    getNetMachineTime,
+    formatMinutesToTime,
+    calculateOperationTime,
+};

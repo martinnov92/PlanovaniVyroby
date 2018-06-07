@@ -66,16 +66,16 @@ export class CalendarEvent extends React.Component {
         let minutesFrom = moment(dateFrom).get('minutes');
         let minutesTo = moment(dateTo).get('minutes');
 
-        if (minutesFrom > 0 && minutesFrom < 30) {
+        if (minutesFrom > 0 && minutesFrom <= 30) {
             dateFrom = moment(dateFrom).minutes(0);
-        } else if (minutesFrom > 30 && minutesFrom < 59) {
-            dateFrom = moment(dateFrom).minutes(30);
+        } else if (minutesFrom > 30 && minutesFrom <= 59) {
+            dateFrom = moment(dateFrom).add(1, 'hours').minutes(0);
         }
 
-        if (minutesTo > 0 && minutesTo < 30) {
+        if (minutesTo > 0 && minutesTo <= 30) {
             dateTo = moment(dateTo).minutes(0);
-        } else if (minutesTo > 30 && minutesTo < 59) {
-            dateTo = moment(dateTo).minutes(30);
+        } else if (minutesTo > 30 && minutesTo <= 59) {
+            dateTo = moment(dateTo).add(1, 'hours').minutes(0);
         }
 
         const startDate = moment(dateFrom).format(DATA_DATE_FORMAT);
