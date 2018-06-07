@@ -86,6 +86,10 @@ export class OrderTable extends React.Component {
             filterFinishedOrders,
         }, () => {
             this.setDimension();
+            setTimeout(() => {
+                const ev = new Event('resize');
+                window.dispatchEvent(ev);
+            }, 0);
         });
     }
 

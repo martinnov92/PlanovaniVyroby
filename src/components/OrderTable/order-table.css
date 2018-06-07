@@ -51,6 +51,10 @@
     border-top: 0;
 }
 
+.table--orders-inner-table > .width--100 {
+    table-layout: fixed;
+}
+
 .table--orders .pd-tooltip {
     width: 100%;
 }
