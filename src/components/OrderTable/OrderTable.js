@@ -41,7 +41,6 @@ export class OrderTable extends React.Component {
             filterFinishedOrders: true,
         };
 
-        window.setDimension = this.setDimension;
         this.fixedHeader = React.createRef();
         this.tableWrapper = React.createRef();
         this.scrollableDiv = React.createRef();
@@ -59,7 +58,7 @@ export class OrderTable extends React.Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         const equalEvents = isEqual(nextProps.events, prevState.events);
         const equalOrderList = isEqual(nextProps.orderList, prevState.orderList);
-
+        console.log(nextProps.events, prevState.events);
         // vytvoření sdružených zakázek, pokud se změní obsah nextPropsů, aby zbytečně nedocházelo ke spuštění createGroupedOrders
         // jako předtím
         if (!equalEvents || !equalOrderList || prevState.filterFinishedOrders !== nextProps.filterFinishedOrders) {
@@ -240,7 +239,7 @@ export class OrderTable extends React.Component {
                         </td>
                     </ContextMenu>
                     <tr
-                        className={`${order._info.done ? 'order--finished' : null} row--total`}
+                        className={`${order._info.done ? 'order--finished' : ''} row--total`}
                     >
                         <td
                             className="table--orders-first-column"
