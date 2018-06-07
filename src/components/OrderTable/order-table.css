@@ -21,7 +21,7 @@
 
 .table--orders .table td,
 .table--orders .table th {
-    min-width: 120px;
+    min-width: 150px;
 }
 
 .table--orders .table .table--orders-first-column {

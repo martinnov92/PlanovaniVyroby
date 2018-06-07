@@ -13,6 +13,11 @@ import {
 
 import './order-table.css';
 
+const countStyle = {
+    width: 90,
+    minWidth: 90,
+};
+
 export class OrderTable extends React.Component {
     static defaultProps = {
         events: [],
@@ -36,17 +41,19 @@ export class OrderTable extends React.Component {
             filterFinishedOrders: true,
         };
 
+        window.setDimension = this.setDimension;
         this.fixedHeader = React.createRef();
         this.tableWrapper = React.createRef();
         this.scrollableDiv = React.createRef();
     }
 
     componentDidMount() {
+        this.setDimension();
         window.addEventListener('resize', this.setDimension);
         this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
+
         // vytvoření sdružených zakázek po načtení komponenty
         this.saveEventsToState(this.props.events, this.props.orderList, this.props.filterFinishedOrders);
-        this.setDimension();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -94,9 +101,13 @@ export class OrderTable extends React.Component {
             const fixedHeader = this.fixedHeader.current;
             const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
     
-            const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => node.offsetWidth);
+            const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => {
+                return Number(parseFloat(window.getComputedStyle(node).width).toFixed(2));
+            });
+
             const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
             const scrollableWidth = this.scrollableDiv.current.offsetWidth - this.scrollableDiv.current.scrollWidth;
+            console.log(fixedHeaderTh, scrollableWidth);
 
             this.setState({
                 height,
@@ -125,121 +136,132 @@ export class OrderTable extends React.Component {
             const o = orderList.find((_o) => _o.id === key);
 
             row.push(
-                <ContextMenu
-                    key={key}
-                    buttons={[
-                        {
-                            label: 'Uzavřít zakázku',
-                            onClick: (e) => this.props.onCloseOrder(e, key, order),
-                        }
-                    ]}
-                    useAsTableRow={true}
-                    disabled={order._info.done}
-                    className={order._info.done ? 'order--finished' : null}
-                >
-                    <td
-                        className="table--orders-first-column"
-                        style={createStyleObject(thWidth[0])}
+                <React.Fragment key={key}>
+                    <ContextMenu
+                        buttons={[
+                            {
+                                label: 'Uzavřít zakázku',
+                                onClick: (e) => this.props.onCloseOrder(e, key, order),
+                            }
+                        ]}
+                        useAsTableRow={true}
+                        disabled={order._info.done}
+                        className={order._info.done ? 'order--finished' : null}
                     >
-                        <span
-                            style={{
-                                backgroundColor: order._info.color
-                            }}
+                        <td
+                            className="table--orders-first-column"
+                            style={createStyleObject(thWidth[0])}
                         >
-                            {o.name}
-                        </span>
-                    </td>
-                    <td className="table--orders-inner-table">
-                        {
-                            orderKeys.map((productKey, i) => {
-                                const product = order[productKey];
+                            <span
+                                style={{
+                                    backgroundColor: order._info.color
+                                }}
+                            >
+                                {o.name}
+                            </span>
+                        </td>
+                        <td className="table--orders-inner-table">
+                            {
+                                orderKeys.map((productKey, i) => {
+                                    const product = order[productKey];
 
-                                if (productKey.startsWith('_')) {
-                                    return null;
-                                }
+                                    if (productKey.startsWith('_')) {
+                                        return null;
+                                    }
 
-                                return (
-                                    <table key={productKey}>
-                                        <tbody>
-                                            <ContextMenu
-                                                buttons={[
-                                                    {
-                                                        label: 'Uzavřít výrobek',
-                                                        onClick: (e) => this.props.onProductClose(e, productKey, key),
-                                                    }
-                                                ]}
-                                                useAsTableRow={true}
-                                                disabled={product.done}
-                                                className={product.done ? 'product--finished' : null}
-                                            >
-                                                <td style={createStyleObject(thWidth[1])} title={productKey}>
-                                                    {productKey}
-                                                </td>
-                                                <td style={createStyleObject(thWidth[2])}>{product.totalCount}</td>
-                                                <td
-                                                    style={createStyleObject(thWidth[3])}
+                                    return (
+                                        <table key={productKey}>
+                                            <tbody>
+                                                <ContextMenu
+                                                    buttons={[
+                                                        {
+                                                            label: 'Uzavřít výrobek',
+                                                            onClick: (e) => this.props.onProductClose(e, productKey, key),
+                                                        }
+                                                    ]}
+                                                    useAsTableRow={true}
+                                                    disabled={product.done}
+                                                    className={product.done ? 'product--finished' : null}
                                                 >
-                                                    {this.renderOperationCell(product['1'])}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[4])}
-                                                >
-                                                    {this.renderOperationCell(product['2'])}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[5])}
-                                                >
-                                                    {this.renderOperationCell(product['3'])}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[6])}
-                                                >
-                                                    {this.renderOperationCell(product['4'])}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[7])}
-                                                >
-                                                    {this.renderOperationCell(product['5'])}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[8])}
-                                                >
-                                                    {this.renderOperationCell(product['6'])}
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[9])}
-                                                >
-                                                    {
-                                                        product.finishDate
-                                                        ? moment(product.finishDate).format(DATA_DATE_FORMAT)
-                                                        : '-'
-                                                    }
-                                                </td>
-                                                <td
-                                                    style={createStyleObject(thWidth[10])}
-                                                >
-                                                    {formatMinutesToTime(product.totalOperationTime)}
-                                                </td>
-                                            </ContextMenu>
-                                            {
-                                                (orderKeys.length - 1) === i
-                                                ? <tr className="row--total">
-                                                    <td colSpan={9}>
-                                                        <strong>Celkový čas na zakázku</strong>
+                                                    <td style={createStyleObject(thWidth[1])} title={productKey}>
+                                                        {productKey}
                                                     </td>
-                                                    <td style={createStyleObject(thWidth[10])}>
-                                                        <strong>{formatMinutesToTime(order._info.totalTime)}</strong>
+                                                    <td style={createStyleObject(thWidth[2])}>{product.totalCount}</td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[3])}
+                                                    >
+                                                        {this.renderOperationCell(product['1'])}
                                                     </td>
-                                                </tr>
-                                                : null
-                                            }
-                                        </tbody>
-                                    </table>
-                                )
-                            })
-                        }
-                    </td>
-                </ContextMenu>
+                                                    <td
+                                                        style={createStyleObject(thWidth[4])}
+                                                    >
+                                                        {this.renderOperationCell(product['2'])}
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[5])}
+                                                    >
+                                                        {this.renderOperationCell(product['3'])}
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[6])}
+                                                    >
+                                                        {this.renderOperationCell(product['4'])}
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[7])}
+                                                    >
+                                                        {this.renderOperationCell(product['5'])}
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[8])}
+                                                    >
+                                                        {this.renderOperationCell(product['6'])}
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[9])}
+                                                    >
+                                                        {
+                                                            product.finishDate
+                                                            ? moment(product.finishDate).format(DATA_DATE_FORMAT)
+                                                            : '-'
+                                                        }
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[10])}
+                                                    >
+                                                        {formatMinutesToTime(product.totalOperationTime)}
+                                                    </td>
+                                                </ContextMenu>
+                                            </tbody>
+                                        </table>
+                                    )
+                                })
+                            }
+                        </td>
+                    </ContextMenu>
+                    <tr
+                        className={`${order._info.done ? 'order--finished' : null} row--total`}
+                    >
+                        <td
+                            className="table--orders-first-column"
+                            style={createStyleObject(thWidth[0])}
+                        />
+                        <td className="table--orders-inner-table">
+                            <table className="width--100">
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={9}>
+                                            <strong>Celkový čas na zakázku</strong>
+                                        </td>
+                                        <td style={createStyleObject(thWidth[10])}>
+                                            <strong>{formatMinutesToTime(order._info.totalTime)}</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </React.Fragment>
             );
 
             return row;
@@ -336,15 +358,17 @@ export class OrderTable extends React.Component {
                                 Zakázka
                             </th>
                             <th scope="col">Název výrobku</th>
-                            <th scope="col">Počet kusů</th>
+                            <th scope="col" style={countStyle}>
+                                Počet ks.
+                            </th>
                             <th scope="col">1.o ks/čas (napl)</th>
                             <th scope="col">2.o ks/čas (napl)</th>
                             <th scope="col">3.o ks/čas (napl)</th>
                             <th scope="col">4.o ks/čas (napl)</th>
                             <th scope="col">5.o ks/čas (napl)</th>
                             <th scope="col">6.o ks/čas (napl)</th>
+                            <th scope="col">Ukončení výroby</th>
                             <th scope="col">Čas na výrobek</th>
-                            <th scope="col">Ukončení výroby výrobku</th>
                         </tr>
                     </thead>
                 </table>

@@ -4,7 +4,7 @@
     X úprava času výpočtu na operaci
     X zobrazení operace v tabulce
     X zobrazení času jednotlivých operací
-    - zadání času ukončení výroby výrobku
+    X zadání času ukončení výroby výrobku
     - oprava refreshe OrderTable + oprava výpočtu šířek (občas se rozpadne)
     X opravit sčítání počtu kusů u zakázek na více strojích
     X zkontrolovat proč se ukládají u products "-"
