@@ -93,6 +93,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 const workingHoursForOperation = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, };
                 const groupedOrder = groupedOrders[order][product];
                 groupedOrder.done = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false;
+                groupedOrder.finishDate = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('finishDate')) ? groupedProduct[0].finishDate : null;
 
                 if (groupedProduct[operation].operation) {
                     const totalTime = groupedProduct.reduce((prev, current) => {

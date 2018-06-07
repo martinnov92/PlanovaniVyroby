@@ -1,9 +1,11 @@
 import React from 'react';
+import moment from 'moment';
 import isEqual from 'lodash/isEqual';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import {
     createClassName,
+    DATA_DATE_FORMAT,
     createGroupedOrders,
     formatMinutesToTime,
     calculateOperationTime,
@@ -207,16 +209,25 @@ export class OrderTable extends React.Component {
                                                 <td
                                                     style={createStyleObject(thWidth[9])}
                                                 >
+                                                    {
+                                                        product.finishDate
+                                                        ? moment(product.finishDate).format(DATA_DATE_FORMAT)
+                                                        : '-'
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={createStyleObject(thWidth[10])}
+                                                >
                                                     {formatMinutesToTime(product.totalOperationTime)}
                                                 </td>
                                             </ContextMenu>
                                             {
                                                 (orderKeys.length - 1) === i
                                                 ? <tr className="row--total">
-                                                    <td colSpan={8}>
+                                                    <td colSpan={9}>
                                                         <strong>Celkový čas na zakázku</strong>
                                                     </td>
-                                                    <td style={createStyleObject(thWidth[9])}>
+                                                    <td style={createStyleObject(thWidth[10])}>
                                                         <strong>{formatMinutesToTime(order._info.totalTime)}</strong>
                                                     </td>
                                                 </tr>
@@ -333,6 +344,7 @@ export class OrderTable extends React.Component {
                             <th scope="col">5.o ks/čas (napl)</th>
                             <th scope="col">6.o ks/čas (napl)</th>
                             <th scope="col">Čas na výrobek</th>
+                            <th scope="col">Ukončení výroby výrobku</th>
                         </tr>
                     </thead>
                 </table>

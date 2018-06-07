@@ -35,6 +35,7 @@ export class SettingsPopup extends React.Component {
 
         return (
             <Popup
+                modal={true}
                 title="Nastavení"
                 className="popup--settings"
                 onClose={this.props.handleClose}
