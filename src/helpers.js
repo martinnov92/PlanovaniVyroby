@@ -214,11 +214,11 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     }
 
     let current = dateFrom;
-    while (current <= dateTo) {
+    while (current < dateTo) {
         const currentTime = current.getHours() + (current.getMinutes() / 60);
 
         // kontrola jestli je daná hodina větší než pracovní doba od a menší než pracovní doba do
-        if (currentTime >= workHoursFrom && currentTime <= workHoursTo) {
+        if (currentTime >= workHoursFrom && currentTime < workHoursTo) {
             if ((currentTime > 11) && (currentTime < 11.1)) {
                 isAtEleven = true;
             }
@@ -229,7 +229,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
         if (minutesWorked % BREAK_AFTER_MINUTES === 0) {
             breakMinutes += pause * 60;
         }
-        
+
         // zvětšit čas o hodinu
         current.setTime(current.getTime() + 1000 * 60);
     }
@@ -238,7 +238,7 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     minutesWorked = minutesWorked - breakMinutes - (isLessThenSixHoursButAtEleven ? pause * 60 : 0);
     isAtEleven = false;
 
-    return Math.floor(minutesWorked / 10) * 10;
+    return minutesWorked;
 }
 
 export function filterDataByDate(events, from, to) {
