@@ -28,6 +28,7 @@ export class CloseProductModal extends React.Component {
         return (
             <Popup
                 width="400px"
+                modal={true}
                 title="Ukončení výroby výrobku"
                 onClose={this.props.onCancel}
                 footerButtons={() => (

@@ -9,6 +9,7 @@ import './popup.css';
 export class Popup extends React.Component {
     static defaultProps = {
         center: true,
+        modal: false,
         footerButtons: () => {},
     };
 
@@ -112,7 +113,7 @@ export class Popup extends React.Component {
         return this.props.onClose();
     }
 
-    render() {
+    renderPopup = () => {
         const {
             clientX,
             clientY,
@@ -122,7 +123,7 @@ export class Popup extends React.Component {
             transform: `translate(${clientX}px, ${clientY}px)`,
         };
 
-        return ReactDOM.createPortal(
+        return (
             <div
                 className={
                     createClassName(['popup', this.props.className])
@@ -160,6 +161,18 @@ export class Popup extends React.Component {
                     </footer>
                 }
             </div>
-        , document.body);
+        );
+    }
+
+    render() {
+        if (this.props.modal) {
+            return ReactDOM.createPortal(
+                <div className="modal--overlay">
+                    {this.renderPopup()}
+                </div>
+            , document.body);
+        }
+
+        return ReactDOM.createPortal(this.renderPopup(), document.body);
     }
 }
