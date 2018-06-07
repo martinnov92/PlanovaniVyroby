@@ -226,21 +226,22 @@ class App extends React.Component {
             this.handleAddNewEvent();
         }
 
+        // ! TODO: zkusit jestli bude fungovat i na macu, na Windows se jinak otevřeli dva dialogy
         // open
-        if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 79) {
-            // ! TODO: opravit zobrazování dialogu (zobrazí se 2x)
-            this.showOpenDialog();
-        }
+        // if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 79) {
+        //     console.log('otevřít');
+        //     this.showOpenDialog();
+        // }
 
         // save
-        if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 83) {
-            this.saveToFile();
-        }
+        // if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 83) {
+        //     this.saveToFile();
+        // }
 
         // save as
-        if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 83) {
-            this.showSaveDialog();
-        }
+        // if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 83) {
+        //     this.showSaveDialog();
+        // }
 
         // open dev tools
         if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 73) {
