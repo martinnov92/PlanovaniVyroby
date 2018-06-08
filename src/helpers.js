@@ -340,17 +340,15 @@ export function saveFile(path, data) {
     });
 }
 
-export function createStyleObject(width) {
-    return {
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        width: `${width || 0}px`,
-        maxWidth: `${width || 0}px`,
-    };
-}
+export const createStyleObject = (width) => ({
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    width: `${width || 0}px`,
+    maxWidth: `${width || 0}px`,
+});
 
-window._mn = {
+window._debug = {
     getNetMachineTime,
     formatMinutesToTime,
     calculateOperationTime,
