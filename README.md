@@ -1,3 +1,6 @@
+# Instalace
+  `yarn install`
+
 # MacOS
   - spustit pomocí `yarn electron-dev`
 
