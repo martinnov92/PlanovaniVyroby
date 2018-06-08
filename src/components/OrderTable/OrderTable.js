@@ -91,6 +91,7 @@ export class OrderTable extends React.Component {
             const orderKeys = Object.keys(commission);
             const { orderId, done, color } = commission._info;
             const o = orderList.find((_o) => _o.id === commission._info.orderId);
+            const totalRowWidth = thWidth.slice(1, thWidth.length - 1).reduce((prev, current) => prev + current, 0);
 
             row.push(
                 <React.Fragment key={orderId}>
@@ -207,7 +208,7 @@ export class OrderTable extends React.Component {
                             <table className="width--100">
                                 <tbody>
                                     <tr>
-                                        <td colSpan={9}>
+                                        <td style={createStyleObject(totalRowWidth)}>
                                             <strong>Celkový čas na zakázku</strong>
                                         </td>
                                         <td style={createStyleObject(thWidth[10])}>
