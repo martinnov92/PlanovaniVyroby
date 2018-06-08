@@ -170,6 +170,19 @@ export class CalendarEvent extends React.Component {
             draggingEvent
         } = this.props;
         const style = Object.assign({}, this.positionEvent());
+        const buttons = [
+            {
+                label: 'Smazat',
+                onClick: (e) => this.props.onDeleteEvent(e, event),
+            }
+        ];
+
+        if (!event.done) {
+            buttons.unshift({
+                label: 'Upravit',
+                onClick: (e) => this.props.onEditEvent(e, event),
+            });
+        }
 
         if (resizerActive) {
             style.opacity = '0.5';
@@ -179,18 +192,9 @@ export class CalendarEvent extends React.Component {
         return (
             <ContextMenu
                 key={event.id}
+                buttons={buttons}
                 onOpen={this.props.onContextOpen}
                 onClose={this.props.onContextClose}
-                buttons={[
-                    {
-                        label: 'Upravit',
-                        onClick: (e) => this.props.onEditEvent(e, event),
-                    },
-                    {
-                        label: 'Smazat',
-                        onClick: (e) => this.props.onDeleteEvent(e, event),
-                    }
-                ]}
             >
                 <div
                     className={
