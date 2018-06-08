@@ -32,6 +32,14 @@ body {
     background-color: #6c757d;
 }
 
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
 .app {
     width: 100vw;
     height: 100vh;
