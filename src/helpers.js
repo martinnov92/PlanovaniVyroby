@@ -311,6 +311,7 @@ export function isDateRangeOverlaping(arr, order) {
 }
 
 export function formatMinutesToTime(totalMinutes) {
+    // TODO: přepsat
     if (!totalMinutes) {
         // default
         return `0h 0m`;
