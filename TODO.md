@@ -5,9 +5,10 @@
     X zobrazení operace v tabulce
     X zobrazení času jednotlivých operací
     X zadání času ukončení výroby výrobku
+    - oprava výpočtu šířek (občas se rozpadne)
     - opravit přesun události v 20:00, událost se zkrátí
-    - položení události na 30 minutu se nenatáhne
-    - oprava refreshe OrderTable + oprava výpočtu šířek (občas se rozpadne)
+    X položení události na 30 minutu se nenatáhne
+    X oprava refreshe OrderTable
     X opravit sčítání počtu kusů u zakázek na více strojích
     X zkontrolovat proč se ukládají u products "-"
     X opravit pozici tooltipu

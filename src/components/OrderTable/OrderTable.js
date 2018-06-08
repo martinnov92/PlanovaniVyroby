@@ -1,12 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import isEqual from 'lodash/isEqual';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import {
     createClassName,
     DATA_DATE_FORMAT,
-    createGroupedOrders,
+    createStyleObject,
     formatMinutesToTime,
     calculateOperationTime,
 } from '../../helpers';
@@ -20,10 +19,9 @@ const countStyle = {
 
 export class OrderTable extends React.Component {
     static defaultProps = {
-        events: [],
         orderList: [],
+        groupedOrders: [],
         onCloseOrder: () => {},
-        filterFinishedOrders: true,
     };
 
     constructor(props) {
@@ -32,13 +30,9 @@ export class OrderTable extends React.Component {
         this.state = {
             width: 0,
             height: 0,
-            orders: [],
-            events: [],
             thWidth: [],
-            orderList: [],
             scrollLeft: 0,
             scrollableWidth: 0,
-            filterFinishedOrders: true,
         };
 
         this.fixedHeader = React.createRef();
@@ -50,47 +44,6 @@ export class OrderTable extends React.Component {
         this.setDimension();
         window.addEventListener('resize', this.setDimension);
         this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
-
-        // vytvoření sdružených zakázek po načtení komponenty
-        this.saveEventsToState(this.props.events, this.props.orderList, this.props.filterFinishedOrders);
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const equalEvents = isEqual(nextProps.events, prevState.events);
-        const equalOrderList = isEqual(nextProps.orderList, prevState.orderList);
-        console.log(nextProps.events, prevState.events);
-        // vytvoření sdružených zakázek, pokud se změní obsah nextPropsů, aby zbytečně nedocházelo ke spuštění createGroupedOrders
-        // jako předtím
-        if (!equalEvents || !equalOrderList || prevState.filterFinishedOrders !== nextProps.filterFinishedOrders) {
-            // ! TODO: opravit refresh tabulky
-            const orders = createGroupedOrders(nextProps.events, nextProps.orderList, nextProps.filterFinishedOrders);
-
-            return {
-                orders,
-                events: nextProps.events,
-                orderList: nextProps.orderList,
-                filterFinishedOrders: nextProps.filterFinishedOrders,
-            };
-        }
-
-        return null;
-    }
-
-    saveEventsToState = (events, orderList, filterFinishedOrders) => {
-        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
-
-        this.setState({
-            orders,
-            events,
-            orderList,
-            filterFinishedOrders,
-        }, () => {
-            this.setDimension();
-            setTimeout(() => {
-                const ev = new Event('resize');
-                window.dispatchEvent(ev);
-            }, 0);
-        });
     }
 
     handleScroll = () => {
@@ -123,18 +76,18 @@ export class OrderTable extends React.Component {
 
     renderTableBody = () => {
         const {
-            orders,
             thWidth,
         } = this.state;
 
         const {
             orderList,
+            groupedOrders,
         } = this.props;
 
         // zgrupovat zakázky podle orderId
-        return Object.keys(orders).map((key) => {
+        return Object.keys(groupedOrders).map((key) => {
             const row = [];
-            const order = orders[key];
+            const order = groupedOrders[key];
             const orderKeys = Object.keys(order);
             const o = orderList.find((_o) => _o.id === key);
 
@@ -393,14 +346,4 @@ export class OrderTable extends React.Component {
             </div>
         );
     } 
-}
-
-function createStyleObject(width) {
-    return {
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        width: `${width || 0}px`,
-        maxWidth: `${width || 0}px`,
-    };
 }

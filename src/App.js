@@ -12,6 +12,7 @@ import { OrderTable } from './components/OrderTable';
 import {
     saveFile,
     getNetMachineTime,
+    createGroupedOrders,
     isDateRangeOverlaping,
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
@@ -36,6 +37,7 @@ class App extends React.Component {
             loading: false,
             readOnly: false,
             settings: false,
+            groupOrders: [],
             hoverOrder: null,
             fileLoaded: false,
             productToBeClosed: null,
@@ -171,6 +173,32 @@ class App extends React.Component {
         });
     }
 
+    saveToFile = () => {
+        this.handleReadOnly(() => {
+            const filePath = window.localStorage.getItem('filePath');
+    
+            if (!filePath) {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
+            }
+
+            this.sendLocalChangeMessage();
+            saveFile(filePath, {
+                orders: this.state.orders,
+                products: this.state.products,
+                machines: this.state.machines,
+                orderList: this.state.orderList,
+                filterFinishedOrders: this.state.filterFinishedOrders,
+            })
+            .then((value) => {
+                this.showInfoMessage(<p>{value}</p>, 3000);
+                this.groupOrders(this.state.orders, this.state.orderList, this.state.filterFinishedOrders);
+            })
+            .catch((err) => {
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
+            });
+        });
+    }
+
     readFile = (filePath) => {
         this.setState({
             loading: true,
@@ -208,6 +236,8 @@ class App extends React.Component {
                     });
 
                     this.watchFileChanges(filePath);
+                    this.groupOrders(d.orders, d.orderList, d.filterFinishedOrders);
+
                     window.localStorage.setItem('filePath', filePath);
                 } catch (err) {
                     this.setState({
@@ -696,28 +726,11 @@ class App extends React.Component {
         }, this.saveToFile);
     }
 
-    saveToFile = () => {
-        this.handleReadOnly(() => {
-            const filePath = window.localStorage.getItem('filePath');
-    
-            if (!filePath) {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
-            }
-    
-            this.sendLocalChangeMessage();
-            saveFile(filePath, {
-                orders: this.state.orders,
-                products: this.state.products,
-                machines: this.state.machines,
-                orderList: this.state.orderList,
-                filterFinishedOrders: this.state.filterFinishedOrders,
-            })
-            .then((value) => {
-                this.showInfoMessage(<p>{value}</p>, 3000);
-            })
-            .catch((err) => {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
-            });
+    groupOrders = (events = [], orderList = [], filterFinishedOrders = false) => {
+        const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
+
+        this.setState({
+            groupOrders: orders,
         });
     }
 
@@ -731,6 +744,7 @@ class App extends React.Component {
             orderList,
             fileLoaded,
             currentWeek,
+            groupOrders,
             startOfTheWeek,
             filterFinishedOrders,
         } = this.state;
@@ -806,6 +820,7 @@ class App extends React.Component {
                     events={orders}
                     products={products}
                     orderList={orderList}
+                    groupedOrders={groupOrders}
                     onCloseOrder={this.handleOrderClose}
                     filterFinishedOrders={filterFinishedOrders}
                     onProductClose={this.displayProductCloseModal}
@@ -830,7 +845,9 @@ class App extends React.Component {
         } = this.state;
 
         return (
-            <div className="app">
+            <div
+                className="app"
+            >
                 <Nav
                     currentWeek={currentWeek}
                     infoText={this.state.infoText}
@@ -920,6 +937,7 @@ class App extends React.Component {
             machines: [],
             orderList: [],
             loading: false,
+            groupOrders: [],
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
