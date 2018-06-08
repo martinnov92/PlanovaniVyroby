@@ -329,6 +329,18 @@ export function calculateOperationTime(count, time, exchange, casting) {
     return (Number(count) * (Number(time) + Number(exchange))) + Number(casting);
 }
 
+export function calculateRemainingOperationTime(orders = [], order = {}) {
+    return orders.filter((o) => {
+        if ((o.orderId === order.orderId) && (o.productName === order.productName) && (o.id !== order.id) && o.operation) {
+            if (o.operation.order == order.operation.order) {
+                return true;
+            }
+        }
+
+        return false;
+    }).reduce((prev, current) => prev + current.workingHours, 0);
+}
+
 export function saveFile(path, data) {
     const d = JSON.stringify(data, null, 4);
 

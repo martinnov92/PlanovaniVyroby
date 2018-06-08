@@ -16,6 +16,7 @@ import {
     isDateRangeOverlaping,
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
+    calculateRemainingOperationTime,
 } from './helpers';
 import sync from './statics/sync.svg';
 
@@ -408,10 +409,16 @@ class App extends React.Component {
                     exchange: 0,
                 };
             }
-    
+
+            const { count, time, exchange, casting } = order.operation;
+            const sameOperationOnSameOrder = calculateRemainingOperationTime(this.state.orders, order);
+            order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
+
             this.setState({
                 open: true,
                 order: copyOrder,
+                // čas, který se zobrazí v popupu a bude zobrazovat kolik času zbývá doplánovat
+                sameOperationRestTime: order.operation.operationTime - order.workingHours - sameOperationOnSameOrder,
             });
         });
     }
@@ -550,15 +557,7 @@ class App extends React.Component {
         }
 
         const { count, time, exchange, casting } = order.operation;
-        let sameOperationOnSameOrder = orders.filter((o) => {
-            if ((o.orderId === order.orderId) && (o.productName === order.productName) && o.operation) {
-                if (o.operation.order == order.operation.order) {
-                    return true;
-                }
-            }
-
-            return false;
-        }).reduce((prev, current) => prev + current.workingHours, 0);
+        const sameOperationOnSameOrder = calculateRemainingOperationTime(orders, order);
         order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
 
         this.setState({
