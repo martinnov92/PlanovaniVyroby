@@ -32,7 +32,6 @@ export class OrderTable extends React.Component {
             height: 0,
             thWidth: [],
             scrollLeft: 0,
-            scrollableWidth: 0,
         };
 
         this.fixedHeader = React.createRef();
@@ -58,16 +57,12 @@ export class OrderTable extends React.Component {
             const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
     
             const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => {
-                return Number(parseFloat(window.getComputedStyle(node).width).toFixed(2));
+                return Number(parseFloat(window.getComputedStyle(node).width));
             });
-
             const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
-            const scrollableWidth = this.scrollableDiv.current.offsetWidth - this.scrollableDiv.current.scrollWidth;
-            console.log(fixedHeaderTh, scrollableWidth);
 
             this.setState({
                 height,
-                scrollableWidth,
                 thWidth: fixedHeaderTh,
                 width: fixedHeader.width,
             });
@@ -84,13 +79,14 @@ export class OrderTable extends React.Component {
             groupedOrders,
         } = this.props;
 
-        // zgrupovat zakázky podle orderId
+        // vykreslit zgroupované zakázky podle orderId
         return groupedOrders.map((commission) => {
             const row = [];
 
             const orderKeys = Object.keys(commission);
             const { orderId, done, color } = commission._info;
             const o = orderList.find((_o) => _o.id === commission._info.orderId);
+            // sečíst všechny sloupce v tabulce kromě prvního a posledního a nastavit jako šířku pro total row
             const totalRowWidth = thWidth.slice(1, thWidth.length - 1).reduce((prev, current) => prev + current, 0);
 
             row.push(
@@ -303,7 +299,6 @@ export class OrderTable extends React.Component {
                     ref={this.fixedHeader}
                     className={classNamesHeader}
                     style={{
-                        width: `calc(100% - ${this.state.scrollableWidth}px)`,
                         transform: `translateX(${this.state.scrollLeft * -1}px)`
                     }}
                 >
