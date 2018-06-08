@@ -195,7 +195,11 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             commission._info.totalTime += Number(commission[product].totalOperationTime);
         }
 
-        groupedOrders.push(commission);
+        if (commission._info.done) {
+            groupedOrders.push(commission);
+        } else {
+            groupedOrders.unshift(commission);
+        }
     }
 
     return groupedOrders;

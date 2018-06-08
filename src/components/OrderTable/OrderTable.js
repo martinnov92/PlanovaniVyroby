@@ -84,11 +84,8 @@ export class OrderTable extends React.Component {
             groupedOrders,
         } = this.props;
 
-        // seřadit zakázky podle toho, jestli jsou dokončené
-        const sortedGroupedOrders = groupedOrders.sort((commissionA, commissionB) => commissionA._info.done > commissionB._info.done);
-
         // zgrupovat zakázky podle orderId
-        return sortedGroupedOrders.map((commission) => {
+        return groupedOrders.map((commission) => {
             const row = [];
 
             const orderKeys = Object.keys(commission);
