@@ -84,25 +84,29 @@ export class OrderTable extends React.Component {
             groupedOrders,
         } = this.props;
 
+        // seřadit zakázky podle toho, jestli jsou dokončené
+        const sortedGroupedOrders = groupedOrders.sort((commissionA, commissionB) => commissionA._info.done > commissionB._info.done);
+
         // zgrupovat zakázky podle orderId
-        return Object.keys(groupedOrders).map((key) => {
+        return sortedGroupedOrders.map((commission) => {
             const row = [];
-            const order = groupedOrders[key];
-            const orderKeys = Object.keys(order);
-            const o = orderList.find((_o) => _o.id === key);
+
+            const orderKeys = Object.keys(commission);
+            const { orderId, done, color } = commission._info;
+            const o = orderList.find((_o) => _o.id === commission._info.orderId);
 
             row.push(
-                <React.Fragment key={key}>
+                <React.Fragment key={orderId}>
                     <ContextMenu
                         buttons={[
                             {
                                 label: 'Uzavřít zakázku',
-                                onClick: (e) => this.props.onCloseOrder(e, key, order),
+                                onClick: (e) => this.props.onCloseOrder(e, orderId, commission),
                             }
                         ]}
                         useAsTableRow={true}
-                        disabled={order._info.done}
-                        className={order._info.done ? 'order--finished' : null}
+                        disabled={done}
+                        className={done ? 'order--finished' : null}
                     >
                         <td
                             className="table--orders-first-column"
@@ -110,7 +114,7 @@ export class OrderTable extends React.Component {
                         >
                             <span
                                 style={{
-                                    backgroundColor: order._info.color
+                                    backgroundColor: color
                                 }}
                             >
                                 {o.name}
@@ -118,29 +122,29 @@ export class OrderTable extends React.Component {
                         </td>
                         <td className="table--orders-inner-table">
                             {
-                                orderKeys.map((productKey, i) => {
-                                    const product = order[productKey];
+                                orderKeys.map((objKey, i) => {
+                                    const product = commission[objKey];
 
-                                    if (productKey.startsWith('_')) {
+                                    if (objKey.startsWith('_')) {
                                         return null;
                                     }
 
                                     return (
-                                        <table key={productKey}>
+                                        <table key={objKey}>
                                             <tbody>
                                                 <ContextMenu
                                                     buttons={[
                                                         {
                                                             label: 'Uzavřít výrobek',
-                                                            onClick: (e) => this.props.onProductClose(e, productKey, key),
+                                                            onClick: (e) => this.props.onProductClose(e, objKey, orderId),
                                                         }
                                                     ]}
                                                     useAsTableRow={true}
                                                     disabled={product.done}
                                                     className={product.done ? 'product--finished' : null}
                                                 >
-                                                    <td style={createStyleObject(thWidth[1])} title={productKey}>
-                                                        {productKey}
+                                                    <td style={createStyleObject(thWidth[1])} title={objKey}>
+                                                        {objKey}
                                                     </td>
                                                     <td style={createStyleObject(thWidth[2])}>{product.totalCount}</td>
                                                     <td
@@ -196,7 +200,7 @@ export class OrderTable extends React.Component {
                         </td>
                     </ContextMenu>
                     <tr
-                        className={`${order._info.done ? 'order--finished' : ''} row--total`}
+                        className={`${commission._info.done ? 'order--finished' : ''} row--total`}
                     >
                         <td
                             className="table--orders-first-column"
@@ -210,7 +214,7 @@ export class OrderTable extends React.Component {
                                             <strong>Celkový čas na zakázku</strong>
                                         </td>
                                         <td style={createStyleObject(thWidth[10])}>
-                                            <strong>{formatMinutesToTime(order._info.totalTime)}</strong>
+                                            <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
                                         </td>
                                     </tr>
                                 </tbody>

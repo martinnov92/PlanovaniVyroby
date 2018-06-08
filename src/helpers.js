@@ -25,7 +25,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
         groupedByProducts[order] = groupBy(groupedByOrders[order], (n) => n.productName);
     }
 
-    const groupedOrders = {};
+    const groupedOrders = [];
     for (let order in groupedByProducts) {
         const orderInfo = orderList.find((o) => o.id === order);
         /**
@@ -38,9 +38,10 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
          * }
          * 
          */
-        groupedOrders[order] = {
+        const commission = {
             _info: {
                 totalTime: 0,
+                orderId: order,
                 done: orderInfo.done,
                 color: orderInfo.color,
             },
@@ -60,7 +61,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
              *      },
              * }
              */
-            groupedOrders[order][product] = {
+            commission[product] = {
                 totalCount: 0,
                 totalWorkingTime: 0,
                 totalOperationTime: 0,
@@ -91,7 +92,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                  */
                 const usedOperation = {};
                 const workingHoursForOperation = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, };
-                const groupedOrder = groupedOrders[order][product];
+                const groupedOrder = commission[product];
                 groupedOrder.done = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false;
                 groupedOrder.finishDate = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('finishDate')) ? groupedProduct[0].finishDate : null;
 
@@ -191,8 +192,10 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             }
 
             // součet časů všech totalTime produktů
-            groupedOrders[order]._info.totalTime += Number(groupedOrders[order][product].totalOperationTime);
+            commission._info.totalTime += Number(commission[product].totalOperationTime);
         }
+
+        groupedOrders.push(commission);
     }
 
     return groupedOrders;
