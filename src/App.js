@@ -207,7 +207,7 @@ class App extends React.Component {
         });
 
         // zastavit sledování souborů před každým novým čtením souboru
-        this.unwatchFileChanges(filePath);
+        this.unwatchFileChanges();
         return fs.readFile(filePath, 'utf-8', (err, data) => {
             if (err) {
                 this.setState({
@@ -286,7 +286,7 @@ class App extends React.Component {
         electron.ipcRenderer.send('file-start-watching', filePath);
     }
 
-    unwatchFileChanges = (filePath) => {
+    unwatchFileChanges = () => {
         electron.ipcRenderer.send('file-stop-watching');
     }
 
@@ -703,11 +703,13 @@ class App extends React.Component {
     }
 
     displayProductCloseModal = (e, productName, orderId) => {
-        this.setState({
-            itemToBeClosed: {
-                orderId,
-                productName,
-            },
+        this.handleReadOnly(() => {
+            this.setState({
+                itemToBeClosed: {
+                    orderId,
+                    productName,
+                },
+            });
         });
     }
 
