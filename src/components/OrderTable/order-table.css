@@ -38,10 +38,6 @@
     min-width: auto;
 }
 
-.table--scrollable > .table > tbody > tr > td {
-    border-bottom: 2px solid;
-} 
-
 .table td.table--orders-inner-table {
     border: 0;
     padding: 0;
@@ -67,8 +63,12 @@
     background-color: #eeeff0;
 }
 
+.table--scrollable > .table > tbody > tr > td {
+    border-bottom: 2px solid var(--calendarDayBorderColor);
+} 
+
 .row--total {
-    border-top: 4px double var(--calendarDayBorderColor);
+    border-top: 3px double var(--calendarDayBorderColor);
 }
 
 .order--finished > td > table > tbody > tr > td,

@@ -41,7 +41,7 @@ class App extends React.Component {
             groupOrders: [],
             hoverOrder: null,
             fileLoaded: false,
-            productToBeClosed: null,
+            itemToBeClosed: null,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             startOfTheWeek: startOfTheWeek,
@@ -675,7 +675,10 @@ class App extends React.Component {
         });
     };
 
-    handleOrderClose = (e, orderId, order) => {
+    handleOrderClose = (date) => {
+        const { orderId } = this.state.itemToBeClosed;
+        const formatedDate = moment(date).format();
+
         let orderListCopy = [...this.state.orderList];
         let setProductInOrderToDone = [...this.state.orders];
         const findOrder = orderListCopy.findIndex((o) => o.id === orderId);
@@ -685,6 +688,7 @@ class App extends React.Component {
             setProductInOrderToDone = this.state.orders.map((order) => {
                 if (order.orderId === orderId) {
                     order.done = true;
+                    order.finishDate = formatedDate;
                 }
     
                 return order;
@@ -692,6 +696,7 @@ class App extends React.Component {
         }
 
         this.setState({
+            itemToBeClosed: null,
             orderList: orderListCopy,
             orders: setProductInOrderToDone,
         }, () => this.saveToFile());
@@ -699,7 +704,7 @@ class App extends React.Component {
 
     displayProductCloseModal = (e, productName, orderId) => {
         this.setState({
-            productToBeClosed: {
+            itemToBeClosed: {
                 orderId,
                 productName,
             },
@@ -708,7 +713,7 @@ class App extends React.Component {
 
     handleProductClose = (date) => {
         const formatedDate = moment(date).format();
-        const { orderId, productName } = this.state.productToBeClosed;
+        const { orderId, productName } = this.state.itemToBeClosed;
 
         const setProductInOrderToDone = this.state.orders.map((order) => {
             if ((order.orderId === orderId) && (order.productName === productName)) {
@@ -720,7 +725,7 @@ class App extends React.Component {
         });
 
         this.setState({
-            productToBeClosed: null,
+            itemToBeClosed: null,
             orders: setProductInOrderToDone,
         }, this.saveToFile);
     }
@@ -820,8 +825,8 @@ class App extends React.Component {
                     products={products}
                     orderList={orderList}
                     groupedOrders={groupOrders}
-                    onCloseOrder={this.handleOrderClose}
                     filterFinishedOrders={filterFinishedOrders}
+                    onCloseOrder={this.displayProductCloseModal}
                     onProductClose={this.displayProductCloseModal}
                 />
             </React.Fragment>
@@ -838,7 +843,7 @@ class App extends React.Component {
             orderList,
             hoverOrder,
             currentWeek,
-            productToBeClosed,
+            itemToBeClosed,
             filterFinishedOrders,
             sameOperationRestTime,
         } = this.state;
@@ -916,10 +921,15 @@ class App extends React.Component {
                 }
 
                 {
-                    productToBeClosed
+                    itemToBeClosed
                     ? <CloseProductModal
-                        onConfirm={this.handleProductClose}
-                        onCancel={() => this.setState({ productToBeClosed: null })}
+                        product={!!itemToBeClosed.productName}
+                        onCancel={() => this.setState({ itemToBeClosed: null })}
+                        onConfirm={
+                            itemToBeClosed.productName
+                            ? (date) => this.handleProductClose(date)
+                            : (date) => this.handleOrderClose(date)
+                        }
                     />
                     : null
                 }
@@ -940,7 +950,7 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
-            productToBeClosed: null,
+            itemToBeClosed: null,
             sameOperationRestTime: 0,
         });
     }

@@ -95,7 +95,7 @@ export class OrderTable extends React.Component {
                         buttons={[
                             {
                                 label: 'Uzavřít zakázku',
-                                onClick: (e) => this.props.onCloseOrder(e, orderId, commission),
+                                onClick: (e) => this.props.onCloseOrder(e, null, orderId, false),
                             }
                         ]}
                         useAsTableRow={true}

@@ -25,17 +25,22 @@ export class CloseProductModal extends React.Component {
     }
 
     render() {
+        const {
+            product,
+            onCancel,
+        } = this.props;
+
         return (
             <Popup
                 width="400px"
                 modal={true}
-                title="Ukončení výroby výrobku"
-                onClose={this.props.onCancel}
+                onClose={onCancel}
+                title={product ? 'Ukončení výroby výrobku' : 'Uzavřít zakázku'}
                 footerButtons={() => (
                     <React.Fragment>
                         <button
                             type="button"
-                            onClick={this.props.onCancel}
+                            onClick={onCancel}
                             className="btn btn-sm ml-2"
                         >
                             Zrušit
@@ -46,7 +51,11 @@ export class CloseProductModal extends React.Component {
                             onClick={this.handleConfirm}
                             className="btn btn-sm btn-danger ml-2"
                         >
-                            Uzavřít výrobek
+                            {
+                                product
+                                ? 'Uzavřít výrobek'
+                                : 'Uzavřít zakázku'
+                            }
                         </button>
                     </React.Fragment>
                 )}
