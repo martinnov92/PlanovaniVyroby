@@ -100,6 +100,7 @@ export class Autocomplete extends React.Component {
 
         const {
             data,
+            disabled,
             propertyName,
         } = this.props;
 
@@ -124,6 +125,7 @@ export class Autocomplete extends React.Component {
                     type="text"
                     value={value}
                     ref={this.input}
+                    disabled={disabled}
                     className="form-control"
                     onFocus={this.handleFocus}
                     onChange={this.handleChange}

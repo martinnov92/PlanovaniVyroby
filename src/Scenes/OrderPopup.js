@@ -20,6 +20,7 @@ export class OrderPopup extends React.Component {
             sameOperationRestTime,
         } = this.props;
 
+        const disabled = order.done;
         const restTimeSign = Math.sign(sameOperationRestTime);
         const sameOperationRemainderTime = Math.abs(sameOperationRestTime);
 
@@ -31,8 +32,9 @@ export class OrderPopup extends React.Component {
                 footerButtons={() => {
                     return <React.Fragment>
                         <button
-                            className="btn btn-sm btn-success ml-2"
+                            disabled={disabled}
                             onClick={this.props.handleSave}
+                            className="btn btn-sm btn-success ml-2"
                         >
                             Uložit
                         </button>
@@ -48,6 +50,7 @@ export class OrderPopup extends React.Component {
                             </div>
                             <select
                                 name="orderId"
+                                disabled={disabled}
                                 value={order.orderId}
                                 className="custom-select"
                                 onChange={this.props.handleInputChange}
@@ -84,6 +87,7 @@ export class OrderPopup extends React.Component {
                                 data={products}
                                 name="productName"
                                 propertyName="name"
+                                disabled={disabled}
                                 value={order.productName}
                                 onChange={this.props.handleInputChange}
                             />
@@ -95,6 +99,7 @@ export class OrderPopup extends React.Component {
                             </div>
                             <select
                                 name="machine"
+                                disabled={disabled}
                                 value={order.machine}
                                 className="custom-select"
                                 onChange={this.props.handleInputChange}
@@ -123,6 +128,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 type="text"
                                 name="worker"
+                                disabled={disabled}
                                 value={order.worker}
                                 className="form-control"
                                 onChange={this.props.handleInputChange}
@@ -136,6 +142,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 name="dateFrom"
                                 required={true}
+                                disabled={disabled}
                                 type="datetime-local"
                                 value={order.dateFrom}
                                 className="form-control"
@@ -149,6 +156,7 @@ export class OrderPopup extends React.Component {
                             </div>
                             <input
                                 name="dateTo"
+                                disabled={disabled}
                                 value={order.dateTo}
                                 type="datetime-local"
                                 className="form-control"
@@ -177,6 +185,7 @@ export class OrderPopup extends React.Component {
                             <textarea
                                 name="note"
                                 value={order.note}
+                                disabled={disabled}
                                 className="form-control"
                                 onChange={this.props.handleInputChange}
                             />
@@ -189,6 +198,7 @@ export class OrderPopup extends React.Component {
                                 <span className="input-group-text">Operace</span>
                             </div>
                             <select
+                                disabled={disabled}
                                 name="operation.order"
                                 className="custom-select"
                                 value={order.operation.order}
@@ -239,6 +249,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 min={0}
                                 type="number"
+                                disabled={disabled}
                                 name="operation.count"
                                 className="form-control"
                                 value={order.operation.count}
@@ -253,6 +264,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 min={0}
                                 type="number"
+                                disabled={disabled}
                                 name="operation.time"
                                 className="form-control"
                                 value={order.operation.time}
@@ -275,6 +287,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 min={0}
                                 type="number"
+                                disabled={disabled}
                                 className="form-control"
                                 name="operation.exchange"
                                 value={order.operation.exchange}
@@ -299,6 +312,7 @@ export class OrderPopup extends React.Component {
                             <input
                                 min={0}
                                 type="number"
+                                disabled={disabled}
                                 name="operation.casting"
                                 className="form-control"
                                 value={order.operation.casting}
