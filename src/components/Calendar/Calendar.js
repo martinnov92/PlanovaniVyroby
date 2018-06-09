@@ -348,9 +348,9 @@ export class Calendar extends React.Component {
         return (
             <React.Fragment>
                 {/* TABLE */}
-                <div className="calendar-wrapper element--block shadow--light">
+                <div className="two-columns--one-fixed element--block shadow--light">
                     <div
-                        className="calendar-column--fixed calendar--left-side"
+                        className="two-columns--left-side calendar--left-side"
                         style={{
                             transform: `translateY(${(this.state.scrollTop * -1)}px)`,
                         }}
@@ -364,7 +364,7 @@ export class Calendar extends React.Component {
                             machines.map((machine) => {
                                 return <div
                                     key={machine.id}
-                                    className="calendar--machine"
+                                    className="left-side--item"
                                 >
                                     <p>{machine.name}</p>
                                 </div>;
@@ -373,7 +373,7 @@ export class Calendar extends React.Component {
                     </div>
                     <div
                         className={createClassName([
-                            'calendar',
+                            'two-columns--right-side',
                             lockScroll ? 'lock--scroll' : null
                         ])}
                         ref={(node) => this.calendar = node}

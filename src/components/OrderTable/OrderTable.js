@@ -98,7 +98,7 @@ export class OrderTable extends React.Component {
 
         return (
             <div
-                className="calendar-column--fixed calendar--left-side"
+                className="two-columns--left-side calendar--left-side"
             >
                 <div
                     className="column--fixed-header"
@@ -136,7 +136,7 @@ export class OrderTable extends React.Component {
                                         borderBottom: '2px solid var(--calendarDayBorderColor)',
                                     }}
                                     className={createClassName([
-                                        'calendar--machine',
+                                        'left-side--item',
                                         done ? 'order--finished' : null,
                                     ])}
                                 >
@@ -361,12 +361,12 @@ export class OrderTable extends React.Component {
 
         return (
             <div
-                className="calendar-wrapper table--orders element--block shadow--light mt-3"
+                className="two-columns--one-fixed table--orders element--block shadow--light mt-3"
                 ref={this.tableWrapper}
             >
                 { this.renderFixedColumn() }
 
-                <div className="calendar lock--scroll">
+                <div className="two-columns--right-side lock--scroll">
                     <table
                         ref={this.fixedHeader}
                         className={classNamesHeader}

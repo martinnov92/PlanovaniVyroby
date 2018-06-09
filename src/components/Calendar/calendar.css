@@ -6,26 +6,26 @@
     --calendarDayBorderColor: #6c757d;
 }
 
-.calendar-wrapper,
-.calendar-wrapper.element--block {
+.two-columns--one-fixed,
+.two-columns--one-fixed.element--block {
     width: 100%;
     flex: 1 0 50%;
     display: flex;
     overflow: hidden;
 }
 
-.calendar-column--fixed {
+.two-columns--left-side {
     min-width: 150px;
     max-width: 150px;
     overflow: visible;
     border-right: 1px solid var(--calendarBorderColor);
 }
 
-.calendar-column--fixed[style*="transform: translateY(0px)"] {
+.two-columns--left-side[style*="transform: translateY(0px)"] {
     overflow: hidden;
 }
 
-.calendar--machine {
+.left-side--item {
     height: 41px;
     display: flex;
     padding: 10px;
@@ -35,18 +35,18 @@
     border-right: 0;
 }
 
-.calendar--machine + .calendar--machine {
+.left-side--item + .left-side--item {
     border-top: 0;
 }
 
-.calendar {
+.two-columns--right-side {
     z-index: 1;
     border-bottom: 0;
     overflow-x: scroll;
     position: relative;
 }
 
-.calendar table {
+.two-columns--right-side table {
     width: 100%;
     border-collapse: collapse;
 }
