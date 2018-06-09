@@ -110,11 +110,16 @@ export class OrderTable extends React.Component {
                 </div>
 
                 <div
-                    className="table--orders-first-column"
+                    className="table--orders-first-column lock--scroll"
                     style={{
-                        transform: `translate3d(0, ${(this.state.scrollTop * -1)}px, 0)`,
+                        height: `calc(100% - ${fixedHeaderHeight}px)`,
                     }}
                 >
+                    <div
+                        style={{
+                            transform: `translate3d(0, ${(this.state.scrollTop * -1)}px, 0)`,
+                        }}
+                    >
                     {
                         groupedOrders.map((commission, i) => {
                             const { orderId, done, color } = commission._info;
@@ -147,6 +152,7 @@ export class OrderTable extends React.Component {
                             );
                         })
                     }
+                    </div>
                 </div>
             </div>
         );
