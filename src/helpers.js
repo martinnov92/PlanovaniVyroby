@@ -13,6 +13,15 @@ export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
 
+export function filterDataByDate(events, from, to) {
+    return events.filter((event) => {
+        const isInRange = moment(event.dateFrom).isBefore(from) && moment(event.dateTo).isAfter(to);
+        const isInWeek = moment(event.dateFrom).isBetween(from, to) || moment(event.dateTo).isBetween(from, to);
+
+        return isInRange || isInWeek;
+    });
+}
+
 export function createGroupedOrders(orders, orderList, displayFinishedOrders = false) {
     if (displayFinishedOrders) {
         orderList = orderList.filter((order) => order.done === false);
@@ -42,6 +51,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             _info: {
                 totalTime: 0,
                 orderId: order,
+                totalWorkingTime: 0,
                 done: orderInfo.done,
                 color: orderInfo.color,
             },
@@ -193,6 +203,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
 
             // součet časů všech totalTime produktů
             commission._info.totalTime += Number(commission[product].totalOperationTime);
+            commission._info.totalWorkingTime += Number(commission[product].totalWorkingTime);
         }
 
         if (commission._info.done) {
@@ -247,15 +258,6 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
     isAtEleven = false;
 
     return minutesWorked;
-}
-
-export function filterDataByDate(events, from, to) {
-    return events.filter((event) => {
-        const isInRange = moment(event.dateFrom).isBefore(from) && moment(event.dateTo).isAfter(to);
-        const isInWeek = moment(event.dateFrom).isBetween(from, to) || moment(event.dateTo).isBetween(from, to);
-
-        return isInRange || isInWeek;
-    });
 }
 
 export function getCorrectDateAfterDrop(originalDateFrom, originalDateTo, dateFrom) {
@@ -331,8 +333,8 @@ export function calculateOperationTime(count, time, exchange, casting) {
 }
 
 export function calculateRemainingOperationTime(orders = [], order = {}) {
-    return orders.filter((o) => {
-        if ((o.orderId === order.orderId) && (o.productName === order.productName) && (o.id !== order.id) && o.operation) {
+    const result = orders.filter((o) => {
+        if ((o.orderId == order.orderId) && (o.productName == order.productName) && (o.id !== order.id) && o.operation) {
             if (o.operation.order == order.operation.order) {
                 return true;
             }
@@ -340,6 +342,12 @@ export function calculateRemainingOperationTime(orders = [], order = {}) {
 
         return false;
     }).reduce((prev, current) => prev + current.workingHours, 0);
+
+    if (order.operation) {
+        return result - order.operation.operationTime - order.workingHours;
+    }
+
+    return result - order.workingHours;
 }
 
 export function saveFile(path, data) {

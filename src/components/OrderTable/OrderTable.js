@@ -87,7 +87,7 @@ export class OrderTable extends React.Component {
             const { orderId, done, color } = commission._info;
             const o = orderList.find((_o) => _o.id === commission._info.orderId);
             // sečíst všechny sloupce v tabulce kromě prvního a posledního a nastavit jako šířku pro total row
-            const totalRowWidth = thWidth.slice(1, thWidth.length - 1).reduce((prev, current) => prev + current, 0);
+            const totalRowWidth = thWidth.slice(1, thWidth.length - 2).reduce((prev, current) => prev + current, 0);
 
             row.push(
                 <React.Fragment key={orderId}>
@@ -183,6 +183,11 @@ export class OrderTable extends React.Component {
                                                     <td
                                                         style={createStyleObject(thWidth[10])}
                                                     >
+                                                        {formatMinutesToTime(product.totalWorkingTime)}
+                                                    </td>
+                                                    <td
+                                                        style={createStyleObject(thWidth[11])}
+                                                    >
                                                         {formatMinutesToTime(product.totalOperationTime)}
                                                     </td>
                                                 </ContextMenu>
@@ -208,6 +213,9 @@ export class OrderTable extends React.Component {
                                             <strong>Celkový čas na zakázku</strong>
                                         </td>
                                         <td style={createStyleObject(thWidth[10])}>
+                                            <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
+                                        </td>
+                                        <td style={createStyleObject(thWidth[11])}>
                                             <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
                                         </td>
                                     </tr>
@@ -321,6 +329,7 @@ export class OrderTable extends React.Component {
                             <th scope="col">5.o ks/čas (napl)</th>
                             <th scope="col">6.o ks/čas (napl)</th>
                             <th scope="col">Ukončení výroby</th>
+                            <th scope="col">Naplánovaný čas</th>
                             <th scope="col">Čas na výrobek</th>
                         </tr>
                     </thead>

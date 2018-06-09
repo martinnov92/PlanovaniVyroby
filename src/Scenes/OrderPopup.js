@@ -342,7 +342,7 @@ export class OrderPopup extends React.Component {
                         </div>
 
                         {
-                            sameOperationRemainderTime >= 0
+                            !order.id
                             ? <div className="input-group mb-3">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text">Zbývá doplánovat</span>

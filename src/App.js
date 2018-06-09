@@ -411,14 +411,14 @@ class App extends React.Component {
             }
 
             const { count, time, exchange, casting } = order.operation;
-            const sameOperationOnSameOrder = calculateRemainingOperationTime(this.state.orders, order);
+            // const sameOperationOnSameOrder = calculateRemainingOperationTime(this.state.orders, order);
             order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
 
             this.setState({
                 open: true,
                 order: copyOrder,
                 // čas, který se zobrazí v popupu a bude zobrazovat kolik času zbývá doplánovat
-                sameOperationRestTime: order.operation.operationTime - order.workingHours - sameOperationOnSameOrder,
+                // sameOperationRestTime: sameOperationOnSameOrder,
             });
         });
     }
@@ -563,7 +563,7 @@ class App extends React.Component {
         this.setState({
             order: order,
             // čas, který se zobrazí v popupu a bude zobrazovat kolik času zbývá doplánovat
-            sameOperationRestTime: order.operation.operationTime - order.workingHours - sameOperationOnSameOrder,
+            sameOperationRestTime: sameOperationOnSameOrder,
         });
     }
 
