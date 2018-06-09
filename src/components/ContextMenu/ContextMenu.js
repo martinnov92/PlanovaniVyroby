@@ -97,6 +97,7 @@ export class ContextMenu extends React.Component {
             return (
                 <tr
                     className={classNames}
+                    style={this.props.style}
                     ref={(node) => this.div = node}
                     onContextMenu={disabled ? null : this.handleRightClick}
                 >
@@ -134,6 +135,7 @@ export class ContextMenu extends React.Component {
         return (
             <div
                 className={classNames}
+                style={this.props.style}
                 ref={(node) => this.div = node}
                 onContextMenu={this.handleRightClick}
             >
@@ -142,27 +144,29 @@ export class ContextMenu extends React.Component {
             {
                 !this.state.open
                 ? null
-                : <div
-                    className="context"
-                    ref={(div) => this.context = div}
-                    style={{ top: this.state.top, left: this.state.left }}
-                >
-                    <ul>
-                    {
-                        // button - name, onClick, label
-                        this.props.buttons.length > 0 &&
-                        this.props.buttons.map((button) => {
-                            return <li key={button.label}>
-                                <button
-                                    onClick={(e) => this.handleButtonClick(e, button)}
-                                >
-                                    {button.label}
-                                </button>
-                            </li>;
-                        })
-                    }
-                    </ul>
-                </div>
+                : ReactDOM.createPortal(
+                    <div
+                        className="context"
+                        ref={(div) => this.context = div}
+                        style={{ top: this.state.top, left: this.state.left }}
+                    >
+                        <ul>
+                        {
+                            // button - name, onClick, label
+                            this.props.buttons.length > 0 &&
+                            this.props.buttons.map((button) => {
+                                return <li key={button.label}>
+                                    <button
+                                        onClick={(e) => this.handleButtonClick(e, button)}
+                                    >
+                                        {button.label}
+                                    </button>
+                                </li>;
+                            })
+                        }
+                        </ul>
+                    </div>
+                , document.body)
             }
             </div>
         );

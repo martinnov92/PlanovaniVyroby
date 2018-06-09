@@ -31,7 +31,10 @@ export class OrderTable extends React.Component {
             width: 0,
             height: 0,
             thWidth: [],
+            scrollTop: 0,
             scrollLeft: 0,
+            rowHeights : [],
+            fixedHeaderHeight: 0,
         };
 
         this.fixedHeader = React.createRef();
@@ -47,11 +50,14 @@ export class OrderTable extends React.Component {
 
     handleScroll = () => {
         this.setState({
+            scrollTop: this.scrollableDiv.current.scrollTop,
             scrollLeft: this.scrollableDiv.current.scrollLeft,
         });
     }
 
     setDimension = () => {
+        const { groupedOrders } = this.props;
+
         try {
             const fixedHeader = this.fixedHeader.current;
             const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
@@ -61,12 +67,89 @@ export class OrderTable extends React.Component {
             });
             const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
 
+            const rowHeights = groupedOrders.map((commission) => {
+                const rows = Array.from(this.scrollableDiv.current.querySelectorAll(`[data-order="${commission._info.orderId}"]`));
+
+                return rows.reduce((acc, current) => {
+                    if (current) {
+                        return Number(parseFloat(window.getComputedStyle(current).height)) + acc;
+                    }
+    
+                    return acc;
+                }, 0);
+            });
+
             this.setState({
                 height,
+                rowHeights,
                 thWidth: fixedHeaderTh,
                 width: fixedHeader.width,
+                fixedHeaderHeight: fixedHeaderClientRect.height,
             });
         } catch (err) {}
+    }
+
+    renderFixedColumn = () => {
+        const { rowHeights, fixedHeaderHeight, } = this.state;
+        const {
+            orderList,
+            groupedOrders,
+        } = this.props;
+
+        return (
+            <div
+                className="calendar-column--fixed calendar--left-side"
+            >
+                <div
+                    className="column--fixed-header"
+                    style={{
+                        height: `${fixedHeaderHeight}px`,
+                    }}
+                >
+                    <p>Zakázka</p>
+                </div>
+
+                <div
+                    className="table--orders-first-column"
+                    style={{
+                        transform: `translate3d(0, ${(this.state.scrollTop * -1)}px, 0)`,
+                    }}
+                >
+                    {
+                        groupedOrders.map((commission, i) => {
+                            const { orderId, done, color } = commission._info;
+                            const o = orderList.find((_o) => _o.id === orderId);
+
+                            return (
+                                <ContextMenu
+                                    key={orderId}
+                                    buttons={[
+                                        {
+                                            label: 'Uzavřít zakázku',
+                                            onClick: (e) => this.props.onCloseOrder(e, null, orderId, false),
+                                        }
+                                    ]}
+                                    disabled={done}
+                                    style={{
+                                        borderTop: 0,
+                                        height: `${rowHeights[i]}px`,
+                                        borderBottom: '2px solid var(--calendarDayBorderColor)',
+                                    }}
+                                    className={createClassName([
+                                        'calendar--machine',
+                                        done ? 'order--finished' : null,
+                                    ])}
+                                >
+                                    <p style={{ backgroundColor: color, }}>
+                                        { o.name }
+                                    </p>
+                                </ContextMenu>
+                            );
+                        })
+                    }
+                </div>
+            </div>
+        );
     }
 
     renderTableBody = () => {
@@ -75,7 +158,6 @@ export class OrderTable extends React.Component {
         } = this.state;
 
         const {
-            orderList,
             groupedOrders,
         } = this.props;
 
@@ -84,36 +166,18 @@ export class OrderTable extends React.Component {
             const row = [];
 
             const orderKeys = Object.keys(commission);
-            const { orderId, done, color } = commission._info;
-            const o = orderList.find((_o) => _o.id === commission._info.orderId);
+            const { orderId, done } = commission._info;
             // sečíst všechny sloupce v tabulce kromě prvního a posledního a nastavit jako šířku pro total row
-            const totalRowWidth = thWidth.slice(1, thWidth.length - 2).reduce((prev, current) => prev + current, 0);
+            const totalRowWidth = thWidth.slice(0, thWidth.length - 2).reduce((prev, current) => prev + current, 0);
 
             row.push(
-                <React.Fragment key={orderId}>
-                    <ContextMenu
-                        buttons={[
-                            {
-                                label: 'Uzavřít zakázku',
-                                onClick: (e) => this.props.onCloseOrder(e, null, orderId, false),
-                            }
-                        ]}
-                        useAsTableRow={true}
-                        disabled={done}
+                <React.Fragment
+                    key={orderId}
+                >
+                    <tr
                         className={done ? 'order--finished' : null}
+                        data-order={orderId}
                     >
-                        <td
-                            className="table--orders-first-column"
-                            style={createStyleObject(thWidth[0])}
-                        >
-                            <span
-                                style={{
-                                    backgroundColor: color
-                                }}
-                            >
-                                {o.name}
-                            </span>
-                        </td>
                         <td className="table--orders-inner-table">
                             {
                                 orderKeys.map((objKey, i) => {
@@ -137,42 +201,42 @@ export class OrderTable extends React.Component {
                                                     disabled={product.done}
                                                     className={product.done ? 'product--finished' : null}
                                                 >
-                                                    <td style={createStyleObject(thWidth[1])} title={objKey}>
+                                                    <td style={createStyleObject(thWidth[0])} title={objKey}>
                                                         {objKey}
                                                     </td>
-                                                    <td style={createStyleObject(thWidth[2])}>{product.totalCount}</td>
+                                                    <td style={createStyleObject(thWidth[1])}>{product.totalCount}</td>
                                                     <td
-                                                        style={createStyleObject(thWidth[3])}
+                                                        style={createStyleObject(thWidth[2])}
                                                     >
                                                         {this.renderOperationCell(product['1'])}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[4])}
+                                                        style={createStyleObject(thWidth[3])}
                                                     >
                                                         {this.renderOperationCell(product['2'])}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[5])}
+                                                        style={createStyleObject(thWidth[4])}
                                                     >
                                                         {this.renderOperationCell(product['3'])}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[6])}
+                                                        style={createStyleObject(thWidth[5])}
                                                     >
                                                         {this.renderOperationCell(product['4'])}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[7])}
+                                                        style={createStyleObject(thWidth[6])}
                                                     >
                                                         {this.renderOperationCell(product['5'])}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[8])}
+                                                        style={createStyleObject(thWidth[7])}
                                                     >
                                                         {this.renderOperationCell(product['6'])}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[9])}
+                                                        style={createStyleObject(thWidth[8])}
                                                     >
                                                         {
                                                             product.finishDate
@@ -181,12 +245,12 @@ export class OrderTable extends React.Component {
                                                         }
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[10])}
+                                                        style={createStyleObject(thWidth[9])}
                                                     >
                                                         {formatMinutesToTime(product.totalWorkingTime)}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[11])}
+                                                        style={createStyleObject(thWidth[10])}
                                                     >
                                                         {formatMinutesToTime(product.totalOperationTime)}
                                                     </td>
@@ -197,14 +261,11 @@ export class OrderTable extends React.Component {
                                 })
                             }
                         </td>
-                    </ContextMenu>
+                    </tr>
                     <tr
+                        data-order={orderId}
                         className={`${commission._info.done ? 'order--finished' : ''} row--total`}
                     >
-                        <td
-                            className="table--orders-first-column"
-                            style={createStyleObject(thWidth[0])}
-                        />
                         <td className="table--orders-inner-table">
                             <table className="width--100">
                                 <tbody>
@@ -212,10 +273,10 @@ export class OrderTable extends React.Component {
                                         <td style={createStyleObject(totalRowWidth)}>
                                             <strong>Celkový čas na zakázku</strong>
                                         </td>
-                                        <td style={createStyleObject(thWidth[10])}>
+                                        <td style={createStyleObject(thWidth[9])}>
                                             <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
                                         </td>
-                                        <td style={createStyleObject(thWidth[11])}>
+                                        <td style={createStyleObject(thWidth[10])}>
                                             <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
                                         </td>
                                     </tr>
@@ -300,54 +361,52 @@ export class OrderTable extends React.Component {
 
         return (
             <div
-                className="table--orders element--block shadow--light mt-3"
+                className="calendar-wrapper table--orders element--block shadow--light mt-3"
                 ref={this.tableWrapper}
             >
-                <table
-                    ref={this.fixedHeader}
-                    className={classNamesHeader}
-                    style={{
-                        transform: `translateX(${this.state.scrollLeft * -1}px)`
-                    }}
-                >
-                    <thead>
-                        <tr>
-                            <th
-                                scope="col"
-                                className="table--orders-first-column"
-                            >
-                                Zakázka
-                            </th>
-                            <th scope="col">Název výrobku</th>
-                            <th scope="col" style={countStyle}>
-                                Počet ks.
-                            </th>
-                            <th scope="col">1.o ks/čas (napl)</th>
-                            <th scope="col">2.o ks/čas (napl)</th>
-                            <th scope="col">3.o ks/čas (napl)</th>
-                            <th scope="col">4.o ks/čas (napl)</th>
-                            <th scope="col">5.o ks/čas (napl)</th>
-                            <th scope="col">6.o ks/čas (napl)</th>
-                            <th scope="col">Ukončení výroby</th>
-                            <th scope="col">Naplánovaný čas</th>
-                            <th scope="col">Čas na výrobek</th>
-                        </tr>
-                    </thead>
-                </table>
+                { this.renderFixedColumn() }
 
-                <div
-                    style={divStyle}
-                    ref={this.scrollableDiv}
-                    className="table--scrollable"
-                >
+                <div className="calendar lock--scroll">
                     <table
-                        className={classNames}
-                        style={tableStyle}
+                        ref={this.fixedHeader}
+                        className={classNamesHeader}
+                        style={{
+                            transform: `translate3d(${this.state.scrollLeft * -1}px, 0, 0)`
+                        }}
                     >
-                        <tbody>
-                            {this.renderTableBody()}
-                        </tbody>
+                        <thead>
+                            <tr>
+                                <th scope="col">Název výrobku</th>
+                                <th scope="col" style={countStyle}>
+                                    Počet ks.
+                                </th>
+                                <th scope="col">1.o ks/čas (napl)</th>
+                                <th scope="col">2.o ks/čas (napl)</th>
+                                <th scope="col">3.o ks/čas (napl)</th>
+                                <th scope="col">4.o ks/čas (napl)</th>
+                                <th scope="col">5.o ks/čas (napl)</th>
+                                <th scope="col">6.o ks/čas (napl)</th>
+                                <th scope="col">Ukončení výroby</th>
+                                <th scope="col">Naplánovaný čas</th>
+                                <th scope="col">Čas na výrobek</th>
+                            </tr>
+                        </thead>
                     </table>
+
+                    <div
+                        style={divStyle}
+                        ref={this.scrollableDiv}
+                        className="table--scrollable"
+                    >
+                        <table
+                            className={classNames}
+                            style={tableStyle}
+                        >
+                            <tbody>
+                                {this.renderTableBody()}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         );
