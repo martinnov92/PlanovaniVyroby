@@ -17,6 +17,7 @@ import {
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
     calculateRemainingOperationTime,
+    dispatchResize,
 } from './helpers';
 import sync from './statics/sync.svg';
 
@@ -88,11 +89,7 @@ class App extends React.Component {
         this.setState({
             ready: true,
         }, () => {
-            // ! TODO: dočasné řešení
-            setTimeout(() => {
-                const event = new Event('resize');
-                window.dispatchEvent(event);
-            }, 50);
+            dispatchResize();
         });
     }
 
@@ -249,7 +246,7 @@ class App extends React.Component {
                         machines: d.machines || [],
                         orderList: d.orderList || [],
                         filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
-                    });
+                    }, dispatchResize);
 
                     this.watchFileChanges(filePath);
                     this.groupOrders(d.orders, d.orderList, d.filterFinishedOrders);
@@ -752,7 +749,7 @@ class App extends React.Component {
 
         this.setState({
             groupOrders: orders,
-        });
+        }, dispatchResize);
     }
 
     // * RENDEROVÁNÍ APLIKACE

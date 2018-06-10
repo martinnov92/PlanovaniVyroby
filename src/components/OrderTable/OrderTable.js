@@ -150,7 +150,7 @@ export class OrderTable extends React.Component {
                                     onOpen={() => this.setState({ activeOrder: orderId })}
                                 >
                                     <p style={{ backgroundColor: color, }}>
-                                        { o.name }
+                                        { o ? o.name : '' }
                                     </p>
                                 </ContextMenu>
                             );

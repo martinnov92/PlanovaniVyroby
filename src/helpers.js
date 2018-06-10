@@ -361,6 +361,13 @@ export function saveFile(path, data) {
     });
 }
 
+export function dispatchResize() {
+    setTimeout(() => {
+        const event = new Event('resize');
+        window.dispatchEvent(event);
+    }, 0);
+}
+
 export const createStyleObject = (width) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',

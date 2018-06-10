@@ -82,15 +82,15 @@ function createWindow() {
     });
 
     // and load the index.html of the app.
-    if (process.env.NODE_ENV === 'production') {
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, '../build/index.html'),
-            protocol: 'file:',
-            slashes: true
-        }));
-    } else {
-        mainWindow.loadURL('http://localhost:3000');
-    }
+    // PRODUCTION
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, '../build/index.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+
+    // DEV
+    mainWindow.loadURL('http://localhost:3000');
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);

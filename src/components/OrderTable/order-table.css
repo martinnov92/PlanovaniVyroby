@@ -70,7 +70,7 @@
 
 .table--scrollable > .table > tbody > tr > td {
     border-bottom: 2px solid var(--calendarDayBorderColor);
-} 
+}
 
 .row--total {
     border-top: 3px double var(--calendarDayBorderColor);
@@ -80,6 +80,7 @@
     border-bottom: 0;
 } 
 
+.order--finished > p,
 .order--finished > td > table > tbody > tr > td,
 .order--finished > .table--orders-first-column > span {
     opacity: .5;
