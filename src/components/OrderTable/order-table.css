@@ -76,6 +76,10 @@
     border-top: 3px double var(--calendarDayBorderColor);
 }
 
+.table--orders-inner-table > table:last-child tr td {
+    border-bottom: 0;
+} 
+
 .order--finished > td > table > tbody > tr > td,
 .order--finished > .table--orders-first-column > span {
     opacity: .5;

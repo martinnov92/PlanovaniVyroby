@@ -113,11 +113,12 @@ export class OrderTable extends React.Component {
                 <div
                     className="table--orders-first-column lock--scroll"
                     style={{
-                        height: `calc(100% - ${fixedHeaderHeight}px)`,
+                        height: `calc(100% - ${fixedHeaderHeight - 1}px)`,
                     }}
                 >
                     <div
                         style={{
+                            marginTop: 1,
                             transform: `translate3d(0, ${(this.state.scrollTop * -1)}px, 0)`,
                         }}
                     >
