@@ -31,6 +31,7 @@ class App extends React.Component {
         this.state = {
             orders: [],
             open: false,
+            ready: false,
             machines: [],
             products: [],
             orderList: [],
@@ -66,6 +67,7 @@ class App extends React.Component {
 
         document.addEventListener('keyup', this.handleKeyUp);
         electron.ipcRenderer.on('menu', this.handleElectronMenu);
+        electron.ipcRenderer.on('dom-ready', this.handleDomReady);
         electron.ipcRenderer.on('selected-directory', this.handleElectronDialogs);
         electron.ipcRenderer.on('file-watcher-error', this.handleFileWatcherError);
         electron.ipcRenderer.on('file-watcher-change', this.handleFileWatcherChange);
@@ -75,10 +77,23 @@ class App extends React.Component {
         this.unwatchFileChanges();
 
         electron.ipcRenderer.removeAllListeners('menu');
+        electron.ipcRenderer.removeAllListeners('dom-ready');
         electron.ipcRenderer.removeAllListeners('file-watcher-error');
         electron.ipcRenderer.removeAllListeners('selected-directory');
         electron.ipcRenderer.removeAllListeners('file-watcher-change');
         document.removeEventListener('keyup', this.handleKeyUp);
+    }
+
+    handleDomReady = () => {
+        this.setState({
+            ready: true,
+        }, () => {
+            // ! TODO: dočasné řešení
+            setTimeout(() => {
+                const event = new Event('resize');
+                window.dispatchEvent(event);
+            }, 50);
+        });
     }
 
     handleElectronDialogs = (sender, type, path) => {
@@ -849,6 +864,10 @@ class App extends React.Component {
             filterFinishedOrders,
             sameOperationRestTime,
         } = this.state;
+
+        if (!this.state.ready) {
+            return null;
+        }
 
         return (
             <div
