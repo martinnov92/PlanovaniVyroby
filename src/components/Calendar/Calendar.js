@@ -355,11 +355,15 @@ export class Calendar extends React.Component {
                             transform: `translateY(${(this.state.scrollTop * -1)}px)`,
                         }}
                     >
-                        <div style={{
+                        <div
+                            className="column--fixed-header"
+                            style={{
                                 height: '43px',
                                 border: 0,
                             }}
-                        />
+                        >
+                            <p>Stroj</p>
+                        </div>
                         {
                             machines.map((machine) => {
                                 return <div
