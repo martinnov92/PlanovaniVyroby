@@ -100,6 +100,10 @@ function createWindow() {
         mainWindow.show();
     });
 
+    mainWindow.webContents.on('dom-ready', () => {
+        mainWindow.webContents.send('dom-ready');
+    });
+
     // if the render process crashes, reload the window
     mainWindow.webContents.on('crashed', () => {
         mainWindow.destroy();
