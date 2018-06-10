@@ -9,6 +9,7 @@
     X opravit dopočet zbývajících hodin v popup
     - opravit přesun události v 20:00, událost se zkrátí
     - když je prázdná objednávka a zadávám novou zakázku s operací, tak se špatně (opět) vypočítá zbývajíécí doba k naplánování
+    - scrollování spodní tabulky, i pokud je tam jen jeden záznam
     X položení události na 30 minutu se nenatáhne
     X oprava refreshe OrderTable
     X opravit sčítání počtu kusů u zakázek na více strojích
