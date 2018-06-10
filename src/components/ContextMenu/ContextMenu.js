@@ -23,16 +23,28 @@ export class ContextMenu extends React.Component {
     
     componentDidMount() {
         this.mounted = true;
-
-        document.addEventListener('click', this.handleClickOutside);
-        document.addEventListener('contextmenu', this.handleRightClickOutside);
     }
 
     componentWillUnmount() {
         this.mounted = false;
+        this.removeEventListeners();
+    }
+
+    addEventListener = () => {
+        document.addEventListener('click', this.handleClickOutside);
+        document.addEventListener('contextmenu', this.handleRightClickOutside);
+    }
+
+    removeEventListeners = () => {
+        document.removeEventListener('click', this.handleClickOutside);
+        document.removeEventListener('contextmenu', this.handleRightClickOutside);
     }
 
     handleRightClick = (e) => {
+        if (this.props.disabled) {
+            return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -43,6 +55,7 @@ export class ContextMenu extends React.Component {
         });
 
         this.props.onOpen();
+        this.addEventListener();
     }
 
     handleRightClickOutside = (e) => {
@@ -62,7 +75,7 @@ export class ContextMenu extends React.Component {
         if (!this.state.open || !this.mounted || this.props.disabled) {
             return;
         }
-        
+
         const root = ReactDOM.findDOMNode(this.div);
         const context = ReactDOM.findDOMNode(this.context);
         const isInRoot = (!root.contains(e.target) || root.contains(e.target));
@@ -84,6 +97,7 @@ export class ContextMenu extends React.Component {
         });
 
         this.props.onClose();
+        this.removeEventListeners();
     }
 
     render() {

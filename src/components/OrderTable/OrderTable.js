@@ -34,6 +34,7 @@ export class OrderTable extends React.Component {
             scrollTop: 0,
             scrollLeft: 0,
             rowHeights : [],
+            activeOrder: null,
             fixedHeaderHeight: 0,
         };
 
@@ -144,6 +145,8 @@ export class OrderTable extends React.Component {
                                         'left-side--item',
                                         done ? 'order--finished' : null,
                                     ])}
+                                    onClose={() => this.setState({ activeOrder: null })}
+                                    onOpen={() => this.setState({ activeOrder: orderId })}
                                 >
                                     <p style={{ backgroundColor: color, }}>
                                         { o.name }
@@ -161,6 +164,7 @@ export class OrderTable extends React.Component {
     renderTableBody = () => {
         const {
             thWidth,
+            activeOrder,
         } = this.state;
 
         const {
@@ -181,7 +185,12 @@ export class OrderTable extends React.Component {
                     key={orderId}
                 >
                     <tr
-                        className={done ? 'order--finished' : null}
+                        className={
+                            createClassName([
+                                done ? 'order--finished' : null,
+                                activeOrder == orderId ? 'context-menu--open' : null,
+                            ])
+                        }
                         data-order={orderId}
                     >
                         <td className="table--orders-inner-table">
@@ -270,7 +279,14 @@ export class OrderTable extends React.Component {
                     </tr>
                     <tr
                         data-order={orderId}
-                        className={`${commission._info.done ? 'order--finished' : ''} row--total`}
+                        className={
+                            createClassName([
+                                'row--total',
+                                done ? 'order--finished' : null,
+                                commission._info.done ? 'order--finished' : null,
+                                activeOrder == orderId ? 'context-menu--open' : null,
+                            ])
+                        }
                     >
                         <td className="table--orders-inner-table">
                             <table className="width--100">
@@ -362,7 +378,7 @@ export class OrderTable extends React.Component {
 
         if (this.state.height > 0) {
             tableStyle.width = this.state.width;
-            divStyle.height = this.state.height;
+            divStyle.height = `${this.state.height}px`;
         }
 
         return (
@@ -402,7 +418,12 @@ export class OrderTable extends React.Component {
                     <div
                         style={divStyle}
                         ref={this.scrollableDiv}
-                        className="table--scrollable"
+                        className={
+                            createClassName([
+                                'table--scrollable',
+                                this.state.activeOrder ? 'lock--scroll': null,
+                            ])
+                        }
                     >
                         <table
                             className={classNames}
