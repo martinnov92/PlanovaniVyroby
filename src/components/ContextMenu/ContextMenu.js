@@ -19,6 +19,7 @@ export class ContextMenu extends React.Component {
         };
 
         this.mounted = false;
+        this.div = React.createRef();
     }
     
     componentDidMount() {
@@ -63,8 +64,7 @@ export class ContextMenu extends React.Component {
             return;
         }
 
-        const root = ReactDOM.findDOMNode(this.div);
-        const isInRoot = !root.contains(e.target);
+        const isInRoot = !this.div.current.contains(e.target);
 
         if (isInRoot) {
             this.closeContextMenu();
@@ -76,9 +76,8 @@ export class ContextMenu extends React.Component {
             return;
         }
 
-        const root = ReactDOM.findDOMNode(this.div);
         const context = ReactDOM.findDOMNode(this.context);
-        const isInRoot = (!root.contains(e.target) || root.contains(e.target));
+        const isInRoot = (!this.div.current.contains(e.target) || this.div.current.contains(e.target));
         const isInContext = !context.contains(e.target);
         
         if (isInRoot && isInContext) {
@@ -110,9 +109,9 @@ export class ContextMenu extends React.Component {
         if (this.props.useAsTableRow) {
             return (
                 <tr
+                    ref={this.div}
                     className={classNames}
                     style={this.props.style}
-                    ref={(node) => this.div = node}
                     onContextMenu={disabled ? null : this.handleRightClick}
                 >
                 {this.props.children}
@@ -148,9 +147,9 @@ export class ContextMenu extends React.Component {
 
         return (
             <div
+                ref={this.div}
                 className={classNames}
                 style={this.props.style}
-                ref={(node) => this.div = node}
                 onContextMenu={this.handleRightClick}
             >
             {this.props.children}
