@@ -423,9 +423,11 @@ class App extends React.Component {
                 };
             }
 
-            const { count, time, exchange, casting } = order.operation;
-            // const sameOperationOnSameOrder = calculateRemainingOperationTime(this.state.orders, order);
-            order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
+            if (order.operation) {
+                const { count, time, exchange, casting } = order.operation;
+                // const sameOperationOnSameOrder = calculateRemainingOperationTime(this.state.orders, order);
+                order.operation.operationTime = calculateOperationTime(count, time, exchange, casting);
+            }
 
             this.setState({
                 open: true,
