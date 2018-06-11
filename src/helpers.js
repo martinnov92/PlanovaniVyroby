@@ -333,7 +333,7 @@ export function calculateOperationTime(count, time, exchange, casting) {
 }
 
 export function calculateRemainingOperationTime(orders = [], order = {}) {
-    const result = orders.filter((o) => {
+    const totalOperationTime = orders.filter((o) => {
         if ((o.orderId == order.orderId) && (o.productName == order.productName) && (o.id !== order.id) && o.operation) {
             if (o.operation.order == order.operation.order) {
                 return true;
@@ -343,8 +343,16 @@ export function calculateRemainingOperationTime(orders = [], order = {}) {
         return false;
     }).reduce((prev, current) => prev + current.workingHours, 0);
 
-    if (order.operation) {
-        return result - order.operation.operationTime - order.workingHours;
+    let result = 0;
+
+    if (totalOperationTime === 0) {
+        return order.operation.operationTime - order.workingHours;
+    } else {
+        if (totalOperationTime >= order.operation.operationTime) {
+            result = totalOperationTime - order.operation.operationTime;
+        } else {
+            result = order.operation.operationTime - totalOperationTime;
+        }
     }
 
     return result - order.workingHours;
