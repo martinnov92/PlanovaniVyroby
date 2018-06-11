@@ -267,27 +267,40 @@ export function getCorrectDateAfterDrop(originalDateFrom, originalDateTo, dateFr
     originalDateTo = moment(originalDateTo);
     originalDateFrom = moment(originalDateFrom);
 
+    console.log('-'.repeat(50));
+    console.log('dateFrom: ', dateFrom.toDate(), 'originalDateFrom: ', originalDateFrom.toDate(), 'originalDateTo: ', originalDateTo.toDate());
+
     let hoursDiff = moment.duration(originalDateTo.diff(originalDateFrom)).asHours();
-    let sign = Math.sign(hoursDiff);
+    const sign = Math.sign(hoursDiff);
+
+    console.log('hours diff', hoursDiff, sign);
+    console.log('originalDateTo', originalDateTo.toDate());
+    console.log('is after', originalDateTo.isAfter(moment(originalDateFrom).hours(20)), moment(originalDateFrom).hours(20).toDate());
 
     if (originalDateTo.isAfter(moment(originalDateFrom).hours(20))) {
         hoursDiff = (hoursDiff > NIGHT_TIME) ? (hoursDiff - NIGHT_TIME) : hoursDiff;
     }
 
-    let finalDateTo = moment(dateFrom).add((hoursDiff * sign), 'hours');
-    let sameDay = moment(dateFrom).isSame(finalDateTo, 'day');
+    console.log('diff after', hoursDiff);
+
+    let finalDateToBeChecked = moment(dateFrom).add((hoursDiff * sign), 'hours');
+    let isDateFromSameAsDateTo = moment(dateFrom).isSame(finalDateToBeChecked, 'day');
+
+    console.log('finalDateTo', finalDateToBeChecked.toDate());
 
     // pokud se událost přesunula během jednoho dne, vrátím dateTo (ve správném formátu, který se uloží)
-    if (sameDay && finalDateTo.hours() < 20) {
-        return finalDateTo.format();
+    if (isDateFromSameAsDateTo && finalDateToBeChecked.hours() < 20) {
+        console.log('final date hours', finalDateToBeChecked.hours());
+        return finalDateToBeChecked.format();
     } else {
         // odečíst čas před osmou
         const diffUntilShiftEnds = moment.duration(moment(dateFrom).hours(20).diff(dateFrom)).asHours();
         hoursDiff -= diffUntilShiftEnds;
-
-        const newDateFrom = moment(dateFrom).add(1, 'days').hours(7);
+        console.log('hours diff 2', hoursDiff);
+        const finalDateFrom = moment(dateFrom).add(1, 'days').hours(7);
         const finalDateTo = moment(dateFrom).add(1, 'days').hours(7).add(hoursDiff, 'hours');
-        return getCorrectDateAfterDrop(newDateFrom, finalDateTo, newDateFrom);
+        console.log('newDateFrom: ', finalDateFrom.toDate(), 'finalDateTo: ', finalDateTo.toDate());
+        return getCorrectDateAfterDrop(finalDateFrom, finalDateTo, finalDateFrom);
     }
 }
 

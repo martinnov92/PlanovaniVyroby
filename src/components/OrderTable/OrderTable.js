@@ -192,7 +192,7 @@ export class OrderTable extends React.Component {
             const { orderId, done } = commission._info;
             // sečíst všechny sloupce v tabulce kromě prvního a posledního a nastavit jako šířku pro total row
             const totalRowWidth = thWidth.slice(0, thWidth.length - 2).reduce((prev, current) => prev + current, 0);
-            console.log(activeOrder);
+
             row.push(
                 <React.Fragment
                     key={orderId}
