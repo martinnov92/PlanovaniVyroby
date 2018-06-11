@@ -46,6 +46,7 @@ class App extends React.Component {
             itemToBeClosed: null,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
+            displayOrdersInEvents: true,
             startOfTheWeek: startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
         };
@@ -765,6 +766,7 @@ class App extends React.Component {
             groupOrders,
             startOfTheWeek,
             filterFinishedOrders,
+            displayOrdersInEvents,
         } = this.state;
 
         if (loading) {
@@ -832,6 +834,7 @@ class App extends React.Component {
                     events={orders}
                     machines={machines}
                     orderList={orderList}
+                    displayOrdersInEvents={displayOrdersInEvents}
                 />
 
                 <OrderTable
@@ -860,6 +863,7 @@ class App extends React.Component {
             itemToBeClosed,
             filterFinishedOrders,
             sameOperationRestTime,
+            displayOrdersInEvents,
         } = this.state;
 
         if (!this.state.ready) {
@@ -930,10 +934,16 @@ class App extends React.Component {
 
                         // general
                         filterFinishedOrders={filterFinishedOrders}
+                        displayOrdersInEvents={displayOrdersInEvents}
+                        handleDisplayOrdersInEvents={(e) => {
+                            this.setState({
+                                displayOrdersInEvents: e.target.checked
+                            },this.saveToFile);
+                        }}
                         handleFilterFinishedOrders={(e) => {
                             this.setState({
                                 filterFinishedOrders: !e.target.checked
-                            }, () => this.saveToFile());
+                            },this.saveToFile);
                         }}
                     />
                 }
@@ -970,6 +980,7 @@ class App extends React.Component {
             fileLoaded: false,
             itemToBeClosed: null,
             sameOperationRestTime: 0,
+            displayOrdersInEvents: true,
         });
     }
 

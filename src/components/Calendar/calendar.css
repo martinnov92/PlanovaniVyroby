@@ -163,8 +163,16 @@ td.calendar-table--empty-hours.calendar--shift-hours {
 .calendar--event {
     display: flex;
     padding: 0 5px;
+    overflow: hidden;
     position: absolute;
     border: 1px solid #949494;
+}
+
+.calendar--event-operation {
+    width: 30px;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 40px;
 }
 
 .calendar--event-text {
@@ -175,6 +183,10 @@ td.calendar-table--empty-hours.calendar--shift-hours {
     width: 100%;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.calendar--event-text p:last-child {
+    margin-top: -4px;
 }
 
 .calendar--event-note:before,

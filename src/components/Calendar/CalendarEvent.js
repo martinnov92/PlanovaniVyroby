@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-import { DATA_DATE_FORMAT, createClassName } from '../../helpers';
+import { DATA_DATE_FORMAT, createClassName, formatMinutesToTime } from '../../helpers';
 import { ContextMenu } from '../ContextMenu';
 
 export class CalendarEvent extends React.Component {
@@ -11,9 +11,11 @@ export class CalendarEvent extends React.Component {
         scrollLeft: 0,
         selectedEvent: {},
         draggingEvent: {},
+        onClick: () => {},
         onDoneEvent: () => {},
         onEditEvent: () => {},
         onDeleteEvent: () => {},
+        onClickOutside: () => {},
         calendarWrapperClientRect: {}
     };
 
@@ -21,24 +23,85 @@ export class CalendarEvent extends React.Component {
         super(props);
 
         this.state = {
-            resizerActive: false
+            selectedEvent: null,
+            resizerActive: false,
+            selectedEventElement: null,
         };
 
         this.draggableParentDiv = React.createRef();
     }
 
-    componentDidMount() {
-        document.addEventListener('keyup', this.handleKeyUp);
-    }
-
     componentWillUnmount() {
         document.removeEventListener('keyup', this.handleKeyUp);
+        document.removeEventListener('click', this.handleClickOutside);
+    }
+
+    handleClick = (e, event) => {
+        this.props.onClick(e, event);
+
+        this.setState({
+            selectedEvent: event,
+            selectedEventElement: e.target,
+        });
+
+        document.addEventListener('keyup', this.handleKeyUp);
+        document.addEventListener('click', this.handleClickOutside);
+    }
+
+    handleClickOutside = (e) => {
+        const {
+            selectedEventElement,
+        } = this.state;
+        
+        if (!selectedEventElement) {
+            return;
+        }
+
+        const isInEvent = selectedEventElement.contains(e.target);
+        if (isInEvent) {
+            return;
+        }
+
+        this.props.onClickOutside();
+
+        this.setState({
+            selectedEvent: null,
+            selectedEventElement: null,
+        });
+
+        document.removeEventListener('keyup', this.handleKeyUp);
+        document.removeEventListener('click', this.handleClickOutside);
+    }
+
+    handleResizerDragStart = (e) => {
+        e.stopPropagation();
+
+        window.dispatchEvent(new Event('resize'));
+
+        setTimeout(() => {
+            this.setState({
+                resizerActive: true,
+            });
+        }, 0);
+
+        e.dataTransfer.setData('text', JSON.stringify({
+            event: this.props.event,
+            eventResize: e.target.dataset.resize,
+        }));
+    }
+
+    handleResizerDragEnd = (e) => {
+        this.setState({
+            resizerActive: false,
+        });
     }
 
     handleKeyUp = (e) => {
         const {
-            event,
             selectedEvent,
+        } = this.state;
+        const {
+            event,
         } = this.props;
 
         if (!selectedEvent || (selectedEvent && (selectedEvent.id !== event.id))) {
@@ -135,39 +198,17 @@ export class CalendarEvent extends React.Component {
         return style;
     }
 
-    handleResizerDragStart = (e) => {
-        e.stopPropagation();
-
-        window.dispatchEvent(new Event('resize'));
-
-        setTimeout(() => {
-            this.setState({
-                resizerActive: true,
-            });
-        }, 0);
-
-        e.dataTransfer.setData('text', JSON.stringify({
-            event: this.props.event,
-            eventResize: e.target.dataset.resize,
-        }));
-    }
-
-    handleResizerDragEnd = (e) => {
-        this.setState({
-            resizerActive: false,
-        });
-    }
-
     render() {
         const {
             resizerActive,
+            selectedEvent,
         } = this.state;
 
         const {
             event,
             order,
-            selectedEvent,
-            draggingEvent
+            draggingEvent,
+            displayOrdersInEvents,
         } = this.props;
         const style = Object.assign({}, this.positionEvent());
         const buttons = [
@@ -213,23 +254,34 @@ export class CalendarEvent extends React.Component {
                     style={style}
                     ref={this.draggableParentDiv}
                     onDragEnd={this.props.onDragEnd}
+                    onClick={(e) => this.handleClick(e, event)}
                     onDrag={(e) => this.props.onDrag(e, event)}
-                    onClick={(e) => this.props.onClick(e, event)}
                     onDragStart={(e) => this.props.onDragStart(e, event)}
                     onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                     onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
                     onDoubleClick={(e) => this.props.onDoubleClick(e, event)}
                     draggable={(order.done || event.done) ? false : !resizerActive}
                 >
+                    {
+                        displayOrdersInEvents && (event.operation && event.operation.order !== '-')
+                        ? <div className="calendar--event-operation">
+                            { event.operation.order }.
+                        </div>
+                        : null
+                    }
+
                     <div
                         className="calendar--event-text"
                     >
                         <p>
                             <strong>
-                                {event.productName}
+                                { event.productName } ({ formatMinutesToTime(event.workingHours) })
                             </strong>
                         </p>
-                        <p>{event.worker}</p>
+
+                        <p>
+                            { event.worker }
+                        </p>
                     </div>
 
                     <div

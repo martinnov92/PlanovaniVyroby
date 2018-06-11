@@ -68,7 +68,6 @@ export class Calendar extends React.Component {
 
         window.addEventListener('resize', this.renderEvents);
         document.addEventListener('mouseup', this.handleMouseUp);
-        document.addEventListener('click', this.handleClickOutside);
         document.addEventListener('mousemove', this.handleMouseMove);
         ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
     }
@@ -104,7 +103,6 @@ export class Calendar extends React.Component {
     componentWillUnmount() {
         window.removeEventListener('resize', this.renderEvents);
         document.removeEventListener('mouseup', this.handleMouseUp);
-        document.removeEventListener('click', this.handleClickOutside);
         document.removeEventListener('mousemove', this.handleMouseMove);
         ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.handleScroll);
     }
@@ -130,20 +128,14 @@ export class Calendar extends React.Component {
         this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
     }
 
-    handleClickOutside = (e) => {
-        const {
-            selectedEventElement,
-        } = this.state;
-        
-        if (!selectedEventElement) {
-            return;
-        }
+    selectEvent = (e, event) => {
+        this.setState({
+            selectedEvent: event,
+            selectedEventElement: e.target,
+        });
+    }
 
-        const isInEvent = selectedEventElement.contains(e.target);
-        if (isInEvent) {
-            return;
-        }
-
+    deselectEvent = () => {
         this.setState({
             selectedEvent: null,
             selectedEventElement: null,
@@ -154,13 +146,6 @@ export class Calendar extends React.Component {
         this.setState({
             scrollTop: e.target.scrollTop,
             scrollLeft: e.target.scrollLeft,
-        });
-    }
-
-    selectEvent = (e, event) => {
-        this.setState({
-            selectedEvent: event,
-            selectedEventElement: e.target,
         });
     }
 
@@ -611,6 +596,7 @@ export class Calendar extends React.Component {
             machines,
             orderList,
             startOfTheWeek,
+            displayOrdersInEvents,
         } = this.props;
 
         const {
@@ -641,17 +627,18 @@ export class Calendar extends React.Component {
                     event={event}
                     key={event.id}
                     machine={machine}
-                    selectedEvent={selectedEvent}
                     draggingEvent={draggingEvent}
                     scrollTop={this.state.scrollTop}
                     scrollLeft={this.state.scrollLeft}
                     calendarWrapperClientRect={calendarHolder}
+                    displayOrdersInEvents={displayOrdersInEvents}
 
                     // mouse events
                     onDrag={this.handleDrag}
                     onClick={this.selectEvent}
                     onDragEnd={this.handleDragEnd}
                     onDragStart={this.handleDragStart}
+                    onClickOutside={this.deselectEvent}
                     onMouseEnter={this.props.onEventEnter}
                     onMouseLeave={this.props.onEventLeave}
                     onDoubleClick={this.props.onDoubleClick}
