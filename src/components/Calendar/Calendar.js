@@ -601,7 +601,6 @@ export class Calendar extends React.Component {
 
         const {
             draggingEvent,
-            selectedEvent,
             calendarHolder,
         } = this.state;
 
