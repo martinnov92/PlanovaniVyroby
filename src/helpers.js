@@ -264,44 +264,36 @@ export function getCorrectDateAfterDrop(originalDateFrom, originalDateTo, dateFr
     const NIGHT_TIME = 11;
 
     dateFrom = moment(dateFrom);
+
+    // 1. získat původní hodinový rozdíl
     originalDateTo = moment(originalDateTo);
     originalDateFrom = moment(originalDateFrom);
+    let duration = moment.duration(originalDateTo.diff(originalDateFrom)).asHours();
 
-    console.log('-'.repeat(50));
-    console.log('dateFrom: ', dateFrom.toDate(), 'originalDateFrom: ', originalDateFrom.toDate(), 'originalDateTo: ', originalDateTo.toDate());
+    console.log(duration);
 
-    let hoursDiff = moment.duration(originalDateTo.diff(originalDateFrom)).asHours();
-    const sign = Math.sign(hoursDiff);
-
-    console.log('hours diff', hoursDiff, sign);
-    console.log('originalDateTo', originalDateTo.toDate());
-    console.log('is after', originalDateTo.isAfter(moment(originalDateFrom).hours(20)), moment(originalDateFrom).hours(20).toDate());
-
-    if (originalDateTo.isAfter(moment(originalDateFrom).hours(20))) {
-        hoursDiff = (hoursDiff > NIGHT_TIME) ? (hoursDiff - NIGHT_TIME) : hoursDiff;
+    // 2. kontrola jestli se posouvám s událostí do minulosti a pokud ano, tak odebere počet hodin v noce
+    if (dateFrom.isBefore(originalDateFrom) && originalDateTo.isAfter(moment(originalDateFrom).hours(20).minutes(0), 'minutes')) {
+        duration -= NIGHT_TIME;
     }
 
-    console.log('diff after', hoursDiff);
-
-    let finalDateToBeChecked = moment(dateFrom).add((hoursDiff * sign), 'hours');
-    let isDateFromSameAsDateTo = moment(dateFrom).isSame(finalDateToBeChecked, 'day');
-
-    console.log('finalDateTo', finalDateToBeChecked.toDate());
-
-    // pokud se událost přesunula během jednoho dne, vrátím dateTo (ve správném formátu, který se uloží)
-    if (isDateFromSameAsDateTo && finalDateToBeChecked.hours() < 20) {
-        console.log('final date hours', finalDateToBeChecked.hours());
-        return finalDateToBeChecked.format();
-    } else {
-        // odečíst čas před osmou
-        const diffUntilShiftEnds = moment.duration(moment(dateFrom).hours(20).diff(dateFrom)).asHours();
-        hoursDiff -= diffUntilShiftEnds;
-        console.log('hours diff 2', hoursDiff);
-        const finalDateFrom = moment(dateFrom).add(1, 'days').hours(7);
-        const finalDateTo = moment(dateFrom).add(1, 'days').hours(7).add(hoursDiff, 'hours');
-        console.log('newDateFrom: ', finalDateFrom.toDate(), 'finalDateTo: ', finalDateTo.toDate());
-        return getCorrectDateAfterDrop(finalDateFrom, finalDateTo, finalDateFrom);
+    let tryDateTo = moment(dateFrom).add(duration, 'hours');
+    if (dateFrom.isSame(tryDateTo, 'day') && tryDateTo.hours() < 20) {
+        return tryDateTo.format();
     }
+
+    // 3. ověřím, jestli nové dateTo datum je roztažené i po 20:00
+    if (tryDateTo.isAfter(moment(dateFrom).hours(20).minutes(0), 'minutes')) {
+        const diff = (dateFrom.hours() + (duration + NIGHT_TIME)) % 24;
+        console.log('diff', diff);
+        // pokud ano, nastavím nový den a dodám správný počet dnů
+        dateFrom = moment(dateFrom).add(1, 'days').hours(7);
+        tryDateTo = moment(dateFrom).add(1, 'days').hours(diff);
+    }
+
+    console.log(tryDateTo.toDate());
+
+    return tryDateTo.format();
 }
 
 export function isDateRangeOverlaping(arr, order) {
