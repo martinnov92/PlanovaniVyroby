@@ -1,5 +1,6 @@
 # TODO:
 
+    - opravit přesun události v 20:00, událost se zkrátí
     X ztmavit rámeček při pokládání události
     X úprava času výpočtu na operaci
     X zobrazení operace v tabulce
@@ -7,9 +8,8 @@
     X zadání času ukončení výroby výrobku
     X oprava výpočtu šířek (občas se rozpadne)
     X opravit dopočet zbývajících hodin v popup
-    - opravit přesun události v 20:00, událost se zkrátí
     X když je prázdná objednávka a zadávám novou zakázku s operací, tak se špatně (opět) vypočítá zbývajíécí doba k naplánování
-    - scrollování spodní tabulky, i pokud je tam jen jeden záznam
+    x scrollování spodní tabulky, i pokud je tam jen jeden záznam
     X položení události na 30 minutu se nenatáhne
     X oprava refreshe OrderTable
     X opravit sčítání počtu kusů u zakázek na více strojích
