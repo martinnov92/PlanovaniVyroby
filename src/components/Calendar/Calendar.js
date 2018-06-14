@@ -335,7 +335,7 @@ export class Calendar extends React.Component {
                 {/* TABLE */}
                 <div className="two-columns--one-fixed element--block shadow--light">
                     <div
-                        className="two-columns--left-side calendar--left-side"
+                        className="two-columns--left-side"
                         style={{
                             transform: `translateY(${(this.state.scrollTop * -1)}px)`,
                         }}

@@ -249,7 +249,9 @@ class App extends React.Component {
                         products: d.products || [],
                         machines: d.machines || [],
                         orderList: d.orderList || [],
-                        filterFinishedOrders: d.filterFinishedOrders === undefined ? true : d.filterFinishedOrders,
+                        displayTotalRow: !!d.displayTotalRow,
+                        filterFinishedOrders: !!d.filterFinishedOrders,
+                        displayOrdersInEvents: !!d.displayOrdersInEvents,
                     }, dispatchResize);
 
                     this.watchFileChanges(filePath);

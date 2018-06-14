@@ -111,7 +111,7 @@ export class OrderTable extends React.Component {
 
         return (
             <div
-                className="two-columns--left-side calendar--left-side"
+                className="two-columns--left-side"
             >
                 <div
                     className="column--fixed-header"
@@ -269,7 +269,7 @@ export class OrderTable extends React.Component {
                                                     >
                                                         {
                                                             product.finishDate
-                                                            ? moment(product.finishDate).format(DATA_DATE_FORMAT)
+                                                            ? moment(product.finishDate).format('DD.MM.YYYY')
                                                             : '-'
                                                         }
                                                     </td>
@@ -416,18 +416,48 @@ export class OrderTable extends React.Component {
                     >
                         <thead>
                             <tr>
-                                <th scope="col">Název výrobku</th>
+                                <th scope="col">Výrobek</th>
                                 <th scope="col" style={countStyle}>
                                     Počet ks.
                                 </th>
-                                <th scope="col">1.o ks/čas (napl)</th>
-                                <th scope="col">2.o ks/čas (napl)</th>
-                                <th scope="col">3.o ks/čas (napl)</th>
-                                <th scope="col">4.o ks/čas (napl)</th>
-                                <th scope="col">5.o ks/čas (napl)</th>
-                                <th scope="col">6.o ks/čas (napl)</th>
-                                <th scope="col">Ukončení výroby</th>
-                                <th scope="col">Naplánovaný čas</th>
+                                <th
+                                    scope="col"
+                                    className="table--orders-operation-column"
+                                >
+                                    1.o ks/čas (napl)
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="table--orders-operation-column"
+                                >
+                                    2.o ks/čas (napl)
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="table--orders-operation-column"
+                                >
+                                    3.o ks/čas (napl)
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="table--orders-operation-column"
+                                >
+                                    4.o ks/čas (napl)
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="table--orders-operation-column"
+                                >
+                                    5.o ks/čas (napl)
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="table--orders-operation-column"
+                                >
+                                    6.o ks/čas (napl)
+                                </th>
+                                <th scope="col">Ukončení</th>
+                                <th scope="col">Naplánováno</th>
                                 <th scope="col">Čas na výrobek</th>
                             </tr>
                         </thead>
