@@ -9,6 +9,10 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 export class SettingsPopup extends React.Component {
+    static defaultProps = {
+        columnsVisibility: {},
+    };
+
     constructor(props) {
         super(props);
 
@@ -30,9 +34,11 @@ export class SettingsPopup extends React.Component {
 
         const {
             displayTotalRow,
+            columnsVisibility,
             handleSettingsChange,
             filterFinishedOrders,
             displayOrdersInEvents,
+            handleColumnVisibility,
         } = this.props;
 
         return (
@@ -127,6 +133,125 @@ export class SettingsPopup extends React.Component {
                             >
                                 Zobrazit řádek "Celkový čas na zakázku"
                             </label>
+                        </div>
+
+                        {/* Nastavení sloupců v tabulce */}
+                        <p>Viditelné sloupce</p>
+                        <div className="display--flex order--table-settings">
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text">
+                                        <input
+                                            name="1"
+                                            type="checkbox"
+                                            id="firstColumn"
+                                            checked={columnsVisibility['1']}
+                                            onChange={handleColumnVisibility}
+                                        />
+                                    </div>
+                                </div>
+                                <label
+                                    className="form-control"
+                                    htmlFor="firstColumn"
+                                >
+                                    1.
+                                </label>
+                            </div>
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text">
+                                        <input
+                                            name="2"
+                                            type="checkbox"
+                                            id="secondColumn"
+                                            checked={columnsVisibility['2']}
+                                            onChange={handleColumnVisibility}
+                                        />
+                                    </div>
+                                </div>
+                                <label
+                                    className="form-control"
+                                    htmlFor="secondColumn"
+                                >
+                                    2.
+                                </label>
+                            </div>
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text">
+                                        <input
+                                            name="3"
+                                            type="checkbox"
+                                            id="thirdColumn"
+                                            checked={columnsVisibility['3']}
+                                            onChange={handleColumnVisibility}
+                                        />
+                                    </div>
+                                </div>
+                                <label
+                                    className="form-control"
+                                    htmlFor="thirdColumn"
+                                >
+                                    3.
+                                </label>
+                            </div>
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text">
+                                        <input
+                                            name="4"
+                                            type="checkbox"
+                                            id="fourthColumn"
+                                            checked={columnsVisibility['4']}
+                                            onChange={handleColumnVisibility}
+                                        />
+                                    </div>
+                                </div>
+                                <label
+                                    className="form-control"
+                                    htmlFor="fourthColumn"
+                                >
+                                    4.
+                                </label>
+                            </div>
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text">
+                                        <input
+                                            name="5"
+                                            type="checkbox"
+                                            id="fifthColumn"
+                                            checked={columnsVisibility['5']}
+                                            onChange={handleColumnVisibility}
+                                        />
+                                    </div>
+                                </div>
+                                <label
+                                    className="form-control"
+                                    htmlFor="fifthColumn"
+                                >
+                                    5.
+                                </label>
+                            </div>
+                            <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text">
+                                        <input
+                                            name="6"
+                                            type="checkbox"
+                                            id="sixthColumn"
+                                            checked={columnsVisibility['6']}
+                                            onChange={handleColumnVisibility}
+                                        />
+                                    </div>
+                                </div>
+                                <label
+                                    className="form-control"
+                                    htmlFor="sixthColumn"
+                                >
+                                    6.
+                                </label>
+                            </div>
                         </div>
                     </TabPanel>
 

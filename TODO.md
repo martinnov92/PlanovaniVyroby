@@ -1,7 +1,8 @@
 # TODO:
 
-    - zůžit sloupce a roztáhnout sloupce s operacemi
     - povolit znovuotevření zakázek a výrobků
+    - přidat možnost skrytí sloupců 
+    X zůžit sloupce a roztáhnout sloupce s operacemi
     X přidat do nastavení zobrazení total row
     X opravit přesun události v 20:00, událost se zkrátí
     X ztmavit rámeček při pokládání události

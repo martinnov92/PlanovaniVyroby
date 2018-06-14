@@ -44,6 +44,7 @@ class App extends React.Component {
             hoverOrder: null,
             fileLoaded: false,
             itemToBeClosed: null,
+            columnsVisibility: {},
             displayTotalRow: true,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
@@ -60,6 +61,16 @@ class App extends React.Component {
     // * OVLÁDÁNÍ APLIKACE + ELECTRON
     componentDidMount() {
         const filePath = window.localStorage.getItem('filePath');
+        let columnsVisibility = window.localStorage.getItem('columnsVisibility');
+
+        if (columnsVisibility) {
+            columnsVisibility = JSON.parse(columnsVisibility);
+
+            this.setState({
+                columnsVisibility,
+            });
+        }
+
         if (!filePath) {
             this.setState({
                 fileLoaded: false,
@@ -772,6 +783,17 @@ class App extends React.Component {
         }, this.saveToFile);
     }
 
+    handleColumnVisibility = (e) => {
+        this.setState({
+            columnsVisibility: {
+                ...this.state.columnsVisibility,
+                [e.target.name]: e.target.checked,
+            },
+        }, () => {
+            window.localStorage.setItem('columnsVisibility', JSON.stringify(this.state.columnsVisibility));
+        });
+    }
+
     // * RENDEROVÁNÍ APLIKACE
     renderMainScreen = () => {
         const {
@@ -785,6 +807,7 @@ class App extends React.Component {
             groupOrders,
             startOfTheWeek,
             displayTotalRow,
+            columnsVisibility,
             filterFinishedOrders,
             displayOrdersInEvents,
         } = this.state;
@@ -863,6 +886,7 @@ class App extends React.Component {
                     orderList={orderList}
                     groupedOrders={groupOrders}
                     displayTotalRow={displayTotalRow}
+                    columnsVisibility={columnsVisibility}
                     filterFinishedOrders={filterFinishedOrders}
                     onCloseOrder={this.displayProductCloseModal}
                     onProductClose={this.displayProductCloseModal}
@@ -883,6 +907,7 @@ class App extends React.Component {
             currentWeek,
             itemToBeClosed,
             displayTotalRow,
+            columnsVisibility,
             filterFinishedOrders,
             sameOperationRestTime,
             displayOrdersInEvents,
@@ -956,9 +981,11 @@ class App extends React.Component {
 
                         // general
                         displayTotalRow={displayTotalRow}
+                        columnsVisibility={columnsVisibility}
                         filterFinishedOrders={filterFinishedOrders}
                         displayOrdersInEvents={displayOrdersInEvents}
                         handleSettingsChange={this.handleSettingsChange}
+                        handleColumnVisibility={this.handleColumnVisibility}
                     />
                 }
 
@@ -993,6 +1020,7 @@ class App extends React.Component {
             hoverOrder: null,
             fileLoaded: false,
             itemToBeClosed: null,
+            columnsVisibility: {},
             displayTotalRow: true,
             sameOperationRestTime: 0,
             displayOrdersInEvents: true,
