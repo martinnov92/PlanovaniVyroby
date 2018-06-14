@@ -270,50 +270,57 @@ export function getNetMachineTime(dateFrom, dateTo, workHoursFrom = 7, workHours
 //     dateFrom = moment(dateFrom);
 //     newDateFrom = moment(newDateFrom);
 
-//     let duration = 0;
-//     let finalDateTo = moment(newDateFrom);
+//     // 1. získání původní délky
+//     let duration = moment.duration(dateTo.diff(dateFrom)).asMinutes();
+//     // 2. nastavení finalDateTo na newDateFrom + duration
+//     let tryDateTo = moment(newDateFrom).add(duration, 'minutes');
 
-//     if (dateFrom.isSame(dateTo, 'day')) {
-//         duration = dateTo.hours() - dateFrom.hours();
+//     // zjištění počtu dnů
+//     let durationInCurrentDay = (END_TIME - newDateFrom.hours()) * 60;
+//     // počet hodin v noci
+//     let nightDuration = ((dateTo.date() - dateFrom.date()) * NIGHT_TIME) * 60;
+//     // celková duration
+//     let totalDuration = (duration - durationInCurrentDay - nightDuration);
+//     // finální datum + to co se vleze do daného dne
+//     let finalDateTo = moment(newDateFrom).add(durationInCurrentDay, 'minutes');
+//     console.log('duration', duration, 'durationInCurrentDay', durationInCurrentDay, 'nightDuration', nightDuration);
+//     console.log('totalDuration', totalDuration);
+//     console.log('tryDateTo', tryDateTo.toDate());
+//     // 3. ověřit jestli newDateFrom je stejný dateFrom a jestli finalDateTo je menší než 20:00
+//     if (newDateFrom.isSame(dateFrom, 'day') && (tryDateTo.hours() < 20 && tryDateTo.hours() >= 7)) {
+//         // pokud ano, vrátím finalDateTo
+//         return tryDateTo.format();
 //     } else {
-//         duration = dateTo.hours() - START_TIME;
-//         let dayDiff = dateTo.date() - dateFrom.date();
-//         console.log('dayDiff', dayDiff);
+//         // 4. pokud se jedná o jiný den, nebo, finalDateTo.hours() > 20, nastavím začátek na další den na 7:00
+//         let current = 0;
 
-//         if (dayDiff > 0) {
-//             duration += ((dayDiff - 1) * SHIFT_TIME);
-//         }
+//         while (current < totalDuration) {
+//             if ((newDateFrom.hours() > 20) || (finalDateTo.hours() >= 20)) {
+//                 console.warn('přesahuje do dalšího dne');
+//                 newDateFrom.add(1, 'days').hours(7);
+//                 finalDateTo.add(1, 'days').hours(7);
+//             }
 
-//         duration += END_TIME - dateFrom.hours();
-//     }
-
-//     console.log('duration', duration);
-
-//     while (duration !== 0) {
-//         let roof = END_TIME - finalDateTo.hours();
-//         console.log('roof', roof);
-
-//         if (roof < duration) {
-//             finalDateTo = finalDateTo.add(roof + NIGHT_TIME, 'hours');
-//             duration -= (END_TIME - newDateFrom.hours());
-//             console.log('duration in roof < duration', duration);
-//         } else if (roof === duration) {
-//             finalDateTo = finalDateTo.add(NIGHT_TIME, 'hours');
-//         } else {
-//             finalDateTo = finalDateTo.add(duration, 'hours');
-//             duration = 0;
+//             current++;
+//             finalDateTo.add(1, 'minutes');
+//             console.log('current', current);
+//             console.log('current date', finalDateTo.toDate());
 //         }
 //     }
 
+//     console.log('Konečné datum: ', finalDateTo.toDate());
 //     return finalDateTo.format();
 // }
 
-export function getCorrectDateAfterDrop(startDate, endDate, newStartDate) {
-    console.log('Test', startDate.toDate(), endDate.toDate(), newStartDate.toDate());
+export function getCorrectDateAfterDrop(start, end, newStart) {
     const startRoof = 7;
     const endRoof = 20;
 
+    let startDate = moment(start);
+    let endDate = moment(end);
+    let newStartDate = moment(newStart);
     let result = moment(newStartDate);
+    console.log('Test', startDate.toDate(), endDate.toDate(), newStartDate.toDate());
 
     let duration = 0;
     if (startDate.day() == endDate.day()) {
@@ -341,9 +348,9 @@ export function getCorrectDateAfterDrop(startDate, endDate, newStartDate) {
             result = result.add(roof + 11, 'h'); //.AddHours(roof + 11);
             duration -= roof;
         } else if (roof == duration) {
-            result = result.add(11, 'h');
+            result = result.add(13, 'h');
+            duration -= roof;
             console.log("částečně => result = ", result.toDate());
-
         }
         else {
             result = result.add(duration, 'h');
