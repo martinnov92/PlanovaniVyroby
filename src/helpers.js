@@ -271,20 +271,19 @@ export function getCorrectDateAfterDrop(start, end, newStart) {
 
     const endDate = moment(end);
     const startDate = moment(start);
-
-    // console.log('Test', startDate.toDate(), endDate.toDate(), newStartDate.toDate());
-
-    if (startDate.day() === endDate.day()) {
+    // console.warn('Test', startDate.toDate(), endDate.toDate(), moment(newStart).toDate());
+    if (startDate.isSame(endDate, 'day')) {
         duration = (endDate.hours() + (endDate.minutes() / 60)) - (startDate.hours() + (startDate.minutes() / 60));
-        // console.log("same day", startDate.day());
+        // console.log('Stejný den a stejný měsíc: ', startDate.isSame(endDate, 'day'));
+        // console.log("same day", startDate.date());
     } else {
+        let daysDiff = Math.round(moment.duration(endDate.diff(startDate)).asDays());
         duration = (endDate.hours() + (endDate.minutes() / 60)) - START_TIME;
-
-        const daysDiff = endDate.date() - startDate.date();
         duration += (daysDiff - 1) * SHIFT_TIME;
         duration += END_TIME - (startDate.hours() + (startDate.minutes() / 60));
-        // console.log("startDay", startDate.date(), "endDate", endDate.date(), "roszdíl", rozdil);
+        // console.log('daysDiff', moment.duration(endDate.diff(startDate)).asDays());
         // console.log("duration", duration);
+        // console.log("startDay", startDate.date(), "endDate", endDate.date(), "roszdíl", duration);
     }
 
     while (duration !== 0) {
