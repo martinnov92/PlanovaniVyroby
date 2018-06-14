@@ -12,11 +12,6 @@ import {
 
 import './order-table.css';
 
-const countStyle = {
-    width: 90,
-    minWidth: 90,
-};
-
 export class OrderTable extends React.Component {
     static defaultProps = {
         orderList: [],
@@ -373,7 +368,8 @@ export class OrderTable extends React.Component {
                     </div>
                 }
             >
-                { `${count}ks. (${formatMinutesToTime(operationTime)}) [${formatMinutesToTime(workingHoursForOperation)}] {${sign === -1 ? '+' : '-'}${formatMinutesToTime(Math.abs(calculateHoursRemainder))}}` }
+                <strong>{count} ks.</strong>
+                { `(${formatMinutesToTime(operationTime)}) [${formatMinutesToTime(workingHoursForOperation)}] {${sign === -1 ? '+' : '-'}${formatMinutesToTime(Math.abs(calculateHoursRemainder))}}` }
             </Tooltip>
         );
     } 
@@ -417,44 +413,44 @@ export class OrderTable extends React.Component {
                         <thead>
                             <tr>
                                 <th scope="col">Výrobek</th>
-                                <th scope="col" style={countStyle}>
-                                    Počet ks.
+                                <th scope="col">
+                                    Ks.
                                 </th>
                                 <th
                                     scope="col"
                                     className="table--orders-operation-column"
                                 >
-                                    1.o ks/čas (napl)
+                                    1.o ks/čas
                                 </th>
                                 <th
                                     scope="col"
                                     className="table--orders-operation-column"
                                 >
-                                    2.o ks/čas (napl)
+                                    2.o ks/čas
                                 </th>
                                 <th
                                     scope="col"
                                     className="table--orders-operation-column"
                                 >
-                                    3.o ks/čas (napl)
+                                    3.o ks/čas
                                 </th>
                                 <th
                                     scope="col"
                                     className="table--orders-operation-column"
                                 >
-                                    4.o ks/čas (napl)
+                                    4.o ks/čas
                                 </th>
                                 <th
                                     scope="col"
                                     className="table--orders-operation-column"
                                 >
-                                    5.o ks/čas (napl)
+                                    5.o ks/čas
                                 </th>
                                 <th
                                     scope="col"
                                     className="table--orders-operation-column"
                                 >
-                                    6.o ks/čas (napl)
+                                    6.o ks/čas
                                 </th>
                                 <th scope="col">Ukončení</th>
                                 <th scope="col">Naplánováno</th>

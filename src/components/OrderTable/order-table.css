@@ -24,11 +24,18 @@
     min-width: 150px;
 }
 
+/* Sloupce - Výrobek a ukončení */
 .table--orders .table th:nth-child(1),
 .table--orders .table th:nth-child(9) {
     min-width: 100px;
 }
 
+/* Sloupec ks */
+.table--orders .table th:nth-child(2) {
+    min-width: 55px;
+}
+
+/* Sloupec Ukončení */
 .table--orders .table th:nth-child(10) {
     min-width: 120px;
 }
