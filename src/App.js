@@ -791,6 +791,7 @@ class App extends React.Component {
             },
         }, () => {
             window.localStorage.setItem('columnsVisibility', JSON.stringify(this.state.columnsVisibility));
+            dispatchResize();
         });
     }
 

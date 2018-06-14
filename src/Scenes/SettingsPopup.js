@@ -138,7 +138,7 @@ export class SettingsPopup extends React.Component {
                         {/* Nastavení sloupců v tabulce */}
                         <p>Viditelné sloupce</p>
                         <div className="display--flex order--table-settings">
-                            <div className="input-group mb-3">
+                            {/* <div className="input-group mb-3">
                                 <div className="input-group-prepend">
                                     <div className="input-group-text">
                                         <input
@@ -213,7 +213,7 @@ export class SettingsPopup extends React.Component {
                                 >
                                     4.
                                 </label>
-                            </div>
+                            </div> */}
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
                                     <div className="input-group-text">
@@ -230,7 +230,7 @@ export class SettingsPopup extends React.Component {
                                     className="form-control"
                                     htmlFor="fifthColumn"
                                 >
-                                    5.
+                                    5. operace
                                 </label>
                             </div>
                             <div className="input-group mb-3">
@@ -249,7 +249,7 @@ export class SettingsPopup extends React.Component {
                                     className="form-control"
                                     htmlFor="sixthColumn"
                                 >
-                                    6.
+                                    6. operace
                                 </label>
                             </div>
                         </div>

@@ -178,6 +178,7 @@ export class OrderTable extends React.Component {
         const {
             groupedOrders,
             displayTotalRow,
+            columnsVisibility,
         } = this.props;
 
         // vykreslit zgroupované zakázky podle orderId
@@ -229,38 +230,62 @@ export class OrderTable extends React.Component {
                                                         {objKey}
                                                     </td>
                                                     <td style={createStyleObject(thWidth[1])}>{product.totalCount}</td>
+                                                    {
+                                                        (columnsVisibility['1'] === true) || (columnsVisibility['1'] == undefined)
+                                                        ? <td
+                                                            style={createStyleObject(thWidth[2])}
+                                                        >
+                                                            {this.renderOperationCell(product['1'])}
+                                                        </td>
+                                                        : null
+                                                    }
+                                                    {
+                                                        (columnsVisibility['2'] === true) || (columnsVisibility['2'] == undefined)
+                                                        ? <td
+                                                            style={createStyleObject(thWidth[3])}
+                                                        >
+                                                            {this.renderOperationCell(product['2'])}
+                                                        </td>
+                                                        : null
+                                                    }
+                                                    {
+                                                        (columnsVisibility['3'] === true) || (columnsVisibility['3'] == undefined)
+                                                        ? <td
+                                                            style={createStyleObject(thWidth[4])}
+                                                        >
+                                                            {this.renderOperationCell(product['3'])}
+                                                        </td>
+                                                        : null
+                                                    }
+                                                    {
+                                                        (columnsVisibility['4'] === true) || (columnsVisibility['4'] == undefined)
+                                                        ? <td
+                                                            style={createStyleObject(thWidth[5])}
+                                                        >
+                                                            {this.renderOperationCell(product['4'])}
+                                                        </td>
+                                                        : null
+                                                    }
+                                                    {
+                                                        (columnsVisibility['5'] === true) || (columnsVisibility['5'] == undefined)
+                                                        ? <td
+                                                            style={createStyleObject(thWidth[6])}
+                                                        >
+                                                            {this.renderOperationCell(product['5'])}
+                                                        </td>
+                                                        : null
+                                                    }
+                                                    {
+                                                        (columnsVisibility['6'] === true) || (columnsVisibility['6'] == undefined)
+                                                        ? <td
+                                                            style={createStyleObject(thWidth[7])}
+                                                        >
+                                                            {this.renderOperationCell(product['6'])}
+                                                        </td>
+                                                        : null
+                                                    }
                                                     <td
-                                                        style={createStyleObject(thWidth[2])}
-                                                    >
-                                                        {this.renderOperationCell(product['1'])}
-                                                    </td>
-                                                    <td
-                                                        style={createStyleObject(thWidth[3])}
-                                                    >
-                                                        {this.renderOperationCell(product['2'])}
-                                                    </td>
-                                                    <td
-                                                        style={createStyleObject(thWidth[4])}
-                                                    >
-                                                        {this.renderOperationCell(product['3'])}
-                                                    </td>
-                                                    <td
-                                                        style={createStyleObject(thWidth[5])}
-                                                    >
-                                                        {this.renderOperationCell(product['4'])}
-                                                    </td>
-                                                    <td
-                                                        style={createStyleObject(thWidth[6])}
-                                                    >
-                                                        {this.renderOperationCell(product['5'])}
-                                                    </td>
-                                                    <td
-                                                        style={createStyleObject(thWidth[7])}
-                                                    >
-                                                        {this.renderOperationCell(product['6'])}
-                                                    </td>
-                                                    <td
-                                                        style={createStyleObject(thWidth[8])}
+                                                        style={createStyleObject(thWidth[thWidth.length - 3])}
                                                     >
                                                         {
                                                             product.finishDate
@@ -269,12 +294,12 @@ export class OrderTable extends React.Component {
                                                         }
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[9])}
+                                                        style={createStyleObject(thWidth[thWidth.length - 2])}
                                                     >
                                                         {formatMinutesToTime(product.totalWorkingTime)}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[10])}
+                                                        style={createStyleObject(thWidth[thWidth.length - 1])}
                                                     >
                                                         {formatMinutesToTime(product.totalOperationTime)}
                                                     </td>
@@ -306,10 +331,10 @@ export class OrderTable extends React.Component {
                                             <td style={createStyleObject(totalRowWidth)}>
                                                 <strong>Celkový čas na zakázku</strong>
                                             </td>
-                                            <td style={createStyleObject(thWidth[9])}>
+                                            <td style={createStyleObject(thWidth[thWidth.length - 2])}>
                                                 <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
                                             </td>
-                                            <td style={createStyleObject(thWidth[10])}>
+                                            <td style={createStyleObject(thWidth[thWidth.length - 1])}>
                                                 <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
                                             </td>
                                         </tr>
@@ -368,7 +393,7 @@ export class OrderTable extends React.Component {
                     </div>
                 }
             >
-                <strong>{count} ks.</strong>
+                <strong>{count} ks. </strong>
                 { `(${formatMinutesToTime(operationTime)}) [${formatMinutesToTime(workingHoursForOperation)}] {${sign === -1 ? '+' : '-'}${formatMinutesToTime(Math.abs(calculateHoursRemainder))}}` }
             </Tooltip>
         );
@@ -395,6 +420,8 @@ export class OrderTable extends React.Component {
             divStyle.height = `${this.state.height}px`;
         }
 
+        const { columnsVisibility } = this.props;
+
         return (
             <div
                 className="two-columns--one-fixed table--orders element--block shadow--light mt-3"
@@ -412,47 +439,69 @@ export class OrderTable extends React.Component {
                     >
                         <thead>
                             <tr>
-                                <th scope="col">Výrobek</th>
-                                <th scope="col">
-                                    Ks.
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="table--orders-operation-column"
-                                >
-                                    1.o ks/čas
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="table--orders-operation-column"
-                                >
-                                    2.o ks/čas
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="table--orders-operation-column"
-                                >
-                                    3.o ks/čas
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="table--orders-operation-column"
-                                >
-                                    4.o ks/čas
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="table--orders-operation-column"
-                                >
-                                    5.o ks/čas
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="table--orders-operation-column"
-                                >
-                                    6.o ks/čas
-                                </th>
-                                <th scope="col">Ukončení</th>
+                                <th scope="col" className="table--orders-100">Výrobek</th>
+                                <th scope="col" className="table--orders-55">Ks.</th>
+                                {
+                                    (columnsVisibility['1'] === true) || (columnsVisibility['1'] == undefined)
+                                    ? <th
+                                        scope="col"
+                                        className="table--orders-operation-column"
+                                    >
+                                        1.o ks/čas
+                                    </th>
+                                    : null
+                                }
+                                {
+                                    (columnsVisibility['2'] === true) || (columnsVisibility['2'] == undefined)
+                                    ? <th
+                                        scope="col"
+                                        className="table--orders-operation-column"
+                                    >
+                                        2.o ks/čas
+                                    </th>
+                                    : null
+                                }
+                                {
+                                    (columnsVisibility['3'] === true) || (columnsVisibility['3'] == undefined)
+                                    ? <th
+                                        scope="col"
+                                        className="table--orders-operation-column"
+                                    >
+                                        3.o ks/čas
+                                    </th>
+                                    : null
+                                }
+                                {
+                                    (columnsVisibility['4'] === true) || (columnsVisibility['4'] == undefined)
+                                    ? <th
+                                        scope="col"
+                                        className="table--orders-operation-column"
+                                    >
+                                        4.o ks/čas
+                                    </th>
+                                    : null
+                                }
+                                {
+                                    (columnsVisibility['5'] === true) || (columnsVisibility['5'] == undefined)
+                                    ? <th
+                                        scope="col"
+                                        className="table--orders-operation-column"
+                                    >
+                                        5.o ks/čas
+                                    </th>
+                                    : null
+                                }
+                                {
+                                    (columnsVisibility['6'] === true) || (columnsVisibility['6'] == undefined)
+                                    ? <th
+                                        scope="col"
+                                        className="table--orders-operation-column"
+                                    >
+                                        6.o ks/čas
+                                    </th>
+                                    : null
+                                }
+                                <th scope="col" className="table--orders-100">Ukončení</th>
                                 <th scope="col">Naplánováno</th>
                                 <th scope="col">Čas na výrobek</th>
                             </tr>

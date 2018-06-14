@@ -24,24 +24,23 @@
     min-width: 150px;
 }
 
-/* Sloupce - Výrobek a ukončení */
-.table--orders .table th:nth-child(1),
-.table--orders .table th:nth-child(9) {
-    min-width: 100px;
+/* Sloupec ks */
+.table--orders .table .table--orders-55 {
+    min-width: 55px;
 }
 
-/* Sloupec ks */
-.table--orders .table th:nth-child(2) {
-    min-width: 55px;
+/* Sloupce - Výrobek a ukončení */
+.table--orders .table .table--orders-100 {
+    min-width: 100px;
 }
 
 /* Sloupec Ukončení */
 .table--orders .table th:nth-child(10) {
-    min-width: 120px;
+    /* min-width: 120px; */
 }
 
 .table--orders .table .table--orders-operation-column {
-    min-width: 300px;
+    min-width: 350px;
 }
 
 .table--orders .column--fixed-header,
@@ -113,4 +112,12 @@
 .product--finished > td,
 .product--finished > td > * {
     text-decoration: line-through;
+}
+
+.order--table-settings .input-group {
+    text-align: center;
+}
+
+.order--table-settings .input-group + .input-group {
+    margin-left: 10px;
 }
