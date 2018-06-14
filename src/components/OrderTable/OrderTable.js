@@ -182,6 +182,7 @@ export class OrderTable extends React.Component {
 
         const {
             groupedOrders,
+            displayTotalRow,
         } = this.props;
 
         // vykreslit zgroupované zakázky podle orderId
@@ -290,35 +291,39 @@ export class OrderTable extends React.Component {
                             }
                         </td>
                     </tr>
-                    <tr
-                        data-order={orderId}
-                        className={
-                            createClassName([
-                                'row--total',
-                                done ? 'order--finished' : null,
-                                commission._info.done ? 'order--finished' : null,
-                                activeOrder == orderId ? 'context-menu--open' : null,
-                            ])
-                        }
-                    >
-                        <td className="table--orders-inner-table">
-                            <table className="width--100">
-                                <tbody>
-                                    <tr>
-                                        <td style={createStyleObject(totalRowWidth)}>
-                                            <strong>Celkový čas na zakázku</strong>
-                                        </td>
-                                        <td style={createStyleObject(thWidth[9])}>
-                                            <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
-                                        </td>
-                                        <td style={createStyleObject(thWidth[10])}>
-                                            <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
+                    {
+                        displayTotalRow
+                        ? <tr
+                            data-order={orderId}
+                            className={
+                                createClassName([
+                                    'row--total',
+                                    done ? 'order--finished' : null,
+                                    commission._info.done ? 'order--finished' : null,
+                                    activeOrder == orderId ? 'context-menu--open' : null,
+                                ])
+                            }
+                        >
+                            <td className="table--orders-inner-table">
+                                <table className="width--100">
+                                    <tbody>
+                                        <tr>
+                                            <td style={createStyleObject(totalRowWidth)}>
+                                                <strong>Celkový čas na zakázku</strong>
+                                            </td>
+                                            <td style={createStyleObject(thWidth[9])}>
+                                                <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
+                                            </td>
+                                            <td style={createStyleObject(thWidth[10])}>
+                                                <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        : null
+                    }
                 </React.Fragment>
             );
 

@@ -29,10 +29,10 @@ export class SettingsPopup extends React.Component {
         } = this.state;
 
         const {
+            displayTotalRow,
+            handleSettingsChange,
             filterFinishedOrders,
             displayOrdersInEvents,
-            handleFilterFinishedOrders,
-            handleDisplayOrdersInEvents,
         } = this.props;
 
         return (
@@ -65,6 +65,31 @@ export class SettingsPopup extends React.Component {
                     </TabList>
 
                     <TabPanel>
+                        <h5 className="mb-1">Kalendář</h5>
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <div className="input-group-text">
+                                    <input
+                                        type="checkbox"
+                                        id="displayOrdersInEvents"
+                                        name="displayOrdersInEvents"
+                                        checked={displayOrdersInEvents}
+                                        onChange={handleSettingsChange}
+                                    />
+                                </div>
+                            </div>
+                            <label
+                                className="form-control"
+                                htmlFor="displayOrdersInEvents"
+                            >
+                                Zobrazovat čísla operací v kalendáři
+                            </label>
+                        </div>
+
+                        <hr />
+
+                        <h5 className="mb-1">Přehled zakázek a výrobků</h5>
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <div className="input-group-text">
@@ -73,7 +98,7 @@ export class SettingsPopup extends React.Component {
                                         id="filterFinishedOrders"
                                         name="filterFinishedOrders"
                                         checked={!filterFinishedOrders}
-                                        onChange={handleFilterFinishedOrders}
+                                        onChange={handleSettingsChange}
                                     />
                                 </div>
                             </div>
@@ -89,18 +114,18 @@ export class SettingsPopup extends React.Component {
                                 <div className="input-group-text">
                                     <input
                                         type="checkbox"
-                                        id="displayOrdersInEvents"
-                                        name="displayOrdersInEvents"
-                                        checked={displayOrdersInEvents}
-                                        onChange={handleDisplayOrdersInEvents}
+                                        id="displayTotalRow"
+                                        name="displayTotalRow"
+                                        checked={displayTotalRow}
+                                        onChange={handleSettingsChange}
                                     />
                                 </div>
                             </div>
                             <label
                                 className="form-control"
-                                htmlFor="displayOrdersInEvents"
+                                htmlFor="displayTotalRow"
                             >
-                                Zobrazovat čísla operací v kalendáři
+                                Zobrazovat řádek "Celkový čas na zakázku"
                             </label>
                         </div>
                     </TabPanel>

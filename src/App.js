@@ -44,6 +44,7 @@ class App extends React.Component {
             hoverOrder: null,
             fileLoaded: false,
             itemToBeClosed: null,
+            displayTotalRow: true,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             displayOrdersInEvents: true,
@@ -201,7 +202,9 @@ class App extends React.Component {
                 products: this.state.products,
                 machines: this.state.machines,
                 orderList: this.state.orderList,
+                displayTotalRow: this.state.displayTotalRow,
                 filterFinishedOrders: this.state.filterFinishedOrders,
+                displayOrdersInEvents: this.state.displayOrdersInEvents,
             })
             .then((value) => {
                 this.showInfoMessage(<p>{value}</p>, 3000);
@@ -755,6 +758,18 @@ class App extends React.Component {
         }, dispatchResize);
     }
 
+    handleSettingsChange = (e) => {
+        let checked = e.target.checked;
+
+        if (e.target.name === 'filterFinishedOrders') {
+            checked = !e.target.checked;
+        }
+
+        this.setState({
+            [e.target.name]: checked,
+        }, this.saveToFile);
+    }
+
     // * RENDEROVÁNÍ APLIKACE
     renderMainScreen = () => {
         const {
@@ -767,6 +782,7 @@ class App extends React.Component {
             currentWeek,
             groupOrders,
             startOfTheWeek,
+            displayTotalRow,
             filterFinishedOrders,
             displayOrdersInEvents,
         } = this.state;
@@ -844,6 +860,7 @@ class App extends React.Component {
                     products={products}
                     orderList={orderList}
                     groupedOrders={groupOrders}
+                    displayTotalRow={displayTotalRow}
                     filterFinishedOrders={filterFinishedOrders}
                     onCloseOrder={this.displayProductCloseModal}
                     onProductClose={this.displayProductCloseModal}
@@ -863,6 +880,7 @@ class App extends React.Component {
             hoverOrder,
             currentWeek,
             itemToBeClosed,
+            displayTotalRow,
             filterFinishedOrders,
             sameOperationRestTime,
             displayOrdersInEvents,
@@ -935,18 +953,10 @@ class App extends React.Component {
                         onOrderDelete={(e, item) => this.handleItemDelete(e, item, 'orderList')}
 
                         // general
+                        displayTotalRow={displayTotalRow}
                         filterFinishedOrders={filterFinishedOrders}
                         displayOrdersInEvents={displayOrdersInEvents}
-                        handleDisplayOrdersInEvents={(e) => {
-                            this.setState({
-                                displayOrdersInEvents: e.target.checked
-                            },this.saveToFile);
-                        }}
-                        handleFilterFinishedOrders={(e) => {
-                            this.setState({
-                                filterFinishedOrders: !e.target.checked
-                            },this.saveToFile);
-                        }}
+                        handleSettingsChange={this.handleSettingsChange}
                     />
                 }
 
@@ -981,6 +991,7 @@ class App extends React.Component {
             hoverOrder: null,
             fileLoaded: false,
             itemToBeClosed: null,
+            displayTotalRow: true,
             sameOperationRestTime: 0,
             displayOrdersInEvents: true,
         });
