@@ -83,7 +83,7 @@ export class SettingsPopup extends React.Component {
                                 className="form-control"
                                 htmlFor="displayOrdersInEvents"
                             >
-                                Zobrazovat čísla operací v kalendáři
+                                Zobrazit čísla operací v kalendáři
                             </label>
                         </div>
 
@@ -125,7 +125,7 @@ export class SettingsPopup extends React.Component {
                                 className="form-control"
                                 htmlFor="displayTotalRow"
                             >
-                                Zobrazovat řádek "Celkový čas na zakázku"
+                                Zobrazit řádek "Celkový čas na zakázku"
                             </label>
                         </div>
                     </TabPanel>

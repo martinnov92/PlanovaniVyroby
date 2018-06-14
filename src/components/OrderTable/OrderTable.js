@@ -333,7 +333,7 @@ export class OrderTable extends React.Component {
 
     renderOperationCell = (operation) => {
         if (!operation) {
-            return '-';
+            return <div> - </div>;
         }
 
         const {

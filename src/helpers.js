@@ -399,6 +399,7 @@ export const createStyleObject = (width) => ({
     textOverflow: 'ellipsis',
     width: `${width || 0}px`,
     maxWidth: `${width || 0}px`,
+    minWidth: `${width || 0}px`,
 });
 
 window._debug = {
