@@ -344,7 +344,8 @@ export class Calendar extends React.Component {
                             className="column--fixed-header"
                             style={{
                                 height: '43px',
-                                border: 0,
+                                borderLeft: 0,
+                                borderBottom: 0,
                             }}
                         >
                             <p>Stroj</p>
