@@ -1,9 +1,9 @@
 # TODO:
 
-    - zmenšit písmo v tabulce, nižší řádky, padding, ...
-    - červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
+    X zmenšit písmo v tabulce, nižší řádky, padding, ...
+    X červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
     - tooltip s časem přesunout pod událost (ne nad)
-    - zrušit celkový čas na zakázku a dát to přímo k zakázce (možná do tooltipu)
+    X zrušit celkový čas na zakázku a dát to přímo k zakázce (možná do tooltipu)
     - do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
     - sloupec ukončení výroby - vyplnit poslední napolánované datum výrobku v zakázce
     - po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
