@@ -1,6 +1,20 @@
 # TODO:
 
+    - zmenšit písmo v tabulce, nižší řádky, padding, ...
+    - červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
+    - tooltip s časem přesunout pod událost (ne nad)
+    - zrušit celkový čas na zakázku a dát to přímo k zakázce (možná do tooltipu)
+    - do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
+    - sloupec ukončení výroby - vyplnit poslední napolánované datum výrobku v zakázce
+    - po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
+
     - povolit znovuotevření zakázek a výrobků
+    - přidat popis operace do popupu
+    - přidat volbu pro 7. operaci - Kooperace (stačí zapsat počet kusů, časy tam být nemusí, skrývat je?), označit výrobek že se jedná o kooperaci
+
+    - zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
+    - změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
+
     X přidat možnost skrytí sloupců
     X ukládat nastavení aplikace do localStorage a ne do souboru
     X zůžit sloupce a roztáhnout sloupce s operacemi
