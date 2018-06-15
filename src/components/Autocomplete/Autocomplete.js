@@ -1,5 +1,5 @@
 import React from 'react';
-import { createClassName } from '../../helpers';
+import { createClassName } from '../../utils/helpers';
 
 import './autocomplete.css';
 

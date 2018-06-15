@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Popup } from '../components/Popup';
-import { INPUT_DATE_TIME_FORMAT } from '../helpers';
+import { INPUT_DATE_TIME_FORMAT } from '../utils/helpers';
 
 export class CloseProductModal extends React.Component {
     constructor() {

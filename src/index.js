@@ -4,7 +4,10 @@ import ReactDOM from 'react-dom';
 import cs from 'moment/locale/cs';
 
 import App from './App';
-import './index.css';
+
+// styles
+import './css/vars.css';
+import './css/index.css';
 
 moment.updateLocale('cs', cs);
 

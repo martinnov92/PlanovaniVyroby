@@ -10,7 +10,7 @@ import {
     getNetMachineTime,
     formatMinutesToTime,
     getCorrectDateAfterDrop,
-} from '../../helpers';
+} from '../../utils/helpers';
 import { CalendarCell, CalendarEvent } from './';
 import './calendar.css';
 

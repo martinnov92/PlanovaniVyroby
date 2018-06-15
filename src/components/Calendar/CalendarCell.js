@@ -3,7 +3,7 @@ import moment from 'moment';
 import {
     createClassName,
     DATA_DATE_FORMAT,
-} from '../../helpers';
+} from '../../utils/helpers';
 
 export class CalendarCell extends React.Component {
     static defaultProps = {

@@ -19,7 +19,7 @@ import {
     INPUT_DATE_TIME_FORMAT,
     calculateRemainingOperationTime,
     dispatchResize,
-} from './helpers';
+} from './utils/helpers';
 import sync from './statics/sync.svg';
 
 const fs = window.require('fs');

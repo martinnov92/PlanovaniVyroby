@@ -7,7 +7,7 @@ import {
     createStyleObject,
     formatMinutesToTime,
     calculateOperationTime,
-} from '../../helpers';
+} from '../../utils/helpers';
 
 import './order-table.css';
 

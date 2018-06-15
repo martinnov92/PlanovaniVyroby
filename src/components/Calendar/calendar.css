@@ -1,11 +1,3 @@
-:root {
-    --fixedWidth: 8.57rem;
-    --selectingCellColor: #424242;
-    --calendarBorderColor: #dee2e6;
-    --calendarWeekendColor: #FFFDC0;
-    --calendarDayBorderColor: #6c757d;
-}
-
 .two-columns--one-fixed,
 .two-columns--one-fixed.element--block {
     width: 100%;

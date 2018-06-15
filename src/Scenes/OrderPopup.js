@@ -1,7 +1,7 @@
 import React from 'react';
 import { Popup } from '../components/Popup';
 import { Autocomplete } from '../components/Autocomplete';
-import { formatMinutesToTime } from '../helpers';
+import { formatMinutesToTime } from '../utils/helpers';
 
 export class OrderPopup extends React.Component {
     static defaultProps = {

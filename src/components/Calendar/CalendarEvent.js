@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-import { DATA_DATE_FORMAT, createClassName, formatMinutesToTime } from '../../helpers';
+import { DATA_DATE_FORMAT, createClassName, formatMinutesToTime } from '../../utils/helpers';
 import { ContextMenu } from '../ContextMenu';
 
 export class CalendarEvent extends React.Component {

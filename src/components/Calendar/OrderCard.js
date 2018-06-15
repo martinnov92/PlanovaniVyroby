@@ -5,7 +5,7 @@ import {
     DATA_DATE_FORMAT,
     formatMinutesToTime,
     calculateOperationTime,
-} from '../../helpers';
+} from '../../utils/helpers';
 
 export class OrderCard extends React.Component {
     static defaultProps = {

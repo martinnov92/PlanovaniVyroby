@@ -2,9 +2,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createClassName } from '../../helpers';
+import { createClassName } from '../../utils/helpers';
 import './popup.css';
-
 
 export class Popup extends React.Component {
     static defaultProps = {
