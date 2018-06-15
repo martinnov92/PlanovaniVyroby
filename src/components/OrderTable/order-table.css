@@ -21,7 +21,7 @@
 
 .table--orders .table td,
 .table--orders .table th {
-    min-width: 150px;
+    min-width: 120px;
 }
 
 /* Sloupec ks */
@@ -32,6 +32,10 @@
 /* Sloupce - Výrobek a ukončení */
 .table--orders .table .table--orders-100 {
     min-width: 100px;
+}
+
+.table--orders .table .table--orders-125 {
+    min-width: 125px;
 }
 
 .table--orders .table .table--orders-operation-column {

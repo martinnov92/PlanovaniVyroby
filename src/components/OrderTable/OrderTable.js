@@ -7,6 +7,7 @@ import {
     createStyleObject,
     formatMinutesToTime,
     calculateOperationTime,
+    DATA_DATE_FORMAT,
 } from '../../utils/helpers';
 
 import './order-table.css';
@@ -311,11 +312,11 @@ export class OrderTable extends React.Component {
                                                         : null
                                                     }
                                                     <td
-                                                        style={createStyleObject(thWidth['finishDate'], false)}
+                                                        style={createStyleObject(thWidth['lastWorkingDate'], false)}
                                                     >
                                                         {
-                                                            product.finishDate
-                                                            ? moment(product.finishDate).format('DD.MM.YYYY')
+                                                            product.lastWorkingDate
+                                                            ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT)
                                                             : '-'
                                                         }
                                                     </td>
@@ -526,8 +527,8 @@ export class OrderTable extends React.Component {
                                 }
                                 <th
                                     scope="col"
-                                    data-column="finishDate"
-                                    className="table--orders-100"
+                                    data-column="lastWorkingDate"
+                                    className="table--orders-125"
                                 >
                                     Ukončení
                                 </th>

@@ -4,8 +4,8 @@
     X červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
     X tooltip s časem přesunout pod událost (ne nad)
     X zrušit celkový čas na zakázku a dát to přímo k zakázce (možná do tooltipu)
+    X sloupec ukončení výroby - vyplnit poslední napolánované datum výrobku v zakázce
     - do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
-    - sloupec ukončení výroby - vyplnit poslední napolánované datum výrobku v zakázce
     - po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
 
     - povolit znovuotevření zakázek a výrobků
