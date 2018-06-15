@@ -4,7 +4,6 @@ import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import {
     createClassName,
-    DATA_DATE_FORMAT,
     createStyleObject,
     formatMinutesToTime,
     calculateOperationTime,
@@ -29,6 +28,7 @@ export class OrderTable extends React.Component {
             scrollTop: 0,
             scrollLeft: 0,
             rowHeights : [],
+            totalRowWidth: 0,
             activeOrder: null,
             fixedHeaderHeight: 0,
         };
@@ -69,10 +69,20 @@ export class OrderTable extends React.Component {
         try {
             const fixedHeader = this.fixedHeader.current;
             const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
-    
-            const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th')).map((node) => {
-                return Number(parseFloat(window.getComputedStyle(node).width));
-            });
+            const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th'));
+            const thWidth = {};
+            let totalRowWidth = 0;
+
+            for (let column of fixedHeaderTh) {
+                thWidth[column.dataset.column] = Number(parseFloat(window.getComputedStyle(column).width));
+
+                if (column.dataset.column === 'totalWorkingTime' || column.dataset.column === 'totalOperationTime') {
+                    continue;
+                }
+
+                totalRowWidth += Number(parseFloat(window.getComputedStyle(column).width));
+            }
+
             const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
 
             const rowHeights = groupedOrders.map((commission) => {
@@ -89,8 +99,9 @@ export class OrderTable extends React.Component {
 
             this.setState({
                 height,
+                thWidth,
                 rowHeights,
-                thWidth: fixedHeaderTh,
+                totalRowWidth,
                 width: fixedHeader.width,
                 fixedHeaderHeight: fixedHeaderClientRect.height,
             });
@@ -173,6 +184,7 @@ export class OrderTable extends React.Component {
         const {
             thWidth,
             activeOrder,
+            totalRowWidth,
         } = this.state;
 
         const {
@@ -187,8 +199,6 @@ export class OrderTable extends React.Component {
 
             const orderKeys = Object.keys(commission);
             const { orderId, done } = commission._info;
-            // sečíst všechny sloupce v tabulce kromě prvního a posledního a nastavit jako šířku pro total row
-            const totalRowWidth = thWidth.slice(0, thWidth.length - 2).reduce((prev, current) => prev + current, 0);
 
             row.push(
                 <React.Fragment
@@ -226,14 +236,21 @@ export class OrderTable extends React.Component {
                                                     disabled={product.done}
                                                     className={product.done ? 'product--finished' : null}
                                                 >
-                                                    <td style={createStyleObject(thWidth[0])} title={objKey}>
+                                                    <td
+                                                        title={objKey}
+                                                        style={createStyleObject(thWidth['order'])}
+                                                    >
                                                         {objKey}
                                                     </td>
-                                                    <td style={createStyleObject(thWidth[1])}>{product.totalCount}</td>
+                                                    <td
+                                                        style={createStyleObject(thWidth['count'])}
+                                                    >
+                                                        {product.totalCount}
+                                                    </td>
                                                     {
                                                         (columnsVisibility['1'] === true) || (columnsVisibility['1'] == undefined)
                                                         ? <td
-                                                            style={createStyleObject(thWidth[2])}
+                                                            style={createStyleObject(thWidth['1'])}
                                                         >
                                                             {this.renderOperationCell(product['1'])}
                                                         </td>
@@ -242,7 +259,7 @@ export class OrderTable extends React.Component {
                                                     {
                                                         (columnsVisibility['2'] === true) || (columnsVisibility['2'] == undefined)
                                                         ? <td
-                                                            style={createStyleObject(thWidth[3])}
+                                                            style={createStyleObject(thWidth['2'])}
                                                         >
                                                             {this.renderOperationCell(product['2'])}
                                                         </td>
@@ -251,7 +268,7 @@ export class OrderTable extends React.Component {
                                                     {
                                                         (columnsVisibility['3'] === true) || (columnsVisibility['3'] == undefined)
                                                         ? <td
-                                                            style={createStyleObject(thWidth[4])}
+                                                            style={createStyleObject(thWidth['3'])}
                                                         >
                                                             {this.renderOperationCell(product['3'])}
                                                         </td>
@@ -260,7 +277,7 @@ export class OrderTable extends React.Component {
                                                     {
                                                         (columnsVisibility['4'] === true) || (columnsVisibility['4'] == undefined)
                                                         ? <td
-                                                            style={createStyleObject(thWidth[5])}
+                                                            style={createStyleObject(thWidth['4'])}
                                                         >
                                                             {this.renderOperationCell(product['4'])}
                                                         </td>
@@ -269,7 +286,7 @@ export class OrderTable extends React.Component {
                                                     {
                                                         (columnsVisibility['5'] === true) || (columnsVisibility['5'] == undefined)
                                                         ? <td
-                                                            style={createStyleObject(thWidth[6])}
+                                                            style={createStyleObject(thWidth['5'])}
                                                         >
                                                             {this.renderOperationCell(product['5'])}
                                                         </td>
@@ -278,14 +295,14 @@ export class OrderTable extends React.Component {
                                                     {
                                                         (columnsVisibility['6'] === true) || (columnsVisibility['6'] == undefined)
                                                         ? <td
-                                                            style={createStyleObject(thWidth[7])}
+                                                            style={createStyleObject(thWidth['6'])}
                                                         >
                                                             {this.renderOperationCell(product['6'])}
                                                         </td>
                                                         : null
                                                     }
                                                     <td
-                                                        style={createStyleObject(thWidth[thWidth.length - 3])}
+                                                        style={createStyleObject(thWidth['finishDate'])}
                                                     >
                                                         {
                                                             product.finishDate
@@ -294,12 +311,12 @@ export class OrderTable extends React.Component {
                                                         }
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[thWidth.length - 2])}
+                                                        style={createStyleObject(thWidth['totalWorkingTime'])}
                                                     >
                                                         {formatMinutesToTime(product.totalWorkingTime)}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth[thWidth.length - 1])}
+                                                        style={createStyleObject(thWidth['totalOperationTime'])}
                                                     >
                                                         {formatMinutesToTime(product.totalOperationTime)}
                                                     </td>
@@ -331,10 +348,10 @@ export class OrderTable extends React.Component {
                                             <td style={createStyleObject(totalRowWidth)}>
                                                 <strong>Celkový čas na zakázku</strong>
                                             </td>
-                                            <td style={createStyleObject(thWidth[thWidth.length - 2])}>
+                                            <td style={createStyleObject(thWidth['totalWorkingTime'])}>
                                                 <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
                                             </td>
-                                            <td style={createStyleObject(thWidth[thWidth.length - 1])}>
+                                            <td style={createStyleObject(thWidth['totalOperationTime'])}>
                                                 <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
                                             </td>
                                         </tr>
@@ -439,12 +456,25 @@ export class OrderTable extends React.Component {
                     >
                         <thead>
                             <tr>
-                                <th scope="col" className="table--orders-100">Výrobek</th>
-                                <th scope="col" className="table--orders-55">Ks.</th>
+                                <th
+                                    scope="col"
+                                    data-column="order"
+                                    className="table--orders-100"
+                                >
+                                    Výrobek
+                                </th>
+                                <th
+                                    scope="col"
+                                    data-column="count"
+                                    className="table--orders-55"
+                                >
+                                    Ks.
+                                </th>
                                 {
                                     (columnsVisibility['1'] === true) || (columnsVisibility['1'] == undefined)
                                     ? <th
                                         scope="col"
+                                        data-column="1"
                                         className="table--orders-operation-column"
                                     >
                                         1.o ks/čas
@@ -455,6 +485,7 @@ export class OrderTable extends React.Component {
                                     (columnsVisibility['2'] === true) || (columnsVisibility['2'] == undefined)
                                     ? <th
                                         scope="col"
+                                        data-column="2"
                                         className="table--orders-operation-column"
                                     >
                                         2.o ks/čas
@@ -465,6 +496,7 @@ export class OrderTable extends React.Component {
                                     (columnsVisibility['3'] === true) || (columnsVisibility['3'] == undefined)
                                     ? <th
                                         scope="col"
+                                        data-column="3"
                                         className="table--orders-operation-column"
                                     >
                                         3.o ks/čas
@@ -475,6 +507,7 @@ export class OrderTable extends React.Component {
                                     (columnsVisibility['4'] === true) || (columnsVisibility['4'] == undefined)
                                     ? <th
                                         scope="col"
+                                        data-column="4"
                                         className="table--orders-operation-column"
                                     >
                                         4.o ks/čas
@@ -485,6 +518,7 @@ export class OrderTable extends React.Component {
                                     (columnsVisibility['5'] === true) || (columnsVisibility['5'] == undefined)
                                     ? <th
                                         scope="col"
+                                        data-column="5"
                                         className="table--orders-operation-column"
                                     >
                                         5.o ks/čas
@@ -495,15 +529,32 @@ export class OrderTable extends React.Component {
                                     (columnsVisibility['6'] === true) || (columnsVisibility['6'] == undefined)
                                     ? <th
                                         scope="col"
+                                        data-column="6"
                                         className="table--orders-operation-column"
                                     >
                                         6.o ks/čas
                                     </th>
                                     : null
                                 }
-                                <th scope="col" className="table--orders-100">Ukončení</th>
-                                <th scope="col">Naplánováno</th>
-                                <th scope="col">Čas na výrobek</th>
+                                <th
+                                    scope="col"
+                                    data-column="finishDate"
+                                    className="table--orders-100"
+                                >
+                                    Ukončení
+                                </th>
+                                <th
+                                    scope="col"
+                                    data-column="totalWorkingTime"
+                                >
+                                    Naplánováno
+                                </th>
+                                <th
+                                    scope="col"
+                                    data-column="totalOperationTime"
+                                >
+                                    Čas na výrobek
+                                </th>
                             </tr>
                         </thead>
                     </table>
