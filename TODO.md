@@ -2,7 +2,7 @@
 
     - povolit znovuotevření zakázek a výrobků
     X přidat možnost skrytí sloupců
-    - ukládat nastavení aplikace do localStorage a ne do souboru
+    X ukládat nastavení aplikace do localStorage a ne do souboru
     X zůžit sloupce a roztáhnout sloupce s operacemi
     X přidat do nastavení zobrazení total row
     X opravit přesun události v 20:00, událost se zkrátí
