@@ -11,6 +11,7 @@ import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
 import {
     saveFile,
+    checkForBoolean,
     getNetMachineTime,
     createGroupedOrders,
     isDateRangeOverlaping,
@@ -45,7 +46,7 @@ class App extends React.Component {
             fileLoaded: false,
             itemToBeClosed: null,
             columnsVisibility: {},
-            displayTotalRow: true,
+            displayTotalRow: false,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             displayOrdersInEvents: true,
@@ -60,16 +61,8 @@ class App extends React.Component {
 
     // * OVLÁDÁNÍ APLIKACE + ELECTRON
     componentDidMount() {
+        this.readFromLocalStorage();
         const filePath = window.localStorage.getItem('filePath');
-        let columnsVisibility = window.localStorage.getItem('columnsVisibility');
-
-        if (columnsVisibility) {
-            columnsVisibility = JSON.parse(columnsVisibility);
-
-            this.setState({
-                columnsVisibility,
-            });
-        }
 
         if (!filePath) {
             this.setState({
@@ -213,9 +206,6 @@ class App extends React.Component {
                 products: this.state.products,
                 machines: this.state.machines,
                 orderList: this.state.orderList,
-                displayTotalRow: this.state.displayTotalRow,
-                filterFinishedOrders: this.state.filterFinishedOrders,
-                displayOrdersInEvents: this.state.displayOrdersInEvents,
             })
             .then((value) => {
                 this.showInfoMessage(<p>{value}</p>, 3000);
@@ -260,9 +250,6 @@ class App extends React.Component {
                         products: d.products || [],
                         machines: d.machines || [],
                         orderList: d.orderList || [],
-                        displayTotalRow: !!d.displayTotalRow,
-                        filterFinishedOrders: !!d.filterFinishedOrders,
-                        displayOrdersInEvents: !!d.displayOrdersInEvents,
                     }, dispatchResize);
 
                     this.watchFileChanges(filePath);
@@ -279,6 +266,24 @@ class App extends React.Component {
                     return electron.ipcRenderer.send('open-error-dialog', 'Chyba při čtení', 'Nečitelný soubor.');
                 }
             }
+        });
+    }
+
+    readFromLocalStorage = () => {
+        let columnsVisibility = window.localStorage.getItem('columnsVisibility');
+        let displayTotalRow = checkForBoolean(window.localStorage.getItem('displayTotalRow'));
+        let filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
+        let displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
+
+        if (columnsVisibility) {
+            columnsVisibility = JSON.parse(columnsVisibility);
+        }
+
+        this.setState({
+            displayTotalRow,
+            columnsVisibility,
+            filterFinishedOrders,
+            displayOrdersInEvents,
         });
     }
 
@@ -772,6 +777,7 @@ class App extends React.Component {
     }
 
     handleSettingsChange = (e) => {
+        let name = e.target.name;
         let checked = e.target.checked;
 
         if (e.target.name === 'filterFinishedOrders') {
@@ -780,7 +786,10 @@ class App extends React.Component {
 
         this.setState({
             [e.target.name]: checked,
-        }, this.saveToFile);
+        }, () => {
+            dispatchResize();
+            window.localStorage.setItem(name, checked);
+        });
     }
 
     handleColumnVisibility = (e) => {

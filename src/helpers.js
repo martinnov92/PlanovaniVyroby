@@ -393,6 +393,14 @@ export function dispatchResize() {
     }, 0);
 }
 
+export function checkForBoolean (item) {
+    if (checkForBoolean == undefined) {
+        return false;
+    }
+
+    return item;
+}
+
 export const createStyleObject = (width) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
