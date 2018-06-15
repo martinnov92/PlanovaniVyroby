@@ -2,7 +2,7 @@
 
     X zmenšit písmo v tabulce, nižší řádky, padding, ...
     X červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
-    - tooltip s časem přesunout pod událost (ne nad)
+    X tooltip s časem přesunout pod událost (ne nad)
     X zrušit celkový čas na zakázku a dát to přímo k zakázce (možná do tooltipu)
     - do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
     - sloupec ukončení výroby - vyplnit poslední napolánované datum výrobku v zakázce
