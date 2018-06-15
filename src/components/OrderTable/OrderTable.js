@@ -238,12 +238,12 @@ export class OrderTable extends React.Component {
                                                 >
                                                     <td
                                                         title={objKey}
-                                                        style={createStyleObject(thWidth['order'])}
+                                                        style={createStyleObject(thWidth['order'], false)}
                                                     >
                                                         {objKey}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth['count'])}
+                                                        style={createStyleObject(thWidth['count'], false)}
                                                     >
                                                         {product.totalCount}
                                                     </td>
@@ -302,7 +302,7 @@ export class OrderTable extends React.Component {
                                                         : null
                                                     }
                                                     <td
-                                                        style={createStyleObject(thWidth['finishDate'])}
+                                                        style={createStyleObject(thWidth['finishDate'], false)}
                                                     >
                                                         {
                                                             product.finishDate
@@ -311,12 +311,12 @@ export class OrderTable extends React.Component {
                                                         }
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth['totalWorkingTime'])}
+                                                        style={createStyleObject(thWidth['totalWorkingTime'], false)}
                                                     >
                                                         {formatMinutesToTime(product.totalWorkingTime)}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth['totalOperationTime'])}
+                                                        style={createStyleObject(thWidth['totalOperationTime'], false)}
                                                     >
                                                         {formatMinutesToTime(product.totalOperationTime)}
                                                     </td>
