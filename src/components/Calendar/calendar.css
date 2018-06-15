@@ -29,6 +29,7 @@
     border: 1px solid var(--calendarBorderColor);
     border-left: 0;
     border-right: 0;
+    position: relative;
 }
 
 .left-side--item + .left-side--item {

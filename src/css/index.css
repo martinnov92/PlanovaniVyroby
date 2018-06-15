@@ -145,6 +145,7 @@ body {
 
 .table td,
 .table th {
+    padding: .4rem;
     vertical-align: middle;
 }
 

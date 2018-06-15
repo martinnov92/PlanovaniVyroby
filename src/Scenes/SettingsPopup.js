@@ -115,26 +115,6 @@ export class SettingsPopup extends React.Component {
                                 Zobrazit dokončené zakázky
                             </label>
                         </div>
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <div className="input-group-text">
-                                    <input
-                                        type="checkbox"
-                                        id="displayTotalRow"
-                                        name="displayTotalRow"
-                                        checked={displayTotalRow}
-                                        onChange={handleSettingsChange}
-                                    />
-                                </div>
-                            </div>
-                            <label
-                                className="form-control"
-                                htmlFor="displayTotalRow"
-                            >
-                                Zobrazit řádek "Celkový čas na zakázku"
-                            </label>
-                        </div>
-
                         {/* Nastavení sloupců v tabulce */}
                         <p>Viditelné sloupce (operace)</p>
                         <div className="display--flex order--table-settings">

@@ -34,13 +34,8 @@
     min-width: 100px;
 }
 
-/* Sloupec Ukončení */
-.table--orders .table th:nth-child(10) {
-    /* min-width: 120px; */
-}
-
 .table--orders .table .table--orders-operation-column {
-    min-width: 350px;
+    min-width: 330px;
 }
 
 .table--orders .column--fixed-header,
@@ -120,4 +115,21 @@
 
 .order--table-settings .input-group + .input-group {
     margin-left: 10px;
+}
+
+.table--orders-tooltip {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: .3rem;
+    position: absolute;
+    align-items: center;
+    align-content: center;
+}
+
+.table--orders-tooltip > p {
+    width: 100%;
+    padding: .3rem;
 }

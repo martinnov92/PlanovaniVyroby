@@ -28,7 +28,6 @@ export class OrderTable extends React.Component {
             scrollTop: 0,
             scrollLeft: 0,
             rowHeights : [],
-            totalRowWidth: 0,
             activeOrder: null,
             fixedHeaderHeight: 0,
         };
@@ -71,16 +70,9 @@ export class OrderTable extends React.Component {
             const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
             const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th'));
             const thWidth = {};
-            let totalRowWidth = 0;
 
             for (let column of fixedHeaderTh) {
                 thWidth[column.dataset.column] = Number(parseFloat(window.getComputedStyle(column).width));
-
-                if (column.dataset.column === 'totalWorkingTime' || column.dataset.column === 'totalOperationTime') {
-                    continue;
-                }
-
-                totalRowWidth += Number(parseFloat(window.getComputedStyle(column).width));
             }
 
             const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
@@ -101,7 +93,6 @@ export class OrderTable extends React.Component {
                 height,
                 thWidth,
                 rowHeights,
-                totalRowWidth,
                 width: fixedHeader.width,
                 fixedHeaderHeight: fixedHeaderClientRect.height,
             });
@@ -131,7 +122,7 @@ export class OrderTable extends React.Component {
                 <div
                     className="table--orders-first-column lock--scroll"
                     style={{
-                        height: `calc(100% - ${fixedHeaderHeight - 1}px)`,
+                        height: `calc(100% - ${fixedHeaderHeight}px)`,
                     }}
                 >
                     <div
@@ -167,9 +158,29 @@ export class OrderTable extends React.Component {
                                     onClose={this.handleCloseContext}
                                     onOpen={() => this.handleOpenContext(orderId)}
                                 >
-                                    <p style={{ backgroundColor: color, }}>
-                                        { o ? o.name : '' }
-                                    </p>
+                                    <Tooltip
+                                        className="table--orders-tooltip"
+                                        title={
+                                            <div>
+                                                <p>
+                                                    Naplánováno: &nbsp;
+                                                    <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
+                                                </p>
+                                                <p>
+                                                    Celkový čas: &nbsp;
+                                                    <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
+                                                </p>
+
+                                                <hr className="bg-white" />
+
+
+                                            </div>
+                                        }
+                                    >
+                                        <p style={{ backgroundColor: color, }}>
+                                            { o ? o.name : '' }
+                                        </p>
+                                    </Tooltip>
                                 </ContextMenu>
                             );
                         })
@@ -184,12 +195,10 @@ export class OrderTable extends React.Component {
         const {
             thWidth,
             activeOrder,
-            totalRowWidth,
         } = this.state;
 
         const {
             groupedOrders,
-            displayTotalRow,
             columnsVisibility,
         } = this.props;
 
@@ -328,39 +337,6 @@ export class OrderTable extends React.Component {
                             }
                         </td>
                     </tr>
-                    {
-                        displayTotalRow
-                        ? <tr
-                            data-order={orderId}
-                            className={
-                                createClassName([
-                                    'row--total',
-                                    done ? 'order--finished' : null,
-                                    commission._info.done ? 'order--finished' : null,
-                                    activeOrder == orderId ? 'context-menu--open' : null,
-                                ])
-                            }
-                        >
-                            <td className="table--orders-inner-table">
-                                <table className="width--100">
-                                    <tbody>
-                                        <tr>
-                                            <td style={createStyleObject(totalRowWidth)}>
-                                                <strong>Celkový čas na zakázku</strong>
-                                            </td>
-                                            <td style={createStyleObject(thWidth['totalWorkingTime'])}>
-                                                <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
-                                            </td>
-                                            <td style={createStyleObject(thWidth['totalOperationTime'])}>
-                                                <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        : null
-                    }
                 </React.Fragment>
             );
 

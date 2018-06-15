@@ -46,7 +46,6 @@ class App extends React.Component {
             fileLoaded: false,
             itemToBeClosed: null,
             columnsVisibility: {},
-            displayTotalRow: false,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             displayOrdersInEvents: true,
@@ -271,7 +270,6 @@ class App extends React.Component {
 
     readFromLocalStorage = () => {
         let columnsVisibility = window.localStorage.getItem('columnsVisibility');
-        let displayTotalRow = checkForBoolean(window.localStorage.getItem('displayTotalRow'));
         let filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
         let displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
 
@@ -280,7 +278,6 @@ class App extends React.Component {
         }
 
         this.setState({
-            displayTotalRow,
             columnsVisibility,
             filterFinishedOrders,
             displayOrdersInEvents,
@@ -816,7 +813,6 @@ class App extends React.Component {
             currentWeek,
             groupOrders,
             startOfTheWeek,
-            displayTotalRow,
             columnsVisibility,
             filterFinishedOrders,
             displayOrdersInEvents,
@@ -895,7 +891,6 @@ class App extends React.Component {
                     products={products}
                     orderList={orderList}
                     groupedOrders={groupOrders}
-                    displayTotalRow={displayTotalRow}
                     columnsVisibility={columnsVisibility}
                     filterFinishedOrders={filterFinishedOrders}
                     onCloseOrder={this.displayProductCloseModal}
@@ -916,7 +911,6 @@ class App extends React.Component {
             hoverOrder,
             currentWeek,
             itemToBeClosed,
-            displayTotalRow,
             columnsVisibility,
             filterFinishedOrders,
             sameOperationRestTime,
@@ -990,7 +984,6 @@ class App extends React.Component {
                         onOrderDelete={(e, item) => this.handleItemDelete(e, item, 'orderList')}
 
                         // general
-                        displayTotalRow={displayTotalRow}
                         columnsVisibility={columnsVisibility}
                         filterFinishedOrders={filterFinishedOrders}
                         displayOrdersInEvents={displayOrdersInEvents}
@@ -1031,7 +1024,6 @@ class App extends React.Component {
             fileLoaded: false,
             itemToBeClosed: null,
             columnsVisibility: {},
-            displayTotalRow: true,
             sameOperationRestTime: 0,
             displayOrdersInEvents: true,
         });
