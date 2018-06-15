@@ -130,25 +130,30 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                                 t = operationTime;
                             }
 
-                            // console.warn('použité operace', product, usedOperation);
-                            if (!used) {
-                                usedOperation[current.operation.order] = {
-                                    ...current.operation,
-                                    operationTime: t,
-                                };
-                                totalOperationTime += t;
+                            if (current.operation.order == '7') {
+                                // pokud objednávka obsahuje sedmou operaci, nastavím na true
+                                groupedOrder.coop = true;
                             } else {
-                                if ((Number(time) > Number(used.time)) || (Number(casting) > Number(used.casting)) || (Number(exchange) > Number(used.exchange)) || (Number(count) > Number(used.count)) || (Number(operationTime) > Number(used.operationTime))) {
-                                    totalOperationTime -= used.operationTime;
-                                    totalOperationTime += t;
+                                // console.warn('použité operace', product, usedOperation);
+                                if (!used) {
                                     usedOperation[current.operation.order] = {
                                         ...current.operation,
                                         operationTime: t,
                                     };
+                                    totalOperationTime += t;
+                                } else {
+                                    if ((Number(time) > Number(used.time)) || (Number(casting) > Number(used.casting)) || (Number(exchange) > Number(used.exchange)) || (Number(count) > Number(used.count)) || (Number(operationTime) > Number(used.operationTime))) {
+                                        totalOperationTime -= used.operationTime;
+                                        totalOperationTime += t;
+                                        usedOperation[current.operation.order] = {
+                                            ...current.operation,
+                                            operationTime: t,
+                                        };
+                                    }
                                 }
                             }
                         }
-    
+
                         return {
                             totalWorkingTime,
                             totalOperationTime,
@@ -219,7 +224,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             groupedOrders.unshift(commission);
         }
     }
-
+    console.log(groupedOrders);
     return groupedOrders;
 }
 

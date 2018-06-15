@@ -33,7 +33,6 @@ export class SettingsPopup extends React.Component {
         } = this.state;
 
         const {
-            displayTotalRow,
             columnsVisibility,
             handleSettingsChange,
             filterFinishedOrders,

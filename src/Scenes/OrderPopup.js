@@ -166,6 +166,19 @@ export class OrderPopup extends React.Component {
 
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
+                                <span className="input-group-text">Poznámka</span>
+                            </div>
+                            <textarea
+                                name="note"
+                                value={order.note}
+                                disabled={disabled}
+                                className="form-control"
+                                onChange={this.props.handleInputChange}
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <div className="input-group-prepend">
                                 <span className="input-group-text">Naplánovaný čas</span>
                             </div>
                             <input
@@ -175,19 +188,6 @@ export class OrderPopup extends React.Component {
                                 className="form-control"
                                 onChange={this.props.handleInputChange}
                                 value={formatMinutesToTime(order.workingHours)}
-                            />
-                        </div>
-
-                        <div className="input-group">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Poznámka</span>
-                            </div>
-                            <textarea
-                                name="note"
-                                value={order.note}
-                                disabled={disabled}
-                                className="form-control"
-                                onChange={this.props.handleInputChange}
                             />
                         </div>
                     </div>
@@ -239,7 +239,25 @@ export class OrderPopup extends React.Component {
                                 >
                                     6. operace
                                 </option>
+                                <option
+                                    value="7"
+                                >
+                                    Kooperace
+                                </option>
                             </select>
+                        </div>
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Popis operace</span>
+                            </div>
+                            <input
+                                type="text"
+                                name="operation.note"
+                                className="form-control"
+                                value={order.operation.note}
+                                onChange={this.props.handleInputChange}
+                            />
                         </div>
 
                         <div className="input-group mb-3">
@@ -257,104 +275,110 @@ export class OrderPopup extends React.Component {
                             />
                         </div>
 
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Čas na kus</span>
-                            </div>
-                            <input
-                                min={0}
-                                type="number"
-                                disabled={disabled}
-                                name="operation.time"
-                                className="form-control"
-                                value={order.operation.time}
-                                onChange={this.props.handleInputChange}
-                            />
-                            <div className="input-group-append">
-                                <span className="input-group-text">min.</span>
-                            </div>
-                        </div>
-
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span
-                                    title="Čas na kus"
-                                    className="input-group-text"
-                                >
-                                    Výměna
-                                </span>
-                            </div>
-                            <input
-                                min={0}
-                                type="number"
-                                disabled={disabled}
-                                className="form-control"
-                                name="operation.exchange"
-                                value={order.operation.exchange}
-                                onChange={this.props.handleInputChange}
-                            />
-                            <div className="input-group-append">
-                                <span className="input-group-text">min.</span>
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span
-                                    className="input-group-text"
-                                    title="Čas na operaci"
-                                >
-                                    Nahazování
-                                </span>
-                            </div>
-                            <input
-                                min={0}
-                                type="number"
-                                disabled={disabled}
-                                name="operation.casting"
-                                className="form-control"
-                                value={order.operation.casting}
-                                onChange={this.props.handleInputChange}
-                            />
-                            <div className="input-group-append">
-                                <span className="input-group-text">min.</span>
-                            </div>
-                        </div>
-
-                        <hr />
-
-                        <div className="spacer" />
-
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text">Čas na operaci</span>
-                            </div>
-                            <input
-                                type="text"
-                                disabled={true}
-                                className="form-control"
-                                name="operation.operationTime"
-                                onChange={this.props.handleInputChange}
-                                value={formatMinutesToTime(order.operation.operationTime)}
-                            />
-                        </div>
-
                         {
-                            !order.id
-                            ? <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                    <span className="input-group-text">Zbývá doplánovat</span>
+                            order.operation.order != '7'
+                            ? <React.Fragment>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Čas na kus</span>
+                                    </div>
+                                    <input
+                                        min={0}
+                                        type="number"
+                                        disabled={disabled}
+                                        name="operation.time"
+                                        className="form-control"
+                                        value={order.operation.time}
+                                        onChange={this.props.handleInputChange}
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text">min.</span>
+                                    </div>
                                 </div>
-                                <input
-                                    type="text"
-                                    disabled={true}
-                                    className="form-control"
-                                    onChange={this.props.handleInputChange}
-                                    value={(restTimeSign === -1 ? '+' : (restTimeSign === 0 ? '' : '-')) + formatMinutesToTime(sameOperationRemainderTime)}
-                                />
-                            </div>
+
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span
+                                            title="Čas na kus"
+                                            className="input-group-text"
+                                        >
+                                            Výměna
+                                        </span>
+                                    </div>
+                                    <input
+                                        min={0}
+                                        type="number"
+                                        disabled={disabled}
+                                        className="form-control"
+                                        name="operation.exchange"
+                                        value={order.operation.exchange}
+                                        onChange={this.props.handleInputChange}
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text">min.</span>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span
+                                            className="input-group-text"
+                                            title="Čas na operaci"
+                                        >
+                                            Nahazování
+                                        </span>
+                                    </div>
+                                    <input
+                                        min={0}
+                                        type="number"
+                                        disabled={disabled}
+                                        name="operation.casting"
+                                        className="form-control"
+                                        value={order.operation.casting}
+                                        onChange={this.props.handleInputChange}
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text">min.</span>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div className="spacer" />
+
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">Čas na operaci</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        disabled={true}
+                                        className="form-control"
+                                        name="operation.operationTime"
+                                        onChange={this.props.handleInputChange}
+                                        value={formatMinutesToTime(order.operation.operationTime)}
+                                    />
+                                </div>
+
+                                {
+                                    !order.id
+                                    ? <div className="input-group mb-3">
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text">Zbývá doplánovat</span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            disabled={true}
+                                            className="form-control"
+                                            onChange={this.props.handleInputChange}
+                                            value={(restTimeSign === -1 ? '+' : (restTimeSign === 0 ? '' : '-')) + formatMinutesToTime(sameOperationRemainderTime)}
+                                        />
+                                    </div>
+                                    : null
+                                }
+                            </React.Fragment>
                             : null
                         }
                     </div>

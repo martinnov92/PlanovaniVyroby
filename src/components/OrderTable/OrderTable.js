@@ -208,7 +208,7 @@ export class OrderTable extends React.Component {
             const row = [];
 
             const orderKeys = Object.keys(commission);
-            const { orderId, done } = commission._info;
+            const { orderId, done, } = commission._info;
 
             row.push(
                 <React.Fragment
@@ -250,7 +250,14 @@ export class OrderTable extends React.Component {
                                                         title={objKey}
                                                         style={createStyleObject(thWidth['order'], false)}
                                                     >
-                                                        {objKey}
+                                                        {
+                                                            product.coop
+                                                            ? <strong className="text-danger product--coop">
+                                                                * &nbsp;
+                                                            </strong>
+                                                            : null
+                                                        }
+                                                        { objKey }
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['count'], false)}
@@ -392,13 +399,13 @@ export class OrderTable extends React.Component {
                 <span>[{formatMinutesToTime(workingHoursForOperation)}]</span>
                 {
                     sign !== 0
-                    ? <span
+                    ? <strong
                         className={createClassName([
                             sign === -1 ? 'text-primary' : 'text-danger',
                         ])}
                     >
                         {`{`}{sign === -1 ? '+' : '-'}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
-                    </span>
+                    </strong>
                     : '{' + formatMinutesToTime(Math.abs(calculateHoursRemainder)) + '}'
                 }
             </Tooltip>

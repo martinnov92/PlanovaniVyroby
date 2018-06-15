@@ -435,6 +435,7 @@ class App extends React.Component {
                 copyOrder.operation = {
                     time: 0,
                     count: 0,
+                    note: '',
                     order: '-',
                     casting: 0,
                     exchange: 0,
@@ -581,6 +582,7 @@ class App extends React.Component {
                 order.operation = {
                     time: 0,
                     count: 0,
+                    note: '',
                     casting: 0,
                     exchange: 0,
                     operationTime: 0,
@@ -1055,6 +1057,7 @@ class App extends React.Component {
                 operation: {
                     time: 0,        // čas na kus (sčítá se s nahazováním a výměnou)
                     count: 0,
+                    note: '',
                     order: '-',
                     casting: 0,     // nahazování
                     exchange: 0,    // výměna

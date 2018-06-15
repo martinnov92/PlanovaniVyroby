@@ -90,6 +90,10 @@ body {
     height: 6px;
 }
 
+.popup-order textarea {
+    height: 86px;
+}
+
 .orders--detail {
     display: grid;
     padding: 10px;
