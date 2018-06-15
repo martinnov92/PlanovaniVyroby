@@ -401,13 +401,14 @@ export function checkForBoolean (item) {
     return item;
 }
 
-export const createStyleObject = (width, minWidth = true) => ({
+export const createStyleObject = (width, maxWidth = true) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     width: `${width || 0}px`,
+    minWidth: `${width || 0}px`,
     maxWidth: `${width || 0}px`,
-    [minWidth ? 'minWidth' : null]: minWidth ? `${width || 0}px` : null,
+    // [maxWidth ? 'maxWidth' : null]: maxWidth ? `${width || 0}px` : null,
 });
 
 window._debug = {
