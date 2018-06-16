@@ -12,7 +12,7 @@
     white-space: pre-wrap;
     z-index: 9998;
     /* font-size: 12px; */
-    pointer-events: none;
+    /* pointer-events: none; */
 }
 
 .pd-tooltip__content {

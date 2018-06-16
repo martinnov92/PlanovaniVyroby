@@ -40,6 +40,10 @@ body {
     cursor: default;
 }
 
+textarea {
+    resize: none;
+}
+
 .app {
     width: 100vw;
     height: 100vh;

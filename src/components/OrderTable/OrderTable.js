@@ -386,7 +386,7 @@ export class OrderTable extends React.Component {
 
         const calculateHoursRemainder = operationTime - workingHoursForOperation;
         const sign = Math.sign(calculateHoursRemainder);
-        const dates = operation[index].dates.map((date) => moment(date).format(DATA_DATE_FORMAT) + '\n').join('');
+        const dates = operation[index].dates.map((date, i) => (i !== 0 ? '\n' : '') + moment(date).format(DATA_DATE_FORMAT)).join('');
 
         return (
             <Tooltip

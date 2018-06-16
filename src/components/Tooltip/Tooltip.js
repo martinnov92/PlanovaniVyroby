@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './tooltip.css';
 
 export class Tooltip extends React.Component {
+    static defaultProps = {
+        timeoutEnter: 0,
+        timeoutLeave: 0,
+    };
+
     timer = null;
 
     constructor() {
@@ -31,7 +36,7 @@ export class Tooltip extends React.Component {
             isMouseOver: true
         });
 
-        this.timer = window.setTimeout(() => this.handleTimeout('toggleTooltip'), 0);
+        this.timer = window.setTimeout(() => this.handleTimeout('toggleTooltip'), this.props.timeoutEnter);
     }
 
     handleMouseLeave() {
@@ -43,7 +48,7 @@ export class Tooltip extends React.Component {
             toggleTooltip: false
         });
 
-        this.timer = window.setTimeout(() => this.handleTimeout('isMouseOver'), 0);
+        this.timer = window.setTimeout(() => this.handleTimeout('isMouseOver'), this.props.timeoutLeave);
     }
 
     handleTimeout(stateItem) {
