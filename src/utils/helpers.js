@@ -196,10 +196,10 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         // const dates = groupedProduct.
                         const operation = {
                             ...gp.operation,
-                            dates: [groupedProduct.dateFrom],
+                            dates: [],
                             workingHoursForOperation: workingHoursForOperation[gp.operation.order],
                         };
-                        console.log(groupedProduct);
+
                         if (index > -1) {
                             // pokud ano zkontroluj, jestli je jedna operace větší než druhá
                             const used = groupedOrder.operation[index];
@@ -218,9 +218,15 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                                     operation.note = used.note + ', ' + note;
                                 }
                                 // a pokud je, tak nastav tu větší jako hlavní
-                                groupedOrder.operation[index] = operation;
+                                groupedOrder.operation[index] = {
+                                    ...groupedOrder.operation[index],
+                                    operation
+                                };
                             }
+
+                            groupedOrder.operation[index].dates.push(gp.dateFrom);
                         } else {
+                            operation.dates.push(gp.dateFrom);
                             groupedOrder.operation.push(operation);
                         }
                     }
