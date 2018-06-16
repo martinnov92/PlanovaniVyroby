@@ -255,7 +255,7 @@ export class OrderPopup extends React.Component {
                                 type="text"
                                 name="operation.note"
                                 className="form-control"
-                                value={order.operation.note}
+                                value={order.operation.note || ''}
                                 onChange={this.props.handleInputChange}
                             />
                         </div>
