@@ -213,14 +213,18 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                                 (Number(operationTime) > Number(used.operationTime)) ||
                                 note != used.note
                             ) {
+                                let noteCopy = used.note;
                                 // pokud je tam víc stejných operací s různými popisky, tak je spojím
+
                                 if (note != used.note) {
-                                    operation.note = used.note + ', ' + note;
+                                    noteCopy += ', ' + note;
                                 }
+
                                 // a pokud je, tak nastav tu větší jako hlavní
                                 groupedOrder.operation[index] = {
                                     ...groupedOrder.operation[index],
-                                    operation
+                                    operation,
+                                    note: noteCopy,
                                 };
                             }
 
