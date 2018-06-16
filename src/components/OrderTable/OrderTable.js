@@ -269,7 +269,7 @@ export class OrderTable extends React.Component {
                                                         ? <td
                                                             style={createStyleObject(thWidth['1'])}
                                                         >
-                                                            {this.renderOperationCell(product['1'])}
+                                                            {this.renderOperationCell(product.operation, 1)}
                                                         </td>
                                                         : null
                                                     }
@@ -278,7 +278,7 @@ export class OrderTable extends React.Component {
                                                         ? <td
                                                             style={createStyleObject(thWidth['2'])}
                                                         >
-                                                            {this.renderOperationCell(product['2'])}
+                                                            {this.renderOperationCell(product.operation, 2)}
                                                         </td>
                                                         : null
                                                     }
@@ -287,7 +287,7 @@ export class OrderTable extends React.Component {
                                                         ? <td
                                                             style={createStyleObject(thWidth['3'])}
                                                         >
-                                                            {this.renderOperationCell(product['3'])}
+                                                            {this.renderOperationCell(product.operation, 3)}
                                                         </td>
                                                         : null
                                                     }
@@ -296,7 +296,7 @@ export class OrderTable extends React.Component {
                                                         ? <td
                                                             style={createStyleObject(thWidth['4'])}
                                                         >
-                                                            {this.renderOperationCell(product['4'])}
+                                                            {this.renderOperationCell(product.operation, 4)}
                                                         </td>
                                                         : null
                                                     }
@@ -305,7 +305,7 @@ export class OrderTable extends React.Component {
                                                         ? <td
                                                             style={createStyleObject(thWidth['5'])}
                                                         >
-                                                            {this.renderOperationCell(product['5'])}
+                                                            {this.renderOperationCell(product.operation, 5)}
                                                         </td>
                                                         : null
                                                     }
@@ -314,7 +314,7 @@ export class OrderTable extends React.Component {
                                                         ? <td
                                                             style={createStyleObject(thWidth['6'])}
                                                         >
-                                                            {this.renderOperationCell(product['6'])}
+                                                            {this.renderOperationCell(product.operation, 6)}
                                                         </td>
                                                         : null
                                                     }
@@ -352,8 +352,10 @@ export class OrderTable extends React.Component {
         });
     }
 
-    renderOperationCell = (operation) => {
-        if (!operation) {
+    renderOperationCell = (operation, orderIndex) => {
+        const index = operation.findIndex((o) => o.order == orderIndex);
+
+        if (index < 0) {
             return <div> - </div>;
         }
 
@@ -363,7 +365,7 @@ export class OrderTable extends React.Component {
             casting,
             exchange,
             workingHoursForOperation = 0,
-        } = operation;
+        } = operation[index];
 
         let operationTime = 0;
 

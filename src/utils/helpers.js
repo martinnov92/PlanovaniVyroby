@@ -72,6 +72,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
              * }
              */
             commission[product] = {
+                operation: [],
                 totalCount: 0,
                 totalWorkingTime: 0,
                 totalOperationTime: 0,
@@ -191,23 +192,23 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     const gp = groupedProduct[operation];
                     if (gp.operation) {
                         // existuje na výrobku dané zakázky daná operace?
-                        if (groupedOrder[gp.operation.order]) {
+                        const index = groupedOrder.operation.findIndex((o) => o.order == gp.operation.order);
+                        const operation = {
+                            ...gp.operation,
+                            workingHoursForOperation: workingHoursForOperation[gp.operation.order],
+                        };
+
+                        if (index > -1) {
                             // pokud ano zkontroluj, jestli je jedna operace větší než druhá
-                            const used = groupedOrder[gp.operation.order];
+                            const used = groupedOrder.operation[index];
                             const { time, casting, exchange, count, operationTime, } = gp.operation;
 
                             if ((Number(time) > Number(used.time)) || (Number(casting) > Number(used.casting)) || (Number(exchange) > Number(used.exchange)) || (Number(count) > Number(used.count)) || (Number(operationTime) > Number(used.operationTime))) {
                                 // a pokud je, tak nastav tu větší jako hlavní
-                                groupedOrder[gp.operation.order] = {
-                                    ...gp.operation,
-                                    workingHoursForOperation: workingHoursForOperation[gp.operation.order]
-                                };
+                                groupedOrder.operation[index] = operation;
                             }
                         } else {
-                            groupedOrder[gp.operation.order] = {
-                                ...gp.operation,
-                                workingHoursForOperation: workingHoursForOperation[gp.operation.order]
-                            };
+                            groupedOrder.operation.push(operation);
                         }
                     }
                 }
