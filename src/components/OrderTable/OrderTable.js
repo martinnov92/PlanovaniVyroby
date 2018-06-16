@@ -408,6 +408,7 @@ export class OrderTable extends React.Component {
         return (
             <Tooltip
                 className={`cursor--default`}
+                scrollableElement={this.scrollableDiv.current}
                 title={
                     <div>
                         {

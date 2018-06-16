@@ -24,9 +24,28 @@ export class Tooltip extends React.Component {
 
         this.tooltip = React.createRef();
         this.parentDiv = React.createRef();
+        this.handleScroll = this.handleScroll.bind(this);
         this.handleTimeout = this.handleTimeout.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
+        this.addEventListeners = this.addEventListeners.bind(this);
+        this.removeEventListeners = this.removeEventListeners.bind(this);
+    }
+
+    componentWillUnmount() {
+        this.removeEventListeners();
+    }
+
+    addEventListeners() {
+        if (this.props.scrollableElement) {
+            this.props.scrollableElement.addEventListener('scroll', this.handleScroll);
+        }
+    }
+
+    removeEventListeners() {
+        if (this.props.scrollableElement) {
+            this.props.scrollableElement.removeEventListener('scroll', this.handleScroll);
+        }
     }
 
     handleMouseEnter() {
@@ -42,6 +61,7 @@ export class Tooltip extends React.Component {
             isMouseOver: true
         });
 
+        this.addEventListeners();
         this.timer = window.setTimeout(() => this.handleTimeout('toggleTooltip'), this.props.timeoutEnter);
     }
 
@@ -58,7 +78,14 @@ export class Tooltip extends React.Component {
             toggleTooltip: false
         });
 
+        this.removeEventListeners();
         this.timer = window.setTimeout(() => this.handleTimeout('isMouseOver'), this.props.timeoutLeave);
+    }
+
+    handleScroll(e) {
+        this.setState({
+            isMouseOver: false,
+        });
     }
 
     handleTimeout(stateItem) {
