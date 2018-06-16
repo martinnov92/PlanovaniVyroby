@@ -160,6 +160,7 @@ export class OrderTable extends React.Component {
                                     onOpen={() => this.handleOpenContext(orderId)}
                                 >
                                     <Tooltip
+                                        pointerEvents={false}
                                         className="table--orders-tooltip"
                                         title={
                                             <div>
@@ -171,10 +172,6 @@ export class OrderTable extends React.Component {
                                                     Celkový čas: &nbsp;
                                                     <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
                                                 </p>
-
-                                                <hr className="bg-white" />
-
-
                                             </div>
                                         }
                                     >
@@ -275,6 +272,7 @@ export class OrderTable extends React.Component {
                                                                 </div>
                                                                 : null
                                                             }
+                                                            pointerEvents={false}
                                                         >
                                                             {
                                                                 product.coop

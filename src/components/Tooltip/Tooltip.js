@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './tooltip.css';
+import { createClassName } from '../../utils/helpers';
 
 export class Tooltip extends React.Component {
     static defaultProps = {
         timeoutEnter: 0,
         timeoutLeave: 0,
+        pointerEvents: true,
     };
 
     timer = null;
@@ -119,7 +121,8 @@ export class Tooltip extends React.Component {
             type,
             title,
             children,
-            className
+            className,
+            pointerEvents,
         } = this.props;
 
         const {
@@ -148,17 +151,24 @@ export class Tooltip extends React.Component {
                 break;
         }
 
-        const classNames = [
+        const classNames = createClassName([
             'pd-tooltip',
             className ? className : null,
-        ].filter((cls) => cls !== null).join(' ');
+        ]);
 
-        const titleClassNames = [
+        const innerClassNames = createClassName([
+            'pd-tooltip__inner',
+            tooltipPositionClassName,
+            toggleTooltip ? 'pd-tooltip--open' : null,
+            pointerEvents ? null : 'pd-tooltip--pointerevents',
+        ]);
+
+        const titleClassNames = createClassName([
+            type || null,
             'pd-tooltip__content',
             'pd-animate__3d--sign ',
-            type || null,
-            toggleTooltip ? 'pd-animate__in' : null
-        ].filter((cls) => cls !== null).join(' ');
+            toggleTooltip ? 'pd-animate__in' : null,
+        ]);
 
         let split = [];
         let text = [];
@@ -185,7 +195,7 @@ export class Tooltip extends React.Component {
                         <div
                             ref={this.tooltip}
                             style={tooltipPositionObj}
-                            className={`pd-tooltip__inner ${tooltipPositionClassName} ${toggleTooltip ? 'pd-tooltip--open' : ''}`}
+                            className={innerClassNames}
                         >
                             <div className={titleClassNames}>
                                 <div className="pd-tooltip__arrow" />
