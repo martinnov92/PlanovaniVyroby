@@ -371,6 +371,7 @@ export class OrderTable extends React.Component {
             time,
             note,
             count,
+            dates,
             casting,
             exchange,
             workingHoursForOperation = 0,
@@ -394,7 +395,9 @@ export class OrderTable extends React.Component {
                     <div>
                         {
                             note
-                            ? <p>Popis: {note}</p>
+                            ? <p>
+                                <strong>Popis: </strong> {note}
+                            </p>
                             : null
                         }
                         <p>Čas na kus: {time} min.</p>
@@ -407,6 +410,14 @@ export class OrderTable extends React.Component {
                         <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
                         <p>Naplánováno: {formatMinutesToTime(workingHoursForOperation)}</p>
                         <p>Zbývá: {sign === -1 ? '+' : (sign === 0 ? '' : '-')}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
+                        <p>
+                            <strong>Náplánováno dne:</strong>
+                        </p>
+                        <textarea
+                            disabled={true}
+                            className="form-control"
+                            defaultValue={dates}
+                        />
                     </div>
                 }
             >

@@ -171,13 +171,13 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                      *          done: false,
                      *          totalTime: 200,
                      *          totalCount: 200,
-                     *          1: {
+                     *          operation: [{
                      *              casting: 2,
                      *              count: 2,
                      *              time: 2,
                      *              order: 1,
                      *              operationTime: CELKOVÝ ČAS OPERACE
-                     *          },
+                     *          }],
                      *      },
                      *      _info: {
                      *          done: false,
@@ -193,11 +193,13 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                     if (gp.operation) {
                         // existuje na výrobku dané zakázky daná operace?
                         const index = groupedOrder.operation.findIndex((o) => o.order == gp.operation.order);
+                        // const dates = groupedProduct.
                         const operation = {
                             ...gp.operation,
+                            dates: [groupedProduct.dateFrom],
                             workingHoursForOperation: workingHoursForOperation[gp.operation.order],
                         };
-
+                        console.log(groupedProduct);
                         if (index > -1) {
                             // pokud ano zkontroluj, jestli je jedna operace větší než druhá
                             const used = groupedOrder.operation[index];
