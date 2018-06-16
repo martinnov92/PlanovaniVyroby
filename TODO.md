@@ -8,13 +8,13 @@
     X přidat popis operace do popupu
     X přidat volbu pro 7. operaci - Kooperace (stačí zapsat počet kusů, časy tam být nemusí, skrývat je?), označit výrobek že se jedná o kooperaci
     X do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
-    - po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
+    X po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
     - zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
     - změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
 
     - špatné výpočty zbývajícího času v OrderPopup
     - povolit znovuotevření zakázek a výrobků
-
+    - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
 
     X přidat možnost skrytí sloupců
     X ukládat nastavení aplikace do localStorage a ne do souboru
