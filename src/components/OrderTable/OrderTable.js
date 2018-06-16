@@ -16,6 +16,7 @@ export class OrderTable extends React.Component {
     static defaultProps = {
         orderList: [],
         groupedOrders: [],
+        moveToDate: () => {},
         onCloseOrder: () => {},
     };
 
@@ -403,7 +404,6 @@ export class OrderTable extends React.Component {
 
         const calculateHoursRemainder = operationTime - workingHoursForOperation;
         const sign = Math.sign(calculateHoursRemainder);
-        const dates = operation[index].dates.map((date, i) => (i !== 0 ? '\n' : '') + moment(date).format(DATA_DATE_FORMAT)).join('');
 
         return (
             <Tooltip
@@ -419,22 +419,35 @@ export class OrderTable extends React.Component {
                         }
                         <p>Čas na kus: {time} min.</p>
                         <p>Výměna: {exchange} min.</p>
-
-                        <hr className="bg-white" />
                         <p>Nahazování: {casting} min.</p>
+
                         <hr className="bg-white" />
 
                         <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
                         <p>Naplánováno: {formatMinutesToTime(workingHoursForOperation)}</p>
                         <p>Zbývá: {sign === -1 ? '+' : (sign === 0 ? '' : '-')}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
+
+                        <hr className="bg-white" />
+
                         <p>
-                            <strong>Náplánováno dne:</strong>
+                            <strong>Náplánováno ve dnech:</strong>
                         </p>
-                        <textarea
-                            disabled={true}
-                            className="form-control"
-                            defaultValue={dates}
-                        />
+                        <div className="area--dates">
+                            <ul>
+                                {
+                                    operation[index].dates.map((date) => {
+                                        return <li key={date}>
+                                            <button
+                                                className="btn btn-link text-dark"
+                                                onClick={() => this.props.moveToDate(date)}
+                                            >
+                                                { moment(date).format(DATA_DATE_FORMAT) }
+                                            </button>
+                                        </li>;
+                                    })
+                                }
+                            </ul>
+                        </div>
                     </div>
                 }
             >

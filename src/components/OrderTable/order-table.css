@@ -137,3 +137,16 @@
     width: 100%;
     padding: .3rem;
 }
+
+.area--dates {
+    max-height: 100px;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    overflow: auto;
+}
+
+.area--dates .btn {
+    padding: 0;
+}

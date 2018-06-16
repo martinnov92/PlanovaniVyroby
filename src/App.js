@@ -767,6 +767,16 @@ class App extends React.Component {
         }, this.saveToFile);
     }
 
+    handleMoveToDate = (date) => {
+        const weekFromDate = moment(date).week();
+        const startOfTheWeek = moment(date).startOf('week');
+
+        this.setState({
+            currentWeek: weekFromDate,
+            startOfTheWeek: startOfTheWeek,
+        });
+    }
+
     groupOrders = (events = [], orderList = [], filterFinishedOrders = false) => {
         const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
 
@@ -893,6 +903,7 @@ class App extends React.Component {
                     products={products}
                     orderList={orderList}
                     groupedOrders={groupOrders}
+                    moveToDate={this.handleMoveToDate}
                     columnsVisibility={columnsVisibility}
                     filterFinishedOrders={filterFinishedOrders}
                     onCloseOrder={this.displayProductCloseModal}
