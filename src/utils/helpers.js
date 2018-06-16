@@ -201,9 +201,20 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                         if (index > -1) {
                             // pokud ano zkontroluj, jestli je jedna operace větší než druhá
                             const used = groupedOrder.operation[index];
-                            const { time, casting, exchange, count, operationTime, } = gp.operation;
+                            const { time, casting, exchange, count, operationTime, note, } = gp.operation;
 
-                            if ((Number(time) > Number(used.time)) || (Number(casting) > Number(used.casting)) || (Number(exchange) > Number(used.exchange)) || (Number(count) > Number(used.count)) || (Number(operationTime) > Number(used.operationTime))) {
+                            if (
+                                (Number(time) > Number(used.time)) ||
+                                (Number(casting) > Number(used.casting)) ||
+                                (Number(exchange) > Number(used.exchange)) ||
+                                (Number(count) > Number(used.count)) ||
+                                (Number(operationTime) > Number(used.operationTime)) ||
+                                note != used.note
+                            ) {
+                                // pokud je tam víc stejných operací s různými popisky, tak je spojím
+                                if (note != used.note) {
+                                    operation.note = used.note + ', ' + note;
+                                }
                                 // a pokud je, tak nastav tu větší jako hlavní
                                 groupedOrder.operation[index] = operation;
                             }

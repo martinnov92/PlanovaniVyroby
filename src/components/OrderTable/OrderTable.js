@@ -250,14 +250,22 @@ export class OrderTable extends React.Component {
                                                         title={objKey}
                                                         style={createStyleObject(thWidth['order'], false)}
                                                     >
-                                                        {
-                                                            product.coop
-                                                            ? <strong className="text-danger product--coop">
-                                                                * &nbsp;
-                                                            </strong>
-                                                            : null
-                                                        }
-                                                        { objKey }
+                                                        {/* <Tooltip
+                                                            title={
+                                                                <div>
+
+                                                                </div>
+                                                            }
+                                                        > */}
+                                                            {
+                                                                product.coop
+                                                                ? <strong className="text-danger product--coop">
+                                                                    * &nbsp;
+                                                                </strong>
+                                                                : null
+                                                            }
+                                                            { objKey }
+                                                        {/* </Tooltip> */}
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['count'], false)}
@@ -361,6 +369,7 @@ export class OrderTable extends React.Component {
 
         const {
             time,
+            note,
             count,
             casting,
             exchange,
@@ -383,6 +392,11 @@ export class OrderTable extends React.Component {
                 className={`cursor--default`}
                 title={
                     <div>
+                        {
+                            note
+                            ? <p>Popis: {note}</p>
+                            : null
+                        }
                         <p>Čas na kus: {time} min.</p>
                         <p>Výměna: {exchange} min.</p>
 
