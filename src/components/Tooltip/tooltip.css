@@ -1,6 +1,6 @@
 .pd-tooltip {
-    display: inline-block;
     position: relative;
+    display: inline-block;
 }
 
 .pd-tooltip__inner {
