@@ -28,6 +28,10 @@ export class Tooltip extends React.Component {
     }
 
     handleMouseEnter() {
+        if (!this.props.title) {
+            return;
+        }
+
         if (this.timer) {
             window.clearInterval(this.timer);
         }
@@ -40,6 +44,10 @@ export class Tooltip extends React.Component {
     }
 
     handleMouseLeave() {
+        if (!this.props.title) {
+            return;
+        }
+
         if (this.timer) {
             window.clearInterval(this.timer);
         }
@@ -171,7 +179,7 @@ export class Tooltip extends React.Component {
             >
                 { children }
                 {
-                    !isMouseOver
+                    !isMouseOver || !text
                     ? null
                     : ReactDOM.createPortal(
                         <div

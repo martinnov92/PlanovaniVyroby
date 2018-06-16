@@ -250,13 +250,32 @@ export class OrderTable extends React.Component {
                                                         title={objKey}
                                                         style={createStyleObject(thWidth['order'], false)}
                                                     >
-                                                        {/* <Tooltip
+                                                        <Tooltip
                                                             title={
-                                                                <div>
+                                                                product.operation && product.operation.length > 0
+                                                                ? <div>
+                                                                    {
+                                                                        product.coop
+                                                                        ? <p>Kooperace</p>
+                                                                        : <ul>
+                                                                            {
+                                                                                product.operation.map((op) => {
+                                                                                    if (op.order === '-') return null;
 
+                                                                                    return (
+                                                                                        <li key={op.order}>
+                                                                                            {op.order}. operace
+                                                                                            {op.note ? ` - ${op.note}` : null}
+                                                                                        </li>
+                                                                                    );
+                                                                                })
+                                                                            }
+                                                                        </ul>
+                                                                    }
                                                                 </div>
+                                                                : null
                                                             }
-                                                        > */}
+                                                        >
                                                             {
                                                                 product.coop
                                                                 ? <strong className="text-danger product--coop">
@@ -265,7 +284,7 @@ export class OrderTable extends React.Component {
                                                                 : null
                                                             }
                                                             { objKey }
-                                                        {/* </Tooltip> */}
+                                                        </Tooltip>
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['count'], false)}
