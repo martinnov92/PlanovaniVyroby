@@ -38,6 +38,9 @@ export class OrderCard extends React.Component {
             }
         } catch (err) {}
 
+        const remainder = totalMinutes - order.workingHours;
+        const sign = Math.sign(remainder);
+
         return (
             <div
                 style={{
@@ -50,43 +53,97 @@ export class OrderCard extends React.Component {
                     order
                     ? <React.Fragment>
                         <h5 className="card-title">
-                            <strong>{mainOrder ? mainOrder.name : 'Bez zakázky'}</strong>
+                            <strong>{ mainOrder ? mainOrder.name : 'Bez zakázky' }</strong>
+                            <strong className="text-muted">{ order.productName ? ` / ${order.productName}` : '' }</strong>
                         </h5>
-                        <h6 className="card-subtitle mb-2">
-                            <strong>{order.productName}</strong>
+                        <h6 className="card-text">
+                            <strong>{ machine ? machine.name : 'Bez stroje' }</strong>
+                            <strong className="text-muted">
+                                { order.worker ? ` / ${order.worker}` : ''}
+                            </strong>
                         </h6>
-                        <h6 className="card-subtitle mb-2 text-muted">
-                            <strong>{order.worker}</strong>
-                        </h6>
-                        <p className="card-text">
-                            {machine ? machine.name : 'Bez stroje'}
-                        </p>
                         {
                             order.operation
-                            ? <React.Fragment>
-                                <p className="card-text">
-                                    {order.operation.order}. operace
-                                </p>
-                                <p className="card-text">
-                                    {order.operation.count}ks
-                                </p>
-                                <p className="card-text">
-                                    {order.operation.time}min/kus
-                                </p>
-                            </React.Fragment>
+                            ? <p className="card-text">
+                                <strong>{ order.operation.order }. operace</strong>
+                                { order.operation.note ? ` - ${order.operation.note}` : '' }
+                            </p>
                             : null
                         }
-                        <p className="card-text">
-                            Celkem: {totalMinutes}min ({formatMinutesToTime(totalMinutes)})
-                        </p>
+                        <table>
+                            <tbody>
+                                {
+                                    order.operation
+                                    ? <React.Fragment>
+                                        <tr>
+                                            <td>Počet kusů: &nbsp;</td>
+                                            <td>
+                                                <p className="card-text">
+                                                    { order.operation.count }ks.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Čas na kus: &nbsp;</td>
+                                            <td>
+                                                <p className="card-text">
+                                                    { order.operation.time }min.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
+                                    : null
+                                }
+                                <tr>
+                                    <td>Začátek: &nbsp;</td>
+                                    <td>
+                                        <p className="card-text">
+                                            { moment(order.dateFrom).format(DATA_DATE_FORMAT) }
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Konec: &nbsp;</td>
+                                    <td>
+                                        <p className="card-text">
+                                            { moment(order.dateTo).format(DATA_DATE_FORMAT) }
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Čas na výrobu: &nbsp;</td>
+                                    <td>
+                                        <p className="card-text">
+                                            { formatMinutesToTime(totalMinutes) }
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Naplánováné: &nbsp;</td>
+                                    <td>
+                                        <p className="card-text">
+                                            { formatMinutesToTime(order.workingHours) }
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Rozdíl: &nbsp;</td>
+                                    <td>
+                                        <p className="card-text">
+                                            <strong
+                                                className={createClassName([
+                                                    (sign === -1) ? 'text-primary' : 'text-danger',
+                                                ])}
+                                            >
+                                                { sign < 0 ? '+' : (sign === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainder)) }
+                                            </strong>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <p className="card-text">
                             {order.note}
-                        </p>
-                        <p className="card-text">
-                            {moment(order.dateFrom).format(DATA_DATE_FORMAT)}
-                            {" - "}
-                            {moment(order.dateTo).format(DATA_DATE_FORMAT)}
-                            <strong> ({formatMinutesToTime(order.workingHours)})</strong>
                         </p>
                     </React.Fragment>
                     : null

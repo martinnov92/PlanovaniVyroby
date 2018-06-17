@@ -422,10 +422,10 @@ export class OrderTable extends React.Component {
                     sign !== 0
                     ? <strong
                         className={createClassName([
-                            sign === -1 ? 'text-primary' : 'text-danger',
+                            (sign === -1) ? 'text-primary' : 'text-danger',
                         ])}
                     >
-                        {`{`}{sign === -1 ? '+' : '-'}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
+                        {`{`}{(sign === -1) ? '+' : '-'}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
                     </strong>
                     : '{' + formatMinutesToTime(Math.abs(calculateHoursRemainder)) + '}'
                 }
