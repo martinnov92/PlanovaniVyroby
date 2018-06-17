@@ -19,7 +19,7 @@ export class OrderTable extends React.Component {
         orderList: [],
         groupedOrders: [],
         moveToDate: () => {},
-        onCloseItem: () => {},
+        onCloseOrOpenItem: () => {},
     };
 
     constructor(props) {
@@ -139,17 +139,25 @@ export class OrderTable extends React.Component {
                         groupedOrders.map((commission, i) => {
                             const { orderId, done, color } = commission._info;
                             const o = orderList.find((_o) => _o.id === orderId);
+                            const buttons = [];
+
+                            if (done) {
+                                buttons.push({
+                                    label: 'Otevřít zakázku',
+                                    // znovuotevření zakázky a všech produktů
+                                    onClick: (e) => this.props.onCloseOrOpenItem(e, null, orderId, false),
+                                });
+                            } else {
+                                buttons.push({
+                                    label: 'Uzavřít zakázku',
+                                    onClick: (e) => this.props.onCloseOrOpenItem(e, null, orderId),
+                                });
+                            }
 
                             return (
                                 <ContextMenu
                                     key={orderId}
-                                    buttons={[
-                                        {
-                                            label: 'Uzavřít zakázku',
-                                            onClick: (e) => this.props.onCloseItem(e, null, orderId),
-                                        }
-                                    ]}
-                                    disabled={done}
+                                    buttons={buttons}
                                     style={{
                                         borderTop: 0,
                                         height: `${rowHeights[i]}px`,
@@ -227,23 +235,32 @@ export class OrderTable extends React.Component {
                             {
                                 orderKeys.map((objKey, i) => {
                                     const product = commission[objKey];
+                                    const buttons = [];
 
                                     if (objKey.startsWith('_')) {
                                         return null;
+                                    }
+
+                                    if (product.done) {
+                                        buttons.push({
+                                            label: 'Otevřít výrobek',
+                                            // znovuotevření zakázky a všech produktů
+                                            onClick: (e) => this.props.onCloseOrOpenItem(e, objKey, orderId, false),
+                                        });
+                                    } else {
+                                        buttons.push({
+                                            label: 'Uzavřít výrobek',
+                                            onClick: (e) => this.props.onCloseOrOpenItem(e, objKey, orderId),
+                                        });
                                     }
 
                                     return (
                                         <table key={objKey}>
                                             <tbody>
                                                 <ContextMenu
-                                                    buttons={[
-                                                        {
-                                                            label: 'Uzavřít výrobek',
-                                                            onClick: (e) => this.props.onCloseItem(e, objKey, orderId),
-                                                        }
-                                                    ]}
+                                                    buttons={buttons}
                                                     useAsTableRow={true}
-                                                    disabled={product.done}
+                                                    disabled={commission._info.done}
                                                     className={product.done ? 'product--finished' : null}
                                                 >
                                                     <td

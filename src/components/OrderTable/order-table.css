@@ -113,6 +113,11 @@
     text-decoration: line-through;
 }
 
+.product--finished > .context,
+.product--finished > .context> * {
+    text-decoration: none;
+}
+
 .order--table-settings .input-group {
     text-align: center;
 }

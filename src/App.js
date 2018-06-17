@@ -268,6 +268,7 @@ class App extends React.Component {
     }
 
     readFromLocalStorage = () => {
+        // TODO: opravit filterFinishedOrders po startu aplikace
         let columnsVisibility = window.localStorage.getItem('columnsVisibility');
         let filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
         let displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
@@ -493,18 +494,30 @@ class App extends React.Component {
 
     handleItemSave = (e, item, which) => {
         this.handleReadOnly(() => {
+            // 1. buď si zkopíruji novou položku
+            let itemCopy = {...item};
             const itemsCopy = [...this.state[which]];
             const findIndex = itemsCopy.findIndex((m) => m.id === item.id);
-    
+
             if (findIndex > -1) {
+                // 2. nebo ji nahradím starou položkou ze state
+                itemCopy = itemsCopy[findIndex];
                 itemsCopy[findIndex] = item;
             } else {
                 itemsCopy.push(item);
             }
-    
+
             this.setState({
                 [which]: itemsCopy,
-            }, this.saveToFile);
+            }, () => {
+                // kontrola, jestli se zakázka znovu otevřela
+                // kontrola, jestli upravuji zakázky, jestli už zakázka existuje (abych potom neotevíral nově vytvořenou zakázku)
+                if ((which === 'orderList' && findIndex > -1) && (itemCopy.done !== itemsCopy[findIndex].done)) {
+                    this.handleCloseOrOpenOrder(item.id, item.done);
+                } else {
+                    this.saveToFile();
+                }
+            });
         });
     }
 
@@ -709,27 +722,27 @@ class App extends React.Component {
         });
     };
 
-    handleOrderOrProductClose = (e, productName, orderId) => {
+    handleOrderOrProductOpenOrClose = (e, productName, orderId, done) => {
         if (productName == null && typeof orderId === 'string') {
-            this.handleOrderClose(orderId);
+            this.handleCloseOrOpenOrder(orderId, done);
         }
 
         if ((typeof productName === 'string') && (typeof orderId === 'string')) {
-            this.handleProductClose(productName, orderId);
+            this.handleCloseOrOpenProduct(productName, orderId, done);
         }
     }
 
-    handleOrderClose = (orderId) => {
+    handleCloseOrOpenOrder = (orderId, done = true) => {
         let orderListCopy = [...this.state.orderList];
         let setProductInOrderToDone = [...this.state.orders];
         const findOrder = orderListCopy.findIndex((o) => o.id === orderId);
 
         if (findOrder > -1) {
             const finishDate = moment().format();
-            orderListCopy[findOrder].done = true;
+            orderListCopy[findOrder].done = done;
             setProductInOrderToDone = this.state.orders.map((order) => {
                 if (order.orderId === orderId) {
-                    order.done = true;
+                    order.done = done;
                     order.finishDate = finishDate;
                 }
     
@@ -743,11 +756,11 @@ class App extends React.Component {
         }, this.saveToFile);
     }
 
-    handleProductClose = (productName, orderId) => {
+    handleCloseOrOpenProduct = (productName, orderId, done = true) => {
         const finishDate = moment().format();
         const setProductInOrderToDone = this.state.orders.map((order) => {
             if ((order.orderId === orderId) && (order.productName === productName)) {
-                order.done = true;
+                order.done = done;
                 order.finishDate = finishDate;
             }
 
@@ -901,7 +914,7 @@ class App extends React.Component {
                     groupedOrders={groupOrders}
                     moveToDate={this.handleMoveToDate}
                     columnsVisibility={columnsVisibility}
-                    onCloseItem={this.handleOrderOrProductClose}
+                    onCloseOrOpenItem={this.handleOrderOrProductOpenOrClose}
                 />
             </React.Fragment>
         );
