@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import set from 'lodash/set';
 import differenceBy from 'lodash/differenceBy';
-import { OrderPopup, SettingsPopup, CloseProductModal } from './Scenes';
+import { OrderPopup, SettingsPopup } from './Scenes';
 import {
     Calendar,
     OrderCard,
@@ -44,7 +44,6 @@ class App extends React.Component {
             groupOrders: [],
             hoverOrder: null,
             fileLoaded: false,
-            itemToBeClosed: null,
             columnsVisibility: {},
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
@@ -252,7 +251,7 @@ class App extends React.Component {
                     }, dispatchResize);
 
                     this.watchFileChanges(filePath);
-                    this.groupOrders(d.orders, d.orderList, d.filterFinishedOrders);
+                    this.groupOrders(d.orders, d.orderList, !d.filterFinishedOrders);
 
                     window.localStorage.setItem('filePath', filePath);
                 } catch (err) {
@@ -525,7 +524,7 @@ class App extends React.Component {
             this.setState({
                 open: false,
                 orders: ordersCopy,
-            }, () => this.saveToFile());
+            }, this.saveToFile);
         });
     }
 
@@ -681,7 +680,7 @@ class App extends React.Component {
                 orders: ordersCopy,
                 products: products,
                 orderList: orderListCopy,
-            }, () => this.saveToFile());
+            }, this.saveToFile);
             this.resetOrderState();
         });
     }
@@ -705,25 +704,33 @@ class App extends React.Component {
                 open: false,
                 orders: orders,
                 hoverOrder: null,
-            }, () => this.saveToFile());
+            }, this.saveToFile);
             this.resetOrderState();
         });
     };
 
-    handleOrderClose = (date) => {
-        const { orderId } = this.state.itemToBeClosed;
-        const formatedDate = moment(date).format();
+    handleOrderOrProductClose = (e, productName, orderId) => {
+        if (productName == null && typeof orderId === 'string') {
+            this.handleOrderClose(orderId);
+        }
 
+        if ((typeof productName === 'string') && (typeof orderId === 'string')) {
+            this.handleProductClose(productName, orderId);
+        }
+    }
+
+    handleOrderClose = (orderId) => {
         let orderListCopy = [...this.state.orderList];
         let setProductInOrderToDone = [...this.state.orders];
         const findOrder = orderListCopy.findIndex((o) => o.id === orderId);
 
         if (findOrder > -1) {
+            const finishDate = moment().format();
             orderListCopy[findOrder].done = true;
             setProductInOrderToDone = this.state.orders.map((order) => {
                 if (order.orderId === orderId) {
                     order.done = true;
-                    order.finishDate = formatedDate;
+                    order.finishDate = finishDate;
                 }
     
                 return order;
@@ -731,38 +738,23 @@ class App extends React.Component {
         }
 
         this.setState({
-            itemToBeClosed: null,
             orderList: orderListCopy,
             orders: setProductInOrderToDone,
-        }, () => this.saveToFile());
+        }, this.saveToFile);
     }
 
-    displayProductCloseModal = (e, productName, orderId) => {
-        this.handleReadOnly(() => {
-            this.setState({
-                itemToBeClosed: {
-                    orderId,
-                    productName,
-                },
-            });
-        });
-    }
-
-    handleProductClose = (date) => {
-        const formatedDate = moment(date).format();
-        const { orderId, productName } = this.state.itemToBeClosed;
-
+    handleProductClose = (productName, orderId) => {
+        const finishDate = moment().format();
         const setProductInOrderToDone = this.state.orders.map((order) => {
             if ((order.orderId === orderId) && (order.productName === productName)) {
                 order.done = true;
-                order.finishDate = formatedDate;
+                order.finishDate = finishDate;
             }
 
             return order;
         });
 
         this.setState({
-            itemToBeClosed: null,
             orders: setProductInOrderToDone,
         }, this.saveToFile);
     }
@@ -789,14 +781,19 @@ class App extends React.Component {
         let name = e.target.name;
         let checked = e.target.checked;
 
-        if (e.target.name === 'filterFinishedOrders') {
-            checked = !e.target.checked;
+        if (name === 'filterFinishedOrders') {
+            checked = !checked;
         }
 
         this.setState({
             [e.target.name]: checked,
         }, () => {
-            dispatchResize();
+            if (name === 'filterFinishedOrders') {
+                this.groupOrders(this.state.orders, this.state.orderList, this.state.filterFinishedOrders);
+            } else {
+                dispatchResize();
+            }
+
             window.localStorage.setItem(name, checked);
         });
     }
@@ -826,7 +823,6 @@ class App extends React.Component {
             groupOrders,
             startOfTheWeek,
             columnsVisibility,
-            filterFinishedOrders,
             displayOrdersInEvents,
         } = this.state;
 
@@ -905,9 +901,7 @@ class App extends React.Component {
                     groupedOrders={groupOrders}
                     moveToDate={this.handleMoveToDate}
                     columnsVisibility={columnsVisibility}
-                    filterFinishedOrders={filterFinishedOrders}
-                    onCloseOrder={this.displayProductCloseModal}
-                    onProductClose={this.displayProductCloseModal}
+                    onCloseItem={this.handleOrderOrProductClose}
                 />
             </React.Fragment>
         );
@@ -923,7 +917,6 @@ class App extends React.Component {
             orderList,
             hoverOrder,
             currentWeek,
-            itemToBeClosed,
             columnsVisibility,
             filterFinishedOrders,
             sameOperationRestTime,
@@ -1004,20 +997,6 @@ class App extends React.Component {
                         handleColumnVisibility={this.handleColumnVisibility}
                     />
                 }
-
-                {
-                    itemToBeClosed
-                    ? <CloseProductModal
-                        product={!!itemToBeClosed.productName}
-                        onCancel={() => this.setState({ itemToBeClosed: null })}
-                        onConfirm={
-                            itemToBeClosed.productName
-                            ? (date) => this.handleProductClose(date)
-                            : (date) => this.handleOrderClose(date)
-                        }
-                    />
-                    : null
-                }
             </div>
         );
     }
@@ -1035,7 +1014,6 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
-            itemToBeClosed: null,
             columnsVisibility: {},
             sameOperationRestTime: 0,
             displayOrdersInEvents: true,

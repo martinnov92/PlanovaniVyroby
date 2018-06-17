@@ -19,7 +19,7 @@ export class OrderTable extends React.Component {
         orderList: [],
         groupedOrders: [],
         moveToDate: () => {},
-        onCloseOrder: () => {},
+        onCloseItem: () => {},
     };
 
     constructor(props) {
@@ -146,7 +146,7 @@ export class OrderTable extends React.Component {
                                     buttons={[
                                         {
                                             label: 'Uzavřít zakázku',
-                                            onClick: (e) => this.props.onCloseOrder(e, null, orderId, false),
+                                            onClick: (e) => this.props.onCloseItem(e, null, orderId),
                                         }
                                     ]}
                                     disabled={done}
@@ -239,7 +239,7 @@ export class OrderTable extends React.Component {
                                                     buttons={[
                                                         {
                                                             label: 'Uzavřít výrobek',
-                                                            onClick: (e) => this.props.onProductClose(e, objKey, orderId),
+                                                            onClick: (e) => this.props.onCloseItem(e, objKey, orderId),
                                                         }
                                                     ]}
                                                     useAsTableRow={true}
