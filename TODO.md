@@ -9,7 +9,7 @@
     X přidat volbu pro 7. operaci - Kooperace (stačí zapsat počet kusů, časy tam být nemusí, skrývat je?), označit výrobek že se jedná o kooperaci
     X do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
     X po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
-    - povolit znovuotevření zakázek a výrobků
+    X povolit znovuotevření zakázek a výrobků
     - zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
     - změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
 
