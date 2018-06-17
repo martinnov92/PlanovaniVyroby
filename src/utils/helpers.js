@@ -81,7 +81,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
             let groupedProduct = groupedByProducts[order][product];
             // poslední den, kdy se pracuje na výrobku
             let lastWorkingDate = Math.max(...groupedProduct.map((product) => {
-                const d = new Date(product.dateFrom);
+                const d = new Date(product.dateTo);
 
                 return d.getTime();
             }));

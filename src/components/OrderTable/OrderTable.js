@@ -256,61 +256,40 @@ export class OrderTable extends React.Component {
                                                     >
                                                         <Tooltip
                                                             title={
-                                                                product.operation && product.operation.length > 0
+                                                                product.coop
                                                                 ? <div>
+                                                                    <p>
+                                                                        Kooperace
+                                                                        { cooperation.note ? ` - ${cooperation.note}` : null }
+                                                                    </p>
                                                                     {
-                                                                        product.coop
+                                                                        cooperation
                                                                         ? <React.Fragment>
                                                                             <p>
-                                                                                Kooperace
-                                                                                { cooperation.note ? ` - ${cooperation.note}` : null }
+                                                                                <strong>Náplánováno ve dnech:</strong>
                                                                             </p>
-
-                                                                            {
-                                                                                cooperation
-                                                                                ? <React.Fragment>
-                                                                                    <p>
-                                                                                        <strong>Náplánováno ve dnech:</strong>
-                                                                                    </p>
-                                                                                    <div className="area--dates">
-                                                                                        <ul>
-                                                                                            {
-                                                                                                cooperation.dates.map((date) => {
-                                                                                                    return <li key={date}>
-                                                                                                        <button
-                                                                                                            className="btn btn-link text-dark"
-                                                                                                            onClick={() => this.props.moveToDate(date)}
-                                                                                                        >
-                                                                                                            { moment(date).format(DATA_DATE_FORMAT) }
-                                                                                                        </button>
-                                                                                                    </li>;
-                                                                                                })
-                                                                                            }
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </React.Fragment>
-                                                                                : null
-                                                                            }
+                                                                            <div className="area--dates">
+                                                                                <ul>
+                                                                                    {
+                                                                                        cooperation.dates.map((date) => {
+                                                                                            return <li key={date}>
+                                                                                                <button
+                                                                                                    className="btn btn-link text-dark"
+                                                                                                    onClick={() => this.props.moveToDate(date)}
+                                                                                                >
+                                                                                                    { moment(date).format(DATA_DATE_FORMAT) }
+                                                                                                </button>
+                                                                                            </li>;
+                                                                                        })
+                                                                                    }
+                                                                                </ul>
+                                                                            </div>
                                                                         </React.Fragment>
-                                                                        : <ul>
-                                                                            {
-                                                                                product.operation.map((op) => {
-                                                                                    if (op.order === '-') return null;
-
-                                                                                    return (
-                                                                                        <li key={op.order}>
-                                                                                            {op.order}. operace
-                                                                                            {op.note ? ` - ${op.note}` : null}
-                                                                                        </li>
-                                                                                    );
-                                                                                })
-                                                                            }
-                                                                        </ul>
+                                                                        : null
                                                                     }
                                                                 </div>
                                                                 : null
                                                             }
-                                                            pointerEvents={false}
                                                         >
                                                             {
                                                                 product.coop
