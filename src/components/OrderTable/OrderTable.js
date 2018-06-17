@@ -227,12 +227,6 @@ export class OrderTable extends React.Component {
                             {
                                 orderKeys.map((objKey, i) => {
                                     const product = commission[objKey];
-                                    let cooperation = {};
-
-                                    if (product && product.operation) {
-                                         // najít kooperaci
-                                        cooperation = product.operation.find((o) => o.order == '7');
-                                    }
 
                                     if (objKey.startsWith('_')) {
                                         return null;
@@ -256,52 +250,22 @@ export class OrderTable extends React.Component {
                                                         title={objKey}
                                                         style={createStyleObject(thWidth['order'], false)}
                                                     >
-                                                        <Tooltip
-                                                            title={
-                                                                product.coop
-                                                                ? <div>
-                                                                    <p>
-                                                                        Kooperace
-                                                                        { cooperation.note ? ` - ${cooperation.note}` : null }
-                                                                    </p>
-                                                                    {
-                                                                        cooperation
-                                                                        ? <React.Fragment>
-                                                                            <p>
-                                                                                <strong>Náplánováno ve dnech:</strong>
-                                                                            </p>
-                                                                            <div className="area--dates">
-                                                                                <ul>
-                                                                                    {
-                                                                                        cooperation.dates.map((date) => {
-                                                                                            return <li key={date}>
-                                                                                                <button
-                                                                                                    className="btn btn-link text-dark"
-                                                                                                    onClick={() => this.props.moveToDate(date)}
-                                                                                                >
-                                                                                                    { moment(date).format(DATA_DATE_FORMAT) }
-                                                                                                </button>
-                                                                                            </li>;
-                                                                                        })
-                                                                                    }
-                                                                                </ul>
-                                                                            </div>
-                                                                        </React.Fragment>
-                                                                        : null
-                                                                    }
-                                                                </div>
-                                                                : null
-                                                            }
-                                                        >
-                                                            {
-                                                                product.coop
-                                                                ? <strong className="text-danger product--coop">
-                                                                    * &nbsp;
-                                                                </strong>
-                                                                : null
-                                                            }
-                                                            { objKey }
-                                                        </Tooltip>
+                                                        {
+                                                            product.coop
+                                                            ? <Tooltip
+                                                                title={this.renderOrderTooltip(product)}
+                                                            >
+                                                                {
+                                                                    product.coop
+                                                                    ? <strong className="text-danger product--coop">
+                                                                        * &nbsp;
+                                                                    </strong>
+                                                                    : null
+                                                                }
+                                                                { objKey }
+                                                            </Tooltip>
+                                                            : objKey
+                                                        }
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['count'], false)}
@@ -450,7 +414,54 @@ export class OrderTable extends React.Component {
                 }
             </Tooltip>
         );
-    } 
+    }
+
+    renderOrderTooltip = (product) => {
+        if (!product.coop) {
+            return null;
+        }
+
+        let cooperation = {};
+
+        if (product && product.operation) {
+             // najít kooperaci
+            cooperation = product.operation.find((o) => o.order == '7');
+        }
+
+        return (
+            <div>
+                <p>
+                    Kooperace
+                    { cooperation.note ? ` - ${cooperation.note}` : null }
+                </p>
+                {
+                    cooperation
+                    ? <React.Fragment>
+                        <p>
+                            <strong>Náplánováno ve dnech:</strong>
+                        </p>
+                        <div className="area--dates">
+                            <ul>
+                                {
+                                    cooperation.dates.map((date) => {
+                                        return <li key={date}>
+                                            <button
+                                                className="btn btn-link text-dark"
+                                                onClick={() => this.props.moveToDate(date)}
+                                            >
+                                                { moment(date).format(DATA_DATE_FORMAT) }
+                                            </button>
+                                        </li>;
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </React.Fragment>
+                    : null
+                }
+            </div>
+        );
+    }
 
     render() {
         const divStyle = {};
@@ -507,70 +518,22 @@ export class OrderTable extends React.Component {
                                     Ks.
                                 </th>
                                 {
-                                    (columnsVisibility['1'] === true) || (columnsVisibility['1'] == undefined)
-                                    ? <th
-                                        scope="col"
-                                        data-column="1"
-                                        className="table--orders-operation-column"
-                                    >
-                                        1.o ks/čas
-                                    </th>
-                                    : null
-                                }
-                                {
-                                    (columnsVisibility['2'] === true) || (columnsVisibility['2'] == undefined)
-                                    ? <th
-                                        scope="col"
-                                        data-column="2"
-                                        className="table--orders-operation-column"
-                                    >
-                                        2.o ks/čas
-                                    </th>
-                                    : null
-                                }
-                                {
-                                    (columnsVisibility['3'] === true) || (columnsVisibility['3'] == undefined)
-                                    ? <th
-                                        scope="col"
-                                        data-column="3"
-                                        className="table--orders-operation-column"
-                                    >
-                                        3.o ks/čas
-                                    </th>
-                                    : null
-                                }
-                                {
-                                    (columnsVisibility['4'] === true) || (columnsVisibility['4'] == undefined)
-                                    ? <th
-                                        scope="col"
-                                        data-column="4"
-                                        className="table--orders-operation-column"
-                                    >
-                                        4.o ks/čas
-                                    </th>
-                                    : null
-                                }
-                                {
-                                    (columnsVisibility['5'] === true) || (columnsVisibility['5'] == undefined)
-                                    ? <th
-                                        scope="col"
-                                        data-column="5"
-                                        className="table--orders-operation-column"
-                                    >
-                                        5.o ks/čas
-                                    </th>
-                                    : null
-                                }
-                                {
-                                    (columnsVisibility['6'] === true) || (columnsVisibility['6'] == undefined)
-                                    ? <th
-                                        scope="col"
-                                        data-column="6"
-                                        className="table--orders-operation-column"
-                                    >
-                                        6.o ks/čas
-                                    </th>
-                                    : null
+                                    OPERATION_COLUMNS.map((column) => {
+                                        if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
+                                            return (
+                                                <th
+                                                    scope="col"
+                                                    key={column}
+                                                    data-column={column}
+                                                    className="table--orders-operation-column"
+                                                >
+                                                    {column}.o ks/čas
+                                                </th>
+                                            )
+                                        }
+
+                                        return null;
+                                    })
                                 }
                                 <th
                                     scope="col"
