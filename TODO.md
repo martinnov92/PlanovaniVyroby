@@ -11,9 +11,9 @@
     X po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
     - zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
     - změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
+    - povolit znovuotevření zakázek a výrobků
 
     - špatné výpočty zbývajícího času v OrderPopup
-    - povolit znovuotevření zakázek a výrobků
     - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
 
     X přidat možnost skrytí sloupců

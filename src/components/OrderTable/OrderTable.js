@@ -12,6 +12,8 @@ import {
 
 import './order-table.css';
 
+const OPERATION_COLUMNS = ['1', '2', '3', '4', '5', '6'];
+
 export class OrderTable extends React.Component {
     static defaultProps = {
         orderList: [],
@@ -307,58 +309,22 @@ export class OrderTable extends React.Component {
                                                         {product.totalCount}
                                                     </td>
                                                     {
-                                                        (columnsVisibility['1'] === true) || (columnsVisibility['1'] == undefined)
-                                                        ? <td
-                                                            style={createStyleObject(thWidth['1'])}
-                                                        >
-                                                            {this.renderOperationCell(product.operation, 1)}
-                                                        </td>
-                                                        : null
-                                                    }
-                                                    {
-                                                        (columnsVisibility['2'] === true) || (columnsVisibility['2'] == undefined)
-                                                        ? <td
-                                                            style={createStyleObject(thWidth['2'])}
-                                                        >
-                                                            {this.renderOperationCell(product.operation, 2)}
-                                                        </td>
-                                                        : null
-                                                    }
-                                                    {
-                                                        (columnsVisibility['3'] === true) || (columnsVisibility['3'] == undefined)
-                                                        ? <td
-                                                            style={createStyleObject(thWidth['3'])}
-                                                        >
-                                                            {this.renderOperationCell(product.operation, 3)}
-                                                        </td>
-                                                        : null
-                                                    }
-                                                    {
-                                                        (columnsVisibility['4'] === true) || (columnsVisibility['4'] == undefined)
-                                                        ? <td
-                                                            style={createStyleObject(thWidth['4'])}
-                                                        >
-                                                            {this.renderOperationCell(product.operation, 4)}
-                                                        </td>
-                                                        : null
-                                                    }
-                                                    {
-                                                        (columnsVisibility['5'] === true) || (columnsVisibility['5'] == undefined)
-                                                        ? <td
-                                                            style={createStyleObject(thWidth['5'])}
-                                                        >
-                                                            {this.renderOperationCell(product.operation, 5)}
-                                                        </td>
-                                                        : null
-                                                    }
-                                                    {
-                                                        (columnsVisibility['6'] === true) || (columnsVisibility['6'] == undefined)
-                                                        ? <td
-                                                            style={createStyleObject(thWidth['6'])}
-                                                        >
-                                                            {this.renderOperationCell(product.operation, 6)}
-                                                        </td>
-                                                        : null
+                                                        OPERATION_COLUMNS.map((column) => {
+                                                            if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
+                                                                return (
+                                                                    <td
+                                                                        key={column}
+                                                                        style={createStyleObject(thWidth[column])}
+                                                                    >
+                                                                        {
+                                                                            this.renderOperationCell(product.operation, Number(column))
+                                                                        }
+                                                                    </td>
+                                                                );
+                                                            }
+
+                                                            return null;
+                                                        })
                                                     }
                                                     <td
                                                         style={createStyleObject(thWidth['lastWorkingDate'], false)}
