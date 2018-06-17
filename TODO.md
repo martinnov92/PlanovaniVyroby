@@ -16,6 +16,7 @@
     - špatné výpočty zbývajícího času v OrderPopup
     - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
 
+    X - zjednodušit výpis operačních sloupců v render table, použil jsem const se sloupci, které pak mapuji
     X přidat možnost skrytí sloupců
     X ukládat nastavení aplikace do localStorage a ne do souboru
     X zůžit sloupce a roztáhnout sloupce s operacemi

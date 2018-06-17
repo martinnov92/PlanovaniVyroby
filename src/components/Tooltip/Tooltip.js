@@ -92,44 +92,46 @@ export class Tooltip extends React.Component {
         let tooltipPositionObj = {};
         let tooltipPositionStr = '';
 
-        if (stateItem === 'toggleTooltip') {
-            const tooltipRect = this.tooltip.current.getBoundingClientRect();
-            const parentRect = this.parentDiv.current.getBoundingClientRect();
-
-            if (parentRect.bottom > (window.innerHeight - tooltipRect.height)) {
-                // tooltip on top
-                tooltipPositionStr = 'top';
-
-                tooltipPositionObj = {
-                    left: parentRect.left - (tooltipRect.width / 2) + (parentRect.width / 2) + "px",
-                    top: parentRect.top - ((parentRect.height / 2) + (tooltipRect.height)) + "px",
-                };
-            } else if (tooltipRect.width > parentRect.left) {
-                // tooltip on right
-                tooltipPositionStr = 'right';
-
-                tooltipPositionObj = {
-                    left: parentRect.right + 5 + "px", //5 == width of arrow
-                    top: parentRect.top + ((parentRect.height / 2) - (tooltipRect.height / 2)) + "px"
-                };
-            } else if (tooltipRect.width > (window.innerWidth - parentRect.right)) {
-                // tooltip on left
-                tooltipPositionStr = 'left';
-
-                tooltipPositionObj = {
-                    left: parentRect.left - tooltipRect.width - 5 + "px", //5 == width of arrow
-                    top: parentRect.top + ((parentRect.height / 2) - (tooltipRect.height / 2)) + "px"
-                };
-            } else {
-                // default on bottom
-                tooltipPositionStr = 'bottom';
-
-                tooltipPositionObj = {
-                    left: parentRect.left - (tooltipRect.width / 2) + (parentRect.width / 2) + "px",
-                    top: parentRect.bottom + "px"
-                };
+        try {
+            if (stateItem === 'toggleTooltip') {
+                const tooltipRect = this.tooltip.current.getBoundingClientRect();
+                const parentRect = this.parentDiv.current.getBoundingClientRect();
+    
+                if (parentRect.bottom > (window.innerHeight - tooltipRect.height)) {
+                    // tooltip on top
+                    tooltipPositionStr = 'top';
+    
+                    tooltipPositionObj = {
+                        left: parentRect.left - (tooltipRect.width / 2) + (parentRect.width / 2) + "px",
+                        top: parentRect.top - ((parentRect.height / 2) + (tooltipRect.height)) + "px",
+                    };
+                } else if (tooltipRect.width > parentRect.left) {
+                    // tooltip on right
+                    tooltipPositionStr = 'right';
+    
+                    tooltipPositionObj = {
+                        left: parentRect.right + 5 + "px", //5 == width of arrow
+                        top: parentRect.top + ((parentRect.height / 2) - (tooltipRect.height / 2)) + "px"
+                    };
+                } else if (tooltipRect.width > (window.innerWidth - parentRect.right)) {
+                    // tooltip on left
+                    tooltipPositionStr = 'left';
+    
+                    tooltipPositionObj = {
+                        left: parentRect.left - tooltipRect.width - 5 + "px", //5 == width of arrow
+                        top: parentRect.top + ((parentRect.height / 2) - (tooltipRect.height / 2)) + "px"
+                    };
+                } else {
+                    // default on bottom
+                    tooltipPositionStr = 'bottom';
+    
+                    tooltipPositionObj = {
+                        left: parentRect.left - (tooltipRect.width / 2) + (parentRect.width / 2) + "px",
+                        top: parentRect.bottom + "px"
+                    };
+                }
             }
-        }
+        } catch (err) {}
 
         this.setState({
             [stateItem]: !this.state[stateItem],
