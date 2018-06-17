@@ -225,6 +225,12 @@ export class OrderTable extends React.Component {
                             {
                                 orderKeys.map((objKey, i) => {
                                     const product = commission[objKey];
+                                    let cooperation = {};
+
+                                    if (product && product.operation) {
+                                         // najít kooperaci
+                                        cooperation = product.operation.find((o) => o.order == '7');
+                                    }
 
                                     if (objKey.startsWith('_')) {
                                         return null;
@@ -254,7 +260,38 @@ export class OrderTable extends React.Component {
                                                                 ? <div>
                                                                     {
                                                                         product.coop
-                                                                        ? <p>Kooperace</p>
+                                                                        ? <React.Fragment>
+                                                                            <p>
+                                                                                Kooperace
+                                                                                { cooperation.note ? ` - ${cooperation.note}` : null }
+                                                                            </p>
+
+                                                                            {
+                                                                                cooperation
+                                                                                ? <React.Fragment>
+                                                                                    <p>
+                                                                                        <strong>Náplánováno ve dnech:</strong>
+                                                                                    </p>
+                                                                                    <div className="area--dates">
+                                                                                        <ul>
+                                                                                            {
+                                                                                                cooperation.dates.map((date) => {
+                                                                                                    return <li key={date}>
+                                                                                                        <button
+                                                                                                            className="btn btn-link text-dark"
+                                                                                                            onClick={() => this.props.moveToDate(date)}
+                                                                                                        >
+                                                                                                            { moment(date).format(DATA_DATE_FORMAT) }
+                                                                                                        </button>
+                                                                                                    </li>;
+                                                                                                })
+                                                                                            }
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </React.Fragment>
+                                                                                : null
+                                                                            }
+                                                                        </React.Fragment>
                                                                         : <ul>
                                                                             {
                                                                                 product.operation.map((op) => {
