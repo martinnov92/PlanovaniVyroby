@@ -10,8 +10,8 @@
     X do tooltipu v OrderTable vypsat datum(y) operací, aby věděli, kde to hledat + připsat popis operace
     X po najetí myší na název výrobku zobrazit informace v tooltipu (jedná se o kooperaci, nebo seznam operací i s popiskem)
     X povolit znovuotevření zakázek a výrobků
-    - změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
-    - zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
+    X změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
+    X zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
 
     - špatné výpočty zbývajícího času v OrderPopup
     - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů

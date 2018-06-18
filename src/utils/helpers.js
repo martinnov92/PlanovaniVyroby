@@ -217,7 +217,11 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                                 // pokud je tam víc stejných operací s různými popisky, tak je spojím
 
                                 if (note != used.note) {
-                                    noteCopy += ', ' + note;
+                                    if (!noteCopy) {
+                                        noteCopy = note;
+                                    } else {
+                                        noteCopy += ', ' + note;
+                                    }
                                 }
 
                                 // a pokud je, tak nastav tu větší jako hlavní
