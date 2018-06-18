@@ -433,11 +433,23 @@ export function dispatchResize() {
 }
 
 export function checkForBoolean (item) {
+    let res = item;
+
     if (checkForBoolean == undefined) {
         return false;
     }
 
-    return item;
+    if (typeof item === 'string') {
+        if (item === 'false') {
+            res = false;
+        }
+
+        if (item === 'true') {
+            res = true;
+        }
+    }
+
+    return res;
 }
 
 export const createStyleObject = (width, maxWidth = true) => ({

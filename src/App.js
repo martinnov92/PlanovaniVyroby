@@ -251,7 +251,7 @@ class App extends React.Component {
                     }, dispatchResize);
 
                     this.watchFileChanges(filePath);
-                    this.groupOrders(d.orders, d.orderList, !d.filterFinishedOrders);
+                    this.groupOrders(d.orders, d.orderList, this.state.filterFinishedOrders);
 
                     window.localStorage.setItem('filePath', filePath);
                 } catch (err) {
@@ -268,7 +268,6 @@ class App extends React.Component {
     }
 
     readFromLocalStorage = () => {
-        // TODO: opravit filterFinishedOrders po startu aplikace
         let columnsVisibility = window.localStorage.getItem('columnsVisibility');
         let filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
         let displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
@@ -793,11 +792,7 @@ class App extends React.Component {
     handleSettingsChange = (e) => {
         let name = e.target.name;
         let checked = e.target.checked;
-
-        if (name === 'filterFinishedOrders') {
-            checked = !checked;
-        }
-
+        console.log(e.target.checked);
         this.setState({
             [e.target.name]: checked,
         }, () => {

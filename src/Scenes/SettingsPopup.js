@@ -102,7 +102,7 @@ export class SettingsPopup extends React.Component {
                                         type="checkbox"
                                         id="filterFinishedOrders"
                                         name="filterFinishedOrders"
-                                        checked={!filterFinishedOrders}
+                                        checked={filterFinishedOrders}
                                         onChange={handleSettingsChange}
                                     />
                                 </div>
@@ -111,7 +111,7 @@ export class SettingsPopup extends React.Component {
                                 className="form-control"
                                 htmlFor="filterFinishedOrders"
                             >
-                                Zobrazit dokončené zakázky
+                                Skrýt dokončené zakázky
                             </label>
                         </div>
                         {/* Nastavení sloupců v tabulce */}
