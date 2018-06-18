@@ -71,20 +71,22 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
              *      },
              * }
              */
+            // poslední den, kdy se pracuje na výrobku
+            const groupedProduct = groupedByProducts[order][product];
+            const lastWorkingDate = Math.max(...groupedProduct.map((product) => {
+                const d = new Date(product.dateTo);
+                return d.getTime();
+            }));
+
             commission[product] = {
                 operation: [],
                 totalCount: 0,
                 totalWorkingTime: 0,
                 totalOperationTime: 0,
+                lastWorkingDate: lastWorkingDate,
+                done: (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false,
             };
-
-            let groupedProduct = groupedByProducts[order][product];
-            // poslední den, kdy se pracuje na výrobku
-            let lastWorkingDate = Math.max(...groupedProduct.map((product) => {
-                const d = new Date(product.dateTo);
-
-                return d.getTime();
-            }));
+            const groupedOrder = commission[product];
 
             for (let operation in groupedProduct) {
                 // ! získání největšího čísla z operation
@@ -110,9 +112,6 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                  */
                 const usedOperation = {};
                 const workingHoursForOperation = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, };
-                const groupedOrder = commission[product];
-                groupedOrder.done = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false;
-                groupedOrder.lastWorkingDate = lastWorkingDate;
 
                 if (groupedProduct[operation].operation) {
                     const totalTime = groupedProduct.reduce((prev, current) => {
