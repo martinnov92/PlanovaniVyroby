@@ -5,7 +5,6 @@
   - spustit pomocí `yarn dev`
   1. build: `yarn build-mac` (spustí se i build React)
 
-
 # Windows
 
   - spustit pomocí `yarn start` a `yarn electron`
@@ -29,7 +28,7 @@
     X změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
     X zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
     X špatné výpočty zbývajícího času v OrderPopup
-    - 
+    - aplikace spadne, pokud najedu na ukončenou zakázku a mám skryté dokončené zakázky
     - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
     X - zjednodušit výpis operačních sloupců v render table, použil jsem const se sloupci, které pak mapuji
     X přidat možnost skrytí sloupců

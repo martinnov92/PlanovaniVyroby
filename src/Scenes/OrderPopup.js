@@ -10,6 +10,7 @@ export class OrderPopup extends React.Component {
         products: [],
         footerButtons: () => {},
         sameOperationRestTime: 0,
+        filterFinishedOrders: false,
     };
 
     render() {
@@ -21,6 +22,12 @@ export class OrderPopup extends React.Component {
         } = this.props;
 
         const disabled = order.done;
+
+        let orderList = this.props.orderList.filter((o) => !o.done);
+        if (!this.props.filterFinishedOrders) {
+            orderList = [...this.props.orderList];
+        }
+
         const restTimeSign = Math.sign(sameOperationRestTime);
         const sameOperationRemainderTime = Math.abs(sameOperationRestTime);
 
@@ -65,11 +72,12 @@ export class OrderPopup extends React.Component {
                                 </option>
                                 <option value="-" />
                                 {
-                                    this.props.orderList.filter((o) => !o.done).map((order) => {
+                                    orderList.map((order) => {
                                         return (
                                             <option
                                                 key={order.id}
                                                 value={order.id}
+                                                disabled={order.done}
                                             >
                                                 {order.name}
                                             </option>

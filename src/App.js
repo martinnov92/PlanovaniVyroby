@@ -966,6 +966,7 @@ class App extends React.Component {
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             handleInputChange={this.handleInputChange}
+                            filterFinishedOrders={filterFinishedOrders}
                             sameOperationRestTime={sameOperationRestTime}
                         />
                     }
