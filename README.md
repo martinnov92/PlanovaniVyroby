@@ -15,6 +15,7 @@
 
   ## Bugy a dodělávky
 
+    - opravit první spuštění bez nastavení skrytých sloupců
     X zmenšit písmo v tabulce, nižší řádky, padding, ...
     X červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
     X tooltip s časem přesunout pod událost (ne nad)
@@ -28,8 +29,8 @@
     X změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
     X zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
     X špatné výpočty zbývajícího času v OrderPopup
-    - aplikace spadne, pokud najedu na ukončenou zakázku a mám skryté dokončené zakázky
-    - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
+    X aplikace spadne, pokud najedu na ukončenou zakázku a mám skryté dokončené zakázky
+    X zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
     X - zjednodušit výpis operačních sloupců v render table, použil jsem const se sloupci, které pak mapuji
     X přidat možnost skrytí sloupců
     X ukládat nastavení aplikace do localStorage a ne do souboru
