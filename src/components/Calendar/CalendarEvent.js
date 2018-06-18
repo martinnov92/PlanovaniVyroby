@@ -234,6 +234,7 @@ export class CalendarEvent extends React.Component {
             <ContextMenu
                 key={event.id}
                 buttons={buttons}
+                disabled={event.done}
                 onOpen={this.props.onContextOpen}
                 onClose={this.props.onContextClose}
             >

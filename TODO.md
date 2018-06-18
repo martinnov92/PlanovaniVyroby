@@ -12,10 +12,8 @@
     X povolit znovuotevření zakázek a výrobků
     X změnit uspořádání informací v popupu s informací o události (po najetí na eventu v kalendáři)
     X zobrazit naplánovou a skutečnou dobu do náhledu (vztahuje se pouze pro danou eventu)
-
-    - špatné výpočty zbývajícího času v OrderPopup
+    X špatné výpočty zbývajícího času v OrderPopup
     - zkontrolovat groupování zakázka v helpers, jestli se něco nepočítá zbytečně několikrát + kontrola toho jak ukládám info do objektů
-
     X - zjednodušit výpis operačních sloupců v render table, použil jsem const se sloupci, které pak mapuji
     X přidat možnost skrytí sloupců
     X ukládat nastavení aplikace do localStorage a ne do souboru
