@@ -24,6 +24,14 @@ import sync from './statics/sync.svg';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
+const COLUMNS_VISIBILITY = {
+    '1': true,
+    '2': true,
+    '3': true,
+    '4': true,
+    '5': true,
+    '6': true,
+};
 
 class App extends React.Component {
     constructor(props) {
@@ -44,12 +52,12 @@ class App extends React.Component {
             groupOrders: [],
             hoverOrder: null,
             fileLoaded: false,
-            columnsVisibility: {},
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             displayOrdersInEvents: true,
             startOfTheWeek: startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
+            columnsVisibility: COLUMNS_VISIBILITY,
         };
 
         this.timeout = null;
@@ -277,9 +285,9 @@ class App extends React.Component {
         }
 
         this.setState({
-            columnsVisibility,
             filterFinishedOrders,
             displayOrdersInEvents,
+            columnsVisibility: columnsVisibility || COLUMNS_VISIBILITY,
         });
     }
 
