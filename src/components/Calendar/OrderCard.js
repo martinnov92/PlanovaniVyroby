@@ -167,7 +167,6 @@ export class OrderCard extends React.Component {
                                             >
                                                 { signCurrentEvent < 0 ? '+' : (signCurrentEvent === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentEvent)) }
                                             </strong>
-                                            {` (vybraná)`}
                                             {` / `}
                                             <strong
                                                 className={createClassName([
