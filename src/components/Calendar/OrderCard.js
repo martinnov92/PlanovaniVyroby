@@ -41,11 +41,11 @@ export class OrderCard extends React.Component {
         } catch (err) {}
 
         const groupedOrder = groupedOrders.find((o) => o._info.orderId === order.orderId);
-        const groupedOrderProduct = groupedOrder[order.productName];
 
         // výpočet zbývajícího času z groupovaných zakázek
         let remainderCurrentProduct = 0;
-        if (groupedOrderProduct) {
+        if (groupedOrder && groupedOrder[order.productName]) {
+            const groupedOrderProduct = groupedOrder[order.productName];
             const groupedOperation = order.operation ? groupedOrderProduct.operation.find((operation) => operation.order == order.operation.order) : null;
 
             if (groupedOperation) {
@@ -156,29 +156,33 @@ export class OrderCard extends React.Component {
                                         </p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Rozdíl: &nbsp;</td>
-                                    <td>
-                                        <p className="card-text">
-                                            <strong
-                                                className={createClassName([
-                                                    (signCurrentEvent <= 0) ? 'text-primary' : 'text-danger',
-                                                ])}
-                                            >
-                                                { signCurrentEvent < 0 ? '+' : (signCurrentEvent === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentEvent)) }
-                                            </strong>
-                                            {` / `}
-                                            <strong
-                                                className={createClassName([
-                                                    (signCurrentOrderProduct <= 0) ? 'text-primary' : 'text-danger',
-                                                ])}
-                                            >
-                                                { signCurrentOrderProduct < 0 ? '+' : (signCurrentOrderProduct === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentProduct)) }
-                                            </strong>
-                                            {` (celkový rozdíl)`}
-                                        </p>
-                                    </td>
-                                </tr>
+                                {
+                                    order.done
+                                    ? null
+                                    : <tr>
+                                        <td>Rozdíl: &nbsp;</td>
+                                        <td>
+                                            <p className="card-text">
+                                                <strong
+                                                    className={createClassName([
+                                                        (signCurrentEvent <= 0) ? 'text-primary' : 'text-danger',
+                                                    ])}
+                                                >
+                                                    { signCurrentEvent < 0 ? '+' : (signCurrentEvent === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentEvent)) }
+                                                </strong>
+                                                {` / `}
+                                                <strong
+                                                    className={createClassName([
+                                                        (signCurrentOrderProduct <= 0) ? 'text-primary' : 'text-danger',
+                                                    ])}
+                                                >
+                                                    { signCurrentOrderProduct < 0 ? '+' : (signCurrentOrderProduct === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentProduct)) }
+                                                </strong>
+                                                {` (celkový rozdíl)`}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                         <p className="card-text">
