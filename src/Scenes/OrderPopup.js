@@ -261,6 +261,7 @@ export class OrderPopup extends React.Component {
                             </div>
                             <input
                                 type="text"
+                                disabled={disabled}
                                 name="operation.note"
                                 className="form-control"
                                 value={order.operation.note || ''}
