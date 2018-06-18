@@ -91,7 +91,7 @@ export class OrderCard extends React.Component {
                                     { order.operation.note ? ` - ${order.operation.note}` : '' }
                                 </p>
 
-                                <table>
+                                <table className="table table-sm">
                                     <tbody>
                                         <tr>
                                             <td>
