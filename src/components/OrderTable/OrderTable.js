@@ -416,19 +416,15 @@ export class OrderTable extends React.Component {
                 }
             >
                 <strong>{count} ks. </strong>
-                <span>({formatMinutesToTime(operationTime)})</span>
-                <span>[{formatMinutesToTime(workingHoursForOperation)}]</span>
-                {
-                    sign !== 0
-                    ? <strong
-                        className={createClassName([
-                            (sign === -1) ? 'text-primary' : 'text-danger',
-                        ])}
-                    >
-                        {`{`}{(sign === -1) ? '+' : '-'}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
-                    </strong>
-                    : '{' + formatMinutesToTime(Math.abs(calculateHoursRemainder)) + '}'
-                }
+                <span>({formatMinutesToTime(operationTime)})</span> {` `}
+                <span>[{formatMinutesToTime(workingHoursForOperation)}]</span>{` `}
+                <strong
+                    className={createClassName([
+                        (sign <= 0) ? 'text-primary' : 'text-danger',
+                    ])}
+                >
+                    {`{`}{ sign < 0 ? '+' : (sign === 0 ? '' : '-') }{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
+                </strong>
             </Tooltip>
         );
     }

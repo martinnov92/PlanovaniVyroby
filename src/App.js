@@ -930,6 +930,7 @@ class App extends React.Component {
             orderList,
             hoverOrder,
             currentWeek,
+            groupOrders,
             columnsVisibility,
             filterFinishedOrders,
             sameOperationRestTime,
@@ -981,6 +982,7 @@ class App extends React.Component {
                             order={hoverOrder}
                             machines={machines}
                             orderList={orderList}
+                            groupedOrders={groupOrders}
                         />
                     }
                 </div>

@@ -12,6 +12,7 @@ export class OrderCard extends React.Component {
         order: {},
         machines: [],
         orderList: [],
+        groupedOrders: [],
     };
 
     render() {
@@ -19,6 +20,7 @@ export class OrderCard extends React.Component {
             order,
             machines,
             orderList,
+            groupedOrders,
         } = this.props;
 
         let totalMinutes = 0;
@@ -38,9 +40,28 @@ export class OrderCard extends React.Component {
             }
         } catch (err) {}
 
-        const remainder = totalMinutes - order.workingHours;
-        const sign = Math.sign(remainder);
+        const groupedOrder = groupedOrders.find((o) => o._info.orderId === order.orderId);
+        const groupedOrderProduct = groupedOrder[order.productName];
 
+        // výpočet zbývajícího času z groupovaných zakázek
+        let remainderCurrentProduct = 0;
+        if (groupedOrderProduct) {
+            const groupedOperation = order.operation ? groupedOrderProduct.operation.find((operation) => operation.order == order.operation.order) : null;
+
+            if (groupedOperation) {
+                const operationTime =
+                    groupedOperation.operationTime
+                    ? groupedOperation.operationTime
+                    : calculateOperationTime(order.operation.count, order.operation.time, order.operation.exchange, order.operation.casting);
+                remainderCurrentProduct = operationTime - groupedOperation.workingHoursForOperation;
+            }
+            console.log(groupedOperation);
+        }
+
+        const remainderCurrentEvent = totalMinutes - order.workingHours;
+        const signCurrentEvent = Math.sign(remainderCurrentEvent);
+        const signCurrentOrderProduct = Math.sign(remainderCurrentProduct);
+        console.log(signCurrentOrderProduct);
         return (
             <div
                 style={{
@@ -64,36 +85,46 @@ export class OrderCard extends React.Component {
                         </h6>
                         {
                             order.operation
-                            ? <p className="card-text">
-                                <strong>{ order.operation.order }. operace</strong>
-                                { order.operation.note ? ` - ${order.operation.note}` : '' }
-                            </p>
-                            : null
-                        }
-                        <table>
-                            <tbody>
-                                {
-                                    order.operation
-                                    ? <React.Fragment>
+                            ? <React.Fragment>
+                                <p className="card-text">
+                                    <strong>{ order.operation.order }. operace</strong>
+                                    { order.operation.note ? ` - ${order.operation.note}` : '' }
+                                </p>
+
+                                <table>
+                                    <tbody>
                                         <tr>
-                                            <td>Počet kusů: &nbsp;</td>
                                             <td>
                                                 <p className="card-text">
                                                     { order.operation.count }ks.
                                                 </p>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Čas na kus: &nbsp;</td>
+                                            <td>{` / `}</td>
                                             <td>
                                                 <p className="card-text">
                                                     { order.operation.time }min.
                                                 </p>
                                             </td>
+                                            <td>{` / `}</td>
+                                            <td>
+                                                <p className="card-text">
+                                                    { order.operation.exchange }min.
+                                                </p>
+                                            </td>
+                                            <td>{` / `}</td>
+                                            <td>
+                                                <p className="card-text">
+                                                    { order.operation.casting }min.
+                                                </p>
+                                            </td>
                                         </tr>
-                                    </React.Fragment>
-                                    : null
-                                }
+                                    </tbody>
+                                </table>
+                            </React.Fragment>
+                            : null
+                        }
+                        <table>
+                            <tbody>
                                 <tr>
                                     <td>Začátek: &nbsp;</td>
                                     <td>
@@ -119,7 +150,7 @@ export class OrderCard extends React.Component {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Naplánováné: &nbsp;</td>
+                                    <td>Naplánováno: &nbsp;</td>
                                     <td>
                                         <p className="card-text">
                                             { formatMinutesToTime(order.workingHours) }
@@ -132,11 +163,21 @@ export class OrderCard extends React.Component {
                                         <p className="card-text">
                                             <strong
                                                 className={createClassName([
-                                                    (sign === -1) ? 'text-primary' : 'text-danger',
+                                                    (signCurrentEvent <= 0) ? 'text-primary' : 'text-danger',
                                                 ])}
                                             >
-                                                { sign < 0 ? '+' : (sign === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainder)) }
+                                                { signCurrentEvent < 0 ? '+' : (signCurrentEvent === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentEvent)) }
                                             </strong>
+                                            {` (vybraná)`}
+                                            {` / `}
+                                            <strong
+                                                className={createClassName([
+                                                    (signCurrentOrderProduct <= 0) ? 'text-primary' : 'text-danger',
+                                                ])}
+                                            >
+                                                { signCurrentOrderProduct < 0 ? '+' : (signCurrentOrderProduct === 0 ? '' : '-') }{ formatMinutesToTime(Math.abs(remainderCurrentProduct)) }
+                                            </strong>
+                                            {` (celkový rozdíl)`}
                                         </p>
                                     </td>
                                 </tr>

@@ -109,7 +109,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                  * }
                  */
                 const usedOperation = {};
-                const workingHoursForOperation = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, };
+                const workingHoursForOperation = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, };
                 const groupedOrder = commission[product];
                 groupedOrder.done = (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false;
                 groupedOrder.lastWorkingDate = lastWorkingDate;
