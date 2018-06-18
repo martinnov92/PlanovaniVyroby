@@ -55,13 +55,12 @@ export class OrderCard extends React.Component {
                     : calculateOperationTime(order.operation.count, order.operation.time, order.operation.exchange, order.operation.casting);
                 remainderCurrentProduct = operationTime - groupedOperation.workingHoursForOperation;
             }
-            console.log(groupedOperation);
         }
 
         const remainderCurrentEvent = totalMinutes - order.workingHours;
         const signCurrentEvent = Math.sign(remainderCurrentEvent);
         const signCurrentOrderProduct = Math.sign(remainderCurrentProduct);
-        console.log(signCurrentOrderProduct);
+
         return (
             <div
                 style={{
