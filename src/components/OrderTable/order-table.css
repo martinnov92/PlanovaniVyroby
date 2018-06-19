@@ -39,7 +39,7 @@
 }
 
 .table--orders .table .table--orders-operation-column {
-    min-width: 330px;
+    min-width: 23em;
 }
 
 .table--orders .column--fixed-header,

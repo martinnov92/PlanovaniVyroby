@@ -99,7 +99,6 @@
 
 .calendar-table--hours {
     min-width: 20px;
-    font-size: 0.8rem;
     text-align: center;
 }
 
@@ -231,6 +230,7 @@ td.calendar-table--empty-hours.calendar--shift-hours {
     bottom: 0;
     opacity: 0;
     z-index: 1;
+    font-size: var(--rootFontSize);
     transition: all ease-in 150ms;
     transform: translate(-50%, 500px)
 }

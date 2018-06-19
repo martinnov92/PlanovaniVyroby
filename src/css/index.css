@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+html {
+    /* Defaultní velikost písma v aplikaci (včetně menu a popupů) */
+    font-size: var(--rootFontSize);
+}
+
 body {
     overflow: hidden;
     font-family: sans-serif;
@@ -47,7 +52,8 @@ textarea {
 .app {
     width: 100vw;
     height: 100vh;
-    font-size: 14px;
+    /* velikost písma v tabulce a kalendáři */
+    font-size: var(--fontSize);
     overflow: hidden;
 }
 
@@ -95,7 +101,7 @@ textarea {
 }
 
 .popup-order textarea {
-    height: 86px;
+    height: 73px;
 }
 
 .orders--detail {

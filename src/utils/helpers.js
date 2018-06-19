@@ -451,6 +451,11 @@ export function checkForBoolean (item) {
     return res;
 }
 
+export function setCSSVariable(key, value, suffix = '') {
+    document.documentElement.style.setProperty(key, value + suffix);
+    dispatchResize();
+}
+
 export const createStyleObject = (width, maxWidth = true) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -460,6 +465,17 @@ export const createStyleObject = (width, maxWidth = true) => ({
     maxWidth: `${width || 0}px`,
     // [maxWidth ? 'maxWidth' : null]: maxWidth ? `${width || 0}px` : null,
 });
+
+export const COLUMNS_VISIBILITY = {
+    '1': true,
+    '2': true,
+    '3': true,
+    '4': true,
+    '5': true,
+    '6': true,
+};
+
+export const FONT_SIZE = 11;
 
 window._debug = {
     getNetMachineTime,

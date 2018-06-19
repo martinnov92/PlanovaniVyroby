@@ -33,6 +33,7 @@ export class SettingsPopup extends React.Component {
         } = this.state;
 
         const {
+            fontSize,
             columnsVisibility,
             handleSettingsChange,
             filterFinishedOrders,
@@ -70,6 +71,22 @@ export class SettingsPopup extends React.Component {
                     </TabList>
 
                     <TabPanel>
+                        <h5 className="mb-1">Aplikace</h5>
+
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                <span className="input-group-text">Velikost písma</span>
+                            </div>
+                            <input
+                                min={8}
+                                max={18}
+                                type="number"
+                                name="fontsize"
+                                value={fontSize}
+                                onChange={handleSettingsChange}
+                            />
+                        </div>
+
                         <h5 className="mb-1">Kalendář</h5>
 
                         <div className="input-group mb-3">
