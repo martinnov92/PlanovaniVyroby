@@ -15,7 +15,8 @@
 
   ## Bugy a dodělávky
 
-    - opravit první spuštění bez nastavení skrytých sloupců
+    X opravit první spuštění bez nastavení skrytých sloupců
+    X zčernat čas v OrderTable, který je 0
     X zmenšit písmo v tabulce, nižší řádky, padding, ...
     X červeně obarvit čas v operacích (přebytek modře, zbývá červeně)
     X tooltip s časem přesunout pod událost (ne nad)

@@ -254,6 +254,10 @@ export class OrderTable extends React.Component {
                                         });
                                     }
 
+                                    const lastWorkingDate = product.lastWorkingDate ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT) : '-';
+                                    const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
+                                    const totalOperationTime = formatMinutesToTime(product.totalOperationTime);
+
                                     return (
                                         <table key={objKey}>
                                             <tbody>
@@ -309,22 +313,21 @@ export class OrderTable extends React.Component {
                                                     }
                                                     <td
                                                         style={createStyleObject(thWidth['lastWorkingDate'], false)}
+                                                        title={lastWorkingDate}
                                                     >
-                                                        {
-                                                            product.lastWorkingDate
-                                                            ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT)
-                                                            : '-'
-                                                        }
+                                                        {lastWorkingDate}
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['totalWorkingTime'], false)}
+                                                        title={totalWorkingTime}
                                                     >
-                                                        {formatMinutesToTime(product.totalWorkingTime)}
+                                                        {totalWorkingTime}
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['totalOperationTime'], false)}
+                                                        title={totalOperationTime}
                                                     >
-                                                        {formatMinutesToTime(product.totalOperationTime)}
+                                                        {totalOperationTime}
                                                     </td>
                                                 </ContextMenu>
                                             </tbody>
@@ -420,7 +423,7 @@ export class OrderTable extends React.Component {
                 <span>[{formatMinutesToTime(workingHoursForOperation)}]</span>{` `}
                 <strong
                     className={createClassName([
-                        (sign <= 0) ? 'text-primary' : 'text-danger',
+                        sign < 0 ? 'text-primary' : (sign === 0 ? null : 'text-danger'),
                     ])}
                 >
                     {`{`}{ sign < 0 ? '+' : (sign === 0 ? '' : '-') }{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
@@ -551,7 +554,7 @@ export class OrderTable extends React.Component {
                                 <th
                                     scope="col"
                                     data-column="lastWorkingDate"
-                                    className="table--orders-125"
+                                    className="table--orders-9_5em"
                                 >
                                     Ukončení
                                 </th>

@@ -21,7 +21,7 @@
 
 .table--orders .table td,
 .table--orders .table th {
-    min-width: 120px;
+    min-width: 7em;
 }
 
 /* Sloupec ks */
@@ -36,6 +36,10 @@
 
 .table--orders .table .table--orders-125 {
     min-width: 125px;
+}
+
+.table--orders .table .table--orders-9_5em {
+    min-width: 9.5em;
 }
 
 .table--orders .table .table--orders-operation-column {
