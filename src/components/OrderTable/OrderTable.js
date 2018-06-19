@@ -369,7 +369,7 @@ export class OrderTable extends React.Component {
         }
 
         const calculateHoursRemainder = operationTime - workingHoursForOperation;
-        const sign = Math.sign(calculateHoursRemainder);
+        const sign = Math.sign(Math.round(calculateHoursRemainder));
 
         return (
             <Tooltip
