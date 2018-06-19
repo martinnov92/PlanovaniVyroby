@@ -11,27 +11,22 @@ import { Nav } from './components/Nav';
 import { OrderTable } from './components/OrderTable';
 import {
     saveFile,
+    FONT_SIZE,
+    dispatchResize,
+    setCSSVariable,
     checkForBoolean,
     getNetMachineTime,
+    COLUMNS_VISIBILITY,
     createGroupedOrders,
     isDateRangeOverlaping,
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
     calculateRemainingOperationTime,
-    dispatchResize,
 } from './utils/helpers';
 import sync from './statics/sync.svg';
 
 const fs = window.require('fs');
 const electron = window.require('electron');
-const COLUMNS_VISIBILITY = {
-    '1': true,
-    '2': true,
-    '3': true,
-    '4': true,
-    '5': true,
-    '6': true,
-};
 
 class App extends React.Component {
     constructor(props) {
@@ -52,6 +47,7 @@ class App extends React.Component {
             groupOrders: [],
             hoverOrder: null,
             fileLoaded: false,
+            fontsize: FONT_SIZE,
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             displayOrdersInEvents: true,
@@ -276,6 +272,7 @@ class App extends React.Component {
     }
 
     readFromLocalStorage = () => {
+        let fontSize = window.localStorage.getItem('fontsize') || FONT_SIZE;
         let columnsVisibility = window.localStorage.getItem('columnsVisibility');
         let filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
         let displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
@@ -284,7 +281,10 @@ class App extends React.Component {
             columnsVisibility = JSON.parse(columnsVisibility);
         }
 
+        setCSSVariable('--fontSize', fontSize, 'px');
+
         this.setState({
+            fontsize: fontSize,
             filterFinishedOrders,
             displayOrdersInEvents,
             columnsVisibility: columnsVisibility || COLUMNS_VISIBILITY,
@@ -799,10 +799,10 @@ class App extends React.Component {
 
     handleSettingsChange = (e) => {
         let name = e.target.name;
-        let checked = e.target.checked;
-        console.log(e.target.checked);
+        let valueOrChecked = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
         this.setState({
-            [e.target.name]: checked,
+            [e.target.name]: valueOrChecked,
         }, () => {
             if (name === 'filterFinishedOrders') {
                 this.groupOrders(this.state.orders, this.state.orderList, this.state.filterFinishedOrders);
@@ -810,7 +810,11 @@ class App extends React.Component {
                 dispatchResize();
             }
 
-            window.localStorage.setItem(name, checked);
+            if (name === 'fontsize') {
+                setCSSVariable('--fontSize', valueOrChecked, 'px');
+            }
+
+            window.localStorage.setItem(name, valueOrChecked);
         });
     }
 
@@ -927,6 +931,7 @@ class App extends React.Component {
         const {
             open,
             order,
+            fontsize,
             machines,
             settings,
             products,
@@ -1009,6 +1014,7 @@ class App extends React.Component {
                         onOrderDelete={(e, item) => this.handleItemDelete(e, item, 'orderList')}
 
                         // general
+                        fontSize={fontsize}
                         columnsVisibility={columnsVisibility}
                         filterFinishedOrders={filterFinishedOrders}
                         displayOrdersInEvents={displayOrdersInEvents}
@@ -1033,6 +1039,7 @@ class App extends React.Component {
             settings: false,
             hoverOrder: null,
             fileLoaded: false,
+            fontsize: FONT_SIZE,
             columnsVisibility: {},
             sameOperationRestTime: 0,
             displayOrdersInEvents: true,
