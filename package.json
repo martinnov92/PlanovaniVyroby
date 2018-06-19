@@ -15,10 +15,10 @@
     "react-tabs": "^2.2.2"
   },
   "devDependencies": {
-    "chokidar": "^2.0.3",
-    "concurrently": "^3.5.1",
-    "electron": "^2.0.0",
-    "electron-builder": "^20.11.1",
+    "chokidar": "^2.0.4",
+    "concurrently": "^3.6.0",
+    "electron": "^2.0.2",
+    "electron-builder": "^20.15.1",
     "wait-on": "^2.1.0"
   },
   "scripts": {
