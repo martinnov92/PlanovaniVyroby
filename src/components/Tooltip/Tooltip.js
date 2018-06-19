@@ -96,7 +96,7 @@ export class Tooltip extends React.Component {
             if (stateItem === 'toggleTooltip') {
                 const tooltipRect = this.tooltip.current.getBoundingClientRect();
                 const parentRect = this.parentDiv.current.getBoundingClientRect();
-    
+
                 if (parentRect.bottom > (window.innerHeight - tooltipRect.height)) {
                     // tooltip on top
                     tooltipPositionStr = 'top';
@@ -227,7 +227,9 @@ export class Tooltip extends React.Component {
                             className={innerClassNames}
                         >
                             <div className={titleClassNames}>
-                                <div className="pd-tooltip__arrow" />
+                                <div className="pd-tooltip__arrow--wrapper">
+                                    <div className="pd-tooltip__arrow" />
+                                </div>
                                 { text }
                             </div>
                         </div>,
