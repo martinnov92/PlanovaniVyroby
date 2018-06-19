@@ -340,7 +340,7 @@ export function getCorrectDateAfterDrop(start, end, newStart) {
         else {
             result = result.add(duration, 'hours');
             duration = 0;
-            // console.log("Zadek !!! result = {0}, duration = {1}", result.toDate(), duration);
+            // console.log("result = {0}, duration = {1}", result.toDate(), duration);
         }
     }
 
