@@ -79,7 +79,7 @@ export class SettingsPopup extends React.Component {
                             </div>
                             <input
                                 min={8}
-                                max={18}
+                                max={14}
                                 type="number"
                                 name="fontsize"
                                 value={fontSize}
