@@ -9,6 +9,7 @@ import {
     formatMinutesToTime,
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
+    dispatchResize,
 } from '../../utils/helpers';
 
 import './order-table.css';
@@ -112,7 +113,7 @@ export class OrderTable extends React.Component {
         this.setState({
             plannedFinishDateValue: date,
             editPlannedFinishDateRow: key,
-        });
+        }, dispatchResize);
     }
 
     handleChange = (e) => {
@@ -624,6 +625,7 @@ export class OrderTable extends React.Component {
                                 <th
                                     scope="col"
                                     data-column="plannedFinishDate"
+                                    className={this.state.editPlannedFinishDateRow ? 'table--orders-finishdate-column' : 'table--orders-9_5em'}
                                 >
                                     Termín
                                 </th>

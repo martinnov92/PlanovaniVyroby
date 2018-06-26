@@ -42,6 +42,10 @@
     min-width: 9.5em;
 }
 
+.table--orders .table .table--orders-finishdate-column {
+    min-width: 15em;
+}
+
 .table--orders .table .table--orders-operation-column {
     min-width: 23em;
 }

@@ -12,10 +12,10 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
-    "react-tabs": "^2.2.2"
+    "react-tabs": "^2.2.2",
+    "chokidar": "^2.0.4"
   },
   "devDependencies": {
-    "chokidar": "^2.0.4",
     "concurrently": "^3.6.0",
     "electron": "^2.0.3",
     "electron-builder": "^20.16.4",
