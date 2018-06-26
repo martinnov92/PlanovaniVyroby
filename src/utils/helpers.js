@@ -85,6 +85,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 totalOperationTime: 0,
                 lastWorkingDate: lastWorkingDate,
                 done: (groupedProduct[0] && groupedProduct[0].hasOwnProperty('done')) ? groupedProduct[0].done : false,
+                plannedFinishDate: (groupedProduct[0] && !!groupedProduct[0].plannedFinishDate) ? groupedProduct[0].plannedFinishDate : null,
             };
             const groupedOrder = commission[product];
 

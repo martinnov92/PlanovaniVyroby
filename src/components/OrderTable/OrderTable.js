@@ -4,10 +4,11 @@ import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import {
     createClassName,
+    DATA_DATE_FORMAT,
     createStyleObject,
     formatMinutesToTime,
     calculateOperationTime,
-    DATA_DATE_FORMAT,
+    INPUT_DATE_TIME_FORMAT,
 } from '../../utils/helpers';
 
 import './order-table.css';
@@ -34,6 +35,8 @@ export class OrderTable extends React.Component {
             rowHeights : [],
             activeOrder: null,
             fixedHeaderHeight: 0,
+            plannedFinishDateValue: '',
+            editPlannedFinishDateRow: null,
         };
 
         this.fixedHeader = React.createRef();
@@ -101,6 +104,39 @@ export class OrderTable extends React.Component {
                 fixedHeaderHeight: fixedHeaderClientRect.height,
             });
         } catch (err) {}
+    }
+
+    editPlannedFinishDate = (e, key, product) => {
+        const date = !!product.plannedFinishDate ? moment(product.plannedFinishDate).format(INPUT_DATE_TIME_FORMAT) : '';
+
+        this.setState({
+            plannedFinishDateValue: date,
+            editPlannedFinishDateRow: key,
+        });
+    }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
+
+    // e, orderId, productName
+    handleSaveFinishDate = (e, orderId, productName) => {
+        // convert input date time format to UTC format and send to App component to save it to file
+        const { plannedFinishDateValue } = this.state;
+
+        if (moment(plannedFinishDateValue).isValid()) {
+            const date = moment(plannedFinishDateValue).format();
+            this.props.handlePlannedDateSave(orderId, productName, date);
+        } else {
+            this.props.handlePlannedDateSave(orderId, productName, '');
+        }
+
+        this.setState({
+            plannedFinishDateValue: '',
+            editPlannedFinishDateRow: null,
+        });
     }
 
     renderFixedColumn = () => {
@@ -204,6 +240,8 @@ export class OrderTable extends React.Component {
         const {
             thWidth,
             activeOrder,
+            plannedFinishDateValue,
+            editPlannedFinishDateRow,
         } = this.state;
 
         const {
@@ -234,6 +272,7 @@ export class OrderTable extends React.Component {
                         <td className="table--orders-inner-table">
                             {
                                 orderKeys.map((objKey, i) => {
+                                    const key = `${orderId}_${objKey}`;
                                     const product = commission[objKey];
                                     const buttons = [];
 
@@ -252,14 +291,27 @@ export class OrderTable extends React.Component {
                                             label: 'Uzavřít výrobek',
                                             onClick: (e) => this.props.onCloseOrOpenItem(e, objKey, orderId),
                                         });
+
+                                        if (editPlannedFinishDateRow !== key) {
+                                            buttons.push({
+                                                label: 'Editovat termín',
+                                                onClick: (e) => this.editPlannedFinishDate(e, key, product),
+                                            });
+                                        } else {
+                                            buttons.push({
+                                                label: 'Uložit termín',
+                                                onClick: (e) => this.handleSaveFinishDate(e, orderId, objKey),
+                                            });
+                                        }
                                     }
 
-                                    const lastWorkingDate = product.lastWorkingDate ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT) : '-';
-                                    const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
+                                    // const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
                                     const totalOperationTime = formatMinutesToTime(product.totalOperationTime);
+                                    const lastWorkingDate = product.lastWorkingDate ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT) : '-';
+                                    const plannedFinishDate = product.plannedFinishDate ? moment(product.plannedFinishDate).format(DATA_DATE_FORMAT) : '-';
 
                                     return (
-                                        <table key={objKey}>
+                                        <table key={key}>
                                             <tbody>
                                                 <ContextMenu
                                                     buttons={buttons}
@@ -318,10 +370,21 @@ export class OrderTable extends React.Component {
                                                         {lastWorkingDate}
                                                     </td>
                                                     <td
-                                                        style={createStyleObject(thWidth['totalWorkingTime'], false)}
-                                                        title={totalWorkingTime}
+                                                        style={createStyleObject(thWidth['plannedFinishDate'], false)}
+                                                        title={''}
                                                     >
-                                                        {totalWorkingTime}
+                                                        {
+                                                            editPlannedFinishDateRow === key
+                                                            ? <input
+                                                                type="datetime-local"
+                                                                onChange={this.handleChange}
+                                                                name="plannedFinishDateValue"
+                                                                value={plannedFinishDateValue}
+                                                                className="form-control form-control-sm"
+                                                                onBlur={(e) => this.handleSaveFinishDate(e, orderId, objKey)}
+                                                            />
+                                                            : plannedFinishDate
+                                                        }
                                                     </td>
                                                     <td
                                                         style={createStyleObject(thWidth['totalOperationTime'], false)}
@@ -560,9 +623,9 @@ export class OrderTable extends React.Component {
                                 </th>
                                 <th
                                     scope="col"
-                                    data-column="totalWorkingTime"
+                                    data-column="plannedFinishDate"
                                 >
-                                    Naplánováno
+                                    Termín
                                 </th>
                                 <th
                                     scope="col"

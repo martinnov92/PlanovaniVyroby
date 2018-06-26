@@ -1,6 +1,6 @@
 {
   "name": "planovanivyroby",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "homepage": "./",
   "author": "Martin Novák",
@@ -17,8 +17,8 @@
   "devDependencies": {
     "chokidar": "^2.0.4",
     "concurrently": "^3.6.0",
-    "electron": "^2.0.2",
-    "electron-builder": "^20.15.1",
+    "electron": "^2.0.3",
+    "electron-builder": "^20.16.4",
     "wait-on": "^2.1.0"
   },
   "scripts": {

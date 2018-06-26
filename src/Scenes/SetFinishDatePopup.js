@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Popup } from '../components/Popup';
 import { INPUT_DATE_TIME_FORMAT } from '../utils/helpers';
 
-export class CloseProductModal extends React.Component {
+export class SetFinishDatePopup extends React.Component {
     constructor() {
         super();
 
@@ -35,7 +35,7 @@ export class CloseProductModal extends React.Component {
                 width="400px"
                 modal={true}
                 onClose={onCancel}
-                title={product ? 'Ukončení výroby výrobku' : 'Uzavřít zakázku'}
+                title={'Termnín'}
                 footerButtons={() => (
                     <React.Fragment>
                         <button
@@ -51,11 +51,7 @@ export class CloseProductModal extends React.Component {
                             onClick={this.handleConfirm}
                             className="btn btn-sm btn-danger ml-2"
                         >
-                            {
-                                product
-                                ? 'Uzavřít výrobek'
-                                : 'Uzavřít zakázku'
-                            }
+                            Uložit
                         </button>
                     </React.Fragment>
                 )}

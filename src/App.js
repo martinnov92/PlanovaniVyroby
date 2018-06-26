@@ -621,6 +621,20 @@ class App extends React.Component {
         });
     }
 
+    handlePlannedDateSave = (orderId, productName, date) => {
+        const orders = this.state.orders.map((order) => {
+            if ((order.orderId === orderId) && (order.productName === productName)) {
+                order.plannedFinishDate = date;
+            }
+
+            return order;
+        });
+
+        this.setState({
+            orders,
+        }, this.saveToFile);
+    }
+
     handleSave = () => {
         this.handleReadOnly(() => {
             const products = [...this.state.products];
@@ -921,6 +935,7 @@ class App extends React.Component {
                     groupedOrders={groupOrders}
                     moveToDate={this.handleMoveToDate}
                     columnsVisibility={columnsVisibility}
+                    handlePlannedDateSave={this.handlePlannedDateSave}
                     onCloseOrOpenItem={this.handleOrderOrProductOpenOrClose}
                 />
             </React.Fragment>
@@ -1079,6 +1094,7 @@ class App extends React.Component {
                     operationTime: 0, // vypočítá čas (pomocná funkce calculateOperationTime)
                 },
                 dateFrom: dateFrom,
+                plannedFinishDate: '',
                 workingHours: workingHours,
                 machine: machineId || this.state.machines[0].id,
             },
