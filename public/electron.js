@@ -29,7 +29,7 @@ let template = [
                 accelerator: 'CmdOrCtrl+O',
                 role: 'open',
                 click: () => {
-                    mainWindow.webContents.send('menu', 'openFile');
+                    sendMessageToWindow('menu', 'openFile');
                 }
             },
             {
@@ -37,7 +37,7 @@ let template = [
                 accelerator: 'CmdOrCtrl+S',
                 role: 'save',
                 click: () => {
-                    mainWindow.webContents.send('menu', 'saveFile');
+                    sendMessageToWindow('menu', 'saveFile');
                 }
             },
             {
@@ -45,7 +45,7 @@ let template = [
                 accelerator: 'CmdOrCtrl+Shift+S',
                 role: 'save',
                 click: () => {
-                    mainWindow.webContents.send('menu', 'saveAsFile');
+                    sendMessageToWindow('menu', 'saveAsFile');
                 }
             },
             {
@@ -67,7 +67,18 @@ let template = [
                 label: 'Přidat zakázku',
                 accelerator: 'CmdOrCtrl+N',
                 click: () => {
-                    mainWindow.webContents.send('menu', 'newEvent');
+                    sendMessageToWindow('menu', 'newEvent');
+                }
+            },
+        ]
+    },
+    {
+        label: 'Nápověda',
+        submenu: [
+            {
+                label: 'Zkontrolovat aktualizace',
+                click: () => {
+                    autoUpdater.checkForUpdates();
                 }
             },
         ]
@@ -102,7 +113,7 @@ function createWindow() {
     });
 
     mainWindow.webContents.on('dom-ready', () => {
-        mainWindow.webContents.send('dom-ready');
+        sendMessageToWindow('dom-ready');
     });
 
     // if the render process crashes, reload the window
@@ -141,6 +152,7 @@ function createWindow() {
     autoUpdater.checkForUpdates();
 
     ipcListeners();
+    autoUpdaterListeners();
 }
 
 // This method will be called when Electron has finished
@@ -163,10 +175,6 @@ app.on('activate', function () {
     if (mainWindow === null) {
         createWindow();
     }
-});
-
-autoUpdater.on('update-downloaded', (info) => {
-    mainWindow.webContents.send('update-ready');
 });
 
 // In this file you can include the rest of your app's specific main process
@@ -217,6 +225,28 @@ function ipcListeners() {
     ipc.on('file-start-watching', startWatchingForFileChanges);
 }
 
+function autoUpdaterListeners() {
+    autoUpdater.on('checking-for-update', () => {
+        sendMessageToWindow('update-checking');
+    });
+
+    autoUpdater.on('update-not-available', () => {
+        sendMessageToWindow('update-not-available');
+    });
+
+    autoUpdater.on('download-progress', (progress) => {
+        sendMessageToWindow('update-downloading', progress);
+    });
+
+    autoUpdater.on('error', () => {
+        sendMessageToWindow('update-error');
+    });
+
+    autoUpdater.on('update-downloaded', () => {
+        sendMessageToWindow('update-ready');
+    });
+}
+
 function startWatchingForFileChanges(event, filePath) {
     try {
         fileWatcher = chokidar.watch(filePath, {
@@ -253,4 +283,8 @@ function stopWatchingForFileChanges(event) {
         fileWatcher.close();
         fileWatcher = null;
     }
+}
+
+function sendMessageToWindow(name, ...rest) {
+    mainWindow.webContents.send(name, ...rest);
 }

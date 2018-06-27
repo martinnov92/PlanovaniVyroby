@@ -77,10 +77,14 @@ class App extends React.Component {
         document.addEventListener('keyup', this.handleKeyUp);
         electron.ipcRenderer.on('menu', this.handleElectronMenu);
         electron.ipcRenderer.on('dom-ready', this.handleDomReady);
+        electron.ipcRenderer.on('update-error', this.handleUpdateError);
         electron.ipcRenderer.on('update-ready', this.handleUpdateReady);
+        electron.ipcRenderer.on('update-checking', this.handleUpdateChecking);
         electron.ipcRenderer.on('selected-directory', this.handleElectronDialogs);
         electron.ipcRenderer.on('file-watcher-error', this.handleFileWatcherError);
+        electron.ipcRenderer.on('update-downloading', this.handleUpdateDownloading);
         electron.ipcRenderer.on('file-watcher-change', this.handleFileWatcherChange);
+        electron.ipcRenderer.on('update-not-available', this.handleUpdateNotAvailable);
     }
 
     componentWillUnmount() {
@@ -89,9 +93,13 @@ class App extends React.Component {
         electron.ipcRenderer.removeAllListeners('menu');
         electron.ipcRenderer.removeAllListeners('dom-ready');
         electron.ipcRenderer.removeAllListeners('update-ready');
+        electron.ipcRenderer.removeAllListeners('update-error');
+        electron.ipcRenderer.removeAllListeners('update-checking');
         electron.ipcRenderer.removeAllListeners('file-watcher-error');
         electron.ipcRenderer.removeAllListeners('selected-directory');
         electron.ipcRenderer.removeAllListeners('file-watcher-change');
+        electron.ipcRenderer.removeAllListeners('update-downloading');
+        electron.ipcRenderer.removeAllListeners('update-not-available');
         document.removeEventListener('keyup', this.handleKeyUp);
     }
 
@@ -103,17 +111,49 @@ class App extends React.Component {
         });
     }
 
+    handleUpdateChecking = (sender) => {
+        this.showInfoMessage(
+            <React.Fragment>
+                <p>Kontrola aktualizací</p>
+            </React.Fragment>
+        , 5000);
+    }
+
+    handleUpdateDownloading = (sender, progress = {}) => {
+        this.showInfoMessage(
+            <React.Fragment>
+                <p>Stahování - {progress.percent}%</p>
+            </React.Fragment>
+        );
+    }
+
+    handleUpdateNotAvailable = () => {
+        this.showInfoMessage(
+            <React.Fragment>
+                <p>Aplikace je aktuální</p>
+            </React.Fragment>
+        , 3000);
+    }
+
+    handleUpdateError = () => {
+        this.showInfoMessage(
+            <React.Fragment>
+                <p>Chyba při zjišťování aktualizací</p>
+            </React.Fragment>
+        , 3000);
+    }
+
     handleUpdateReady = () => {
         this.showInfoMessage(
             <React.Fragment>
                 Aktualizace je připravena k nainstalování.
 
-                <button
-                    className="btn btn-link"
+                <span
+                    className="btn-link ml-3"
                     onClick={this.sendUpdateAppRequest}
                 >
                     Nainstalovat
-                </button>
+                </span>
             </React.Fragment>
         );
     }
