@@ -5,6 +5,7 @@
   "homepage": "./",
   "author": "Martin Novák",
   "main": "public/electron.js",
+  "repository": "https://github.com/martinnov92/PlanovaniVyroby",
   "dependencies": {
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
@@ -29,6 +30,8 @@
     "build-windows": "electron-builder -w",
     "test": "react-scripts test --env=jsdom",
     "build-mac": "react-scripts build && electron-builder -m",
+    "ship-mac": "react-scripts build && electron-builder -m -p always",
+    "ship-windows": "react-scripts build && electron-builder -w -p always",
     "dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "build": {
@@ -40,6 +43,11 @@
       "build/**/*",
       "node_modules/**/*"
     ],
+    "publish": [{
+        "provider": "github",
+        "owner": "martinnov92",
+        "repo": "PlanovaniVyroby"
+    }],
     "directories": {
       "buildResources": "assets"
     }
