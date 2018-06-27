@@ -2,6 +2,7 @@ const url = require('url');
 const path = require('path');
 const chokidar = require('chokidar');
 const electron = require('electron');
+const { autoUpdater } = require('electron-updater');
 
 const app = electron.app;
 const Menu = electron.Menu;
@@ -137,6 +138,8 @@ function createWindow() {
         stopWatchingForFileChanges();
     });
 
+    autoUpdater.checkForUpdates();
+
     ipcListeners();
 }
 
@@ -162,6 +165,10 @@ app.on('activate', function () {
     }
 });
 
+autoUpdater.on('update-downloaded', (info) => {
+    mainWindow.webContents.send('update-ready');
+});
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
@@ -169,7 +176,7 @@ function ipcListeners() {
     // events from renderer
     ipc.on('open-file-dialog', (event) => {
         const w = BrowserWindow.fromWebContents(event.sender);
-    
+
         electron.dialog.showOpenDialog(w, {
             title: 'Otevřít soubor',
             defaultPath: documentsPath + '/' + fileName,
@@ -181,7 +188,7 @@ function ipcListeners() {
 
     ipc.on('open-save-dialog', (event) => {
         const w = BrowserWindow.fromWebContents(event.sender);
-    
+
         electron.dialog.showSaveDialog(w, {
             title: 'Uložit soubor',
             defaultPath: path + '/' + fileName,
@@ -189,6 +196,10 @@ function ipcListeners() {
         }, (resultPath) => {
             event.sender.send('selected-directory', 'save', resultPath);
         });
+    });
+
+    ipc.on('update-install', (event) => {
+        autoUpdater.quitAndInstall();
     });
 
     ipc.on('open-error-dialog', (event, title = 'Chyba', content) => {

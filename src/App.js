@@ -77,6 +77,7 @@ class App extends React.Component {
         document.addEventListener('keyup', this.handleKeyUp);
         electron.ipcRenderer.on('menu', this.handleElectronMenu);
         electron.ipcRenderer.on('dom-ready', this.handleDomReady);
+        electron.ipcRenderer.on('update-ready', this.handleUpdateReady);
         electron.ipcRenderer.on('selected-directory', this.handleElectronDialogs);
         electron.ipcRenderer.on('file-watcher-error', this.handleFileWatcherError);
         electron.ipcRenderer.on('file-watcher-change', this.handleFileWatcherChange);
@@ -87,6 +88,7 @@ class App extends React.Component {
 
         electron.ipcRenderer.removeAllListeners('menu');
         electron.ipcRenderer.removeAllListeners('dom-ready');
+        electron.ipcRenderer.removeAllListeners('update-ready');
         electron.ipcRenderer.removeAllListeners('file-watcher-error');
         electron.ipcRenderer.removeAllListeners('selected-directory');
         electron.ipcRenderer.removeAllListeners('file-watcher-change');
@@ -101,6 +103,21 @@ class App extends React.Component {
         });
     }
 
+    handleUpdateReady = () => {
+        this.showInfoMessage(
+            <React.Fragment>
+                Aktualizace je připravena k nainstalování.
+
+                <button
+                    className="btn btn-link"
+                    onClick={this.sendUpdateAppRequest}
+                >
+                    Nainstalovat
+                </button>
+            </React.Fragment>
+        );
+    }
+
     handleElectronDialogs = (sender, type, path) => {
         if (type === 'open' && path) {
             this.openFile(path[0]);
@@ -108,7 +125,7 @@ class App extends React.Component {
 
         if (type === 'save') {
             this.saveFile(path);
-        } 
+        }
     }
 
     handleFileWatcherChange = (event, path, stats) => {
@@ -149,6 +166,10 @@ class App extends React.Component {
 
     showOpenDialog = () => {
         electron.ipcRenderer.send('open-file-dialog');
+    }
+
+    sendUpdateAppRequest = () => {
+        electron.ipcRenderer.send('update-install');
     }
 
     openFile = (path) => {
@@ -197,7 +218,7 @@ class App extends React.Component {
     saveToFile = () => {
         this.handleReadOnly(() => {
             const filePath = window.localStorage.getItem('filePath');
-    
+
             if (!filePath) {
                 return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
             }
@@ -437,7 +458,7 @@ class App extends React.Component {
                 dateFrom: moment(order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
                 dateTo: moment(order.dateTo).format(INPUT_DATE_TIME_FORMAT),
             };
-    
+
             if (!copyOrder.operation) {
                 copyOrder.operation = {
                     time: 0,
@@ -469,29 +490,29 @@ class App extends React.Component {
             if (!window.confirm(`Opravdu si přejete smazat "${item.name}"?`)) {
                 return;
             }
-    
+
             let linkedItems = [];
             let itemsCopy = [...this.state[which]];
             let diffOrdersArr = [...this.state.orders];
-    
+
             if (which === 'machines') {
                 linkedItems = this.state.orders.filter((order) => order.machine === item.id);
             } else if (which === 'orderList') {
                 linkedItems = this.state.orders.filter((order) => order.orderId === item.id);
             }
-    
+
             const linkedItemsLength = linkedItems.length;
             const message = `Přejete si smazat položky (${linkedItemsLength}) související s "${item.name}"?`;
-    
+
             if ((linkedItemsLength > 0)) {
                 if (window.confirm(message)) {
                     diffOrdersArr = differenceBy(this.state.orders, linkedItems);
                 }
             }
-    
+
             const index = itemsCopy.findIndex((m) => m.id === item.id);
             itemsCopy.splice(index, 1);
-    
+
             this.setState({
                 [which]: itemsCopy,
                 orders: diffOrdersArr,
@@ -533,14 +554,14 @@ class App extends React.Component {
             const ordersCopy = [...this.state.orders];
             const index = ordersCopy.findIndex((o) => o.id === order.id);
             const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
-    
+
             if (isOverlaping) {
                 return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj již vytížen.');
             }
-    
+
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
             ordersCopy.splice(index, 1, order);
-    
+
             this.setState({
                 open: false,
                 orders: ordersCopy,
@@ -655,34 +676,34 @@ class App extends React.Component {
                 dateTo: moment(this.state.order.dateTo).format(),
                 dateFrom: moment(this.state.order.dateFrom).format(),
             };
-    
+
             if (!order.orderId || !order.machine || !order.productName) {
                 return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'Při zakládání zakázky musí být vyplněna zakázka, výrobek a stroj.');
-            } 
-    
+            }
+
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
-    
+
             if (!this.state.order.id) {
                 if (isDateRangeOverlaping(ordersCopy, order)) {
                     return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
                 }
-    
+
                 order.id = moment().unix();
                 ordersCopy.push(order);
             } else {
                 const findIndex = ordersCopy.findIndex((o) => o.id === order.id);
                 const dateFromIsSame = moment(order.dateFrom).isSame(ordersCopy[findIndex].dateFrom);
                 const dateToIsSame = moment(order.dateTo).isSame(ordersCopy[findIndex].dateTo);
-    
+
                 if ((!dateFromIsSame || !dateToIsSame) && ordersCopy[findIndex].id !== order.id) {
                     if (isDateRangeOverlaping(ordersCopy, order)) {
                         return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
                     }
                 }
-    
+
                 ordersCopy.splice(findIndex, 1, order);
             }
-    
+
             const findIndex = products.findIndex((product) => order.productName === product.name);
             if (order.operation.order === '-') {
                 delete order.operation;
@@ -708,7 +729,7 @@ class App extends React.Component {
                     };
                 }
             }
-    
+
             this.setState({
                 open: false,
                 orders: ordersCopy,
@@ -723,16 +744,16 @@ class App extends React.Component {
         this.handleReadOnly(() => {
             const orders = [...this.state.orders];
             const findIndex = orders.findIndex((o) => o.id === passedOrder.id);
-    
+
             if (findIndex < 0) {
                 return;
             }
-    
+
             const confirm = window.confirm('Přejete si smazat událost?');
             if (!confirm) {
                 return;
             }
-    
+
             orders.splice(findIndex, 1);
             this.setState({
                 open: false,
@@ -766,7 +787,7 @@ class App extends React.Component {
                     order.done = done;
                     order.finishDate = finishDate;
                 }
-    
+
                 return order;
             });
         }
