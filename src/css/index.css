@@ -265,3 +265,16 @@ h1, h2, h3, h4, h5, h6 {
 .display--flex {
     display: flex;
 }
+
+/* COLORS */
+.product--same-day {
+    background-color: var(--sameDayColor);
+}
+
+.product--day-before {
+    background-color: var(--dayBeforeColor);
+}
+
+.product--week-before {
+    background-color: var(--weekBeforeColor);
+}

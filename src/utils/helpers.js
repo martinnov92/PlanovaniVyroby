@@ -467,6 +467,27 @@ export const createStyleObject = (width, maxWidth = true) => ({
     // [maxWidth ? 'maxWidth' : null]: maxWidth ? `${width || 0}px` : null,
 });
 
+export function getWarningClassName(date) {
+    if (!date) {
+        return null;
+    }
+
+    let className = '';
+    date = moment(date).startOf('day');
+    const now = moment().startOf('day');
+    const differenceInDays = Math.floor(moment.duration(date.diff(now)).asDays());
+
+    if (differenceInDays === 0) {
+        className = 'product--same-day';
+    } else if (differenceInDays === 1) {
+        className = 'product--day-before';
+    } else if (differenceInDays > 1 && differenceInDays <= 7) {
+        className = 'product--week-before';
+    }
+
+    return className;
+}
+
 export const COLUMNS_VISIBILITY = {
     '1': true,
     '2': true,

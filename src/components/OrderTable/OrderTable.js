@@ -3,13 +3,14 @@ import moment from 'moment';
 import { Tooltip } from '../Tooltip';
 import { ContextMenu } from '../ContextMenu';
 import {
+    dispatchResize,
     createClassName,
     DATA_DATE_FORMAT,
     createStyleObject,
+    getWarningClassName,
     formatMinutesToTime,
     calculateOperationTime,
     INPUT_DATE_TIME_FORMAT,
-    dispatchResize,
 } from '../../utils/helpers';
 
 import './order-table.css';
@@ -308,8 +309,13 @@ export class OrderTable extends React.Component {
 
                                     // const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
                                     const totalOperationTime = formatMinutesToTime(product.totalOperationTime);
+                                    const warningClassNameBeforeToday = getWarningClassName(product.plannedFinishDate);
                                     const lastWorkingDate = product.lastWorkingDate ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT) : '-';
                                     const plannedFinishDate = product.plannedFinishDate ? moment(product.plannedFinishDate).format(DATA_DATE_FORMAT) : '-';
+                                    const className = [
+                                        warningClassNameBeforeToday,
+                                        product.done ? 'product--finished' : null,
+                                    ].filter(Boolean).join(' ');
 
                                     return (
                                         <table key={key}>
@@ -317,8 +323,8 @@ export class OrderTable extends React.Component {
                                                 <ContextMenu
                                                     buttons={buttons}
                                                     useAsTableRow={true}
+                                                    className={className}
                                                     disabled={commission._info.done}
-                                                    className={product.done ? 'product--finished' : null}
                                                 >
                                                     <td
                                                         title={objKey}
