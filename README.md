@@ -16,7 +16,7 @@
   ## 20.7.2018
   - [ ] postup řazení časů u operací (podle posloupnosti časů/hodin)
   - [ ] menu výrobku jako u kooperace + doplnit poznámku
-  - [ ] když se blíží termín, tak obarvit
+  - [x] když se blíží termín, tak obarvit
     - den před - oranžová
     - týden před - žlutá
     - ten den - červená
