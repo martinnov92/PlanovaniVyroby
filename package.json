@@ -33,7 +33,7 @@
     "build-mac": "react-scripts build && electron-builder -m",
     "ship-mac": "react-scripts build && electron-builder -m -p always",
     "ship-windows": "react-scripts build && electron-builder -w -p always",
-    "dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
+    "dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "build": {
     "appId": "com.martinnovak.PlanovaniVyroby",

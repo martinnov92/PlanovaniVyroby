@@ -16,6 +16,10 @@ import './calendar.css';
 
 const CELL_OVER_CLASS_NAME = 'calendar--event-dragging--over';
 
+// TODO: uložit, jestli jsem při přetahování měl stisknutou klávesu CTRL a pokud ano tak při handleDrop událost nepřesunout
+// TODO: ale zkopírovat na dané datum
+// TODO: nebo přidat možnost kopírovat do context menu a pak se otevčře popup, kde se upraví jen potřebná data
+
 export class Calendar extends React.Component {
     static defaultProps = {
         pause: 11,
@@ -37,6 +41,7 @@ export class Calendar extends React.Component {
         this.state = {
             scrollTop: 0,
             scrollLeft: 0,
+            activeKey: null,
             lockScroll: false,
             eventsToRender: [],
             draggingEvent: null,
@@ -67,9 +72,13 @@ export class Calendar extends React.Component {
         this.renderTableBody();
 
         window.addEventListener('resize', this.renderEvents);
+
+        document.addEventListener('keyup', this.handleKeyup);
+        document.addEventListener('keydown', this.handleKeyDown);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mousemove', this.handleMouseMove);
-        ReactDOM.findDOMNode(this.calendar).addEventListener('scroll', this.handleScroll);
+
+        this.calendar.addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -102,9 +111,13 @@ export class Calendar extends React.Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.renderEvents);
+
+        document.removeEventListener('keyup', this.handleKeyup);
+        document.removeEventListener('keydown', this.handleKeyDown);
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('mousemove', this.handleMouseMove);
-        ReactDOM.findDOMNode(this.calendar).removeEventListener('scroll', this.handleScroll);
+
+        this.calendar.removeEventListener('scroll', this.handleScroll);
     }
 
     getDimensions = () => {
@@ -149,12 +162,30 @@ export class Calendar extends React.Component {
         });
     }
 
+    handleKeyDown = (e) => {
+        if (e.keyCode === 19 || e.keyCode === 91) {
+            this.setState({
+                activeKey: 'CTRL',
+            });
+        }
+    };
+
+    handleKeyUp = (e) => {
+        this.setState({
+            activeKey: null,
+        });
+    };
+
     handleDragStart = (e, event) => {
         setTimeout(() => {
             this.setState({
                 draggingEvent: event
             });
         }, 0);
+
+        if (this.state.activeKey === 'CTRL') {
+            e.dataTransfer.dropEffect = 'copy';
+        }
 
         e.dataTransfer.setData('text', JSON.stringify({
             event: event
@@ -233,6 +264,11 @@ export class Calendar extends React.Component {
             dateFrom: dateFrom,
             machine: machineId,
         };
+
+        // TODO: události se kopírují, nepřesouvají když udělám keyUP
+        if (this.state.activeKey === 'CTRL') {
+            return this.props.onEventDrop(newEvent, true);
+        }
 
         this.props.onEventDrop(newEvent);
     }
@@ -482,9 +518,7 @@ export class Calendar extends React.Component {
             }
 
             const td =
-                <td
-                    key={day.format(FULL_FORMAT)}
-                >
+                <td key={day.format(FULL_FORMAT)}>
                     <table>
                         <tbody>
                             {
@@ -618,7 +652,7 @@ export class Calendar extends React.Component {
             let row = null;
 
             if (machine) {
-                row = ReactDOM.findDOMNode(this[machine.id]);
+                row = this[machine.id];
             } else {
                 return null;
             }

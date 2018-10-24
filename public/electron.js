@@ -114,6 +114,7 @@ function createWindow() {
 
     mainWindow.webContents.on('dom-ready', () => {
         sendMessageToWindow('dom-ready');
+        mainWindow.webContents.openDevTools();
     });
 
     // if the render process crashes, reload the window

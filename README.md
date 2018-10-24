@@ -14,8 +14,14 @@
 # TODO:
 
   ## 20.7.2018
+  - [ ] zrušit findDOMNode
+  - [ ] aktualizovat React, ReactDOM, electron
+  - [ ] zatím minifikovat JSON, později ukládat nějak jinak
+  - [ ] opravit nefukční klávesové zkratky (?)
   - [ ] postup řazení časů u operací (podle posloupnosti časů/hodin)
   - [ ] menu výrobku jako u kooperace + doplnit poznámku
+  - [ ] přidat jest a testovat aspoň některé funkce
+  - [ ] urychlit renderování spodní tabulky
   - [x] když se blíží termín, tak obarvit
     - den před - oranžová
     - týden před - žlutá
@@ -27,7 +33,7 @@
   - [ ] Možnost uzavření operace
   - [ ] Kopírování práce - události, např.při rozdělení jedné operace (pravý klik na událost -> kopírovat -> otevře se okno, změním jenom datum)
   - [ ] Zborazovat stoj u operace
-  - [ ] Možnost zadání výrobku do zakázky ještě bez práce
+  - [x] Možnost zadání výrobku do zakázky ještě bez práce - vyřešili pomocí nového řádku, kam "odkládají" nezařazené zakázky
 
   ## Bugy a dodělávky
   - [x] opravit první spuštění bez nastavení skrytých sloupců

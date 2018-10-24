@@ -589,10 +589,9 @@ class App extends React.Component {
         });
     }
 
-    handleEventDrop = (order) => {
+    handleEventDrop = (order, copy) => {
         this.handleReadOnly(() => {
             const ordersCopy = [...this.state.orders];
-            const index = ordersCopy.findIndex((o) => o.id === order.id);
             const isOverlaping = isDateRangeOverlaping(ordersCopy, order);
 
             if (isOverlaping) {
@@ -600,7 +599,15 @@ class App extends React.Component {
             }
 
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
-            ordersCopy.splice(index, 1, order);
+
+            if (copy) {
+                order.id = moment().unix();
+                ordersCopy.push(order);
+            } else {
+                const index = ordersCopy.findIndex((o) => o.id === order.id);
+
+                ordersCopy.splice(index, 1, order);
+            }
 
             this.setState({
                 open: false,

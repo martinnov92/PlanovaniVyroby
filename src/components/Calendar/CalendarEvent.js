@@ -97,12 +97,8 @@ export class CalendarEvent extends React.Component {
     }
 
     handleKeyUp = (e) => {
-        const {
-            selectedEvent,
-        } = this.state;
-        const {
-            event,
-        } = this.props;
+        const { event } = this.props;
+        const { selectedEvent } = this.state;
 
         if (!selectedEvent || (selectedEvent && (selectedEvent.id !== event.id))) {
             return;
