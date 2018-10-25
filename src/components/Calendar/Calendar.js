@@ -73,7 +73,7 @@ export class Calendar extends React.Component {
 
         window.addEventListener('resize', this.renderEvents);
 
-        document.addEventListener('keyup', this.handleKeyup);
+        document.addEventListener('keyup', this.handleKeyUp);
         document.addEventListener('keydown', this.handleKeyDown);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mousemove', this.handleMouseMove);
@@ -112,7 +112,7 @@ export class Calendar extends React.Component {
     componentWillUnmount() {
         window.removeEventListener('resize', this.renderEvents);
 
-        document.removeEventListener('keyup', this.handleKeyup);
+        document.removeEventListener('keyup', this.handleKeyUp);
         document.removeEventListener('keydown', this.handleKeyDown);
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('mousemove', this.handleMouseMove);
@@ -170,21 +170,19 @@ export class Calendar extends React.Component {
         }
     };
 
-    handleKeyUp = (e) => {
+    handleKeyUp = () => {
         this.setState({
             activeKey: null,
         });
     };
 
     handleDragStart = (e, event) => {
-        setTimeout(() => {
-            this.setState({
-                draggingEvent: event
-            });
-        }, 0);
-
-        if (this.state.activeKey === 'CTRL') {
-            e.dataTransfer.dropEffect = 'copy';
+        if (this.state.activeKey !== 'CTRL') {
+            setTimeout(() => {
+                this.setState({
+                    draggingEvent: event
+                });
+            }, 0);
         }
 
         e.dataTransfer.setData('text', JSON.stringify({
@@ -196,6 +194,11 @@ export class Calendar extends React.Component {
 
     handleDrag = (e, event) => {
         // console.log('handle');
+        if (this.state.activeKey === 'CTRL') {
+            e.dataTransfer.dropEffect = 'copy';
+        } else {
+            e.dataTransfer.dropEffect = 'move';
+        }
     }
 
     handleDragEnter = (e) => {
@@ -215,6 +218,12 @@ export class Calendar extends React.Component {
     handleDragOver = (e) => {
         e.preventDefault();
         // console.log('over');
+
+        if (this.state.activeKey === 'CTRL') {
+            e.dataTransfer.dropEffect = 'copy';
+        } else {
+            e.dataTransfer.dropEffect = 'move';
+        }
     }
 
     handleDragLeave = (e) => {
@@ -365,6 +374,8 @@ export class Calendar extends React.Component {
         const {
             machines
         } = this.props;
+
+        console.log(this.state.activeKey);
 
         return (
             <React.Fragment>

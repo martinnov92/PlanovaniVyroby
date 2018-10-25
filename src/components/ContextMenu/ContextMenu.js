@@ -79,7 +79,7 @@ export class ContextMenu extends React.Component {
         const context = ReactDOM.findDOMNode(this.context);
         const isInRoot = (!this.div.current.contains(e.target) || this.div.current.contains(e.target));
         const isInContext = !context.contains(e.target);
-        
+
         if (isInRoot && isInContext) {
             this.closeContextMenu();
         } 
@@ -87,7 +87,7 @@ export class ContextMenu extends React.Component {
 
     handleButtonClick = (e, button) => {
         this.closeContextMenu();
-        return button.onClick(...arguments);
+        return button.onClick(e, button);
     }
 
     closeContextMenu = () => {
