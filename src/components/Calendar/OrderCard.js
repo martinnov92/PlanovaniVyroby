@@ -46,6 +46,7 @@ export class OrderCard extends React.Component {
         let remainderCurrentProduct = 0;
         if (groupedOrder && groupedOrder[order.productName]) {
             const groupedOrderProduct = groupedOrder[order.productName];
+            // eslint-disable-next-line eqeqeq
             const groupedOperation = order.operation ? groupedOrderProduct.operation.find((operation) => operation.order == order.operation.order) : null;
 
             if (groupedOperation) {

@@ -1,7 +1,6 @@
-import isEqual from 'lodash/isEqual';
-import moment from 'moment';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import moment from 'moment';
+import isEqual from 'lodash/isEqual';
 import {
     FULL_FORMAT,
     createClassName,
@@ -64,6 +63,7 @@ export class Calendar extends React.Component {
         };
 
         this.calendarScrolled = false;
+        this.calendar = React.createRef();
         this.currentDate = React.createRef();
     }
 
@@ -78,7 +78,7 @@ export class Calendar extends React.Component {
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mousemove', this.handleMouseMove);
 
-        this.calendar.addEventListener('scroll', this.handleScroll);
+        this.calendar.current.addEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -117,11 +117,11 @@ export class Calendar extends React.Component {
         document.removeEventListener('mouseup', this.handleMouseUp);
         document.removeEventListener('mousemove', this.handleMouseMove);
 
-        this.calendar.removeEventListener('scroll', this.handleScroll);
+        this.calendar.current.removeEventListener('scroll', this.handleScroll);
     }
 
     getDimensions = () => {
-        const calendarHolder = this.calendar;
+        const calendarHolder = this.calendar.current;
         const calendarTableWidth = calendarHolder.firstChild.offsetWidth;
 
         this.setState({
@@ -138,7 +138,7 @@ export class Calendar extends React.Component {
         }
 
         const currentDateCell = this.currentDate.current.getBoundingClientRect();
-        this.calendar.scrollTo(currentDateCell.left - this.calendar.offsetLeft, 0);
+        this.calendar.current.scrollTo(currentDateCell.left - this.calendar.current.offsetLeft, 0);
     }
 
     selectEvent = (e, event) => {
@@ -227,7 +227,7 @@ export class Calendar extends React.Component {
             dragActiveCell: null,
         });
 
-        const classListToRemove = Array.from(this.calendar.getElementsByClassName(CELL_OVER_CLASS_NAME));
+        const classListToRemove = Array.from(this.calendar.current.getElementsByClassName(CELL_OVER_CLASS_NAME));
         if (classListToRemove.length > 0) {
             classListToRemove.forEach((node) => node.classList.remove(CELL_OVER_CLASS_NAME));
         }
@@ -402,7 +402,7 @@ export class Calendar extends React.Component {
                             'two-columns--right-side',
                             lockScroll ? 'lock--scroll' : null
                         ])}
-                        ref={(node) => this.calendar = node}
+                        ref={this.calendar}
                     >
                         <table className="calendar-table">
                             <thead
@@ -420,7 +420,6 @@ export class Calendar extends React.Component {
 
                         <div
                             className="calendar-events--holder"
-                            ref={(node) => this.events = node}
                             style={{
                                 width: `${this.state.calendarTableWidth}px`
                             }}
@@ -697,7 +696,7 @@ export class Calendar extends React.Component {
                 this.scrollToCurrentDate();
             } else {
                 if (!this.calendarScrolled) {
-                    this.calendar.scrollTo(0, 0);
+                    this.calendar.current.scrollTo(0, 0);
                 }
             }
 

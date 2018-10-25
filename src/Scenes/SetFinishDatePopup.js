@@ -25,10 +25,7 @@ export class SetFinishDatePopup extends React.Component {
     }
 
     render() {
-        const {
-            product,
-            onCancel,
-        } = this.props;
+        const { onCancel } = this.props;
 
         return (
             <Popup

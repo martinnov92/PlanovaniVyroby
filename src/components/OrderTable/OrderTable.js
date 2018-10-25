@@ -266,6 +266,7 @@ export class OrderTable extends React.Component {
                         className={
                             createClassName([
                                 done ? 'order--finished' : null,
+                                // eslint-disable-next-line eqeqeq
                                 activeOrder == orderId ? 'context-menu--open' : null,
                             ])
                         }
@@ -354,6 +355,7 @@ export class OrderTable extends React.Component {
                                                     </td>
                                                     {
                                                         OPERATION_COLUMNS.map((column) => {
+                                                            // eslint-disable-next-line eqeqeq
                                                             if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
                                                                 return (
                                                                     <td
@@ -415,6 +417,7 @@ export class OrderTable extends React.Component {
     }
 
     renderOperationCell = (operation, orderIndex) => {
+        // eslint-disable-next-line eqeqeq
         const index = operation.findIndex((o) => o.order == orderIndex);
 
         if (index < 0) {
@@ -511,6 +514,7 @@ export class OrderTable extends React.Component {
 
         if (product && product.operation) {
              // najít kooperaci
+             // eslint-disable-next-line eqeqeq
             cooperation = product.operation.find((o) => o.order == '7');
         }
 
@@ -605,6 +609,7 @@ export class OrderTable extends React.Component {
                                 </th>
                                 {
                                     OPERATION_COLUMNS.map((column) => {
+                                        // eslint-disable-next-line eqeqeq
                                         if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
                                             return (
                                                 <th

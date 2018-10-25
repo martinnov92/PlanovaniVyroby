@@ -285,6 +285,7 @@ export class OrderPopup extends React.Component {
                         </div>
 
                         {
+                            // eslint-disable-next-line eqeqeq
                             order.operation.order != '7'
                             ? <React.Fragment>
                                 <div className="input-group mb-3">

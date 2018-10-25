@@ -9,6 +9,8 @@ export const FULL_FORMAT = 'D.M.YYYY dddd';
 export const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 export const INPUT_DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
 
+/* eslint-disable eqeqeq */
+
 export function createClassName(classNames) {
     return classNames.filter((cls) => cls).join(' ');
 }
@@ -504,3 +506,5 @@ window._debug = {
     formatMinutesToTime,
     calculateOperationTime,
 };
+
+/* eslint-enable eqeqeq */

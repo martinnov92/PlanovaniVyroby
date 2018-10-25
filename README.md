@@ -13,14 +13,16 @@
 
 # TODO:
 
-  ## 20.7.2018
-  - [ ] zrušit findDOMNode
-  - [ ] aktualizovat React, ReactDOM, electron
+  ## 20.7.2018, 25.10.2018
+  - [x] zrušit findDOMNode
+  - [x] aktualizovat React, ReactDOM, electron
+  - [x] disablovat, nebo opravit eslint hlášky
   - [ ] zatím minifikovat JSON, později ukládat nějak jinak
   - [ ] opravit nefukční klávesové zkratky (?)
   - [ ] postup řazení časů u operací (podle posloupnosti časů/hodin)
   - [ ] menu výrobku jako u kooperace + doplnit poznámku
-  - [ ] přidat jest a testovat aspoň některé funkce
+  - [x] přidat jest
+  - [ ] testovat aspoň některé funkce
   - [ ] urychlit renderování spodní tabulky
   - [x] když se blíží termín, tak obarvit
     - den před - oranžová
