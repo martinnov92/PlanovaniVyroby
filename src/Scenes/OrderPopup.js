@@ -78,7 +78,7 @@ export class OrderPopup extends React.Component {
                                 </option>
                                 <option value="-" />
                                 {
-                                    orderList.map((order) => {
+                                    orderList.filter((order) => !order.done).map((order) => {
                                         return (
                                             <option
                                                 key={order.id}

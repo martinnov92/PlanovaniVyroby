@@ -15,10 +15,6 @@ import './calendar.css';
 
 const CELL_OVER_CLASS_NAME = 'calendar--event-dragging--over';
 
-// TODO: uložit, jestli jsem při přetahování měl stisknutou klávesu CTRL a pokud ano tak při handleDrop událost nepřesunout
-// TODO: ale zkopírovat na dané datum
-// TODO: nebo přidat možnost kopírovat do context menu a pak se otevčře popup, kde se upraví jen potřebná data
-
 export class Calendar extends React.Component {
     static defaultProps = {
         pause: 11,

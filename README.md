@@ -33,7 +33,7 @@
     - řazení podle stavu dokončení (prvně nedokončené) + podle čísla zakázky
     - možnost zobrazit jen nedokončené
   - [ ] Možnost uzavření operace
-  - [ ] Kopírování práce - události, např.při rozdělení jedné operace (pravý klik na událost -> kopírovat -> otevře se okno, změním jenom datum)
+  - [x] Kopírování práce - události, např.při rozdělení jedné operace (pravý klik na událost -> kopírovat -> otevře se okno, změním jenom datum)
   - [ ] Zborazovat stoj u operace
   - [x] Možnost zadání výrobku do zakázky ještě bez práce - vyřešili pomocí nového řádku, kam "odkládají" nezařazené zakázky
 

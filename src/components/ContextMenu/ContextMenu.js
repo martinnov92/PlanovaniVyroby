@@ -8,8 +8,6 @@ import './context-menu.css';
 const { remote } = window.require('electron');
 const { Menu, MenuItem } = remote;
 
-const tableContextMenu = new Menu();
-
 export function openEventContextMenu (callback = () => {}) {
     const eventContextMenu = new Menu();
 
@@ -31,6 +29,21 @@ export function openEventContextMenu (callback = () => {}) {
     eventContextMenu.popup({ window: remote.getCurrentWindow() });
 }
 
+export function openTableContextMenu (callback = () => {}) {
+    const tableContextMenu = new Menu();
+
+    tableContextMenu.append(new MenuItem({
+        label: 'Uzavřít výrobek',
+        click: () => callback('close'),
+    }));
+
+    tableContextMenu.append(new MenuItem({
+        label: 'Editovat termín',
+        click: () => callback('term'),
+    }));
+
+    tableContextMenu.popup({ window: remote.getCurrentWindow() });
+}
 
 export class ContextMenu extends React.Component {
     static defaultProps = {

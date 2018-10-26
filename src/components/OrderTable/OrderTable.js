@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Tooltip } from '../Tooltip';
-import { ContextMenu } from '../ContextMenu';
+import { ContextMenu, openTableContextMenu } from '../ContextMenu';
 import {
     dispatchResize,
     createClassName,
@@ -16,6 +16,8 @@ import {
 import './order-table.css';
 
 const OPERATION_COLUMNS = ['1', '2', '3', '4', '5', '6'];
+
+// TODO: vyseparovat řádky/bunky do komponent
 
 export class OrderTable extends React.Component {
     static defaultProps = {
@@ -475,8 +477,7 @@ export class OrderTable extends React.Component {
                         <div className="area--dates">
                             <ul>
                                 {
-                                    operation[index].dates.map((date, i) => {
-                                        // TODO: vytvořit nový key
+                                    operation[index].dates.sort().map((date, i) => {
                                         return <li key={`${date}-${i}`}>
                                             <button
                                                 className="btn btn-link text-dark"
