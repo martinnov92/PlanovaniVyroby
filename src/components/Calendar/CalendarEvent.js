@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 import { DATA_DATE_FORMAT, createClassName, formatMinutesToTime } from '../../utils/helpers';
-import { ContextMenu } from '../ContextMenu';
+import { openEventContextMenu } from '../ContextMenu';
 
 export class CalendarEvent extends React.Component {
     static defaultProps = {
@@ -47,6 +47,12 @@ export class CalendarEvent extends React.Component {
         document.addEventListener('keyup', this.handleKeyUp);
         document.addEventListener('click', this.handleClickOutside);
     }
+
+    handleContextMenu = () => {
+        if (!this.props.done) {
+            openEventContextMenu((type) => this.props.onContextMenu(type, this.props.event));
+        }
+    };
 
     handleClickOutside = (e) => {
         const {
@@ -107,7 +113,7 @@ export class CalendarEvent extends React.Component {
         e.preventDefault();
         const element = e.target;
         if ((e.keyCode === 46 || e.keyCode === 8) && (document.activeElement === element)) {
-            this.props.onDeleteEvent(e, event);
+            this.props.onDeleteEvent(event);
         }
     }
 
@@ -207,19 +213,6 @@ export class CalendarEvent extends React.Component {
             displayOrdersInEvents,
         } = this.props;
         const style = Object.assign({}, this.positionEvent());
-        const buttons = [
-            {
-                label: 'Smazat',
-                onClick: (e) => this.props.onDeleteEvent(e, event),
-            }
-        ];
-
-        if (!event.done) {
-            buttons.unshift({
-                label: 'Upravit',
-                onClick: (e) => this.props.onEditEvent(e, event),
-            });
-        }
 
         if (resizerActive) {
             style.opacity = '0.5';
@@ -227,77 +220,69 @@ export class CalendarEvent extends React.Component {
         }
 
         return (
-            <ContextMenu
-                key={event.id}
-                buttons={buttons}
-                disabled={event.done}
-                onOpen={this.props.onContextOpen}
-                onClose={this.props.onContextClose}
+            <div
+                className={
+                    createClassName([
+                        'calendar--event',
+                        event.note ? 'calendar--event-note' : null,
+                        draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
+                        selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
+                    ])
+                }
+                title={
+                    event.productName + '\n' +
+                    event.worker + '\n' +
+                    event.note
+                }
+                style={style}
+                ref={this.draggableParentDiv}
+                onDragEnd={this.props.onDragEnd}
+                onContextMenu={this.handleContextMenu}
+                onClick={(e) => this.handleClick(e, event)}
+                onDragStart={(e) => this.props.onDragStart(e, event)}
+                onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
+                onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
+                onDoubleClick={(e) => this.props.onDoubleClick(e, event)}
+                draggable={(order.done || event.done) ? false : !resizerActive}
             >
-                <div
-                    className={
-                        createClassName([
-                            'calendar--event',
-                            event.note ? 'calendar--event-note' : null,
-                            draggingEvent && draggingEvent.id === event.id ? 'calendar--event-dragging' : null,
-                            selectedEvent && selectedEvent.id === event.id ? 'calendar--event-selected' : null,
-                        ])
-                    }
-                    title={
-                        event.productName + '\n' +
-                        event.worker + '\n' +
-                        event.note
-                    }
-                    style={style}
-                    ref={this.draggableParentDiv}
-                    onDragEnd={this.props.onDragEnd}
-                    onClick={(e) => this.handleClick(e, event)}
-                    onDrag={(e) => this.props.onDrag(e, event)}
-                    onDragStart={(e) => this.props.onDragStart(e, event)}
-                    onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
-                    onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
-                    onDoubleClick={(e) => this.props.onDoubleClick(e, event)}
-                    draggable={(order.done || event.done) ? false : !resizerActive}
-                >
-                    {
-                        displayOrdersInEvents && (event.operation && event.operation.order !== '-')
-                        ? <div className="calendar--event-operation">
-                            { event.operation.order }.
-                        </div>
-                        : null
-                    }
-
-                    <div
-                        className="calendar--event-text"
-                    >
-                        <p>
-                            <strong>
-                                { event.productName } ({ formatMinutesToTime(event.workingHours) })
-                            </strong>
-                        </p>
-
-                        <p>
-                            { event.worker }
-                        </p>
+                {
+                    displayOrdersInEvents && (event.operation && event.operation.order !== '-')
+                    ? <div className="calendar--event-operation">
+                        { event.operation.order }.
                     </div>
+                    : null
+                }
 
-                    <div
-                        data-resize="dateFrom"
-                        onDragEnd={this.handleResizerDragEnd}
-                        onDragStart={this.handleResizerDragStart}
-                        draggable={(order.done || event.done) ? false : true}
-                        className="calendar--event--resizer calendar--event--resizer-left"
-                    />
+                <div
+                    className="calendar--event-text"
+                >
+                    <p>
+                        <strong>
+                            { event.productName } ({ formatMinutesToTime(event.workingHours) })
+                        </strong>
+                    </p>
 
-                    <div
-                        data-resize="dateTo"
-                        onDragEnd={this.handleResizerDragEnd}
-                        onDragStart={this.handleResizerDragStart}
-                        draggable={(order.done || event.done) ? false : true}
-                        className="calendar--event--resizer calendar--event--resizer-right"
-                    />
+                    <p>
+                        { event.worker }
+                    </p>
                 </div>
-            </ContextMenu>
+
+                <div
+                    data-resize="dateFrom"
+                    onDragEnd={this.handleResizerDragEnd}
+                    onDragStart={this.handleResizerDragStart}
+                    draggable={(order.done || event.done) ? false : true}
+                    className="calendar--event--resizer calendar--event--resizer-left"
+                />
+
+                <div
+                    data-resize="dateTo"
+                    onDragEnd={this.handleResizerDragEnd}
+                    onDragStart={this.handleResizerDragStart}
+                    draggable={(order.done || event.done) ? false : true}
+                    className="calendar--event--resizer calendar--event--resizer-right"
+                />
+            </div>
         );
     }
 } 

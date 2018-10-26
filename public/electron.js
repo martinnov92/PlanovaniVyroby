@@ -20,7 +20,7 @@ const date = new Date();
 const fileName = `PLANOVANI_ZAKAZEK_${date.getFullYear()}.json`;
 const documentsPath = `${electron.app.getPath('documents')}`;
 
-let template = [
+const template = [
     {
         label: 'Soubor',
         submenu: [
@@ -222,7 +222,9 @@ function ipcListeners() {
     ipc.on('file-watcher-localsave', (event, local) => {
         localChange = local;
     });
+
     ipc.on('file-stop-watching', stopWatchingForFileChanges);
+
     ipc.on('file-start-watching', startWatchingForFileChanges);
 }
 

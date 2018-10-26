@@ -13,6 +13,12 @@ export class OrderPopup extends React.Component {
         filterFinishedOrders: false,
     };
 
+    constructor() {
+        super();
+
+        this.dateFromInput = React.createRef();
+    }
+
     render() {
         const {
             order,
@@ -154,6 +160,7 @@ export class OrderPopup extends React.Component {
                                 type="datetime-local"
                                 value={order.dateFrom}
                                 className="form-control"
+                                ref={this.dateFromInput}
                                 onChange={this.props.handleInputChange}
                             />
                         </div>

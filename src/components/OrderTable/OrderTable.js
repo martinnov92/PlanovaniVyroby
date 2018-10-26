@@ -475,8 +475,9 @@ export class OrderTable extends React.Component {
                         <div className="area--dates">
                             <ul>
                                 {
-                                    operation[index].dates.map((date) => {
-                                        return <li key={date}>
+                                    operation[index].dates.map((date, i) => {
+                                        // TODO: vytvořit nový key
+                                        return <li key={`${date}-${i}`}>
                                             <button
                                                 className="btn btn-link text-dark"
                                                 onClick={() => this.props.moveToDate(date)}

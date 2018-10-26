@@ -21,7 +21,7 @@
   - [ ] opravit nefukční klávesové zkratky (?)
   - [ ] postup řazení časů u operací (podle posloupnosti časů/hodin)
   - [ ] menu výrobku jako u kooperace + doplnit poznámku
-  - [x] přidat jest
+  - [ ] předělat context menu na normální systémové context menu
   - [ ] testovat aspoň některé funkce
   - [ ] urychlit renderování spodní tabulky
   - [x] když se blíží termín, tak obarvit

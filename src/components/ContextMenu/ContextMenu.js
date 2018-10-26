@@ -3,6 +3,35 @@ import ReactDOM from 'react-dom';
 import { createClassName } from '../../utils/helpers';
 import './context-menu.css';
 
+// TODO: předělat na systémové context menu, viz. dokumentace
+
+const { remote } = window.require('electron');
+const { Menu, MenuItem } = remote;
+
+const tableContextMenu = new Menu();
+
+export function openEventContextMenu (callback = () => {}) {
+    const eventContextMenu = new Menu();
+
+    eventContextMenu.append(new MenuItem({
+        label: 'Upravit',
+        click: () => callback('edit'),
+    }));
+
+    eventContextMenu.append(new MenuItem({
+        label: 'Kopírovat',
+        click: () => callback('copy'),
+    }));
+
+    eventContextMenu.append(new MenuItem({
+        label: 'Smazat',
+        click: () => callback('delete'),
+    }));
+
+    eventContextMenu.popup({ window: remote.getCurrentWindow() });
+}
+
+
 export class ContextMenu extends React.Component {
     static defaultProps = {
         buttons: [],
@@ -76,7 +105,7 @@ export class ContextMenu extends React.Component {
             return;
         }
 
-        const context = ReactDOM.findDOMNode(this.context);
+        const context = this.context;
         const isInRoot = (!this.div.current.contains(e.target) || this.div.current.contains(e.target));
         const isInContext = !context.contains(e.target);
 

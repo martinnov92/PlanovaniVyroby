@@ -59,6 +59,7 @@ class App extends React.Component {
         this.timeout = null;
         this.settings = React.createRef();
         this.calendar = React.createRef();
+        this.orderPopup = React.createRef();
     }
 
     // * OVLÁDÁNÍ APLIKACE + ELECTRON
@@ -200,15 +201,15 @@ class App extends React.Component {
         alert('Nastala chyba při sledování změn souboru: ' + error);
     }
 
-    showSaveDialog = () => {
+    showSaveDialog() {
         electron.ipcRenderer.send('open-save-dialog');
     }
 
-    showOpenDialog = () => {
+    showOpenDialog() {
         electron.ipcRenderer.send('open-file-dialog');
     }
 
-    sendUpdateAppRequest = () => {
+    sendUpdateAppRequest() {
         electron.ipcRenderer.send('update-install');
     }
 
@@ -468,7 +469,7 @@ class App extends React.Component {
         });
     }
 
-    handleEventLeave = (e, order) => {
+    handleEventLeave = () => {
         this.setState({
             hoverOrder: null,
         });
@@ -491,7 +492,36 @@ class App extends React.Component {
         });
     }
 
-    handleEventEdit = (e, order) => {
+    handleContextMenu = (type, order) => {
+        switch (type) {
+            case 'edit':
+            default:
+                return this.handleEventEdit(order);
+            case 'copy':
+                return this.handleEventCopy(order);
+            case 'delete':
+                return this.handleOrderDelete(order);
+        }
+    };
+
+    handleEventCopy = (_order) => {
+        const order = {
+            ..._order,
+            id: null,
+            dateFrom: moment(_order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
+            dateTo: moment(_order.dateTo).format(INPUT_DATE_TIME_FORMAT),
+        };
+
+        this.setState({
+            order,
+            open: true,
+        }, () => {
+            // focus dateFrom input in popup, after it was opened
+            this.orderPopup.current.dateFromInput.current.focus();
+        });
+    };
+
+    handleEventEdit = (order) => {
         this.handleReadOnly(() => {
             const copyOrder = {
                 ...order,
@@ -787,7 +817,7 @@ class App extends React.Component {
         });
     }
 
-    handleOrderDelete = (e, passedOrder) => {
+    handleOrderDelete = (passedOrder) => {
         this.handleReadOnly(() => {
             const orders = [...this.state.orders];
             const findIndex = orders.findIndex((o) => o.id === passedOrder.id);
@@ -986,13 +1016,14 @@ class App extends React.Component {
                     onMouseUp={this.handleSelectingMouseUp}
 
                     // context menu
-                    onEditEvent={this.handleEventEdit}
-                    onDeleteEvent={this.handleOrderDelete}
+                    onContextMenu={this.handleContextMenu}
 
                     // data
                     events={orders}
                     machines={machines}
                     orderList={orderList}
+                    onCopyEvent={this.handleEventCopy}
+                    onDeleteEvent={this.handleOrderDelete}
                     displayOrdersInEvents={displayOrdersInEvents}
                 />
 
@@ -1059,6 +1090,7 @@ class App extends React.Component {
                             products={products}
                             machines={machines}
                             orderList={orderList}
+                            ref={this.orderPopup}
                             handleSave={this.handleSave}
                             handleClose={this.handleClose}
                             handleInputChange={this.handleInputChange}

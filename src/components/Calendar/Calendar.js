@@ -41,6 +41,7 @@ export class Calendar extends React.Component {
             scrollTop: 0,
             scrollLeft: 0,
             activeKey: null,
+            isDragging: false,
             lockScroll: false,
             eventsToRender: [],
             draggingEvent: null,
@@ -163,7 +164,14 @@ export class Calendar extends React.Component {
     }
 
     handleKeyDown = (e) => {
-        if (e.keyCode === 19 || e.keyCode === 91) {
+        // run only if event is selected
+        if (this.state.selectedEvent) {
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 67) {
+                this.props.onCopyEvent(this.state.selectedEvent);
+            }
+        }
+
+        if (e.ctrlKey || e.metaKey) {
             this.setState({
                 activeKey: 'CTRL',
             });
@@ -171,12 +179,18 @@ export class Calendar extends React.Component {
     };
 
     handleKeyUp = () => {
-        this.setState({
-            activeKey: null,
-        });
+        if (!this.state.isDragging) {
+            this.setState({
+                activeKey: null,
+            });
+        }
     };
 
     handleDragStart = (e, event) => {
+        this.setState({
+            isDragging: true,
+        });
+        
         if (this.state.activeKey !== 'CTRL') {
             setTimeout(() => {
                 this.setState({
@@ -190,15 +204,6 @@ export class Calendar extends React.Component {
         }));
 
         this.props.onDragStart();
-    }
-
-    handleDrag = (e, event) => {
-        // console.log('handle');
-        if (this.state.activeKey === 'CTRL') {
-            e.dataTransfer.dropEffect = 'copy';
-        } else {
-            e.dataTransfer.dropEffect = 'move';
-        }
     }
 
     handleDragEnter = (e) => {
@@ -217,13 +222,6 @@ export class Calendar extends React.Component {
 
     handleDragOver = (e) => {
         e.preventDefault();
-        // console.log('over');
-
-        if (this.state.activeKey === 'CTRL') {
-            e.dataTransfer.dropEffect = 'copy';
-        } else {
-            e.dataTransfer.dropEffect = 'move';
-        }
     }
 
     handleDragLeave = (e) => {
@@ -232,6 +230,8 @@ export class Calendar extends React.Component {
 
     handleDragEnd = (e) => {
         this.setState({
+            activeKey: null,
+            isDragging: false,
             draggingEvent: null,
             dragActiveCell: null,
         });
@@ -274,7 +274,6 @@ export class Calendar extends React.Component {
             machine: machineId,
         };
 
-        // TODO: události se kopírují, nepřesouvají když udělám keyUP
         if (this.state.activeKey === 'CTRL') {
             return this.props.onEventDrop(newEvent, true);
         }
@@ -375,118 +374,113 @@ export class Calendar extends React.Component {
             machines
         } = this.props;
 
-        console.log(this.state.activeKey);
-
         return (
-            <React.Fragment>
-                {/* TABLE */}
-                <div className="two-columns--one-fixed element--block shadow--light">
-                    <div
-                        className="two-columns--left-side"
-                        style={{
-                            transform: `translateY(${(this.state.scrollTop * -1)}px)`,
-                        }}
-                    >
-                        <div
-                            className="column--fixed-header"
-                            style={{
-                                height: '43px',
-                                borderLeft: 0,
-                                borderBottom: 0,
-                            }}
-                        >
-                            <p>Stroj</p>
-                        </div>
-                        {
-                            machines.map((machine) => {
-                                return <div
-                                    key={machine.id}
-                                    className="left-side--item"
-                                >
-                                    <p>{machine.name}</p>
-                                </div>;
-                            })
-                        }
-                    </div>
-                    <div
-                        className={createClassName([
-                            'two-columns--right-side',
-                            lockScroll ? 'lock--scroll' : null
-                        ])}
-                        ref={this.calendar}
-                    >
-                        <table className="calendar-table">
-                            <thead
-                                className="calendar-table--header"
-                            >
-                                <tr>
-                                    {this.renderDaysCell(false)}
-                                </tr>
-                            </thead>
-                            {/* body of the calendar, week */}
-                            <tbody className="calendar-table--body">
-                                {this.state.renderTableBody}
-                            </tbody>
-                        </table>
-
-                        <div
-                            className="calendar-events--holder"
-                            style={{
-                                width: `${this.state.calendarTableWidth}px`
-                            }}
-                        >
-                            {this.state.eventsToRender}
-                        </div>
-                    </div>
-
-                    {
-                        selectingCells
-                        ? <div
-                            className={createClassName([
-                                'calendar--event',
-                                'calendar--event-selecting',
-                            ])}
-                            style={selectingCellStyle}
-                        >
-                            {
-                                selectingCellStyle.width > 0 && selectingCellTime
-                                ? <p className="text-light">
-                                    <strong>{formatMinutesToTime(selectingCellTime)}</strong>
-                                </p>
-                                : null
-                            }
-                        </div>
-                        : null
-                    }
-
+            <div className="two-columns--one-fixed element--block shadow--light">
                 <div
-                    className="pd-tooltip"
+                    className="two-columns--left-side"
                     style={{
-                        position: 'absolute',
-                        pointerEvents: 'none',
-                        display: dragActiveCell ? 'block' : 'none',
-                        left: `${dragActiveCell ? (dragActiveCell.left - 65 + (dragActiveCell.width / 2)) : '0'}px`,
-                        // zobrazení pod událostí
-                        top: `${dragActiveCell ? (dragActiveCell.top + dragActiveCell.height + 5) : '0'}px`,
-                        // zobrazení nad událostí
-                        // top: `${dragActiveCell ? (dragActiveCell.top - dragActiveCell.height - 2) : '0'}px`,
+                        transform: `translateY(${(this.state.scrollTop * -1)}px)`,
                     }}
                 >
                     <div
+                        className="column--fixed-header"
                         style={{
-                            width: '130px',
-                            minWidth: '130px',
+                            height: '43px',
+                            borderLeft: 0,
+                            borderBottom: 0,
                         }}
-                        className="pd-tooltip__inner pd-tooltip__bottom pd-tooltip--open"
                     >
-                        <div className="pd-tooltip__content">
-                            <div className="pd-tooltip__arrow" />
-                            { dragActiveCellInfo }
-                            </div>
+                        <p>Stroj</p>
+                    </div>
+                    {
+                        machines.map((machine) => {
+                            return <div
+                                key={machine.id}
+                                className="left-side--item"
+                            >
+                                <p>{machine.name}</p>
+                            </div>;
+                        })
+                    }
+                </div>
+                <div
+                    className={createClassName([
+                        'two-columns--right-side',
+                        lockScroll ? 'lock--scroll' : null
+                    ])}
+                    ref={this.calendar}
+                >
+                    <table className="calendar-table">
+                        <thead
+                            className="calendar-table--header"
+                        >
+                            <tr>
+                                {this.renderDaysCell(false)}
+                            </tr>
+                        </thead>
+                        {/* body of the calendar, week */}
+                        <tbody className="calendar-table--body">
+                            {this.state.renderTableBody}
+                        </tbody>
+                    </table>
+
+                    <div
+                        className="calendar-events--holder"
+                        style={{
+                            width: `${this.state.calendarTableWidth}px`
+                        }}
+                    >
+                        {this.state.eventsToRender}
+                    </div>
+                </div>
+
+                {
+                    selectingCells
+                    ? <div
+                        className={createClassName([
+                            'calendar--event',
+                            'calendar--event-selecting',
+                        ])}
+                        style={selectingCellStyle}
+                    >
+                        {
+                            selectingCellStyle.width > 0 && selectingCellTime
+                            ? <p className="text-light">
+                                <strong>{formatMinutesToTime(selectingCellTime)}</strong>
+                            </p>
+                            : null
+                        }
+                    </div>
+                    : null
+                }
+
+            <div
+                className="pd-tooltip"
+                style={{
+                    position: 'absolute',
+                    pointerEvents: 'none',
+                    display: dragActiveCell ? 'block' : 'none',
+                    left: `${dragActiveCell ? (dragActiveCell.left - 65 + (dragActiveCell.width / 2)) : '0'}px`,
+                    // zobrazení pod událostí
+                    top: `${dragActiveCell ? (dragActiveCell.top + dragActiveCell.height + 5) : '0'}px`,
+                    // zobrazení nad událostí
+                    // top: `${dragActiveCell ? (dragActiveCell.top - dragActiveCell.height - 2) : '0'}px`,
+                }}
+            >
+                <div
+                    style={{
+                        width: '130px',
+                        minWidth: '130px',
+                    }}
+                    className="pd-tooltip__inner pd-tooltip__bottom pd-tooltip--open"
+                >
+                    <div className="pd-tooltip__content">
+                        <div className="pd-tooltip__arrow" />
+                        { dragActiveCellInfo }
                         </div>
                     </div>
                 </div>
-            </React.Fragment>
+            </div>
         );
     }
 
@@ -605,7 +599,6 @@ export class Calendar extends React.Component {
                     shiftStart={shiftStart}
                     className={[isPause]}
                     {...cellAttrs}
-                    // onClick={() => console.log('click', i)}
                 />
                 <CalendarCell
                     day={day}
@@ -627,7 +620,6 @@ export class Calendar extends React.Component {
                     colSpan={2}
                     machine={machine}
                     className={[isPause]}
-                    onClick={() => console.log('click', i)}
                     {...cellAttrs}
                 />
             }
@@ -681,7 +673,6 @@ export class Calendar extends React.Component {
                     displayOrdersInEvents={displayOrdersInEvents}
 
                     // mouse events
-                    onDrag={this.handleDrag}
                     onClick={this.selectEvent}
                     onDragEnd={this.handleDragEnd}
                     onDragStart={this.handleDragStart}
@@ -691,11 +682,8 @@ export class Calendar extends React.Component {
                     onDoubleClick={this.props.onDoubleClick}
 
                     // context menu props
-                    onEditEvent={this.props.onEditEvent}
-                    onDoneEvent={this.props.onDoneEvent}
+                    onContextMenu={this.props.onContextMenu}
                     onDeleteEvent={this.props.onDeleteEvent}
-                    onContextOpen={() => this.setState({ lockScroll: true })}
-                    onContextClose={() => this.setState({ lockScroll: false })}
                 />
             );
         });
