@@ -49,7 +49,7 @@ export class CalendarEvent extends React.Component {
     }
 
     handleContextMenu = () => {
-        if (!this.props.done) {
+        if (!this.props.event.done) {
             openEventContextMenu((type) => this.props.onContextMenu(type, this.props.event));
         }
     };

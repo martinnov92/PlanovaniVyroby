@@ -841,7 +841,7 @@ class App extends React.Component {
         });
     };
 
-    handleOrderOrProductOpenOrClose = (e, productName, orderId, done) => {
+    handleOrderOrProductOpenOrClose = (productName, orderId, done) => {
         if (productName == null && typeof orderId === 'string') {
             this.handleCloseOrOpenOrder(orderId, done);
         }
@@ -1035,7 +1035,7 @@ class App extends React.Component {
                     moveToDate={this.handleMoveToDate}
                     columnsVisibility={columnsVisibility}
                     handlePlannedDateSave={this.handlePlannedDateSave}
-                    onCloseOrOpenItem={this.handleOrderOrProductOpenOrClose}
+                    onContextMenu={this.handleOrderOrProductOpenOrClose}
                 />
             </React.Fragment>
         );
