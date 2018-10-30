@@ -644,7 +644,7 @@ export class Calendar extends React.Component {
         const endOfTheWeek = moment(startOfTheWeek).endOf('week');
         const filteredEvents = filterDataByDate(events, startOfTheWeek, endOfTheWeek);
 
-        const eventsToRender = filteredEvents.map((event) => {
+        const eventsToRender = filteredEvents.map((event, index) => {
             const order = orderList.find((o) => o.id === event.orderId);
             const machine = machines.find((machine) => machine.id === event.machine);
             let row = null;
@@ -658,6 +658,7 @@ export class Calendar extends React.Component {
             return (
                 <CalendarEvent
                     row={row}
+                    index={index}
                     order={order}
                     event={event}
                     key={event.id}

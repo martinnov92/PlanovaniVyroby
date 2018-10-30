@@ -1,7 +1,7 @@
 import React from 'react';
 import 'react-tabs/style/react-tabs.css';
 
-export class OrdersTab extends React.Component {
+export class OrdersTab extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -60,13 +60,8 @@ export class OrdersTab extends React.Component {
     }
 
     render() {
-        const {
-            tempOrder,
-        } = this.state;
-
-        const {
-            orders,
-        } = this.props;
+        const { orders } = this.props;
+        const { tempOrder } = this.state;
 
         return (
             <React.Fragment>

@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Popup } from '../components/Popup';
 import { INPUT_DATE_TIME_FORMAT } from '../utils/helpers';
 
-export class SetFinishDatePopup extends React.Component {
+export class SetFinishDatePopup extends React.PureComponent {
     constructor() {
         super();
 

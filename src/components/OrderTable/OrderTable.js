@@ -13,7 +13,7 @@ export const OPERATION_COLUMNS = ['1', '2', '3', '4', '5', '6'];
 
 // TODO: vyseparovat řádky/bunky do komponent
 
-export class OrderTable extends React.Component {
+export class OrderTable extends React.PureComponent {
     static defaultProps = {
         orderList: [],
         groupedOrders: [],

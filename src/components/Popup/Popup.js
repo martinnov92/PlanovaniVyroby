@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { createClassName } from '../../utils/helpers';
 import './popup.css';
 
-export class Popup extends React.Component {
+export class Popup extends React.PureComponent {
     static defaultProps = {
         center: true,
         modal: false,
@@ -38,6 +38,9 @@ export class Popup extends React.Component {
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mousemove', this.handleMouseMove);
         this.header.current.addEventListener('mousedown', this.handleMouseDown);
+
+        // focus popup
+        this.popup.current.focus();
     }
 
     componentWillUnmount() {
@@ -128,6 +131,7 @@ export class Popup extends React.Component {
                     createClassName(['popup', this.props.className])
                 }
                 style={style}
+                tabIndex={-1}
                 ref={this.popup}
             >
                 <header

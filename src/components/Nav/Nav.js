@@ -5,7 +5,7 @@ import ARROW_RIGHT from '../../statics/arrow-right.svg';
 
 import './nav.css';
 
-export class Nav extends React.Component {
+export class Nav extends React.PureComponent {
     render() {
         return (
             <nav

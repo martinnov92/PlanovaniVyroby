@@ -1,7 +1,7 @@
 import React from 'react';
 import 'react-tabs/style/react-tabs.css';
 
-export class MachinesTab extends React.Component {
+export class MachinesTab extends React.PureComponent {
     constructor(props) {
         super(props);
 

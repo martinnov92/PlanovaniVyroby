@@ -110,9 +110,8 @@ export class CalendarEvent extends React.Component {
             return;
         }
 
-        e.preventDefault();
-        const element = e.target;
-        if ((e.keyCode === 46 || e.keyCode === 8) && (document.activeElement === element)) {
+        console.log(document.activeElement);
+        if ((e.keyCode === 46 || e.keyCode === 8) && (document.activeElement.classList.contains('calendar--event-selected'))) {
             this.props.onDeleteEvent(event);
         }
     }
@@ -209,6 +208,7 @@ export class CalendarEvent extends React.Component {
         const {
             event,
             order,
+            index,
             draggingEvent,
             displayOrdersInEvents,
         } = this.props;
@@ -235,6 +235,7 @@ export class CalendarEvent extends React.Component {
                     event.note
                 }
                 style={style}
+                tabIndex={index}
                 ref={this.draggableParentDiv}
                 onDragEnd={this.props.onDragEnd}
                 onContextMenu={this.handleContextMenu}

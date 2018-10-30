@@ -510,6 +510,9 @@ class App extends React.Component {
             id: null,
             dateFrom: moment(_order.dateFrom).format(INPUT_DATE_TIME_FORMAT),
             dateTo: moment(_order.dateTo).format(INPUT_DATE_TIME_FORMAT),
+            operation: {
+                ..._order.operation,
+            },
         };
 
         this.setState({
@@ -631,7 +634,7 @@ class App extends React.Component {
             order.workingHours = getNetMachineTime(order.dateFrom, order.dateTo);
 
             if (copy) {
-                order.id = moment().unix();
+                order.id = Date.now();
                 ordersCopy.push(order);
             } else {
                 const index = ordersCopy.findIndex((o) => o.id === order.id);
@@ -765,7 +768,7 @@ class App extends React.Component {
                     return electron.ipcRenderer.send('open-error-dialog', 'Chyba', 'V tomto čase je daný stroj vytížen.');
                 }
 
-                order.id = moment().unix();
+                order.id = Date.now();
                 ordersCopy.push(order);
             } else {
                 const findIndex = ordersCopy.findIndex((o) => o.id === order.id);

@@ -8,7 +8,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import 'react-tabs/style/react-tabs.css';
 
-export class SettingsPopup extends React.Component {
+export class SettingsPopup extends React.PureComponent {
     static defaultProps = {
         columnsVisibility: {},
     };
