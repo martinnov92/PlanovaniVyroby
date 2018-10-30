@@ -1,6 +1,6 @@
 {
   "name": "planovanivyroby",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "homepage": "./",
   "author": "Martin Novák",
@@ -33,7 +33,7 @@
     "build-mac": "react-scripts build && electron-builder -m",
     "ship-mac": "react-scripts build && electron-builder -m -p always",
     "ship-windows": "react-scripts build && electron-builder -w -p always",
-    "dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "build": {
     "appId": "com.martinnovak.PlanovaniVyroby",
