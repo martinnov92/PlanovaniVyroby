@@ -3,7 +3,7 @@ import { createClassName } from '../../utils/helpers';
 
 import './autocomplete.css';
 
-export class Autocomplete extends React.PureComponent {
+export class Autocomplete extends React.Component {
     constructor(props) {
         super(props);
 

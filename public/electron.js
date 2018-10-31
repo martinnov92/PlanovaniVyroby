@@ -95,14 +95,15 @@ function createWindow() {
 
     // and load the index.html of the app.
     // PRODUCTION
-    // mainWindow.loadURL(url.format({
-    //     pathname: path.join(__dirname, '../build/index.html'),
-    //     protocol: 'file:',
-    //     slashes: true
-    // }));
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, '../build/index.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
 
     // DEV
-    mainWindow.loadURL('http://localhost:3000');
+    // mainWindow.loadURL('http://localhost:3000');
+    // mainWindow.webContents.openDevTools();
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
@@ -114,7 +115,6 @@ function createWindow() {
 
     mainWindow.webContents.on('dom-ready', () => {
         sendMessageToWindow('dom-ready');
-        mainWindow.webContents.openDevTools();
     });
 
     // if the render process crashes, reload the window

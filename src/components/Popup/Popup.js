@@ -108,11 +108,9 @@ export class Popup extends React.PureComponent {
     }
 
     handleKeyUp = (e) => {
-        if (e.keyCode !== 27) {
-            return;
+        if (e.keyCode === 27) {
+            return this.props.onClose();
         }
-
-        return this.props.onClose();
     }
 
     renderPopup = () => {

@@ -112,7 +112,7 @@ class App extends React.Component {
         });
     }
 
-    handleUpdateChecking = (sender) => {
+    handleUpdateChecking = (_) => {
         this.showInfoMessage(
             <React.Fragment>
                 <p>Kontrola aktualizací</p>
@@ -120,10 +120,10 @@ class App extends React.Component {
         , 5000);
     }
 
-    handleUpdateDownloading = (sender, progress = {}) => {
+    handleUpdateDownloading = (_, progress = {}) => {
         this.showInfoMessage(
             <React.Fragment>
-                <p>Stahování - {progress.percent}%</p>
+                <p>Stahování - {parseInt(progress.percent, 10)}%</p>
             </React.Fragment>
         );
     }

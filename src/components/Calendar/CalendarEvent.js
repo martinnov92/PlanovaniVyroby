@@ -110,7 +110,6 @@ export class CalendarEvent extends React.Component {
             return;
         }
 
-        console.log(document.activeElement);
         if ((e.keyCode === 46 || e.keyCode === 8) && (document.activeElement.classList.contains('calendar--event-selected'))) {
             this.props.onDeleteEvent(event);
         }
@@ -243,7 +242,7 @@ export class CalendarEvent extends React.Component {
                 onDragStart={(e) => this.props.onDragStart(e, event)}
                 onMouseEnter={(e) => this.props.onMouseEnter(e, event)}
                 onMouseLeave={(e) => this.props.onMouseLeave(e, event)}
-                onDoubleClick={(e) => this.props.onDoubleClick(e, event)}
+                onDoubleClick={() => this.props.onDoubleClick(event)}
                 draggable={(order.done || event.done) ? false : !resizerActive}
             >
                 {
