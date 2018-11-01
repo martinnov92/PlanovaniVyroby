@@ -81,6 +81,13 @@ const template = [
                     autoUpdater.checkForUpdates();
                 }
             },
+            {
+                label: 'Debug',
+                accelerator: 'CmdOrCtrl+Shift+I',
+                click: () => {
+                    mainWindow.webContents.openDevTools();
+                }
+            }
         ]
     }
 ];
@@ -103,7 +110,6 @@ function createWindow() {
 
     // DEV
     // mainWindow.loadURL('http://localhost:3000');
-    // mainWindow.webContents.openDevTools();
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);

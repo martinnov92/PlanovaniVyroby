@@ -18,10 +18,9 @@
   - [x] aktualizovat React, ReactDOM, electron
   - [x] disablovat, nebo opravit eslint hlášky
   - [ ] zatím minifikovat JSON, později ukládat nějak jinak
-  - [ ] opravit nefukční klávesové zkratky (?)
-  - [ ] postup řazení časů u operací (podle posloupnosti časů/hodin)
+  - [x] postup řazení časů u operací (podle posloupnosti časů/hodin)
   - [ ] menu výrobku jako u kooperace + doplnit poznámku
-  - [ ] předělat context menu na normální systémové context menu
+  - [x] předělat context menu na normální systémové context menu
   - [ ] testovat aspoň některé funkce
   - [ ] urychlit renderování spodní tabulky
   - [x] když se blíží termín, tak obarvit

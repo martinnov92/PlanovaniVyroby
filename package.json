@@ -1,6 +1,6 @@
 {
   "name": "planovanivyroby",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "homepage": "./",
   "author": "Martin Novák",
@@ -8,19 +8,19 @@
   "repository": "https://github.com/martinnov92/PlanovaniVyroby",
   "dependencies": {
     "chokidar": "^2.0.4",
-    "electron-updater": "^3.1.2",
+    "electron-updater": "^3.1.6",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "moment-range": "^4.0.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-scripts": "2.0.5",
+    "react-scripts": "2.1.1",
     "react-tabs": "^2.3.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
-    "electron": "^3.0.5",
-    "electron-builder": "^20.28.4",
+    "electron": "^3.0.7",
+    "electron-builder": "^20.29.0",
     "wait-on": "^3.1.0"
   },
   "scripts": {
@@ -33,7 +33,7 @@
     "build-mac": "react-scripts build && electron-builder -m",
     "ship-mac": "react-scripts build && electron-builder -m -p always",
     "ship-windows": "react-scripts build && electron-builder -w -p always",
-    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\""
+    "dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "build": {
     "appId": "com.martinnovak.PlanovaniVyroby",
