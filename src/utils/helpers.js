@@ -469,8 +469,8 @@ export const createStyleObject = (width, maxWidth = true) => ({
     // [maxWidth ? 'maxWidth' : null]: maxWidth ? `${width || 0}px` : null,
 });
 
-export function getWarningClassName(date) {
-    if (!date) {
+export function getWarningClassName(date, done) {
+    if (!date || done) {
         return null;
     }
 
@@ -479,7 +479,7 @@ export function getWarningClassName(date) {
     const now = moment().startOf('day');
     const differenceInDays = Math.floor(moment.duration(date.diff(now)).asDays());
 
-    if (differenceInDays === 0) {
+    if (differenceInDays <= 0) {
         className = 'product--same-day';
     } else if (differenceInDays === 1) {
         className = 'product--day-before';

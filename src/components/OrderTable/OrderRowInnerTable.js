@@ -49,14 +49,14 @@ export class OrderRowInnerTable extends React.PureComponent {
             columnsVisibility,
             plannedFinishDateValue,
             editPlannedFinishDateRow,
-
+            // fn
             onBlur,
             onChange,
         } = this.props;
 
         // const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
         const totalOperationTime = formatMinutesToTime(product.totalOperationTime);
-        const warningClassNameBeforeToday = getWarningClassName(product.plannedFinishDate);
+        const warningClassNameBeforeToday = getWarningClassName(product.plannedFinishDate, product.done);
         const lastWorkingDate = product.lastWorkingDate ? moment(product.lastWorkingDate).format(DATA_DATE_FORMAT) : '-';
         const plannedFinishDate = product.plannedFinishDate ? moment(product.plannedFinishDate).format(DATA_DATE_FORMAT) : '-';
         const className = [

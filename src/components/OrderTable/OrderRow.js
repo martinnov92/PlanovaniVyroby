@@ -12,7 +12,7 @@ export class OrderRow extends React.PureComponent {
             columnsVisibility,
             editPlannedFinishDate,
             plannedFinishDateValue,
-
+            // fn
             moveToDate,
             onBlur,
             onChange,
