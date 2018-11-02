@@ -8,7 +8,6 @@ const app = electron.app;
 const Menu = electron.Menu;
 const ipc = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
-const globalShortcut = electron.globalShortcut;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -60,6 +59,18 @@ const template = [
             }
         ]
     },
+    // {
+    //     label: 'Úpravy',
+    //     submenu: [
+    //         {
+    //             label: 'Zpět',
+    //             accelerator: 'CmdOrCtrl+Z',
+    //             click: () => {
+                    
+    //             },
+    //         },
+    //     ],
+    // },
     {
         label: 'Zakázky',
         submenu: [
@@ -100,16 +111,18 @@ function createWindow() {
         minHeight: 400,
     });
 
-    // and load the index.html of the app.
-    // PRODUCTION
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '../build/index.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-
     // DEV
-    // mainWindow.loadURL('http://localhost:3000');
+    if (process.env.NODE_ENV === 'development') {
+        mainWindow.webContents.openDevTools();
+        mainWindow.loadURL('http://localhost:3000');
+    } else {
+        // PRODUCTION
+        mainWindow.loadURL(url.format({
+            pathname: path.join(__dirname, '../build/index.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
+    }
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);

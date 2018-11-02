@@ -417,7 +417,7 @@ export function calculateRemainingOperationTime(orders = [], order = {}) {
 }
 
 export function saveFile(path, data) {
-    const d = JSON.stringify(data, null, 4);
+    const d = JSON.stringify(data, null, process.env.NODE_ENV === 'development' ? 4 : 0);
 
     return new Promise((resolve, reject) => {
         fs.writeFile(path, d, (err) => {
