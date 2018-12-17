@@ -51,6 +51,7 @@ class App extends React.Component {
             sameOperationRestTime: 0,
             filterFinishedOrders: true,
             displayOrdersInEvents: true,
+            displayFinishedOrders: true,
             startOfTheWeek: startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
             columnsVisibility: COLUMNS_VISIBILITY,
@@ -110,7 +111,7 @@ class App extends React.Component {
         }, () => {
             dispatchResize();
         });
-    }
+    };
 
     handleUpdateChecking = (_) => {
         this.showInfoMessage(
@@ -118,7 +119,7 @@ class App extends React.Component {
                 <p>Kontrola aktualizací</p>
             </React.Fragment>
         , 5000);
-    }
+    };
 
     handleUpdateDownloading = (_, progress = {}) => {
         this.showInfoMessage(
@@ -126,7 +127,7 @@ class App extends React.Component {
                 <p>Stahování - {parseInt(progress.percent, 10)}%</p>
             </React.Fragment>
         );
-    }
+    };
 
     handleUpdateNotAvailable = () => {
         this.showInfoMessage(
@@ -134,7 +135,7 @@ class App extends React.Component {
                 <p>Aplikace je aktuální</p>
             </React.Fragment>
         , 3000);
-    }
+    };
 
     handleUpdateError = () => {
         this.showInfoMessage(
@@ -142,7 +143,7 @@ class App extends React.Component {
                 <p>Chyba při zjišťování aktualizací</p>
             </React.Fragment>
         , 3000);
-    }
+    };
 
     handleUpdateReady = () => {
         this.showInfoMessage(
@@ -157,7 +158,7 @@ class App extends React.Component {
                 </span>
             </React.Fragment>
         );
-    }
+    };
 
     handleElectronDialogs = (sender, type, path) => {
         if (type === 'open' && path) {
@@ -167,7 +168,7 @@ class App extends React.Component {
         if (type === 'save') {
             this.saveFile(path);
         }
-    }
+    };
 
     handleFileWatcherChange = (event, path, stats) => {
         if (!path) {
@@ -195,11 +196,11 @@ class App extends React.Component {
                 </button>
             </React.Fragment>
         );
-    }
+    };
 
     handleFileWatcherError = (error) => {
         alert('Nastala chyba při sledování změn souboru: ' + error);
-    }
+    };
 
     showSaveDialog() {
         electron.ipcRenderer.send('open-save-dialog');
@@ -226,7 +227,7 @@ class App extends React.Component {
         }
 
         return this.readFile(path);
-    }
+    };
 
     saveFile = (path) => {
         if (!path && !this.state.fileLoaded) {
@@ -254,7 +255,7 @@ class App extends React.Component {
                 fileLoaded: true,
             });
         });
-    }
+    };
 
     saveToFile = () => {
         this.handleReadOnly(() => {
@@ -279,7 +280,7 @@ class App extends React.Component {
                 return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
             });
         });
-    }
+    };
 
     readFile = (filePath) => {
         this.setState({
@@ -331,13 +332,15 @@ class App extends React.Component {
                 }
             }
         });
-    }
+    };
 
     readFromLocalStorage = () => {
-        let fontSize = window.localStorage.getItem('fontsize') || FONT_SIZE;
         let columnsVisibility = window.localStorage.getItem('columnsVisibility');
-        let filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
-        let displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
+
+        const fontSize = window.localStorage.getItem('fontsize') || FONT_SIZE;
+        const filterFinishedOrders = checkForBoolean(window.localStorage.getItem('filterFinishedOrders'));
+        const displayOrdersInEvents = checkForBoolean(window.localStorage.getItem('displayOrdersInEvents'));
+        const displayFinishedOrders = checkForBoolean(window.localStorage.getItem('displayFinishedOrders'));
 
         if (columnsVisibility) {
             columnsVisibility = JSON.parse(columnsVisibility);
@@ -349,9 +352,10 @@ class App extends React.Component {
             fontsize: fontSize,
             filterFinishedOrders,
             displayOrdersInEvents,
+            displayFinishedOrders,
             columnsVisibility: columnsVisibility || COLUMNS_VISIBILITY,
         });
-    }
+    };
 
     handleKeyUp = (e) => {
         if ((e.ctrlKey || e.keyCode === 91) && e.keyCode === 78) {
@@ -362,9 +366,9 @@ class App extends React.Component {
         if ((e.ctrlKey || e.keyCode === 91) && e.shiftKey && e.keyCode === 73) {
             electron.ipcRenderer.send('show-dev-tools');
         }
-    }
+    };
 
-    handleElectronMenu = (evt, arg) => {
+    handleElectronMenu = (e, arg) => {
         if (arg === 'newEvent') {
             this.handleAddNewEvent();
         }
@@ -380,20 +384,20 @@ class App extends React.Component {
         if (arg === 'saveAsFile') {
             this.showSaveDialog();
         }
-    }
+    };
 
     watchFileChanges = (filePath) => {
         electron.ipcRenderer.send('file-start-watching', filePath);
-    }
+    };
 
     unwatchFileChanges = () => {
         electron.ipcRenderer.send('file-stop-watching');
-    }
+    };
 
     sendLocalChangeMessage = () => {
         // ! poslat zprávu o tom, že se jedná o lokální změnu, aby se nezobrazila hláška "Soubor byl změněn"
         electron.ipcRenderer.send('file-watcher-localsave', true);
-    }
+    };
 
     showInfoMessage = (value, timeout) => {
         this.setState({
@@ -408,7 +412,7 @@ class App extends React.Component {
                 });
             }, timeout);
         }
-    }
+    };
 
     handleReadOnly = (next) => {
         if (this.state.readOnly) {
@@ -416,9 +420,9 @@ class App extends React.Component {
         }
 
         next();
-    }
+    };
 
-    handleWeekMove = (_, move) => {
+    handleWeekMove = (e, move) => {
         let startOfTheWeek = moment(this.state.startOfTheWeek);
 
         if (move === 'next') {
@@ -431,7 +435,7 @@ class App extends React.Component {
             startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
         });
-    }
+    };
 
     resetCurrentWeek = () => {
         const startOfTheWeek = moment().startOf('week').startOf('day');
@@ -440,14 +444,14 @@ class App extends React.Component {
             startOfTheWeek,
             currentWeek: startOfTheWeek.week(),
         });
-    }
+    };
 
     handleClose = () => {
         this.setState({
             open: false,
         });
         this.resetOrderState();
-    }
+    };
 
     openSettings = (e, tabIndex = 0) => {
         this.setState({
@@ -455,31 +459,31 @@ class App extends React.Component {
         }, () => {
             this.settings.current.setTabIndex(tabIndex);
         });
-    }
+    };
 
     closeSettings = () => {
         this.setState({
             settings: false,
         });
-    }
+    };
 
     handleEventEnter = (e, order) => {
         this.setState({
             hoverOrder: order,
         });
-    }
+    };
 
     handleEventLeave = () => {
         this.setState({
             hoverOrder: null,
         });
-    }
+    };
 
     handleDragStart = () => {
         this.setState({
             open: false,
         });
-    }
+    };
 
     // * PRÁCE S DATY
     handleAddNewEvent = () => {
@@ -490,7 +494,7 @@ class App extends React.Component {
                 });
             });
         });
-    }
+    };
 
     handleContextMenu = (type, order) => {
         switch (type) {
@@ -556,7 +560,7 @@ class App extends React.Component {
                 // sameOperationRestTime: sameOperationOnSameOrder,
             });
         });
-    }
+    };
 
     handleItemDelete = (e, item, which) => {
         this.handleReadOnly(() => {
@@ -591,7 +595,7 @@ class App extends React.Component {
                 orders: diffOrdersArr,
             }, this.saveToFile);
         });
-    }
+    };
 
     handleItemSave = (e, item, which) => {
         this.handleReadOnly(() => {
@@ -620,7 +624,7 @@ class App extends React.Component {
                 }
             });
         });
-    }
+    };
 
     handleEventDrop = (order, copy) => {
         this.handleReadOnly(() => {
@@ -647,7 +651,7 @@ class App extends React.Component {
                 orders: ordersCopy,
             }, this.saveToFile);
         });
-    }
+    };
 
     handleSelectingMouseUp = (dateFrom, dateTo, machineId) => {
         this.resetOrderState(dateFrom, dateTo, machineId, () => {
@@ -655,7 +659,7 @@ class App extends React.Component {
                 open: true,
             });
         });
-    }
+    };
 
     handleInputChange = (e) => {
         const { products, orders, } = this.state;
@@ -720,7 +724,7 @@ class App extends React.Component {
             // čas, který se zobrazí v popupu a bude zobrazovat kolik času zbývá doplánovat
             sameOperationRestTime: sameOperationOnSameOrder,
         });
-    }
+    };
 
     handlePlannedDateSave = (orderId, productName, date) => {
         const orders = this.state.orders.map((order) => {
@@ -734,7 +738,7 @@ class App extends React.Component {
         this.setState({
             orders,
         }, this.saveToFile);
-    }
+    };
 
     handleSave = () => {
         this.handleReadOnly(() => {
@@ -818,7 +822,7 @@ class App extends React.Component {
             }, this.saveToFile);
             this.resetOrderState();
         });
-    }
+    };
 
     handleOrderDelete = (passedOrder) => {
         this.handleReadOnly(() => {
@@ -852,7 +856,7 @@ class App extends React.Component {
         if ((typeof productName === 'string') && (typeof orderId === 'string')) {
             this.handleCloseOrOpenProduct(productName, orderId, done);
         }
-    }
+    };
 
     handleCloseOrOpenOrder = (orderId, done = true) => {
         let orderListCopy = [...this.state.orderList];
@@ -876,7 +880,7 @@ class App extends React.Component {
             orderList: orderListCopy,
             orders: setProductInOrderToDone,
         }, this.saveToFile);
-    }
+    };
 
     handleCloseOrOpenProduct = (productName, orderId, done = true) => {
         const finishDate = moment().format();
@@ -892,7 +896,7 @@ class App extends React.Component {
         this.setState({
             orders: setProductInOrderToDone,
         }, this.saveToFile);
-    }
+    };
 
     handleMoveToDate = (date) => {
         const weekFromDate = moment(date).week();
@@ -902,7 +906,7 @@ class App extends React.Component {
             currentWeek: weekFromDate,
             startOfTheWeek: startOfTheWeek,
         });
-    }
+    };
 
     groupOrders = (events = [], orderList = [], filterFinishedOrders = false) => {
         const orders = createGroupedOrders(events, orderList, filterFinishedOrders);
@@ -910,7 +914,7 @@ class App extends React.Component {
         this.setState({
             groupOrders: orders,
         }, dispatchResize);
-    }
+    };
 
     handleSettingsChange = (e) => {
         let name = e.target.name;
@@ -931,7 +935,7 @@ class App extends React.Component {
 
             window.localStorage.setItem(name, valueOrChecked);
         });
-    }
+    };
 
     handleColumnVisibility = (e) => {
         this.setState({
@@ -943,7 +947,7 @@ class App extends React.Component {
             window.localStorage.setItem('columnsVisibility', JSON.stringify(this.state.columnsVisibility));
             dispatchResize();
         });
-    }
+    };
 
     // * RENDEROVÁNÍ APLIKACE
     renderMainScreen = () => {
@@ -1042,7 +1046,7 @@ class App extends React.Component {
                 />
             </React.Fragment>
         );
-    }
+    };
 
     render() {
         const {
@@ -1060,6 +1064,7 @@ class App extends React.Component {
             filterFinishedOrders,
             sameOperationRestTime,
             displayOrdersInEvents,
+            displayFinishedOrders,
         } = this.state;
 
         if (!this.state.ready) {
@@ -1128,8 +1133,10 @@ class App extends React.Component {
 
                         // orders
                         orders={orderList}
+                        displayFinishedOrders={displayFinishedOrders}
                         onOrderSave={(e, item) => this.handleItemSave(e, item, 'orderList')}
                         onOrderDelete={(e, item) => this.handleItemDelete(e, item, 'orderList')}
+                        onFinishedOrdersVisibility={this.handleSettingsChange}
 
                         // general
                         fontSize={fontsize}
@@ -1161,8 +1168,9 @@ class App extends React.Component {
             columnsVisibility: {},
             sameOperationRestTime: 0,
             displayOrdersInEvents: true,
+            displayFinishedOrders: true,
         });
-    }
+    };
 
     resetOrderState = (from, to, machineId, cb) => {
         let dateTo;
@@ -1203,7 +1211,7 @@ class App extends React.Component {
             },
             sameOperationRestTime: 0,
         }, cb);
-    }
+    };
 }
 
 export default App;

@@ -260,6 +260,8 @@ export class SettingsPopup extends React.PureComponent {
                             orders={this.props.orders}
                             onOrderSave={this.props.onOrderSave}
                             onOrderDelete={this.props.onOrderDelete}
+                            displayFinishedOrders={this.props.displayFinishedOrders}
+                            onFinishedOrdersVisibility={this.props.onFinishedOrdersVisibility}
                         />
                     </TabPanel>
                 </Tabs>

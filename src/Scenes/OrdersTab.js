@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import 'react-tabs/style/react-tabs.css';
 
-export class OrdersTab extends React.PureComponent {
+export class OrdersTab extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -60,28 +60,41 @@ export class OrdersTab extends React.PureComponent {
     }
 
     render() {
-        const { orders } = this.props;
+        let { orders } = this.props;
+        const { displayFinishedOrders, onFinishedOrdersVisibility } = this.props;
         const { tempOrder } = this.state;
+
+        if (!displayFinishedOrders) {
+            orders = orders.filter(({ done }) => !done);
+        }
 
         return (
             <React.Fragment>
-                <div
-                    className="clearfix"
-                >
-                    <button
-                        onClick={this.handleOrderAdd}
-                        className="btn btn-success pull-right"
-                    >
+                <div className="display--flex">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <div className="input-group-text">
+                                <input
+                                    type="checkbox"
+                                    id="displayFinishedOrders"
+                                    name="displayFinishedOrders"
+                                    checked={displayFinishedOrders}
+                                    onChange={onFinishedOrdersVisibility}
+                                />
+                            </div>
+                        </div>
+                        <label className="form-control" htmlFor="displayFinishedOrders">
+                            Zobrazit dokončené zakázky
+                        </label>
+                    </div>
+
+                    <button onClick={this.handleOrderAdd} className="btn btn-success ml-3">
                         Přidat zakázku
                     </button>
                 </div>
 
-                <div
-                    className="settings--overflow"
-                >
-                    <table
-                        className="table table-bordered table--machines"
-                    >
+                <div className="settings--overflow">
+                    <table className="table table-bordered table--machines">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -106,14 +119,10 @@ export class OrdersTab extends React.PureComponent {
     }
 
     renderOrderTr = (order, index) => {
-        const {
-            tempOrder,
-        } = this.state;
+        const { tempOrder } = this.state;
 
         return (
-            <tr
-                key={index || order.id}
-            >
+            <tr key={index || order.id}>
                 <td>{isNaN(index) ? '-' : `${index + 1}.`}</td>
                 <td>
                     {
