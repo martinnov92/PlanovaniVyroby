@@ -50,7 +50,7 @@ export class OrderName extends PureComponent {
                 }}
                 onContextMenu={this.handleContextMenu}
             >
-                <Tooltip overlay={overlay}>
+                <Tooltip overlay={overlay} destroyTooltipOnHide={true}>
                     <p style={{ backgroundColor: color, }}>
                         { o ? o.name : '' }
                     </p>

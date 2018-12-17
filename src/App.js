@@ -418,7 +418,7 @@ class App extends React.Component {
         next();
     }
 
-    handleWeekMove = (e, move) => {
+    handleWeekMove = (_, move) => {
         let startOfTheWeek = moment(this.state.startOfTheWeek);
 
         if (move === 'next') {

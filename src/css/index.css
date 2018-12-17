@@ -136,14 +136,13 @@ textarea {
 .react-tabs__tab {
     margin-left: 5px;
     border-radius: 3px 3px 0 0;
-    border: 1px solid #ced4da;
-    border-top: 0;
-    border-bottom: 0;
+    border: 0;
 }
 
 .settings--tabs-selected {
     font-weight: bold;
     background-color: white;
+    border-bottom: 3px solid #C8E0FF;
 }
 
 .settings--overflow {

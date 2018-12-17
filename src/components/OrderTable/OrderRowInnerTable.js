@@ -78,7 +78,7 @@ export class OrderRowInnerTable extends React.PureComponent {
                         >
                             {
                                 product.coop
-                                ? <Tooltip overlay={this.renderOrderTooltip(product)}>
+                                ? <Tooltip overlay={this.renderOrderTooltip(product)} destroyTooltipOnHide={true}>
                                     <div>
                                         {product.coop ? <strong className="text-danger product--coop">* &nbsp;</strong> : null}
                                         { objKey }
