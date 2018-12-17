@@ -371,19 +371,24 @@ export function isDateRangeOverlaping(arr, order) {
     return false;
 }
 
-export function formatMinutesToTime(totalMinutes) {
+export function formatMinutesToTime(totalMinutes, onlyTime = true) {
     if (!totalMinutes) {
-        // default
         return `0h 0m`;
     }
 
+    let hours = 0;
     const days = Math.floor(totalMinutes / (60 * 24));
-    const hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
     const minutes = Math.floor(totalMinutes % 60);
-    // const secs = Math.floor((totalMinutes * 60) - (hours * 3600) - (minutes * 60));
+
+    if (onlyTime) {
+        hours = Math.floor(totalMinutes / 60);
+
+        return `${hours}h ${minutes}m`;
+    }
+
+    hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
 
     return days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
-    // return days > 0 ? `${days}d ${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}` : `${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}`;
 }
 
 export function calculateOperationTime(count, time, exchange, casting) {

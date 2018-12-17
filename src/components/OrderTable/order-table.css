@@ -163,3 +163,7 @@
 .area--dates .btn {
     padding: 0;
 }
+
+.tooltip .rc-tooltip-content {
+    max-width: 400px;
+}

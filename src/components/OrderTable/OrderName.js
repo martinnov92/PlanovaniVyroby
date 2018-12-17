@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import Tooltip from 'rc-tooltip';
 
-import { Tooltip } from '../Tooltip';
 import { openTableContextMenu } from '../ContextMenu';
 import { createClassName, formatMinutesToTime } from '../../utils/helpers';
 
-export class OrderName extends React.PureComponent {
+export class OrderName extends PureComponent {
     handleContextMenu = () => {
         const { commission } = this.props;
         const { done } = commission._info;
@@ -23,13 +23,26 @@ export class OrderName extends React.PureComponent {
         const { commission, orderList, rowHeights, i } = this.props;
         const { orderId, done, color } = commission._info;
         const o = orderList.find((_o) => _o.id === orderId);
+        const className = createClassName([
+            'left-side--item',
+            done ? 'order--finished' : null,
+        ]);
+        const overlay = (
+            <div>
+                <p>
+                    Naplánováno: &nbsp;
+                    <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
+                </p>
+                <p>
+                    Celkový čas: &nbsp;
+                    <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
+                </p>
+            </div>
+        );
     
         return (
             <div
-                className={createClassName([
-                    'left-side--item',
-                    done ? 'order--finished' : null,
-                ])}
+                className={className}
                 style={{
                     borderTop: 0,
                     height: `${rowHeights[i]}px`,
@@ -37,22 +50,7 @@ export class OrderName extends React.PureComponent {
                 }}
                 onContextMenu={this.handleContextMenu}
             >
-                <Tooltip
-                    pointerEvents={false}
-                    className="table--orders-tooltip"
-                    title={
-                        <div>
-                            <p>
-                                Naplánováno: &nbsp;
-                                <strong>{formatMinutesToTime(commission._info.totalWorkingTime)}</strong>
-                            </p>
-                            <p>
-                                Celkový čas: &nbsp;
-                                <strong>{formatMinutesToTime(commission._info.totalTime)}</strong>
-                            </p>
-                        </div>
-                    }
-                >
+                <Tooltip overlay={overlay}>
                     <p style={{ backgroundColor: color, }}>
                         { o ? o.name : '' }
                     </p>

@@ -1,8 +1,9 @@
 import React from 'react';
 import moment from 'moment';
+import Tooltip from 'rc-tooltip';
 
-import { Tooltip } from '../Tooltip';
 import { OPERATION_COLUMNS } from './';
+import { OrderRowTooltip } from './OrderRowTooltip';
 import { openTableContextMenu } from '../ContextMenu';
 import {
     createClassName,
@@ -77,24 +78,16 @@ export class OrderRowInnerTable extends React.PureComponent {
                         >
                             {
                                 product.coop
-                                ? <Tooltip
-                                    title={this.renderOrderTooltip(product)}
-                                >
-                                    {
-                                        product.coop
-                                        ? <strong className="text-danger product--coop">
-                                            * &nbsp;
-                                        </strong>
-                                        : null
-                                    }
-                                    { objKey }
+                                ? <Tooltip overlay={this.renderOrderTooltip(product)}>
+                                    <div>
+                                        {product.coop ? <strong className="text-danger product--coop">* &nbsp;</strong> : null}
+                                        { objKey }
+                                    </div>
                                 </Tooltip>
                                 : objKey
                             }
                         </td>
-                        <td
-                            style={createStyleObject(thWidth['count'], false)}
-                        >
+                        <td style={createStyleObject(thWidth['count'], false)}>
                             {product.totalCount}
                         </td>
                         {
@@ -106,9 +99,7 @@ export class OrderRowInnerTable extends React.PureComponent {
                                             key={column}
                                             style={createStyleObject(thWidth[column])}
                                         >
-                                            {
-                                                this.renderOperationCell(product.operation, Number(column))
-                                            }
+                                            {this.renderOperationCell(product.operation, Number(column))}
                                         </td>
                                     );
                                 }
@@ -162,7 +153,6 @@ export class OrderRowInnerTable extends React.PureComponent {
 
         const {
             time,
-            note,
             count,
             casting,
             exchange,
@@ -179,65 +169,26 @@ export class OrderRowInnerTable extends React.PureComponent {
 
         const calculateHoursRemainder = operationTime - workingHoursForOperation;
         const sign = Math.sign(Math.round(calculateHoursRemainder));
+        const className = createClassName([ sign < 0 ? 'text-primary' : (sign === 0 ? null : 'text-danger') ]);
 
         return (
             // TODO: opravit tooltip, aby miznul při scrollování
-            <Tooltip
-                className={`cursor--default`}
-                title={
-                    <div>
-                        {
-                            note
-                            ? <p>
-                                <strong>Popis: </strong> {note}
-                            </p>
-                            : null
-                        }
-                        <p>Čas na kus: {time} min.</p>
-                        <p>Výměna: {exchange} min.</p>
-                        <p>Nahazování: {casting} min.</p>
-
-                        <hr className="bg-white" />
-
-                        <p>Celkem na operaci: {formatMinutesToTime(operationTime)}</p>
-                        <p>Naplánováno: {formatMinutesToTime(workingHoursForOperation)}</p>
-                        <p>Zbývá: {sign === -1 ? '+' : (sign === 0 ? '' : '-')}{formatMinutesToTime(Math.abs(calculateHoursRemainder))}</p>
-
-                        <hr className="bg-white" />
-
-                        <p>
-                            <strong>Náplánováno ve dnech:</strong>
-                        </p>
-                        <div className="area--dates">
-                            <ul>
-                                {
-                                    operation[index].dates.sort().map((date, i) => {
-                                        return <li key={`${date}-${i}`}>
-                                            <button
-                                                className="btn btn-link text-dark"
-                                                onClick={() => this.props.moveToDate(date)}
-                                            >
-                                                { moment(date).format(DATA_DATE_FORMAT) }
-                                            </button>
-                                        </li>;
-                                    })
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                }
+            <OrderRowTooltip
+                sign={sign}
+                operation={operation[index]}
+                operationTime={operationTime}
+                calculateHoursRemainder={calculateHoursRemainder}
+                moveToDate={this.props.moveToDate}
             >
-                <strong>{count} ks. </strong>
-                <span>({formatMinutesToTime(operationTime)})</span> {` `}
-                <span>[{formatMinutesToTime(workingHoursForOperation)}]</span>{` `}
-                <strong
-                    className={createClassName([
-                        sign < 0 ? 'text-primary' : (sign === 0 ? null : 'text-danger'),
-                    ])}
-                >
-                    {`{`}{ sign < 0 ? '+' : (sign === 0 ? '' : '-') }{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
-                </strong>
-            </Tooltip>
+                <div>
+                    <strong>{count} ks. </strong>
+                    <span>({formatMinutesToTime(operationTime)})</span> {` `}
+                    <span>[{formatMinutesToTime(workingHoursForOperation)}]</span>{` `}
+                    <strong className={className}>
+                        {`{`}{ sign < 0 ? '+' : (sign === 0 ? '' : '-') }{formatMinutesToTime(Math.abs(calculateHoursRemainder))}{`}`}
+                    </strong>
+                </div>
+            </OrderRowTooltip>
         );
     }
 
@@ -263,9 +214,7 @@ export class OrderRowInnerTable extends React.PureComponent {
                 {
                     cooperation
                     ? <React.Fragment>
-                        <p>
-                            <strong>Náplánováno ve dnech:</strong>
-                        </p>
+                        <p><strong>Náplánováno ve dnech:</strong></p>
                         <div className="area--dates">
                             <ul>
                                 {
