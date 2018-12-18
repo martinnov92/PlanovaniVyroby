@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import moment from 'moment';
-import Tooltip from 'rc-tooltip';
 
+import { Tooltip } from '../Tooltip';
 import { OPERATION_COLUMNS } from './';
 import { OrderRowTooltip } from './OrderRowTooltip';
 import { openTableContextMenu } from '../ContextMenu';
@@ -14,7 +14,7 @@ import {
     calculateOperationTime,
 } from '../../utils/helpers';
 
-export class OrderRowInnerTable extends React.PureComponent {
+export class OrderRowInnerTable extends PureComponent {
     handleContextMenu = () => {
         const { _key, product, commission, editPlannedFinishDateRow } = this.props;
 
@@ -76,16 +76,12 @@ export class OrderRowInnerTable extends React.PureComponent {
                             title={objKey}
                             style={createStyleObject(thWidth['order'], false)}
                         >
-                            {
-                                product.coop
-                                ? <Tooltip overlay={this.renderOrderTooltip(product)} destroyTooltipOnHide={true}>
-                                    <div>
-                                        {product.coop ? <strong className="text-danger product--coop">* &nbsp;</strong> : null}
-                                        { objKey }
-                                    </div>
-                                </Tooltip>
-                                : objKey
-                            }
+                            <Tooltip overlay={this.renderOrderTooltip(product)}>
+                                <div>
+                                    {product.coop && <strong className="text-danger product--coop">* &nbsp;</strong>}
+                                    { objKey }
+                                </div>
+                            </Tooltip>
                         </td>
                         <td style={createStyleObject(thWidth['count'], false)}>
                             {product.totalCount}
@@ -172,7 +168,6 @@ export class OrderRowInnerTable extends React.PureComponent {
         const className = createClassName([ sign < 0 ? 'text-primary' : (sign === 0 ? null : 'text-danger') ]);
 
         return (
-            // TODO: opravit tooltip, aby miznul při scrollování
             <OrderRowTooltip
                 sign={sign}
                 operation={operation[index]}
@@ -193,48 +188,58 @@ export class OrderRowInnerTable extends React.PureComponent {
     }
 
     renderOrderTooltip (product) {
-        if (!product.coop) {
-            return null;
-        }
-
-        let cooperation = {};
+        let cooperationIndex = -1;
+        let hasCooperation = false;
 
         if (product && product.operation) {
              // najít kooperaci
              // eslint-disable-next-line eqeqeq
-            cooperation = product.operation.find((o) => o.order == '7');
+             cooperationIndex = product.operation.findIndex((o) => o.order == '7');
+             hasCooperation = cooperationIndex !== -1;
         }
+
+        const operations = product.operation.sort((a, b) => Number(a.order) >= Number(b.order));
 
         return (
             <div>
-                <p>
-                    Kooperace
-                    { cooperation.note ? ` - ${cooperation.note}` : null }
-                </p>
                 {
-                    cooperation
-                    ? <React.Fragment>
-                        <p><strong>Náplánováno ve dnech:</strong></p>
-                        <div className="area--dates">
-                            <ul>
-                                {
-                                    cooperation.dates.map((date) => {
-                                        return <li key={date}>
-                                            <button
-                                                className="btn btn-link text-dark"
-                                                onClick={() => this.props.moveToDate(date)}
-                                            >
-                                                { moment(date).format(DATA_DATE_FORMAT) }
-                                            </button>
-                                        </li>;
-                                    })
-                                }
-                            </ul>
-                        </div>
-                    </React.Fragment>
-                    : null
+                    hasCooperation && (
+                        <Fragment>
+                            <p><strong>Kooperace</strong></p>
+                            <p>{product.operation[cooperationIndex].note}</p>
+                            <br />
+                        </Fragment>
+                    )
                 }
+
+                <p>Náplánováno ve dnech:</p>
+                <div className="area--dates">
+                    <ul>
+                        {operations.map(({ dates, note, order}) => {
+                            return (
+                                <Fragment key={order}>
+                                    {!hasCooperation && <li><strong>{order}. operace</strong></li>}
+                                    {note && <li>{note}</li>}
+                                    {dates.sort().map(this.renderOrderTooltipDates)}
+                                </Fragment>
+                            );
+                        })}
+                    </ul>
+                </div>
             </div>
         );
     }
+
+    renderOrderTooltipDates = (date, index) => {
+        return (
+            <li key={date + index}>
+                <button
+                    className="btn btn-link text-dark"
+                    onClick={() => this.props.moveToDate(date)}
+                >
+                    { moment(date).format(DATA_DATE_FORMAT) }
+                </button>
+            </li>
+        );
+    };
 }

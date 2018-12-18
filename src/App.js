@@ -670,11 +670,11 @@ class App extends React.Component {
         }
 
         if (name === 'orderId' && value === 'new') {
-            return this.openSettings(null, 2);
+            return this.openSettings(null, 3);
         }
 
         if (name === 'machine' && value === 'new') {
-            return this.openSettings(null, 1);
+            return this.openSettings(null, 2);
         }
 
         const order = set(this.state.order, name, value);

@@ -71,9 +71,7 @@ export class OrderPopup extends React.Component {
                                 <option>
                                     Vyberte zakázku
                                 </option>
-                                <option
-                                    value="new"
-                                >
+                                <option value="new">
                                     Přidat novou zakázka
                                 </option>
                                 <option value="-" />

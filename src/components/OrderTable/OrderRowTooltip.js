@@ -1,11 +1,8 @@
 import React, { Component, PureComponent } from 'react';
 import moment from 'moment';
-import Tooltip from 'rc-tooltip';
 
-import 'rc-tooltip/assets/bootstrap.css';
+import { Tooltip } from '../Tooltip';
 import { DATA_DATE_FORMAT, formatMinutesToTime } from '../../utils/helpers';
-
-const TRIGGERS = [ 'click', 'hover' ];
 
 export class OrderRowTooltip extends Component {
     render() {
@@ -22,14 +19,7 @@ export class OrderRowTooltip extends Component {
         );
 
         return (
-            <Tooltip
-                trigger={TRIGGERS}
-                overlay={overlay}
-                overlayClassName="tooltip"
-                mouseEnterDelay={1}
-                mouseLeaveDelay={.5}
-                destroyTooltipOnHide={true}
-            >
+            <Tooltip overlay={overlay}>
                 {this.props.children}
             </Tooltip>
         );

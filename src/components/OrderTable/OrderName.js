@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import Tooltip from 'rc-tooltip';
 
+import { Tooltip } from '../Tooltip';
 import { openTableContextMenu } from '../ContextMenu';
 import { createClassName, formatMinutesToTime } from '../../utils/helpers';
 
@@ -50,7 +50,7 @@ export class OrderName extends PureComponent {
                 }}
                 onContextMenu={this.handleContextMenu}
             >
-                <Tooltip overlay={overlay} destroyTooltipOnHide={true}>
+                <Tooltip overlay={overlay}>
                     <p style={{ backgroundColor: color, }}>
                         { o ? o.name : '' }
                     </p>
