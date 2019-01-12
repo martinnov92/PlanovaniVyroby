@@ -14,7 +14,7 @@ export class OrdersTab extends PureComponent {
         };
     }
 
-    handleOrderAdd = (e) => {
+    handleOrderAdd = () => {
         this.setState({
             tempOrder: {
                 name: '',
