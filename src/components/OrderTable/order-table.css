@@ -152,6 +152,8 @@
 }
 
 .area--dates {
+    color: #343434;
+    max-width: 400px;
     max-height: 100px;
     border-radius: .25rem;
     padding: .375rem .75rem;
@@ -162,4 +164,8 @@
 
 .area--dates .btn {
     padding: 0;
+}
+
+.tooltip .rc-tooltip-content {
+    max-width: 400px;
 }

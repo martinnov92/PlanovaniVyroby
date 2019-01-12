@@ -457,17 +457,12 @@ export class Calendar extends React.Component {
                     pointerEvents: 'none',
                     display: dragActiveCell ? 'block' : 'none',
                     left: `${dragActiveCell ? (dragActiveCell.left - 65 + (dragActiveCell.width / 2)) : '0'}px`,
-                    // zobrazení pod událostí
                     top: `${dragActiveCell ? (dragActiveCell.top + dragActiveCell.height + 5) : '0'}px`,
-                    // zobrazení nad událostí
                     // top: `${dragActiveCell ? (dragActiveCell.top - dragActiveCell.height - 2) : '0'}px`,
                 }}
             >
                 <div
-                    style={{
-                        width: '130px',
-                        minWidth: '130px',
-                    }}
+                    style={{ maxWidth: '130px' }}
                     className="pd-tooltip__inner pd-tooltip__bottom pd-tooltip--open"
                 >
                     <div className="pd-tooltip__content">

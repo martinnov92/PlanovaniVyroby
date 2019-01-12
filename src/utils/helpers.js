@@ -371,19 +371,24 @@ export function isDateRangeOverlaping(arr, order) {
     return false;
 }
 
-export function formatMinutesToTime(totalMinutes) {
+export function formatMinutesToTime(totalMinutes, onlyTime = true) {
     if (!totalMinutes) {
-        // default
         return `0h 0m`;
     }
 
+    let hours = 0;
     const days = Math.floor(totalMinutes / (60 * 24));
-    const hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
     const minutes = Math.floor(totalMinutes % 60);
-    // const secs = Math.floor((totalMinutes * 60) - (hours * 3600) - (minutes * 60));
+
+    if (onlyTime) {
+        hours = Math.floor(totalMinutes / 60);
+
+        return `${hours}h ${minutes}m`;
+    }
+
+    hours = Math.floor((totalMinutes - (days * 24 * 60)) / 60);
 
     return days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
-    // return days > 0 ? `${days}d ${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}` : `${hours}h ${minutes}m${secs ? ' ' + secs + 's' : ''}`;
 }
 
 export function calculateOperationTime(count, time, exchange, casting) {
@@ -488,6 +493,59 @@ export function getWarningClassName(date, done) {
     }
 
     return className;
+}
+
+// https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value/4760279#4760279
+export function dynamicSort(property) {
+    let sortOrder = 1;
+
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+
+    return function (a, b) {
+        let firstValue = a[property];
+        let secondValue = b[property];
+
+        if (typeof firstValue === 'string') {
+            firstValue = firstValue.toLocaleLowerCase();
+        }
+
+        if (typeof secondValue === 'string') {
+            secondValue = secondValue.toLocaleLowerCase();
+        }
+
+        const result = (firstValue < secondValue) ? -1 : (firstValue > secondValue) ? 1 : 0;
+
+        return result * sortOrder;
+    }
+}
+
+// https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value/4760279#4760279
+export function dynamicSortMultiple() {
+    /*
+     * save the arguments object as it will be overwritten
+     * note that arguments object is an array-like object
+     * consisting of the names of the properties to sort by
+     */
+    const props = arguments;
+
+    return function (obj1, obj2) {
+        let i = 0;
+        let result = 0;
+        const numberOfProperties = props.length;
+
+        /* try getting a different result from 0 (equal)
+         * as long as we have extra properties to compare
+         */
+        while(result === 0 && i < numberOfProperties) {
+            result = dynamicSort(props[i])(obj1, obj2);
+            i++;
+        }
+
+        return result;
+    }
 }
 
 export const COLUMNS_VISIBILITY = {

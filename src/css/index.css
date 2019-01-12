@@ -136,14 +136,13 @@ textarea {
 .react-tabs__tab {
     margin-left: 5px;
     border-radius: 3px 3px 0 0;
-    border: 1px solid #ced4da;
-    border-top: 0;
-    border-bottom: 0;
+    border: 0;
 }
 
 .settings--tabs-selected {
     font-weight: bold;
     background-color: white;
+    border-bottom: 3px solid #C8E0FF;
 }
 
 .settings--overflow {
@@ -277,4 +276,54 @@ h1, h2, h3, h4, h5, h6 {
 
 .product--week-before {
     background-color: var(--weekBeforeColor);
+}
+
+/* CUSTOM TOOLTIP */
+.pd-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.pd-tooltip__inner {
+    width: auto;
+    z-index: 9998;
+    position: fixed;
+    min-height: 34px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.pd-tooltip--pointerevents {
+    pointer-events: none;
+}
+
+.pd-tooltip__content {
+    padding: 8px 10px;
+    background-color: #424242;
+    color: #fff;
+    text-align: left;
+    text-decoration: none;
+    border-radius: 3px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pd-tooltip--open .pd-tooltip__arrow--wrapper {
+    width: 100%;
+    height: 10px;
+}
+
+.pd-tooltip--open .pd-tooltip__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
+.pd-tooltip--open.pd-tooltip__bottom .pd-tooltip__arrow {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 5px 5px 5px;
+    border-bottom-color: #424242;
 }

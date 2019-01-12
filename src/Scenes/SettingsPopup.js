@@ -53,26 +53,21 @@ export class SettingsPopup extends React.PureComponent {
                     onSelect={(index) => this.setState({ tabIndex: index })}
                 >
                     <TabList>
-                        <Tab
-                            selectedClassName="settings--tabs-selected"
-                        >
+                        <Tab selectedClassName="settings--tabs-selected">
                             Obecné
                         </Tab>
-                        <Tab
-                            selectedClassName="settings--tabs-selected"
-                        >
+                        <Tab selectedClassName="settings--tabs-selected">
+                            Kalendář a přehled zakázek
+                        </Tab>
+                        <Tab selectedClassName="settings--tabs-selected">
                             Stroje
                         </Tab>
-                        <Tab
-                            selectedClassName="settings--tabs-selected"
-                        >
+                        <Tab selectedClassName="settings--tabs-selected">
                             Zakázky
                         </Tab>
                     </TabList>
 
                     <TabPanel>
-                        <h5 className="mb-1">Aplikace</h5>
-
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <span className="input-group-text">Velikost písma</span>
@@ -86,9 +81,10 @@ export class SettingsPopup extends React.PureComponent {
                                 onChange={handleSettingsChange}
                             />
                         </div>
+                    </TabPanel>
 
+                    <TabPanel>
                         <h5 className="mb-1">Kalendář</h5>
-
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <div className="input-group-text">
@@ -109,7 +105,7 @@ export class SettingsPopup extends React.PureComponent {
                             </label>
                         </div>
 
-                        <hr />
+                        <br />
 
                         <h5 className="mb-1">Přehled zakázek a výrobků</h5>
                         <div className="input-group mb-3">
@@ -264,6 +260,8 @@ export class SettingsPopup extends React.PureComponent {
                             orders={this.props.orders}
                             onOrderSave={this.props.onOrderSave}
                             onOrderDelete={this.props.onOrderDelete}
+                            displayFinishedOrders={this.props.displayFinishedOrders}
+                            onFinishedOrdersVisibility={this.props.onFinishedOrdersVisibility}
                         />
                     </TabPanel>
                 </Tabs>

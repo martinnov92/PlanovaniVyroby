@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import moment from 'moment';
 import {
     createClassName,
     DATA_DATE_FORMAT,
 } from '../../utils/helpers';
 
-export class CalendarCell extends React.Component {
+export class CalendarCell extends PureComponent {
     static defaultProps = {
         hours: 1,
         minutes: 0,
@@ -47,7 +47,6 @@ export class CalendarCell extends React.Component {
                 data-date={dateTime}
                 className={emptyCellclassNames}
                 data-machine={machine && machine.id}
-                
                 // drag and drop
                 onDrop={this.props.onDrop}
                 onDragOver={this.props.onDragOver}

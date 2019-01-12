@@ -8,20 +8,22 @@
   "repository": "https://github.com/martinnov92/PlanovaniVyroby",
   "dependencies": {
     "chokidar": "^2.0.4",
-    "electron-updater": "^3.1.6",
+    "electron-updater": "^4.0.6",
     "lodash": "^4.17.11",
-    "moment": "^2.22.2",
+    "moment": "^2.23.0",
     "moment-range": "^4.0.1",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
+    "rc-tooltip": "^3.7.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
     "react-scripts": "2.1.1",
-    "react-tabs": "^2.3.0"
+    "react-tabs": "^2.3.0",
+    "react-waterfall": "^4.0.1"
   },
   "devDependencies": {
-    "concurrently": "^4.0.1",
-    "electron": "^3.0.7",
-    "electron-builder": "^20.29.0",
-    "wait-on": "^3.1.0"
+    "concurrently": "^4.1.0",
+    "electron": "^3.0.12",
+    "electron-builder": "^20.38.3",
+    "wait-on": "^3.2.0"
   },
   "scripts": {
     "electron": "electron .",
