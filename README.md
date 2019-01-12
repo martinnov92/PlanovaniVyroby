@@ -19,7 +19,7 @@
   - [x] disablovat, nebo opravit eslint hlášky
   - [x] zatím minifikovat JSON, později ukládat nějak jinak
   - [x] postup řazení časů u operací (podle posloupnosti časů/hodin)
-  - [ ] menu výrobku jako u kooperace + doplnit poznámku
+  - [x] menu výrobku jako u kooperace + doplnit poznámku
   - [x] předělat context menu na normální systémové context menu
   - [ ] testovat aspoň některé funkce
   - [x] urychlit renderování spodní tabulky
@@ -29,13 +29,14 @@
     - týden před - žlutá
     - ten den - červená
   - [x] prodloužit čas zobrazení menu u operace (cca 2 s.)
-  - [ ] Zakázky
+  - [x] Zakázky
     - řazení podle stavu dokončení (prvně nedokončené) + podle čísla zakázky
     - možnost zobrazit jen nedokončené
   - [ ] Možnost uzavření operace
   - [x] Kopírování práce - události, např.při rozdělení jedné operace (pravý klik na událost -> kopírovat -> otevře se okno, změním jenom datum)
-  - [ ] Zborazovat stoj u operace
+  - [ ] Zborazovat stoj u operace - nebude
   - [x] Možnost zadání výrobku do zakázky ještě bez práce - vyřešili pomocí nového řádku, kam "odkládají" nezařazené zakázky
+  - [ ] rozblikat událost v kalendáři po kliknutí na datum v tooltipu
 
   ## Bugy a dodělávky
   - [x] opravit první spuštění bez nastavení skrytých sloupců

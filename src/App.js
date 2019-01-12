@@ -307,6 +307,7 @@ class App extends React.Component {
                 // načíst obsah souboru do state
                 try {
                     const d = JSON.parse(data);
+
                     this.setState({
                         loading: false,
                         readOnly: false,

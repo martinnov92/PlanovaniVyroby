@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import 'react-tabs/style/react-tabs.css';
 
+import { dynamicSortMultiple } from '../utils/helpers';
+
 export class OrdersTab extends PureComponent {
     constructor(props) {
         super(props);
@@ -67,6 +69,8 @@ export class OrdersTab extends PureComponent {
         if (!displayFinishedOrders) {
             orders = orders.filter(({ done }) => !done);
         }
+
+        orders = [...orders].sort(dynamicSortMultiple('done', 'name'));
 
         return (
             <React.Fragment>
