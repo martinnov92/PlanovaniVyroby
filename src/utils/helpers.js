@@ -505,7 +505,18 @@ export function dynamicSort(property) {
     }
 
     return function (a, b) {
-        const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        let firstValue = a[property];
+        let secondValue = b[property];
+
+        if (typeof firstValue === 'string') {
+            firstValue = firstValue.toLocaleLowerCase();
+        }
+
+        if (typeof secondValue === 'string') {
+            secondValue = secondValue.toLocaleLowerCase();
+        }
+
+        const result = (firstValue < secondValue) ? -1 : (firstValue > secondValue) ? 1 : 0;
 
         return result * sortOrder;
     }
