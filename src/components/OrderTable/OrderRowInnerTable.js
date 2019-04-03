@@ -66,76 +66,73 @@ export class OrderRowInnerTable extends PureComponent {
         ].filter(Boolean).join(' ');
 
         return (
-            <table>
-                <tbody>
-                    <tr
-                        className={className}
-                        onContextMenu={this.handleContextMenu}
-                    >
-                        <td
-                            title={objKey}
-                            style={createStyleObject(thWidth['order'], false)}
-                        >
-                            <Tooltip overlay={this.renderOrderTooltip(product)}>
-                                <div>
-                                    {product.coop && <strong className="text-danger product--coop">* &nbsp;</strong>}
-                                    { objKey }
-                                </div>
-                            </Tooltip>
-                        </td>
-                        <td style={createStyleObject(thWidth['count'], false)}>
-                            {product.totalCount}
-                        </td>
-                        {
-                            OPERATION_COLUMNS.map((column) => {
-                                // eslint-disable-next-line eqeqeq
-                                if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
-                                    return (
-                                        <td
-                                            key={column}
-                                            style={createStyleObject(thWidth[column])}
-                                        >
-                                            {this.renderOperationCell(product.operation, Number(column))}
-                                        </td>
-                                    );
-                                }
-
-                                return null;
-                            })
+            <tr
+                className={className}
+                onContextMenu={this.handleContextMenu}
+            >
+                <td className="table--orders__fixed--column"></td>
+                <td
+                    title={objKey}
+                    style={createStyleObject(thWidth['order'], false)}
+                >
+                    <Tooltip overlay={this.renderOrderTooltip(product)}>
+                        <div>
+                            {product.coop && <strong className="text-danger product--coop">* &nbsp;</strong>}
+                            { objKey }
+                        </div>
+                    </Tooltip>
+                </td>
+                <td style={createStyleObject(thWidth['count'], false)}>
+                    {product.totalCount}
+                </td>
+                {
+                    OPERATION_COLUMNS.map((column) => {
+                        // eslint-disable-next-line eqeqeq
+                        if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
+                            return (
+                                <td
+                                    key={column}
+                                    style={createStyleObject(thWidth[column])}
+                                >
+                                    {this.renderOperationCell(product.operation, Number(column))}
+                                </td>
+                            );
                         }
-                        <td
-                            style={createStyleObject(thWidth['lastWorkingDate'], false)}
-                            title={lastWorkingDate}
-                        >
-                            {lastWorkingDate}
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth['plannedFinishDate'], false)}
-                            title={''}
-                        >
-                            {
-                                // TODO: předat jako isTermEditing prop
-                                editPlannedFinishDateRow === _key
-                                ? <input
-                                    type="datetime-local"
-                                    onChange={onChange}
-                                    name="plannedFinishDateValue"
-                                    value={plannedFinishDateValue}
-                                    className="form-control form-control-sm"
-                                    onBlur={() => onBlur(orderId, objKey)}
-                                />
-                                : plannedFinishDate
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth['totalOperationTime'], false)}
-                            title={totalOperationTime}
-                        >
-                            {totalOperationTime}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+                        return null;
+                    })
+                }
+                <td
+                    style={createStyleObject(thWidth['lastWorkingDate'], false)}
+                    title={lastWorkingDate}
+                >
+                    {lastWorkingDate}
+                </td>
+                <td
+                    style={createStyleObject(thWidth['plannedFinishDate'], false)}
+                    title={''}
+                >
+                    {
+                        // TODO: předat jako isTermEditing prop
+                        editPlannedFinishDateRow === _key
+                        ? <input
+                            type="datetime-local"
+                            onChange={onChange}
+                            name="plannedFinishDateValue"
+                            value={plannedFinishDateValue}
+                            className="form-control form-control-sm"
+                            onBlur={() => onBlur(orderId, objKey)}
+                        />
+                        : plannedFinishDate
+                    }
+                </td>
+                <td
+                    style={createStyleObject(thWidth['totalOperationTime'], false)}
+                    title={totalOperationTime}
+                >
+                    {totalOperationTime}
+                </td>
+            </tr>
         );
     }
 

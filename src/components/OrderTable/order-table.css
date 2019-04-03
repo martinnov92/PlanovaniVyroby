@@ -3,25 +3,43 @@
     flex: 1 1 100%;
     position: relative;
     padding: 0;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .table-header--fixed tr {
     padding-right: 10px;
 }
 
-.table--scrollable {
-    overflow: auto;
+.table--orders table {
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .table--orders .table th {
     text-align: center;
     border-top: 0;
+    z-index: 1;
 }
 
 .table--orders .table td,
 .table--orders .table th {
     min-width: 7em;
+    background-color: #fff;
+    border-right-width: 1px;
+}
+
+.table--orders__fixed--row,
+.table--orders__fixed--column {
+    position: sticky;
+}
+
+.table--orders__fixed--row {
+    top: 0;
+    z-index: 10;
+}
+
+.table--orders__fixed--column {
+    left: 0;
 }
 
 /* Sloupec ks */

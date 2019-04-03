@@ -17,7 +17,7 @@
   - [ ] upravit ukládání souborů
   - [ ] jako ID u `orders` používat `uuid`
   - [ ] ukládat jako datum, kdy byl vytvořen záznam
-  - [ ] aktualizovat electron, react, ...
+  - [x] aktualizovat electron, react, ...
   - [ ] předělat tabulku na `position: sticky`?
 
   ## 20.7.2018, 17.12.2018

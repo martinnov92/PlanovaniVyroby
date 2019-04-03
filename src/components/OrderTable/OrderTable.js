@@ -13,6 +13,10 @@ export const OPERATION_COLUMNS = ['1', '2', '3', '4', '5', '6'];
 
 // TODO: vyseparovat řádky/bunky do komponent
 
+const fixedHeaderCell = {
+    zIndex: 20,
+};
+
 export class OrderTable extends React.PureComponent {
     static defaultProps = {
         orderList: [],
@@ -37,59 +41,7 @@ export class OrderTable extends React.PureComponent {
             editPlannedFinishDateRow: null,
         };
 
-        this.fixedHeader = React.createRef();
         this.tableWrapper = React.createRef();
-        this.scrollableDiv = React.createRef();
-    }
-
-    componentDidMount() {
-        this.setDimension();
-        window.addEventListener('resize', this.setDimension);
-        this.scrollableDiv.current.addEventListener('scroll', this.handleScroll);
-    }
-
-    handleScroll = () => {
-        this.setState({
-            scrollTop: this.scrollableDiv.current.scrollTop,
-            scrollLeft: this.scrollableDiv.current.scrollLeft,
-        });
-    }
-
-    setDimension = () => {
-        const { groupedOrders } = this.props;
-
-        try {
-            const fixedHeader = this.fixedHeader.current;
-            const fixedHeaderClientRect = fixedHeader.getBoundingClientRect();
-            const fixedHeaderTh = Array.from(fixedHeader.getElementsByTagName('th'));
-            const thWidth = {};
-
-            for (let column of fixedHeaderTh) {
-                thWidth[column.dataset.column] = Number(parseFloat(window.getComputedStyle(column).width));
-            }
-
-            const height = this.tableWrapper.current.getBoundingClientRect().height - fixedHeaderClientRect.height;
-
-            const rowHeights = groupedOrders.map((commission) => {
-                const rows = Array.from(this.scrollableDiv.current.querySelectorAll(`[data-order="${commission._info.orderId}"]`));
-
-                return rows.reduce((acc, current) => {
-                    if (current) {
-                        return Number(parseFloat(window.getComputedStyle(current).height)) + acc;
-                    }
-    
-                    return acc;
-                }, 0);
-            });
-
-            this.setState({
-                height,
-                thWidth,
-                rowHeights,
-                width: fixedHeader.width,
-                fixedHeaderHeight: fixedHeaderClientRect.height,
-            });
-        } catch (err) {}
     }
 
     editPlannedFinishDate = (key, product) => {
@@ -205,8 +157,7 @@ export class OrderTable extends React.PureComponent {
     }
 
     render() {
-        const divStyle = {};
-        const tableStyle = {};
+        const { columnsVisibility } = this.props;
 
         const classNames = createClassName([
             'table',
@@ -214,114 +165,204 @@ export class OrderTable extends React.PureComponent {
             this.props.className,
         ]);
 
-        const classNamesHeader = createClassName([
-            'table',
-            'table-bordered',
-            'table-header--fixed',
-        ]);
-
-        if (this.state.height > 0) {
-            tableStyle.width = this.state.width;
-            divStyle.height = `${this.state.height}px`;
-        }
-
-        const { columnsVisibility } = this.props;
-
         return (
-            <div
-                className="two-columns--one-fixed table--orders element--block shadow--light mt-3"
-                ref={this.tableWrapper}
-            >
-                { this.renderFixedColumn() }
+            <div className="table--orders element--block shadow--light mt-3">
+                <table className={classNames}>
+                    <thead>
+                        <tr>
+                            <th
+                                style={fixedHeaderCell}
+                                className="table--orders__fixed--column table--orders__fixed--row"
+                            >
+                                Zakázka
+                            </th>
+                            <th
+                                scope="col"
+                                data-column="order"
+                                className="table--orders__fixed--row table--orders-100"
+                            >
+                                Výrobek
+                            </th>
+                            <th
+                                scope="col"
+                                data-column="count"
+                                className="table--orders__fixed--row table--orders-55"
+                            >
+                                Ks.
+                            </th>
+                            {
+                                OPERATION_COLUMNS.map((column) => {
+                                    // eslint-disable-next-line eqeqeq
+                                    if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
+                                        return (
+                                            <th
+                                                scope="col"
+                                                key={column}
+                                                data-column={column}
+                                                className="table--orders__fixed--row table--orders-operation-column"
+                                            >
+                                                {column}.o ks/čas
+                                            </th>
+                                        )
+                                    }
 
-                <div className="two-columns--right-side lock--scroll">
-                    <table
-                        ref={this.fixedHeader}
-                        className={classNamesHeader}
-                        style={{
-                            transform: `translate3d(${this.state.scrollLeft * -1}px, 0, 0)`
-                        }}
-                    >
-                        <thead>
-                            <tr>
-                                <th
-                                    scope="col"
-                                    data-column="order"
-                                    className="table--orders-100"
-                                >
-                                    Výrobek
-                                </th>
-                                <th
-                                    scope="col"
-                                    data-column="count"
-                                    className="table--orders-55"
-                                >
-                                    Ks.
-                                </th>
-                                {
-                                    OPERATION_COLUMNS.map((column) => {
-                                        // eslint-disable-next-line eqeqeq
-                                        if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
-                                            return (
-                                                <th
-                                                    scope="col"
-                                                    key={column}
-                                                    data-column={column}
-                                                    className="table--orders-operation-column"
-                                                >
-                                                    {column}.o ks/čas
-                                                </th>
-                                            )
-                                        }
-
-                                        return null;
-                                    })
+                                    return null;
+                                })
+                            }
+                            <th
+                                scope="col"
+                                data-column="lastWorkingDate"
+                                className="table--orders__fixed--row table--orders-9_5em"
+                            >
+                                Ukončení
+                            </th>
+                            <th
+                                scope="col"
+                                data-column="plannedFinishDate"
+                                className={
+                                    createClassName([
+                                        'table--orders__fixed--row',
+                                        this.state.editPlannedFinishDateRow ? 'table--orders-finishdate-column' : 'table--orders-9_5em'
+                                    ])
                                 }
-                                <th
-                                    scope="col"
-                                    data-column="lastWorkingDate"
-                                    className="table--orders-9_5em"
-                                >
-                                    Ukončení
-                                </th>
-                                <th
-                                    scope="col"
-                                    data-column="plannedFinishDate"
-                                    className={this.state.editPlannedFinishDateRow ? 'table--orders-finishdate-column' : 'table--orders-9_5em'}
-                                >
-                                    Termín
-                                </th>
-                                <th
-                                    scope="col"
-                                    data-column="totalOperationTime"
-                                >
-                                    Čas na výrobek
-                                </th>
-                            </tr>
-                        </thead>
-                    </table>
-
-                    <div
-                        style={divStyle}
-                        ref={this.scrollableDiv}
-                        className={
-                            createClassName([
-                                'table--scrollable',
-                                this.state.activeOrder ? 'lock--scroll': null,
-                            ])
-                        }
-                    >
-                        <table
-                            className={classNames}
-                            style={tableStyle}
-                        >
-                            <tbody>
-                                {this.renderTableBody()}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            >
+                                Termín
+                            </th>
+                            <th
+                                scope="col"
+                                data-column="totalOperationTime"
+                                className="table--orders__fixed--row"
+                            >
+                                Čas na výrobek
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderTableBody()}
+                    </tbody>
+                </table>
             </div>
         );
-    } 
+    }
+
+    // render() {
+    //     const divStyle = {};
+    //     const tableStyle = {};
+
+    //     const classNames = createClassName([
+    //         'table',
+    //         'table-bordered',
+    //         this.props.className,
+    //     ]);
+
+    //     const classNamesHeader = createClassName([
+    //         'table',
+    //         'table-bordered',
+    //         'table-header--fixed',
+    //     ]);
+
+    //     if (this.state.height > 0) {
+    //         tableStyle.width = this.state.width;
+    //         divStyle.height = `${this.state.height}px`;
+    //     }
+
+    //     const { columnsVisibility } = this.props;
+
+    //     return (
+    //         <div
+    //             className="two-columns--one-fixed table--orders element--block shadow--light mt-3"
+    //             ref={this.tableWrapper}
+    //         >
+    //             { this.renderFixedColumn() }
+
+    //             <div className="two-columns--right-side lock--scroll">
+    //                 <table
+    //                     ref={this.fixedHeader}
+    //                     className={classNamesHeader}
+    //                     style={{
+    //                         transform: `translate3d(${this.state.scrollLeft * -1}px, 0, 0)`
+    //                     }}
+    //                 >
+    //                     <thead>
+    //                         <tr>
+    //                             <th
+    //                                 scope="col"
+    //                                 data-column="order"
+    //                                 className="table--orders-100"
+    //                             >
+    //                                 Výrobek
+    //                             </th>
+    //                             <th
+    //                                 scope="col"
+    //                                 data-column="count"
+    //                                 className="table--orders-55"
+    //                             >
+    //                                 Ks.
+    //                             </th>
+    //                             {
+    //                                 OPERATION_COLUMNS.map((column) => {
+    //                                     // eslint-disable-next-line eqeqeq
+    //                                     if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
+    //                                         return (
+    //                                             <th
+    //                                                 scope="col"
+    //                                                 key={column}
+    //                                                 data-column={column}
+    //                                                 className="table--orders-operation-column"
+    //                                             >
+    //                                                 {column}.o ks/čas
+    //                                             </th>
+    //                                         )
+    //                                     }
+
+    //                                     return null;
+    //                                 })
+    //                             }
+    //                             <th
+    //                                 scope="col"
+    //                                 data-column="lastWorkingDate"
+    //                                 className="table--orders-9_5em"
+    //                             >
+    //                                 Ukončení
+    //                             </th>
+    //                             <th
+    //                                 scope="col"
+    //                                 data-column="plannedFinishDate"
+    //                                 className={this.state.editPlannedFinishDateRow ? 'table--orders-finishdate-column' : 'table--orders-9_5em'}
+    //                             >
+    //                                 Termín
+    //                             </th>
+    //                             <th
+    //                                 scope="col"
+    //                                 data-column="totalOperationTime"
+    //                             >
+    //                                 Čas na výrobek
+    //                             </th>
+    //                         </tr>
+    //                     </thead>
+    //                 </table>
+
+    //                 <div
+    //                     style={divStyle}
+    //                     ref={this.scrollableDiv}
+    //                     className={
+    //                         createClassName([
+    //                             'table--scrollable',
+    //                             this.state.activeOrder ? 'lock--scroll': null,
+    //                         ])
+    //                     }
+    //                 >
+    //                     <table
+    //                         className={classNames}
+    //                         style={tableStyle}
+    //                     >
+    //                         <tbody>
+    //                             {this.renderTableBody()}
+    //                         </tbody>
+    //                     </table>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // } 
 }
