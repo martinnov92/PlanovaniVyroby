@@ -13,6 +13,13 @@
 
 # TODO:
 
+  ## Důležité
+  - [ ] upravit ukládání souborů
+  - [ ] jako ID u `orders` používat `uuid`
+  - [ ] ukládat jako datum, kdy byl vytvořen záznam
+  - [ ] aktualizovat electron, react, ...
+  - [ ] předělat tabulku na `position: sticky`?
+
   ## 20.7.2018, 17.12.2018
   - [x] zrušit findDOMNode
   - [x] aktualizovat React, ReactDOM, electron
@@ -34,7 +41,7 @@
     - možnost zobrazit jen nedokončené
   - [ ] Možnost uzavření operace
   - [x] Kopírování práce - události, např.při rozdělení jedné operace (pravý klik na událost -> kopírovat -> otevře se okno, změním jenom datum)
-  - [ ] Zborazovat stoj u operace - nebude
+  - [x] Zborazovat stoj u operace - nebude
   - [x] Možnost zadání výrobku do zakázky ještě bez práce - vyřešili pomocí nového řádku, kam "odkládají" nezařazené zakázky
   - [ ] rozblikat událost v kalendáři po kliknutí na datum v tooltipu
 

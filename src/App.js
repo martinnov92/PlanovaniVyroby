@@ -323,6 +323,8 @@ class App extends React.Component {
 
                     window.localStorage.setItem('filePath', filePath);
                 } catch (err) {
+                    console.log(err);
+
                     this.setState({
                         loading: false,
                         fileLoaded: false,
