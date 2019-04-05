@@ -464,16 +464,6 @@ export function setCSSVariable(key, value, suffix = '') {
     dispatchResize();
 }
 
-export const createStyleObject = (width, maxWidth = true) => ({
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    width: `${width || 0}px`,
-    minWidth: `${width || 0}px`,
-    maxWidth: `${width || 0}px`,
-    // [maxWidth ? 'maxWidth' : null]: maxWidth ? `${width || 0}px` : null,
-});
-
 export function getWarningClassName(date, done) {
     if (!date || done) {
         return null;

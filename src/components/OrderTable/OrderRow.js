@@ -6,7 +6,6 @@ import { createClassName } from '../../utils/helpers';
 export class OrderRow extends React.PureComponent {
     render () {
         const {
-            thWidth,
             commission,
             activeOrder,
             columnsVisibility,
@@ -37,7 +36,6 @@ export class OrderRow extends React.PureComponent {
                     _key={key}
                     objKey={objKey}
                     orderId={orderId}
-                    thWidth={thWidth}
                     product={product}
                     commission={commission}
                     columnsVisibility={columnsVisibility}

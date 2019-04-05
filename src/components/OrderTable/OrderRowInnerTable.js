@@ -8,7 +8,6 @@ import { openTableContextMenu } from '../ContextMenu';
 import {
     createClassName,
     DATA_DATE_FORMAT,
-    createStyleObject,
     getWarningClassName,
     formatMinutesToTime,
     calculateOperationTime,
@@ -45,7 +44,6 @@ export class OrderRowInnerTable extends PureComponent {
             _key,
             objKey,
             product,
-            thWidth,
             orderId,
             columnsVisibility,
             plannedFinishDateValue,
@@ -70,21 +68,17 @@ export class OrderRowInnerTable extends PureComponent {
                 className={className}
                 onContextMenu={this.handleContextMenu}
             >
-                <td className="table--orders__fixed--column"></td>
-                <td
-                    title={objKey}
-                    style={createStyleObject(thWidth['order'], false)}
-                >
+                <td className="table--orders__fixed--column">
+                </td>
+                <td title={objKey} className="table--orders-100">
                     <Tooltip overlay={this.renderOrderTooltip(product)}>
-                        <div>
+                        <div className="cut-text">
                             {product.coop && <strong className="text-danger product--coop">* &nbsp;</strong>}
                             { objKey }
                         </div>
                     </Tooltip>
                 </td>
-                <td style={createStyleObject(thWidth['count'], false)}>
-                    {product.totalCount}
-                </td>
+                <td>{product.totalCount}</td>
                 {
                     OPERATION_COLUMNS.map((column) => {
                         // eslint-disable-next-line eqeqeq
@@ -92,7 +86,6 @@ export class OrderRowInnerTable extends PureComponent {
                             return (
                                 <td
                                     key={column}
-                                    style={createStyleObject(thWidth[column])}
                                 >
                                     {this.renderOperationCell(product.operation, Number(column))}
                                 </td>
@@ -102,16 +95,10 @@ export class OrderRowInnerTable extends PureComponent {
                         return null;
                     })
                 }
-                <td
-                    style={createStyleObject(thWidth['lastWorkingDate'], false)}
-                    title={lastWorkingDate}
-                >
+                <td title={lastWorkingDate}>
                     {lastWorkingDate}
                 </td>
-                <td
-                    style={createStyleObject(thWidth['plannedFinishDate'], false)}
-                    title={''}
-                >
+                <td title={''}>
                     {
                         // TODO: předat jako isTermEditing prop
                         editPlannedFinishDateRow === _key
@@ -126,10 +113,7 @@ export class OrderRowInnerTable extends PureComponent {
                         : plannedFinishDate
                     }
                 </td>
-                <td
-                    style={createStyleObject(thWidth['totalOperationTime'], false)}
-                    title={totalOperationTime}
-                >
+                <td title={totalOperationTime}>
                     {totalOperationTime}
                 </td>
             </tr>
@@ -234,7 +218,7 @@ export class OrderRowInnerTable extends PureComponent {
                     className="btn btn-link text-dark"
                     onClick={() => this.props.moveToDate(date)}
                 >
-                    { moment(date).format(DATA_DATE_FORMAT) }
+                    {moment(date).format(DATA_DATE_FORMAT)}
                 </button>
             </li>
         );

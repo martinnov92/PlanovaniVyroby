@@ -25,7 +25,7 @@
 .table--orders .table th {
     min-width: 7em;
     background-color: #fff;
-    border-right-width: 1px;
+    border-left-width: 0;
 }
 
 .table--orders__fixed--row,
@@ -42,6 +42,19 @@
     left: 0;
 }
 
+/* COLORS */
+.table--orders .product--same-day td {
+    background-color: var(--sameDayColor);
+}
+
+.table--orders .product--day-before td {
+    background-color: var(--dayBeforeColor);
+}
+
+.table--orders .product--week-before td {
+    background-color: var(--weekBeforeColor);
+}
+
 /* Sloupec ks */
 .table--orders .table .table--orders-55 {
     min-width: 55px;
@@ -49,7 +62,8 @@
 
 /* Sloupce - Výrobek a ukončení */
 .table--orders .table .table--orders-100 {
-    min-width: 100px;
+    width: 100px;
+    max-width: 100px;
 }
 
 .table--orders .table .table--orders-125 {
@@ -128,9 +142,7 @@
     border-bottom: 0;
 } 
 
-.order--finished > p,
-.order--finished > td > table > tbody > tr > td,
-.order--finished > .table--orders-first-column > span {
+.order--finished {
     opacity: .5;
 }
 
