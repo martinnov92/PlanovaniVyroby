@@ -54,6 +54,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 totalTime: 0,
                 orderId: order,
                 totalWorkingTime: 0,
+                name: orderInfo.name,
                 done: orderInfo.done,
                 color: orderInfo.color,
             },
@@ -463,16 +464,6 @@ export function setCSSVariable(key, value, suffix = '') {
     document.documentElement.style.setProperty(key, value + suffix);
     dispatchResize();
 }
-
-export const createStyleObject = (width, maxWidth = true) => ({
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    width: `${width || 0}px`,
-    minWidth: `${width || 0}px`,
-    maxWidth: `${width || 0}px`,
-    // [maxWidth ? 'maxWidth' : null]: maxWidth ? `${width || 0}px` : null,
-});
 
 export function getWarningClassName(date, done) {
     if (!date || done) {

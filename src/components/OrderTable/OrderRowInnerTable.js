@@ -2,13 +2,12 @@ import React, { Fragment, PureComponent } from 'react';
 import moment from 'moment';
 
 import { Tooltip } from '../Tooltip';
-import { OPERATION_COLUMNS } from './';
+import { OrderName, OPERATION_COLUMNS } from './';
 import { OrderRowTooltip } from './OrderRowTooltip';
 import { openTableContextMenu } from '../ContextMenu';
 import {
     createClassName,
     DATA_DATE_FORMAT,
-    createStyleObject,
     getWarningClassName,
     formatMinutesToTime,
     calculateOperationTime,
@@ -16,9 +15,9 @@ import {
 
 export class OrderRowInnerTable extends PureComponent {
     handleContextMenu = () => {
-        const { _key, product, commission, editPlannedFinishDateRow } = this.props;
+        const { _key, product, info, editPlannedFinishDateRow } = this.props;
 
-        if (commission._info.done) {
+        if (info.done) {
             return;
         }
 
@@ -29,7 +28,8 @@ export class OrderRowInnerTable extends PureComponent {
     };
 
     handleContextMenuClick = (type) => {
-        const { _key, objKey, orderId, product } = this.props;
+        const { _key, objKey, info, product } = this.props;
+        const { orderId } = info;
 
         if (type === 'edit-term') {
             this.props.editPlannedFinishDate(_key, product);
@@ -43,10 +43,12 @@ export class OrderRowInnerTable extends PureComponent {
     render () {
         const {
             _key,
+            info,
             objKey,
             product,
-            thWidth,
-            orderId,
+            rowSpan,
+            isLastRow,
+            showOrderId,
             columnsVisibility,
             plannedFinishDateValue,
             editPlannedFinishDateRow,
@@ -62,80 +64,75 @@ export class OrderRowInnerTable extends PureComponent {
         const plannedFinishDate = product.plannedFinishDate ? moment(product.plannedFinishDate).format(DATA_DATE_FORMAT) : '-';
         const className = [
             warningClassNameBeforeToday,
+            isLastRow ? 'order-table--last-row' : null,
             product.done ? 'product--finished' : null,
         ].filter(Boolean).join(' ');
 
         return (
-            <table>
-                <tbody>
-                    <tr
-                        className={className}
-                        onContextMenu={this.handleContextMenu}
-                    >
+            <tr
+                className={className}
+                onContextMenu={this.handleContextMenu}
+            >
+                {
+                    showOrderId && (
                         <td
-                            title={objKey}
-                            style={createStyleObject(thWidth['order'], false)}
+                            rowSpan={rowSpan}
+                            className="table--orders__fixed--column order-table--last-row"
                         >
-                            <Tooltip overlay={this.renderOrderTooltip(product)}>
-                                <div>
-                                    {product.coop && <strong className="text-danger product--coop">* &nbsp;</strong>}
-                                    { objKey }
-                                </div>
-                            </Tooltip>
+                            <OrderName
+                                info={info}
+                                onContextMenu={this.props.onContextMenu}
+                            />
                         </td>
-                        <td style={createStyleObject(thWidth['count'], false)}>
-                            {product.totalCount}
-                        </td>
-                        {
-                            OPERATION_COLUMNS.map((column) => {
-                                // eslint-disable-next-line eqeqeq
-                                if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
-                                    return (
-                                        <td
-                                            key={column}
-                                            style={createStyleObject(thWidth[column])}
-                                        >
-                                            {this.renderOperationCell(product.operation, Number(column))}
-                                        </td>
-                                    );
-                                }
-
-                                return null;
-                            })
+                    )
+                }
+                <td title={objKey} className="table--orders-100">
+                    <Tooltip overlay={this.renderOrderTooltip(product)}>
+                        <div className="cut-text">
+                            {product.coop && <strong className="text-danger product--coop">* &nbsp;</strong>}
+                            { objKey }
+                        </div>
+                    </Tooltip>
+                </td>
+                <td>{product.totalCount}</td>
+                {
+                    OPERATION_COLUMNS.map((column) => {
+                        // eslint-disable-next-line eqeqeq
+                        if ((columnsVisibility[column] === true) || (columnsVisibility[column] == undefined)) {
+                            return (
+                                <td
+                                    key={column}
+                                >
+                                    {this.renderOperationCell(product.operation, Number(column))}
+                                </td>
+                            );
                         }
-                        <td
-                            style={createStyleObject(thWidth['lastWorkingDate'], false)}
-                            title={lastWorkingDate}
-                        >
-                            {lastWorkingDate}
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth['plannedFinishDate'], false)}
-                            title={''}
-                        >
-                            {
-                                // TODO: předat jako isTermEditing prop
-                                editPlannedFinishDateRow === _key
-                                ? <input
-                                    type="datetime-local"
-                                    onChange={onChange}
-                                    name="plannedFinishDateValue"
-                                    value={plannedFinishDateValue}
-                                    className="form-control form-control-sm"
-                                    onBlur={() => onBlur(orderId, objKey)}
-                                />
-                                : plannedFinishDate
-                            }
-                        </td>
-                        <td
-                            style={createStyleObject(thWidth['totalOperationTime'], false)}
-                            title={totalOperationTime}
-                        >
-                            {totalOperationTime}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+                        return null;
+                    })
+                }
+                <td title={lastWorkingDate}>
+                    {lastWorkingDate}
+                </td>
+                <td title={''}>
+                    {
+                        // TODO: předat jako isTermEditing prop
+                        editPlannedFinishDateRow === _key
+                        ? <input
+                            type="datetime-local"
+                            onChange={onChange}
+                            name="plannedFinishDateValue"
+                            value={plannedFinishDateValue}
+                            className="form-control form-control-sm"
+                            onBlur={() => onBlur(info.orderId, objKey)}
+                        />
+                        : plannedFinishDate
+                    }
+                </td>
+                <td title={totalOperationTime}>
+                    {totalOperationTime}
+                </td>
+            </tr>
         );
     }
 
@@ -237,7 +234,7 @@ export class OrderRowInnerTable extends PureComponent {
                     className="btn btn-link text-dark"
                     onClick={() => this.props.moveToDate(date)}
                 >
-                    { moment(date).format(DATA_DATE_FORMAT) }
+                    {moment(date).format(DATA_DATE_FORMAT)}
                 </button>
             </li>
         );

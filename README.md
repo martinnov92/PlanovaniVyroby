@@ -16,9 +16,12 @@
   ## Důležité
   - [ ] upravit ukládání souborů
   - [ ] jako ID u `orders` používat `uuid`
+    - https://www.npmjs.com/package/uuid
+    - nebo použít Node.js `crypto` https://stackoverflow.com/questions/23327010/how-to-generate-unique-id-with-node-js
   - [ ] ukládat jako datum, kdy byl vytvořen záznam
-  - [ ] aktualizovat electron, react, ...
+  - [x] aktualizovat electron, react, ...
   - [ ] předělat tabulku na `position: sticky`?
+  - [ ] používat PropTypes a defaultProps
 
   ## 20.7.2018, 17.12.2018
   - [x] zrušit findDOMNode

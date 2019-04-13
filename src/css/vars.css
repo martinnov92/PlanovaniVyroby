@@ -6,7 +6,7 @@
     --calendarDayBorderColor: #6c757d;
     --fontSize: 11px;
     --rootFontSize: 14px;
-    --sameDayColor: rgba(255, 0, 0, .50);
-    --dayBeforeColor: rgba(255, 165, 0, .50);
-    --weekBeforeColor: rgba(255, 255, 0, .50);
+    --sameDayColor: #ffb4b4;
+    --dayBeforeColor: #ffca6a;
+    --weekBeforeColor: #ffff9b;
 }

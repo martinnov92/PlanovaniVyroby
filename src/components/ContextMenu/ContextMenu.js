@@ -27,7 +27,7 @@ export function openTableContextMenu (isProduct, isDone, isEditing, callback = (
 
     if (isProduct) {
         tableContextMenu.append(new MenuItem({
-            label: isDone ? 'Otevřít zakázku' : 'Uzavřít výrobek',
+            label: isDone ? 'Otevřít zakázku' : 'Uzavřít zakázku',
             click: () => callback(isDone ? 'open-order' : 'close-product'),
         }));
     } else {

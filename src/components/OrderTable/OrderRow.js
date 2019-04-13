@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 
 import { OrderRowInnerTable } from './';
-import { createClassName } from '../../utils/helpers';
 
-export class OrderRow extends React.PureComponent {
+export class OrderRow extends PureComponent {
     render () {
         const {
-            thWidth,
             commission,
-            activeOrder,
             columnsVisibility,
             editPlannedFinishDate,
             plannedFinishDateValue,
@@ -20,54 +17,36 @@ export class OrderRow extends React.PureComponent {
             editPlannedFinishDateRow,
         } = this.props;
 
-        const orderKeys = Object.keys(commission);
-        const { orderId, done, } = commission._info;
+        const orderKeys = Object.keys(commission).filter((key) => !key.startsWith('_'));
+        
+        const { orderId } = commission._info;
+        const orderKeysCount = orderKeys.length;
 
-        return (
-            <tr
-                className={
-                    createClassName([
-                        done ? 'order--finished' : null,
-                        // eslint-disable-next-line eqeqeq
-                        activeOrder == orderId ? 'context-menu--open' : null,
-                    ])
-                }
-                data-order={orderId}
-            >
-                <td className="table--orders-inner-table">
-                    {
-                        orderKeys.map((objKey, i) => {
-                            const key = `${orderId}_${objKey}`;
-                            const product = commission[objKey];
+        return orderKeys.map((objKey, i) => {
+            const key = `${orderId}_${objKey}`;
+            const product = commission[objKey];
 
-                            if (objKey.startsWith('_')) {
-                                return null;
-                            }
+            return (
+                <OrderRowInnerTable
+                    key={key}
+                    _key={key}
+                    objKey={objKey}
+                    product={product}
+                    showOrderId={i === 0}
+                    info={commission._info}
+                    rowSpan={orderKeysCount}
+                    isLastRow={i === orderKeysCount - 1}
+                    columnsVisibility={columnsVisibility}
+                    plannedFinishDateValue={plannedFinishDateValue}
+                    editPlannedFinishDateRow={editPlannedFinishDateRow}
 
-                            return (
-                                <OrderRowInnerTable
-                                    key={key}
-                                    _key={key}
-                                    objKey={objKey}
-                                    orderId={orderId}
-                                    thWidth={thWidth}
-                                    product={product}
-                                    commission={commission}
-                                    columnsVisibility={columnsVisibility}
-                                    plannedFinishDateValue={plannedFinishDateValue}
-                                    editPlannedFinishDateRow={editPlannedFinishDateRow}
-
-                                    moveToDate={moveToDate}
-                                    onBlur={onBlur}
-                                    onChange={onChange}
-                                    onContextMenu={onContextMenu}
-                                    editPlannedFinishDate={editPlannedFinishDate} // !!! pro uložení
-                                />
-                            );
-                        })
-                    }
-                </td>
-            </tr>
-        );
+                    moveToDate={moveToDate}
+                    onBlur={onBlur}
+                    onChange={onChange}
+                    onContextMenu={onContextMenu}
+                    editPlannedFinishDate={editPlannedFinishDate} // !!! pro uložení
+                />
+            );
+        });
     }
 }

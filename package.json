@@ -7,22 +7,24 @@
   "main": "public/electron.js",
   "repository": "https://github.com/martinnov92/PlanovaniVyroby",
   "dependencies": {
-    "chokidar": "^2.0.4",
+    "chokidar": "^2.1.5",
     "electron-updater": "^4.0.6",
     "lodash": "^4.17.11",
-    "moment": "^2.23.0",
-    "moment-range": "^4.0.1",
+    "moment": "^2.24.0",
+    "moment-range": "^4.0.2",
     "rc-tooltip": "^3.7.3",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1",
-    "react-tabs": "^2.3.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "2.1.8",
+    "react-tabs": "^3.0.0",
     "react-waterfall": "^4.0.1"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "electron": "^3.0.12",
-    "electron-builder": "^20.38.3",
+    "electron": "^4.1.4",
+    "electron-builder": "^20.39.0",
+    "node": "^8.15.0",
+    "typescript": "^3.4.3",
     "wait-on": "^3.2.0"
   },
   "scripts": {
@@ -41,7 +43,7 @@
     "appId": "com.martinnovak.PlanovaniVyroby",
     "productName": "Planovani Vyroby",
     "icon": "build/icon.png",
-    "copyright": "Copyright 2018 year ${author}",
+    "copyright": "Copyright 2019 year ${author}",
     "files": [
       "build/**/*",
       "node_modules/**/*"
