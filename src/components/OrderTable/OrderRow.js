@@ -5,7 +5,6 @@ import { OrderRowInnerTable } from './';
 export class OrderRow extends PureComponent {
     render () {
         const {
-            orderList,
             commission,
             columnsVisibility,
             editPlannedFinishDate,
@@ -22,7 +21,6 @@ export class OrderRow extends PureComponent {
         
         const { orderId } = commission._info;
         const orderKeysCount = orderKeys.length;
-        const order = orderList.find((_o) => _o.id === orderId);
 
         return orderKeys.map((objKey, i) => {
             const key = `${orderId}_${objKey}`;
@@ -32,11 +30,10 @@ export class OrderRow extends PureComponent {
                 <OrderRowInnerTable
                     key={key}
                     _key={key}
-                    order={order}
                     objKey={objKey}
                     product={product}
                     showOrderId={i === 0}
-                    commission={commission}
+                    info={commission._info}
                     rowSpan={orderKeysCount}
                     isLastRow={i === orderKeysCount - 1}
                     columnsVisibility={columnsVisibility}

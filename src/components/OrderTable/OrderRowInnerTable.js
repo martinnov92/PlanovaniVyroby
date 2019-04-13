@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from 'react';
 import moment from 'moment';
 
 import { Tooltip } from '../Tooltip';
-import { OPERATION_COLUMNS } from './';
+import { OrderName, OPERATION_COLUMNS } from './';
 import { OrderRowTooltip } from './OrderRowTooltip';
 import { openTableContextMenu } from '../ContextMenu';
 import {
@@ -15,9 +15,9 @@ import {
 
 export class OrderRowInnerTable extends PureComponent {
     handleContextMenu = () => {
-        const { _key, product, commission, editPlannedFinishDateRow } = this.props;
+        const { _key, product, info, editPlannedFinishDateRow } = this.props;
 
-        if (commission._info.done) {
+        if (info.done) {
             return;
         }
 
@@ -28,22 +28,22 @@ export class OrderRowInnerTable extends PureComponent {
     };
 
     handleContextMenuClick = (type) => {
-        const { _key, objKey, order, product } = this.props;
-        const { id } = order;
+        const { _key, objKey, info, product } = this.props;
+        const { orderId } = info;
 
         if (type === 'edit-term') {
             this.props.editPlannedFinishDate(_key, product);
         } else if (type === 'save-term') {
-            this.props.onBlur(id, objKey);
+            this.props.onBlur(orderId, objKey);
         } else {
-            this.props.onContextMenu(objKey, id, type === 'close-product');
+            this.props.onContextMenu(objKey, orderId, type === 'close-product');
         }
     };
 
     render () {
         const {
             _key,
-            order,
+            info,
             objKey,
             product,
             rowSpan,
@@ -56,7 +56,6 @@ export class OrderRowInnerTable extends PureComponent {
             onBlur,
             onChange,
         } = this.props;
-        const { id, name, color } = order;
 
         // const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
         const totalOperationTime = formatMinutesToTime(product.totalOperationTime);
@@ -80,7 +79,10 @@ export class OrderRowInnerTable extends PureComponent {
                             rowSpan={rowSpan}
                             className="table--orders__fixed--column order-table--last-row"
                         >
-                            <p style={{ backgroundColor: color }}>{name}</p>
+                            <OrderName
+                                info={info}
+                                onContextMenu={this.props.onContextMenu}
+                            />
                         </td>
                     )
                 }
@@ -122,7 +124,7 @@ export class OrderRowInnerTable extends PureComponent {
                             name="plannedFinishDateValue"
                             value={plannedFinishDateValue}
                             className="form-control form-control-sm"
-                            onBlur={() => onBlur(id, objKey)}
+                            onBlur={() => onBlur(info.orderId, objKey)}
                         />
                         : plannedFinishDate
                     }

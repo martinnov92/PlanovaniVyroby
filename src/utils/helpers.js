@@ -54,6 +54,7 @@ export function createGroupedOrders(orders, orderList, displayFinishedOrders = f
                 totalTime: 0,
                 orderId: order,
                 totalWorkingTime: 0,
+                name: orderInfo.name,
                 done: orderInfo.done,
                 color: orderInfo.color,
             },
