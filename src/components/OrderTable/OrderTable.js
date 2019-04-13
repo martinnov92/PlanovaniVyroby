@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { OrderName, OrderRow } from './';
+import { OrderRow } from './';
 import {
     dispatchResize,
     createClassName,
@@ -62,56 +62,6 @@ export class OrderTable extends React.PureComponent {
             editPlannedFinishDateRow: null,
         });
     }
-
-    // renderFixedColumn = () => {
-    //     const { rowHeights, fixedHeaderHeight, } = this.state;
-    //     const {
-    //         orderList,
-    //         groupedOrders,
-    //     } = this.props;
-
-    //     return (
-    //         <div
-    //             className="two-columns--left-side"
-    //         >
-    //             <div
-    //                 className="column--fixed-header"
-    //                 style={{
-    //                     height: `${fixedHeaderHeight}px`,
-    //                 }}
-    //             >
-    //                 <p>Zakázka</p>
-    //             </div>
-
-    //             <div
-    //                 className="table--orders-first-column lock--scroll"
-    //                 style={{
-    //                     height: `calc(100% - ${fixedHeaderHeight}px)`,
-    //                 }}
-    //             >
-    //                 <div
-    //                     style={{
-    //                         marginTop: 1,
-    //                         transform: `translate3d(0, ${(this.state.scrollTop * -1)}px, 0)`,
-    //                     }}
-    //                 >
-    //                 {
-    //                     groupedOrders.map((commission, i) => (
-    //                         <OrderName
-    //                             i={i}
-    //                             orderList={orderList}
-    //                             commission={commission}
-    //                             rowHeights={rowHeights}
-    //                             key={commission._info.orderId}
-    //                             onContextMenu={this.props.onContextMenu}
-    //                         />
-    //                     ))
-    //                 }
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     );
-    // }
 
     renderTableHead() {
         const { columnsVisibility } = this.props;
@@ -195,25 +145,28 @@ export class OrderTable extends React.PureComponent {
             editPlannedFinishDateRow,
         } = this.state;
 
-        const { groupedOrders, columnsVisibility, moveToDate } = this.props;
+        const { groupedOrders, columnsVisibility, orderList, moveToDate } = this.props;
 
         // vykreslit zgroupované zakázky podle orderId
-        return groupedOrders.map((commission) => (
-            <OrderRow
-                key={commission._info.orderId}
-                commission={commission}
-                activeOrder={activeOrder}
-                columnsVisibility={columnsVisibility}
-                plannedFinishDateValue={plannedFinishDateValue}
-                editPlannedFinishDateRow={editPlannedFinishDateRow}
+        return groupedOrders.map((commission) => {
+            return (
+                <OrderRow
+                    key={commission._info.orderId}
+                    orderList={orderList}
+                    commission={commission}
+                    activeOrder={activeOrder}
+                    columnsVisibility={columnsVisibility}
+                    plannedFinishDateValue={plannedFinishDateValue}
+                    editPlannedFinishDateRow={editPlannedFinishDateRow}
 
-                moveToDate={moveToDate}
-                onBlur={this.handleBlur}
-                onChange={this.handleChange}
-                onContextMenu={this.props.onContextMenu}
-                editPlannedFinishDate={this.editPlannedFinishDate}
-            />
-        ));
+                    moveToDate={moveToDate}
+                    onBlur={this.handleBlur}
+                    onChange={this.handleChange}
+                    onContextMenu={this.props.onContextMenu}
+                    editPlannedFinishDate={this.editPlannedFinishDate}
+                />
+            )
+        });
     }
 
     render() {

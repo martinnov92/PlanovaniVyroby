@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 
 import { OrderRowInnerTable } from './';
-import { createClassName } from '../../utils/helpers';
 
-export class OrderRow extends React.PureComponent {
+export class OrderRow extends PureComponent {
     render () {
         const {
+            orderList,
             commission,
-            activeOrder,
             columnsVisibility,
             editPlannedFinishDate,
             plannedFinishDateValue,
@@ -19,25 +18,27 @@ export class OrderRow extends React.PureComponent {
             editPlannedFinishDateRow,
         } = this.props;
 
-        const orderKeys = Object.keys(commission);
-        const { orderId, done, } = commission._info;
+        const orderKeys = Object.keys(commission).filter((key) => !key.startsWith('_'));
+        
+        const { orderId } = commission._info;
+        const orderKeysCount = orderKeys.length;
+        const order = orderList.find((_o) => _o.id === orderId);
 
         return orderKeys.map((objKey, i) => {
             const key = `${orderId}_${objKey}`;
             const product = commission[objKey];
 
-            if (objKey.startsWith('_')) {
-                return null;
-            }
-
             return (
                 <OrderRowInnerTable
                     key={key}
                     _key={key}
+                    order={order}
                     objKey={objKey}
-                    orderId={orderId}
                     product={product}
+                    showOrderId={i === 0}
                     commission={commission}
+                    rowSpan={orderKeysCount}
+                    isLastRow={i === orderKeysCount - 1}
                     columnsVisibility={columnsVisibility}
                     plannedFinishDateValue={plannedFinishDateValue}
                     editPlannedFinishDateRow={editPlannedFinishDateRow}

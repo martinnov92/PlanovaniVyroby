@@ -21,6 +21,7 @@
   - [ ] ukládat jako datum, kdy byl vytvořen záznam
   - [x] aktualizovat electron, react, ...
   - [ ] předělat tabulku na `position: sticky`?
+  - [ ] používat PropTypes a defaultProps
 
   ## 20.7.2018, 17.12.2018
   - [x] zrušit findDOMNode

@@ -28,23 +28,27 @@ export class OrderRowInnerTable extends PureComponent {
     };
 
     handleContextMenuClick = (type) => {
-        const { _key, objKey, orderId, product } = this.props;
+        const { _key, objKey, order, product } = this.props;
+        const { id } = order;
 
         if (type === 'edit-term') {
             this.props.editPlannedFinishDate(_key, product);
         } else if (type === 'save-term') {
-            this.props.onBlur(orderId, objKey);
+            this.props.onBlur(id, objKey);
         } else {
-            this.props.onContextMenu(objKey, orderId, type === 'close-product');
+            this.props.onContextMenu(objKey, id, type === 'close-product');
         }
     };
 
     render () {
         const {
             _key,
+            order,
             objKey,
             product,
-            orderId,
+            rowSpan,
+            isLastRow,
+            showOrderId,
             columnsVisibility,
             plannedFinishDateValue,
             editPlannedFinishDateRow,
@@ -52,6 +56,7 @@ export class OrderRowInnerTable extends PureComponent {
             onBlur,
             onChange,
         } = this.props;
+        const { id, name, color } = order;
 
         // const totalWorkingTime = formatMinutesToTime(product.totalWorkingTime);
         const totalOperationTime = formatMinutesToTime(product.totalOperationTime);
@@ -60,6 +65,7 @@ export class OrderRowInnerTable extends PureComponent {
         const plannedFinishDate = product.plannedFinishDate ? moment(product.plannedFinishDate).format(DATA_DATE_FORMAT) : '-';
         const className = [
             warningClassNameBeforeToday,
+            isLastRow ? 'order-table--last-row' : null,
             product.done ? 'product--finished' : null,
         ].filter(Boolean).join(' ');
 
@@ -68,8 +74,16 @@ export class OrderRowInnerTable extends PureComponent {
                 className={className}
                 onContextMenu={this.handleContextMenu}
             >
-                <td className="table--orders__fixed--column">
-                </td>
+                {
+                    showOrderId && (
+                        <td
+                            rowSpan={rowSpan}
+                            className="table--orders__fixed--column order-table--last-row"
+                        >
+                            <p style={{ backgroundColor: color }}>{name}</p>
+                        </td>
+                    )
+                }
                 <td title={objKey} className="table--orders-100">
                     <Tooltip overlay={this.renderOrderTooltip(product)}>
                         <div className="cut-text">
@@ -108,7 +122,7 @@ export class OrderRowInnerTable extends PureComponent {
                             name="plannedFinishDateValue"
                             value={plannedFinishDateValue}
                             className="form-control form-control-sm"
-                            onBlur={() => onBlur(orderId, objKey)}
+                            onBlur={() => onBlur(id, objKey)}
                         />
                         : plannedFinishDate
                     }
