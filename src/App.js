@@ -249,6 +249,7 @@ class App extends React.Component {
             }
 
             window.localStorage.setItem('filePath', path);
+
             this.saveToFile();
             this.setState({
                 loading: false,
@@ -258,27 +259,28 @@ class App extends React.Component {
     };
 
     saveToFile = () => {
-        this.handleReadOnly(() => {
+        this.handleReadOnly(async () => {
             const filePath = window.localStorage.getItem('filePath');
 
             if (!filePath) {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', 'Soubor nenalezen.');
+                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při zápisu dat.', 'Soubor nenalezen.');
             }
 
             this.sendLocalChangeMessage();
-            saveFile(filePath, {
-                orders: this.state.orders,
-                products: this.state.products,
-                machines: this.state.machines,
-                orderList: this.state.orderList,
-            })
-            .then((value) => {
-                this.showInfoMessage(<p>{value}</p>, 3000);
+
+            try {
+                const res = await saveFile(filePath, {
+                    orders: this.state.orders,
+                    products: this.state.products,
+                    machines: this.state.machines,
+                    orderList: this.state.orderList,
+                });
+
+                this.showInfoMessage(<p>{res}</p>, 3000);
                 this.groupOrders(this.state.orders, this.state.orderList, this.state.filterFinishedOrders);
-            })
-            .catch((err) => {
-                return electron.ipcRenderer.send('open-error-dialog', 'Chyba při ukládání', err);
-            });
+            } catch (exception) {
+                electron.ipcRenderer.send('open-error-dialog', 'Chyba při zápisu dat', exception);
+            }
         });
     };
 
@@ -298,6 +300,7 @@ class App extends React.Component {
                 });
 
                 this.resetState();
+
                 return electron.ipcRenderer.send(
                     'open-error-dialog',
                     'Chyba při čtení',
@@ -792,6 +795,7 @@ class App extends React.Component {
             }
 
             const findIndex = products.findIndex((product) => order.productName === product.name);
+
             if (order.operation.order === '-') {
                 delete order.operation;
             } else {
@@ -823,6 +827,7 @@ class App extends React.Component {
                 products: products,
                 orderList: orderListCopy,
             }, this.saveToFile);
+
             this.resetOrderState();
         });
     };
@@ -842,11 +847,13 @@ class App extends React.Component {
             }
 
             orders.splice(findIndex, 1);
+
             this.setState({
                 open: false,
                 orders: orders,
                 hoverOrder: null,
             }, this.saveToFile);
+
             this.resetOrderState();
         });
     };

@@ -3,11 +3,20 @@ import groupBy from 'lodash/groupBy';
 import { extendMoment } from 'moment-range';
 
 const fs = window.require('fs');
+const path = window.require('path');
+const util = window.require('util');
+
+const rename = util.promisify(fs.rename);
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
+
 const moment = extendMoment(Moment);
 
 export const FULL_FORMAT = 'D.M.YYYY dddd';
 export const DATA_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 export const INPUT_DATE_TIME_FORMAT = 'YYYY-MM-DDTHH:mm';
+
+const WRITE_FILE_ERROR = 'Chyba při zápisu dat.';
 
 /* eslint-disable eqeqeq */
 
@@ -422,15 +431,28 @@ export function calculateRemainingOperationTime(orders = [], order = {}) {
     return result - order.workingHours;
 }
 
-export function saveFile(path, data) {
+export async function saveFile(filePath, data) {
     const d = JSON.stringify(data, null, process.env.NODE_ENV === 'development' ? 4 : 0);
 
-    return new Promise((resolve, reject) => {
-        fs.writeFile(path, d, (err) => {
-            if (err) reject(err);
-            resolve('Uloženo');
-        });
-    });
+    const dirname = path.dirname(filePath);
+    const tempFileName = `TEMP_${path.basename(filePath)}`;
+    const tempFilePath = path.join(dirname, tempFileName);
+
+    try {
+        await writeFile(tempFilePath, d);
+
+        const tempFileData = await readFile(tempFilePath);
+
+        JSON.parse(tempFileData);
+
+        await rename(tempFilePath, filePath);
+    } catch (exception) {
+        console.log(exception);
+
+        throw WRITE_FILE_ERROR;
+    }
+
+    return 'Uloženo';
 }
 
 export function dispatchResize() {
