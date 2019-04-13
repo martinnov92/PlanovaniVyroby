@@ -18,9 +18,10 @@
   - [ ] jako ID u `orders` používat `uuid`
     - https://www.npmjs.com/package/uuid
     - nebo použít Node.js `crypto` https://stackoverflow.com/questions/23327010/how-to-generate-unique-id-with-node-js
-  - [ ] ukládat jako datum, kdy byl vytvořen záznam
+  - [ ] ukládat datum, kdy byl vytvořen záznam
   - [x] aktualizovat electron, react, ...
-  - [ ] předělat tabulku na `position: sticky`?
+  - [x] předělat tabulku na `position: sticky`?
+  - [ ] předělat kalendář na `position: sticky`?
   - [ ] používat PropTypes a defaultProps
 
   ## 20.7.2018, 17.12.2018
