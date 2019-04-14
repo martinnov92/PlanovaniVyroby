@@ -441,7 +441,7 @@ export async function saveFile(filePath, data) {
     try {
         await writeFile(tempFilePath, d);
 
-        const tempFileData = await readFile(tempFilePath);
+        const tempFileData = await readFile(tempFilePath, 'utf-8');
 
         JSON.parse(tempFileData);
 
