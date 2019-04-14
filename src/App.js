@@ -645,6 +645,7 @@ class App extends React.Component {
 
             if (copy) {
                 order.id = Date.now();
+
                 ordersCopy.push(order);
             } else {
                 const index = ordersCopy.findIndex((o) => o.id === order.id);

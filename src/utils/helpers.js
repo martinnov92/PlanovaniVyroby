@@ -373,7 +373,7 @@ export function isDateRangeOverlaping(arr, order) {
         const existingOrderDateTo = moment(o.dateTo);
         const existingRange = moment.range(existingOrderDateFrom, existingOrderDateTo);
 
-        if (existingRange.overlaps(rangeOrder, { adjacent: false }) && sameMachine && order.id !== o.id) {
+        if (existingRange.overlaps(rangeOrder, { adjacent: false }) && sameMachine && (order.id !== o.id)) {
             return true;
         }
     }
