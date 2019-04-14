@@ -148,10 +148,10 @@
 
 .order--finished {
     opacity: .5;
+    text-decoration: line-through;
 }
 
-.product--finished > td,
-.product--finished > td > * {
+.product--finished > td:not(.table--orders__fixed--column) > * {
     text-decoration: line-through;
 }
 
