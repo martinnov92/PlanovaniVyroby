@@ -14,7 +14,8 @@
 # TODO:
 
   ## Důležité
-  - [ ] upravit ukládání souborů
+  - [x] upravit ukládání souborů
+  - [x] ověřit, proč je někdy možné dát 2 události přes sebe
   - [ ] jako ID u `orders` používat `uuid`
     - https://www.npmjs.com/package/uuid
     - nebo použít Node.js `crypto` https://stackoverflow.com/questions/23327010/how-to-generate-unique-id-with-node-js

@@ -271,6 +271,9 @@ export class Calendar extends React.Component {
         };
 
         if (this.state.activeKey === 'CTRL') {
+            // smazat id z kopírované položky
+            delete newEvent.id;
+
             return this.props.onEventDrop(newEvent, true);
         }
 
