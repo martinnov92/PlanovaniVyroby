@@ -212,9 +212,9 @@ export class OrderRowInnerTable extends PureComponent {
                 <p>Náplánováno ve dnech:</p>
                 <div className="area--dates">
                     <ul>
-                        {operations.map(({ dates, note, order}) => {
+                        {operations.map(({ dates, note, order}, index) => {
                             return (
-                                <Fragment key={order}>
+                                <Fragment key={`${order}_${index}`}>
                                     {!hasCooperation && <li><strong>{order}. operace</strong></li>}
                                     {note && <li>{note}</li>}
                                     {dates.sort().map(this.renderOrderTooltipDates)}
